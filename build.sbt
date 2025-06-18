@@ -45,7 +45,8 @@ lazy val microservice = (project in file("."))
     retrieveManaged := true,
     resolvers ++= Seq(Resolver.jcenterRepo),
     pipelineStages := Seq(digest),
-    Assets / pipelineStages := Seq(concat)
+    Assets / pipelineStages := Seq(concat),
+    PlayKeys.playDefaultPort := 10057
   )
 
 lazy val testSettings: Seq[Def.Setting[_]] = Seq(
