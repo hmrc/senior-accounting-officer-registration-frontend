@@ -31,12 +31,6 @@ lazy val microservice = (project in file("."))
       "controllers.routes.*",
       "viewmodels.govuk.all.*"
     ),
-    PlayKeys.playDefaultPort := 9000,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*handlers.*;.*components.*;" +
-      ".*Routes.*;.*viewmodels.govuk.*;",
-    ScoverageKeys.coverageMinimumStmtTotal := 78,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
       "-feature",
       "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
@@ -48,6 +42,7 @@ lazy val microservice = (project in file("."))
     Assets / pipelineStages := Seq(concat),
     PlayKeys.playDefaultPort := 10057
   )
+  .settings(CodeCoverageSettings.settings*)
 
 lazy val testSettings: Seq[Def.Setting[_]] = Seq(
   fork := true,
