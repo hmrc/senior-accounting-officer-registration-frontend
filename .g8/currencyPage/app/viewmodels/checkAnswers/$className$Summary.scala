@@ -2,12 +2,13 @@ package viewmodels.checkAnswers
 
 import config.CurrencyFormatter.currencyFormat
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import common.models.CheckMode
+import registration.models.UserAnswers
 import pages.$className$Page
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import common.viewmodels.govuk.summarylist._
+import common.viewmodels.implicits._
 
 object $className$Summary  {
 

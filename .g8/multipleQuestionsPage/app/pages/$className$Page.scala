@@ -1,6 +1,6 @@
 package pages
 
-import models.$className$
+import registration.models.$className$
 import play.api.libs.json.JsPath
 
 case object $className$Page extends QuestionPage[$className$] {

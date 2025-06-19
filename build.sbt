@@ -26,10 +26,10 @@ lazy val microservice = (project in file("."))
       "uk.gov.hmrc.hmrcfrontend.views.html.components.*",
       "uk.gov.hmrc.hmrcfrontend.views.html.helpers.*",
       "uk.gov.hmrc.hmrcfrontend.views.config.*",
-      "views.ViewUtils.*",
-      "models.Mode",
-      "controllers.routes.*",
-      "viewmodels.govuk.all.*"
+      "common.views.ViewUtils.*",
+      "common.models.Mode",
+      "common.viewmodels.govuk.all.*",
+      "registration.controllers.{ routes => registrationRoutes }"
     ),
     scalacOptions ++= Seq(
       "-feature",

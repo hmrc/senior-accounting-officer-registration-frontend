@@ -1,13 +1,14 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import common.models.CheckMode
+import registration.models.UserAnswers
 import pages.$className$Page
 import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import utils.DateTimeFormats.dateTimeFormat
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import common.utils.DateTimeFormats.dateTimeFormat
+import common.viewmodels.govuk.summarylist.*
+import common.viewmodels.implicits.*
 
 object $className$Summary  {
 
