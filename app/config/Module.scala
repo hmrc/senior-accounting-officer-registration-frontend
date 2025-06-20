@@ -33,7 +33,6 @@ class Module extends AbstractModule {
       .to(classOf[registrationActions.DataRequiredActionImpl])
       .asEagerSingleton()
 
-    // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[registrationActions.IdentifierAction])
       .to(classOf[registrationActions.AuthenticatedIdentifierAction])
       .asEagerSingleton()
@@ -45,9 +44,8 @@ class Module extends AbstractModule {
       .to(classOf[eligibilityActions.DataRequiredActionImpl])
       .asEagerSingleton()
 
-    // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[eligibilityActions.IdentifierAction])
-      .to(classOf[eligibilityActions.AuthenticatedIdentifierAction])
+      .to(classOf[eligibilityActions.SessionIdentifierAction])
       .asEagerSingleton()
 
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))

@@ -21,20 +21,25 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import registration.views.html.ErrorTemplate
+import registration.views.html.{ErrorTemplate => RegistrationErrorTemplate}
+import eligibility.views.html.{ErrorTemplate => EligibilityErrorTemplate}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ErrorHandler @Inject() (
     val messagesApi: MessagesApi,
-    view: ErrorTemplate
+    registrationView: RegistrationErrorTemplate,
+    eligibilityView: EligibilityErrorTemplate
 )(override implicit val ec: ExecutionContext)
     extends FrontendErrorHandler
     with I18nSupport {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
       rh: RequestHeader
-  ): Future[Html] =
-    Future.successful(view(pageTitle, heading, message))
+  ): Future[Html] = if (rh.uri.contains("/eligibility/")) {
+    Future.successful(eligibilityView(pageTitle, heading, message))
+  } else {
+    Future.successful(registrationView(pageTitle, heading, message))
+  }
 }

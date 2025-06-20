@@ -9,9 +9,3 @@ GET         /refresh-session                             eligibility.controllers
 GET         /there-is-a-problem                          eligibility.controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
 GET         /check-your-answers                          eligibility.controllers.CheckYourAnswersController.onPageLoad()
-
-GET         /account/sign-out-survey                     eligibility.controllers.auth.AuthController.signOut()
-GET         /account/sign-out                            eligibility.controllers.auth.AuthController.signOutNoSurvey()
-GET         /account/signed-out                          eligibility.controllers.auth.SignedOutController.onPageLoad()
-
-GET         /unauthorised                                eligibility.controllers.UnauthorisedController.onPageLoad()
