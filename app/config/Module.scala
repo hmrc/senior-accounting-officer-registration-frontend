@@ -17,7 +17,8 @@
 package config
 
 import com.google.inject.AbstractModule
-import registration.controllers.actions.*
+import registration.controllers.{actions => registrationActions}
+import eligibility.controllers.{actions => eligibilityActions}
 
 import java.time.{Clock, ZoneOffset}
 
@@ -25,11 +26,29 @@ class Module extends AbstractModule {
 
   override def configure(): Unit = {
 
-    bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
-    bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
+    bind(classOf[registrationActions.DataRetrievalAction])
+      .to(classOf[registrationActions.DataRetrievalActionImpl])
+      .asEagerSingleton()
+    bind(classOf[registrationActions.DataRequiredAction])
+      .to(classOf[registrationActions.DataRequiredActionImpl])
+      .asEagerSingleton()
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
-    bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
+    bind(classOf[registrationActions.IdentifierAction])
+      .to(classOf[registrationActions.AuthenticatedIdentifierAction])
+      .asEagerSingleton()
+
+    bind(classOf[eligibilityActions.DataRetrievalAction])
+      .to(classOf[eligibilityActions.DataRetrievalActionImpl])
+      .asEagerSingleton()
+    bind(classOf[eligibilityActions.DataRequiredAction])
+      .to(classOf[eligibilityActions.DataRequiredActionImpl])
+      .asEagerSingleton()
+
+    // For session based storage instead of cred based, change to SessionIdentifierAction
+    bind(classOf[eligibilityActions.IdentifierAction])
+      .to(classOf[eligibilityActions.AuthenticatedIdentifierAction])
+      .asEagerSingleton()
 
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
   }

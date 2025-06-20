@@ -3,4 +3,5 @@
 ->          /registration/hmrc-frontend                               hmrcfrontend.Routes
 ->          /registration                                             registration.Routes
 
-
+->          /eligibility/hmrc-frontend                                hmrcfrontend.Routes
+->          /eligibility                                              eligibility.Routes
