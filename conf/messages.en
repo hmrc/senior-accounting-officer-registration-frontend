@@ -47,3 +47,11 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+eligibility.radioButtonPageName.title = radioButtonPageName
+eligibility.radioButtonPageName.heading = radioButtonPageName
+eligibility.radioButtonPageName.option1 = Option 1
+eligibility.radioButtonPageName.option2 = Option 2
+eligibility.radioButtonPageName.checkYourAnswersLabel = radioButtonPageName
+eligibility.radioButtonPageName.error.required = Select radioButtonPageName
+eligibility.radioButtonPageName.change.hidden = RadioButtonPageName
