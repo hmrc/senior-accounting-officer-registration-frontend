@@ -19,11 +19,11 @@ package controllers
 import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import views.html.IndexView
+import views.html.IsCompanyEligibleView
 
 class IndexControllerSpec extends SpecBase {
 
-  "Index Controller" - {
+  "IndexController Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
@@ -34,10 +34,9 @@ class IndexControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[IndexView]
+        val view = application.injector.instanceOf[IsCompanyEligibleView]
 
         status(result) mustEqual OK
-
         contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }

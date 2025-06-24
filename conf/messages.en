@@ -1,4 +1,4 @@
-service.name = senior-accounting-officer-registration-frontend
+service.name = Senior Accounting Officer notification and certificate
 
 site.back = Back
 site.remove = Remove
@@ -27,10 +27,6 @@ error.title.prefix = Error:
 error.prefix = Error
 error.summary.title = There is a problem
 
-index.title = senior-accounting-officer-registration-frontend
-index.heading = senior-accounting-officer-registration-frontend
-index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
 checkYourAnswers.title = Check your answers
 checkYourAnswers.heading = Check your answers
 
@@ -47,3 +43,12 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+eligibility.isCompanyEligible.title = Check if your company is eligible
+eligibility.isCompanyEligible.heading = Check if your company is eligible
+eligibility.isCompanyEligible.p1 = To use this service, your company must be incorporated in the UK under the Companies Act 2006.
+eligibility.isCompanyEligible.p2 = In the previous financial year, it must either alone, or when aggregated with other UK companies in the same group, have had:
+eligibility.isCompanyEligible.b1 = a turnover of more than £200 million, and, or
+eligibility.isCompanyEligible.b2 = a balance sheet total of more than £2 billion
+eligibility.isCompanyEligible.p3 = You’ll now answer a few questions to check if your company meets the eligibility rules.
+
