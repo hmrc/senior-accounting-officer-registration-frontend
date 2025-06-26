@@ -44,6 +44,14 @@ class Navigator @Inject() () {
       _.get(GroupAnnualRevenuesPage) match {
         case Some(GroupAnnualRevenues.Yes) =>
           routes.EligibleGroupController.onPageLoad()
+        case Some(GroupAnnualRevenues.No) =>
+          routes.GroupBalanceSheetController.onPageLoad(NormalMode)
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
+    case GroupBalanceSheetPage =>
+      _.get(GroupBalanceSheetPage) match {
+        case Some(GroupBalanceSheet.Yes) =>
+          routes.EligibleGroupController.onPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }
     case _ => _ => routes.IndexController.onPageLoad()

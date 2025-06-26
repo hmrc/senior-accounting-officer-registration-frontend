@@ -59,7 +59,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ServiceNotSuitableController.onPageLoad()
       }
 
-      "when user answered is missing on IsIncorporatedUnderUkCompanyActsPage must go to JourneyRecoveryController" in {
+      "when user answer is missing on IsIncorporatedUnderUkCompanyActsPage must go to JourneyRecoveryController" in {
         navigator.nextPage(
           IsIncorporatedUnderUkCompanyActsPage,
           NormalMode,
@@ -78,7 +78,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.GroupAnnualRevenuesController.onPageLoad(NormalMode)
       }
 
-      "when user answered is missing on IsGroupOrStandalonePage must go to JourneyRecoveryController" in {
+      "when user answer is missing on IsGroupOrStandalonePage must go to JourneyRecoveryController" in {
         navigator.nextPage(
           IsGroupOrStandalonePage,
           NormalMode,
@@ -97,9 +97,39 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.EligibleGroupController.onPageLoad()
       }
 
-      "when user answered is missing on GroupAnnualRevenuesPage must go to JourneyRecoveryController" in {
+      "when user answered No on GroupAnnualRevenuesPage must go to GroupBalanceSheetController" in {
+        navigator.nextPage(
+          GroupAnnualRevenuesPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(GroupAnnualRevenuesPage.toString -> GroupAnnualRevenues.No.toString)
+          )
+        ) mustBe routes.GroupBalanceSheetController.onPageLoad(NormalMode)
+      }
+
+      "when user answer is missing on GroupAnnualRevenuesPage must go to JourneyRecoveryController" in {
         navigator.nextPage(
           IsGroupOrStandalonePage,
+          NormalMode,
+          UserAnswers("id", data = Json.obj())
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
+
+      "when user answered Yes on GroupBalanceSheetPage must go to EligibleGroupController" in {
+        navigator.nextPage(
+          GroupBalanceSheetPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(GroupBalanceSheetPage.toString -> GroupBalanceSheet.Yes.toString)
+          )
+        ) mustBe routes.EligibleGroupController.onPageLoad()
+      }
+
+      "when user answer is missing on GroupBalanceSheetPage must go to JourneyRecoveryController" in {
+        navigator.nextPage(
+          GroupBalanceSheetPage,
           NormalMode,
           UserAnswers("id", data = Json.obj())
         ) mustBe routes.JourneyRecoveryController.onPageLoad()

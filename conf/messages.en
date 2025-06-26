@@ -84,3 +84,10 @@ eligibleGroup.heading = eligibleGroup
 eligibilityConfirmation.title = eligibilityConfirmation
 eligibilityConfirmation.heading = eligibilityConfirmation
 
+groupBalanceSheet.title = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
+groupBalanceSheet.heading = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
+groupBalanceSheet.yes = Yes
+groupBalanceSheet.no = No
+groupBalanceSheet.checkYourAnswersLabel = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
+groupBalanceSheet.error.required = Select groupBalanceSheet
+groupBalanceSheet.change.hidden = GroupBalanceSheet

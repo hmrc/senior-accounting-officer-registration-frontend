@@ -42,3 +42,8 @@ GET        /company-eligible-group                                  controllers.
 POST       /company-eligible-group                                  controllers.EligibleGroupController.continue()
 
 GET        /eligibility/confirmation                                controllers.EligibilityConfirmationController.onPageLoad()
+
+GET        /group-consolidated-balance-sheet                        controllers.GroupBalanceSheetController.onPageLoad(mode: Mode = NormalMode)
+POST       /group-consolidated-balance-sheet                        controllers.GroupBalanceSheetController.onSubmit(mode: Mode = NormalMode)
+GET        /change-group-consolidated-balance-sheet                 controllers.GroupBalanceSheetController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-group-consolidated-balance-sheet                 controllers.GroupBalanceSheetController.onSubmit(mode: Mode = CheckMode)
