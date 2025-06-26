@@ -17,29 +17,29 @@
 package controllers
 
 import controllers.actions._
-import forms.StandaloneAnnualRevenuesFormProvider
+import forms.StandaloneBalanceSheetFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.StandaloneAnnualRevenuesPage
+import pages.StandaloneBalanceSheetPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.StandaloneAnnualRevenuesView
+import views.html.StandaloneBalanceSheetView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class StandaloneAnnualRevenuesController @Inject() (
+class StandaloneBalanceSheetController @Inject() (
     override val messagesApi: MessagesApi,
     sessionRepository: SessionRepository,
     navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    formProvider: StandaloneAnnualRevenuesFormProvider,
+    formProvider: StandaloneBalanceSheetFormProvider,
     val controllerComponents: MessagesControllerComponents,
-    view: StandaloneAnnualRevenuesView
+    view: StandaloneBalanceSheetView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -48,7 +48,7 @@ class StandaloneAnnualRevenuesController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
 
-    val preparedForm = request.userAnswers.get(StandaloneAnnualRevenuesPage) match {
+    val preparedForm = request.userAnswers.get(StandaloneBalanceSheetPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -64,9 +64,9 @@ class StandaloneAnnualRevenuesController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(StandaloneAnnualRevenuesPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(StandaloneBalanceSheetPage, value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(StandaloneAnnualRevenuesPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(StandaloneBalanceSheetPage, mode, updatedAnswers))
         )
   }
 }

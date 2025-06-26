@@ -26,25 +26,24 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object GroupBalanceSheetSummary  {
+object GroupBalanceSheetSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(GroupBalanceSheetPage).map {
-      answer =>
+    answers.get(GroupBalanceSheetPage).map { answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"groupBalanceSheet.$answer"))
-          )
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"groupBalanceSheet.$answer"))
         )
+      )
 
-        SummaryListRowViewModel(
-          key     = "groupBalanceSheet.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.GroupBalanceSheetController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("groupBalanceSheet.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "groupBalanceSheet.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.GroupBalanceSheetController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("groupBalanceSheet.change.hidden"))
         )
+      )
     }
 }

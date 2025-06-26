@@ -156,6 +156,56 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id", data = Json.obj())
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
+
+      "when user answered Yes on StandaloneAnnualRevenuesPage must go to EligibleController.onStandalonePageLoad" in {
+        navigator.nextPage(
+          StandaloneAnnualRevenuesPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(StandaloneAnnualRevenuesPage.toString -> StandaloneAnnualRevenues.Yes.toString)
+          )
+        ) mustBe routes.EligibleController.onStandalonePageLoad()
+      }
+
+      "when user answered No on StandaloneAnnualRevenuesPage must go to StandaloneBalanceSheetController" in {
+        navigator.nextPage(
+          StandaloneAnnualRevenuesPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(StandaloneAnnualRevenuesPage.toString -> StandaloneAnnualRevenues.No.toString)
+          )
+        ) mustBe routes.StandaloneBalanceSheetController.onPageLoad(NormalMode)
+      }
+
+      "when user answer is missing on StandaloneAnnualRevenuesPage must go to JourneyRecoveryController" in {
+        navigator.nextPage(
+          StandaloneAnnualRevenuesPage,
+          NormalMode,
+          UserAnswers("id", data = Json.obj())
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
+
+      "when user answered Yes on StandaloneBalanceSheetPage must go to EligibleController.onStandalonePageLoad" in {
+        navigator.nextPage(
+          StandaloneBalanceSheetPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(StandaloneBalanceSheetPage.toString -> StandaloneBalanceSheet.Yes.toString)
+          )
+        ) mustBe routes.EligibleController.onStandalonePageLoad()
+      }
+
+      "when user answer is missing on StandaloneBalanceSheetPage must go to JourneyRecoveryController" in {
+        navigator.nextPage(
+          StandaloneBalanceSheetPage,
+          NormalMode,
+          UserAnswers("id", data = Json.obj())
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
+
     }
 
     "in Check mode" - {

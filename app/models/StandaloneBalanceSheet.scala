@@ -20,26 +20,26 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait StandaloneAnnualRevenues
+sealed trait StandaloneBalanceSheet
 
-object StandaloneAnnualRevenues extends Enumerable.Implicits {
+object StandaloneBalanceSheet extends Enumerable.Implicits {
 
-  case object Yes extends WithName("yes") with StandaloneAnnualRevenues
-  case object No  extends WithName("no") with StandaloneAnnualRevenues
+  case object Yes extends WithName("yes") with StandaloneBalanceSheet
+  case object No  extends WithName("no") with StandaloneBalanceSheet
 
-  val values: Seq[StandaloneAnnualRevenues] = Seq(
+  val values: Seq[StandaloneBalanceSheet] = Seq(
     Yes,
     No
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
     RadioItem(
-      content = Text(messages(s"standaloneAnnualRevenues.${value.toString}")),
+      content = Text(messages(s"standaloneBalanceSheet.${value.toString}")),
       value = Some(value.toString),
       id = Some(s"value_$index")
     )
   }
 
-  implicit val enumerable: Enumerable[StandaloneAnnualRevenues] =
+  implicit val enumerable: Enumerable[StandaloneBalanceSheet] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

@@ -24,34 +24,37 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.OptionValues
 import play.api.libs.json.{JsError, JsString, Json}
 
-class GroupBalanceSheetSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class StandaloneBalanceSheetSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
-  "GroupBalanceSheet" - {
+  "StandaloneBalanceSheet" - {
 
     "must deserialise valid values" in {
 
-      val gen = Gen.oneOf(GroupBalanceSheet.values.toSeq)
+      val gen = Gen.oneOf(StandaloneBalanceSheet.values.toSeq)
 
-      forAll(gen) { groupBalanceSheet =>
-        JsString(groupBalanceSheet.toString).validate[GroupBalanceSheet].asOpt.value mustEqual groupBalanceSheet
+      forAll(gen) { standaloneBalanceSheet =>
+        JsString(standaloneBalanceSheet.toString)
+          .validate[StandaloneBalanceSheet]
+          .asOpt
+          .value mustEqual standaloneBalanceSheet
       }
     }
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!GroupBalanceSheet.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!StandaloneBalanceSheet.values.map(_.toString).contains(_))
 
       forAll(gen) { invalidValue =>
-        JsString(invalidValue).validate[GroupBalanceSheet] mustEqual JsError("error.invalid")
+        JsString(invalidValue).validate[StandaloneBalanceSheet] mustEqual JsError("error.invalid")
       }
     }
 
     "must serialise" in {
 
-      val gen = Gen.oneOf(GroupBalanceSheet.values.toSeq)
+      val gen = Gen.oneOf(StandaloneBalanceSheet.values.toSeq)
 
-      forAll(gen) { groupBalanceSheet =>
-        Json.toJson(groupBalanceSheet) mustEqual JsString(groupBalanceSheet.toString)
+      forAll(gen) { standaloneBalanceSheet =>
+        Json.toJson(standaloneBalanceSheet) mustEqual JsString(standaloneBalanceSheet.toString)
       }
     }
   }

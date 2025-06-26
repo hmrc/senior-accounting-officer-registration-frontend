@@ -39,7 +39,8 @@ class ServiceNotSuitableController @Inject() (
     Ok(notInUkView())
   }
 
-  def onGroupUnderThresholdPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(groupUnderThresholdGroupView())
+  def onGroupUnderThresholdPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      Ok(groupUnderThresholdGroupView())
   }
 }

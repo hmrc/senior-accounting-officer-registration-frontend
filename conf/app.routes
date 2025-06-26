@@ -54,3 +54,8 @@ GET        /individual-annual-revenues                              controllers.
 POST       /individual-annual-revenues                              controllers.StandaloneAnnualRevenuesController.onSubmit(mode: Mode = NormalMode)
 GET        /change-individual-annual-revenues                       controllers.StandaloneAnnualRevenuesController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-individual-annual-revenues                       controllers.StandaloneAnnualRevenuesController.onSubmit(mode: Mode = CheckMode)
+
+GET        /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onPageLoad(mode: Mode = NormalMode)
+POST       /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onSubmit(mode: Mode = NormalMode)
+GET        /change-individual-balance-sheet                         controllers.StandaloneBalanceSheetController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-individual-balance-sheet                         controllers.StandaloneBalanceSheetController.onSubmit(mode: Mode = CheckMode)

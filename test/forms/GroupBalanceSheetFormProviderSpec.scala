@@ -26,13 +26,13 @@ class GroupBalanceSheetFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "groupBalanceSheet.error.required"
 
     behave like optionsField[GroupBalanceSheet](
       form,
       fieldName,
-      validValues  = GroupBalanceSheet.values,
+      validValues = GroupBalanceSheet.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

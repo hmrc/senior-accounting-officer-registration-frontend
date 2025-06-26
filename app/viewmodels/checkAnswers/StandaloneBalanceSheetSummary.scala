@@ -18,7 +18,7 @@ package viewmodels.checkAnswers
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import pages.StandaloneAnnualRevenuesPage
+import pages.StandaloneBalanceSheetPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -26,23 +26,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object StandaloneAnnualRevenuesSummary {
+object StandaloneBalanceSheetSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(StandaloneAnnualRevenuesPage).map { answer =>
+    answers.get(StandaloneBalanceSheetPage).map { answer =>
 
       val value = ValueViewModel(
         HtmlContent(
-          HtmlFormat.escape(messages(s"standaloneAnnualRevenues.$answer"))
+          HtmlFormat.escape(messages(s"standaloneBalanceSheet.$answer"))
         )
       )
 
       SummaryListRowViewModel(
-        key = "standaloneAnnualRevenues.checkYourAnswersLabel",
+        key = "standaloneBalanceSheet.checkYourAnswersLabel",
         value = value,
         actions = Seq(
-          ActionItemViewModel("site.change", routes.StandaloneAnnualRevenuesController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("standaloneAnnualRevenues.change.hidden"))
+          ActionItemViewModel("site.change", routes.StandaloneBalanceSheetController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("standaloneBalanceSheet.change.hidden"))
         )
       )
     }

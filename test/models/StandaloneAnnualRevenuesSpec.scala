@@ -32,10 +32,11 @@ class StandaloneAnnualRevenuesSpec extends AnyFreeSpec with Matchers with ScalaC
 
       val gen = Gen.oneOf(StandaloneAnnualRevenues.values.toSeq)
 
-      forAll(gen) {
-        standaloneAnnualRevenues =>
-
-          JsString(standaloneAnnualRevenues.toString).validate[StandaloneAnnualRevenues].asOpt.value mustEqual standaloneAnnualRevenues
+      forAll(gen) { standaloneAnnualRevenues =>
+        JsString(standaloneAnnualRevenues.toString)
+          .validate[StandaloneAnnualRevenues]
+          .asOpt
+          .value mustEqual standaloneAnnualRevenues
       }
     }
 
@@ -43,10 +44,8 @@ class StandaloneAnnualRevenuesSpec extends AnyFreeSpec with Matchers with ScalaC
 
       val gen = arbitrary[String] suchThat (!StandaloneAnnualRevenues.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[StandaloneAnnualRevenues] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[StandaloneAnnualRevenues] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,10 +53,8 @@ class StandaloneAnnualRevenuesSpec extends AnyFreeSpec with Matchers with ScalaC
 
       val gen = Gen.oneOf(StandaloneAnnualRevenues.values.toSeq)
 
-      forAll(gen) {
-        standaloneAnnualRevenues =>
-
-          Json.toJson(standaloneAnnualRevenues) mustEqual JsString(standaloneAnnualRevenues.toString)
+      forAll(gen) { standaloneAnnualRevenues =>
+        Json.toJson(standaloneAnnualRevenues) mustEqual JsString(standaloneAnnualRevenues.toString)
       }
     }
   }

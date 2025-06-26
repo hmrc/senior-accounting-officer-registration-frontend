@@ -40,7 +40,7 @@ class StandaloneAnnualRevenuesControllerSpec extends SpecBase with MockitoSugar 
   lazy val standaloneAnnualRevenuesRoute = routes.StandaloneAnnualRevenuesController.onPageLoad(NormalMode).url
 
   val formProvider = new StandaloneAnnualRevenuesFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   "StandaloneAnnualRevenues Controller" - {
 
@@ -62,7 +62,8 @@ class StandaloneAnnualRevenuesControllerSpec extends SpecBase with MockitoSugar 
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(StandaloneAnnualRevenuesPage, StandaloneAnnualRevenues.values.head).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(StandaloneAnnualRevenuesPage, StandaloneAnnualRevenues.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +75,10 @@ class StandaloneAnnualRevenuesControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(StandaloneAnnualRevenues.values.head), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(StandaloneAnnualRevenues.values.head), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

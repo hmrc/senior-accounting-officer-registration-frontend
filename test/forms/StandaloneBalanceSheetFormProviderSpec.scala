@@ -17,22 +17,22 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.StandaloneAnnualRevenues
+import models.StandaloneBalanceSheet
 import play.api.data.FormError
 
-class StandaloneAnnualRevenuesFormProviderSpec extends OptionFieldBehaviours {
+class StandaloneBalanceSheetFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new StandaloneAnnualRevenuesFormProvider()()
+  val form = new StandaloneBalanceSheetFormProvider()()
 
   ".value" - {
 
     val fieldName   = "value"
-    val requiredKey = "standaloneAnnualRevenues.error.required"
+    val requiredKey = "standaloneBalanceSheet.error.required"
 
-    behave like optionsField[StandaloneAnnualRevenues](
+    behave like optionsField[StandaloneBalanceSheet](
       form,
       fieldName,
-      validValues = StandaloneAnnualRevenues.values,
+      validValues = StandaloneBalanceSheet.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 
