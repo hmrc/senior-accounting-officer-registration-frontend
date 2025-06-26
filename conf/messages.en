@@ -77,3 +77,10 @@ groupAnnualRevenues.no = No
 groupAnnualRevenues.checkYourAnswersLabel = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
 groupAnnualRevenues.error.required = Select groupAnnualRevenues
 groupAnnualRevenues.change.hidden = GroupAnnualRevenues
+
+eligibleGroup.title = eligibleGroup
+eligibleGroup.heading = eligibleGroup
+
+eligibilityConfirmation.title = eligibilityConfirmation
+eligibilityConfirmation.heading = eligibilityConfirmation
+

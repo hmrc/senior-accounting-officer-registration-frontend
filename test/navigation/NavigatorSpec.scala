@@ -85,6 +85,25 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id", data = Json.obj())
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
+
+      "when user answered Yes on GroupAnnualRevenuesPage must go to EligibleGroupController" in {
+        navigator.nextPage(
+          GroupAnnualRevenuesPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(GroupAnnualRevenuesPage.toString -> GroupAnnualRevenues.Yes.toString)
+          )
+        ) mustBe routes.EligibleGroupController.onPageLoad()
+      }
+
+      "when user answered is missing on GroupAnnualRevenuesPage must go to JourneyRecoveryController" in {
+        navigator.nextPage(
+          IsGroupOrStandalonePage,
+          NormalMode,
+          UserAnswers("id", data = Json.obj())
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
     }
 
     "in Check mode" - {
