@@ -78,6 +78,17 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.GroupAnnualRevenuesController.onPageLoad(NormalMode)
       }
 
+      "when user answered Standalone on IsGroupOrStandalonePage must go to StandaloneAnnualRevenuesController" in {
+        navigator.nextPage(
+          IsGroupOrStandalonePage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(IsGroupOrStandalonePage.toString -> IsGroupOrStandalone.Standalone.toString)
+          )
+        ) mustBe routes.StandaloneAnnualRevenuesController.onPageLoad(NormalMode)
+      }
+      
       "when user answer is missing on IsGroupOrStandalonePage must go to JourneyRecoveryController" in {
         navigator.nextPage(
           IsGroupOrStandalonePage,
