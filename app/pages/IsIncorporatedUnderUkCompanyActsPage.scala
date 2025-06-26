@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models.*
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import models.IsIncorporatedUnderUkCompanyActs
+import play.api.libs.json.JsPath
 
-trait ModelGenerators {
+case object IsIncorporatedUnderUkCompanyActsPage extends QuestionPage[IsIncorporatedUnderUkCompanyActs] {
 
-  implicit lazy val arbitraryIsIncorporatedUnderUkCompanyActs: Arbitrary[IsIncorporatedUnderUkCompanyActs] =
-    Arbitrary {
-      Gen.oneOf(IsIncorporatedUnderUkCompanyActs.values)
-    }
+  override def path: JsPath = JsPath \ toString
 
+  override def toString: String = "isIncorporatedUnderUkCompanyActs"
 }

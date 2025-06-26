@@ -52,3 +52,9 @@ eligibility.isCompanyEligible.b1 = a turnover of more than £200 million, and, o
 eligibility.isCompanyEligible.b2 = a balance sheet total of more than £2 billion
 eligibility.isCompanyEligible.p3 = You’ll now answer a few questions to check if your company meets the eligibility rules.
 
+
+eligibility.isIncorporatedUnderUkCompanyActs.title = Is the company incorporated in the UK under the Company Acts 2006?
+eligibility.isIncorporatedUnderUkCompanyActs.heading = Is the company incorporated in the UK under the Company Acts 2006?
+eligibility.isIncorporatedUnderUkCompanyActs.checkYourAnswersLabel = Is the company incorporated in the UK under the Company Acts 2006?
+eligibility.isIncorporatedUnderUkCompanyActs.error.required = Select isIncorporatedUnderUkCompanyActs
+eligibility.isIncorporatedUnderUkCompanyActs.change.hidden = IsIncorporatedUnderUkCompanyActs

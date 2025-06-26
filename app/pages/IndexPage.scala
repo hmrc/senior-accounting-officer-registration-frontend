@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models.*
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
-
-trait ModelGenerators {
-
-  implicit lazy val arbitraryIsIncorporatedUnderUkCompanyActs: Arbitrary[IsIncorporatedUnderUkCompanyActs] =
-    Arbitrary {
-      Gen.oneOf(IsIncorporatedUnderUkCompanyActs.values)
-    }
-
+case object IndexPage extends Page {
+  override def toString: String = "indexPage"
 }

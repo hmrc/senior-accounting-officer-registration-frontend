@@ -23,3 +23,4 @@ addSbtPlugin("com.github.sbt" % "sbt-concat" % "1.0.0")
 addSbtPlugin("com.github.sbt" % "sbt-digest" % "2.1.0")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.4")
+addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.16.2")

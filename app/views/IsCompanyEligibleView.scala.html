@@ -16,6 +16,7 @@
 
 @this(
         layout: templates.Layout,
+        formHelper: FormWithCSRF,
         govukButton: GovukButton
 )
 
@@ -34,7 +35,9 @@
 
     <p class="govuk-body">@messages("eligibility.isCompanyEligible.p3")</p>
 
-    @govukButton(
-        ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
-    )
+    @formHelper(action = routes.IndexController.continue()) {
+        @govukButton(
+            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+        )
+    }
 }
