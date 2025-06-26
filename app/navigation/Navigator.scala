@@ -31,7 +31,7 @@ class Navigator @Inject() () {
         case Some(IsIncorporatedUnderUkCompanyActs.Yes) =>
           routes.IsGroupOrStandaloneController.onPageLoad(NormalMode)
         case Some(IsIncorporatedUnderUkCompanyActs.No) =>
-          routes.ServiceNotSuitableController.onPageLoad()
+          routes.ServiceNotSuitableController.onNotInUkPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }
     case IsGroupOrStandalonePage =>
@@ -52,6 +52,8 @@ class Navigator @Inject() () {
       _.get(GroupBalanceSheetPage) match {
         case Some(GroupBalanceSheet.Yes) =>
           routes.EligibleGroupController.onPageLoad()
+        case Some(GroupBalanceSheet.No) =>
+          routes.ServiceNotSuitableController.onGroupUnderThresholdPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }
     case _ => _ => routes.IndexController.onPageLoad()

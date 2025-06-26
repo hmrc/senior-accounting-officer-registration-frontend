@@ -56,7 +56,7 @@ class NavigatorSpec extends SpecBase {
             data =
               Json.obj(IsIncorporatedUnderUkCompanyActsPage.toString -> IsIncorporatedUnderUkCompanyActs.No.toString)
           )
-        ) mustBe routes.ServiceNotSuitableController.onPageLoad()
+        ) mustBe routes.ServiceNotSuitableController.onNotInUkPageLoad()
       }
 
       "when user answer is missing on IsIncorporatedUnderUkCompanyActsPage must go to JourneyRecoveryController" in {
@@ -125,6 +125,17 @@ class NavigatorSpec extends SpecBase {
             data = Json.obj(GroupBalanceSheetPage.toString -> GroupBalanceSheet.Yes.toString)
           )
         ) mustBe routes.EligibleGroupController.onPageLoad()
+      }
+
+      "when user answered No on GroupBalanceSheetPage must go to ServiceNotSuitableController" in {
+        navigator.nextPage(
+          GroupBalanceSheetPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(GroupBalanceSheetPage.toString -> GroupBalanceSheet.No.toString)
+          )
+        ) mustBe routes.ServiceNotSuitableController.onGroupUnderThresholdPageLoad()
       }
 
       "when user answer is missing on GroupBalanceSheetPage must go to JourneyRecoveryController" in {

@@ -67,8 +67,11 @@ isGroupOrStandalone.checkYourAnswersLabel = Select if your company is part of a 
 isGroupOrStandalone.error.required = Select isGroupOrStandalone
 isGroupOrStandalone.change.hidden = IsGroupOrStandalone
 
-serviceNotSuitable.title = serviceNotSuitable
-serviceNotSuitable.heading = serviceNotSuitable
+serviceNotSuitable.notInUk.title = serviceNotSuitable.notInUk
+serviceNotSuitable.notInUk.heading = serviceNotSuitable.notInUk
+
+serviceNotSuitable.groupUnderThreshold.title = serviceNotSuitable.groupUnderThreshold
+serviceNotSuitable.groupUnderThreshold.heading = serviceNotSuitable.groupUnderThreshold
 
 groupAnnualRevenues.title = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
 groupAnnualRevenues.heading = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?

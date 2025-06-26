@@ -18,23 +18,39 @@ package controllers
 
 import base.SpecBase
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import views.html.ServiceNotSuitableView
+import play.api.test.Helpers.*
+import views.html.{ServiceNotSuitableGroupUnderThresholdView, ServiceNotSuitableNotInUkView}
 
 class ServiceNotSuitableControllerSpec extends SpecBase {
 
   "ServiceNotSuitable Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET on not in UK" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ServiceNotSuitableController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ServiceNotSuitableController.onNotInUkPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ServiceNotSuitableView]
+        val view = application.injector.instanceOf[ServiceNotSuitableNotInUkView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(request, messages(application)).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET on group under threshold" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.ServiceNotSuitableController.onGroupUnderThresholdPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[ServiceNotSuitableGroupUnderThresholdView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
