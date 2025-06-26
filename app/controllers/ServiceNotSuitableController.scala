@@ -22,7 +22,11 @@ import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{ServiceNotSuitableNotInUkView, ServiceNotSuitableGroupUnderThresholdView}
+import views.html.{
+  ServiceNotSuitableNotInUkView,
+  ServiceNotSuitableGroupUnderThresholdView,
+  ServiceNotSuitableStandaloneUnderThresholdView
+}
 
 class ServiceNotSuitableController @Inject() (
     override val messagesApi: MessagesApi,
@@ -31,7 +35,8 @@ class ServiceNotSuitableController @Inject() (
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     notInUkView: ServiceNotSuitableNotInUkView,
-    groupUnderThresholdGroupView: ServiceNotSuitableGroupUnderThresholdView
+    groupUnderThresholdGroupView: ServiceNotSuitableGroupUnderThresholdView,
+    groupUnderThresholdStandaloneView: ServiceNotSuitableStandaloneUnderThresholdView
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -42,5 +47,10 @@ class ServiceNotSuitableController @Inject() (
   def onGroupUnderThresholdPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       Ok(groupUnderThresholdGroupView())
+  }
+
+  def onStandaloneUnderThresholdPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      Ok(groupUnderThresholdStandaloneView())
   }
 }

@@ -198,6 +198,17 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.EligibleController.onStandalonePageLoad()
       }
 
+      "when user answered no on StandaloneBalanceSheetPage must go to ServiceNotSuitableController.onGroupUnderThresholdPageLoad" in {
+        navigator.nextPage(
+          StandaloneBalanceSheetPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data = Json.obj(StandaloneBalanceSheetPage.toString -> StandaloneBalanceSheet.No.toString)
+          )
+        ) mustBe routes.ServiceNotSuitableController.onStandaloneUnderThresholdPageLoad()
+      }
+
       "when user answer is missing on StandaloneBalanceSheetPage must go to JourneyRecoveryController" in {
         navigator.nextPage(
           StandaloneBalanceSheetPage,

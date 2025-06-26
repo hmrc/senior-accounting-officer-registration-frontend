@@ -19,7 +19,11 @@ package controllers
 import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import views.html.{ServiceNotSuitableGroupUnderThresholdView, ServiceNotSuitableNotInUkView}
+import views.html.{
+  ServiceNotSuitableGroupUnderThresholdView,
+  ServiceNotSuitableNotInUkView,
+  ServiceNotSuitableStandaloneUnderThresholdView
+}
 
 class ServiceNotSuitableControllerSpec extends SpecBase {
 
@@ -56,5 +60,22 @@ class ServiceNotSuitableControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }
+
+    "must return OK and the correct view for a GET on standalone under threshold" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.ServiceNotSuitableController.onStandaloneUnderThresholdPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[ServiceNotSuitableStandaloneUnderThresholdView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(request, messages(application)).toString
+      }
+    }
+
   }
 }

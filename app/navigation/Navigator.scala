@@ -70,6 +70,8 @@ class Navigator @Inject() () {
       _.get(StandaloneBalanceSheetPage) match {
         case Some(StandaloneBalanceSheet.Yes) =>
           routes.EligibleController.onStandalonePageLoad()
+        case Some(StandaloneBalanceSheet.No) =>
+          routes.ServiceNotSuitableController.onStandaloneUnderThresholdPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }
     case _ => _ => routes.IndexController.onPageLoad()
