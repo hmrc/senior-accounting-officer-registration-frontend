@@ -81,8 +81,11 @@ groupAnnualRevenues.checkYourAnswersLabel = Does the group have a total aggregat
 groupAnnualRevenues.error.required = Select groupAnnualRevenues
 groupAnnualRevenues.change.hidden = GroupAnnualRevenues
 
-eligibleGroup.title = eligibleGroup
-eligibleGroup.heading = eligibleGroup
+eligible.group.title = eligibleGroup
+eligible.group.heading = eligibleGroup
+
+eligible.standalone.title = eligibleStandalone
+eligible.standalone.heading = eligibleStandalone
 
 eligibilityConfirmation.title = eligibilityConfirmation
 eligibilityConfirmation.heading = eligibilityConfirmation

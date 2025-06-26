@@ -22,9 +22,9 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("eligible.group.title"))) {
+@layout(pageTitle = titleNoForm(messages("eligible.standalone.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("eligible.group.heading")</h1>
+    <h1 class="govuk-heading-xl">@messages("eligible.standalone.heading")</h1>
 
     @formHelper(action = routes.EligibleController.continue()) {
         @govukButton(

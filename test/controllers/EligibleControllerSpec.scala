@@ -18,23 +18,39 @@ package controllers
 
 import base.SpecBase
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import views.html.EligibleGroupView
+import play.api.test.Helpers.*
+import views.html.{EligibleGroupView, EligibleStandaloneView}
 
-class EligibleGroupControllerSpec extends SpecBase {
+class EligibleControllerSpec extends SpecBase {
 
-  "EligibleGroup Controller" - {
+  "Eligible Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET for a group" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.EligibleGroupController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.EligibleController.onGroupPageLoad().url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[EligibleGroupView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(request, messages(application)).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET for a standalone" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.EligibleController.onStandalonePageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[EligibleStandaloneView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString

@@ -47,7 +47,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.IsGroupOrStandaloneController.onPageLoad(NormalMode)
       }
 
-      "when user answered no on IsIncorporatedUnderUkCompanyActsPage must go to IsGroupOrStandaloneController" in {
+      "when user answered no on IsIncorporatedUnderUkCompanyActsPage must go to ServiceNotSuitableController.onNotInUkPageLoad" in {
         navigator.nextPage(
           IsIncorporatedUnderUkCompanyActsPage,
           NormalMode,
@@ -88,7 +88,7 @@ class NavigatorSpec extends SpecBase {
           )
         ) mustBe routes.StandaloneAnnualRevenuesController.onPageLoad(NormalMode)
       }
-      
+
       "when user answer is missing on IsGroupOrStandalonePage must go to JourneyRecoveryController" in {
         navigator.nextPage(
           IsGroupOrStandalonePage,
@@ -97,7 +97,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
-      "when user answered Yes on GroupAnnualRevenuesPage must go to EligibleGroupController" in {
+      "when user answered Yes on GroupAnnualRevenuesPage must go to EligibleController.onGroupPageLoad" in {
         navigator.nextPage(
           GroupAnnualRevenuesPage,
           NormalMode,
@@ -105,7 +105,7 @@ class NavigatorSpec extends SpecBase {
             "id",
             data = Json.obj(GroupAnnualRevenuesPage.toString -> GroupAnnualRevenues.Yes.toString)
           )
-        ) mustBe routes.EligibleGroupController.onPageLoad()
+        ) mustBe routes.EligibleController.onGroupPageLoad()
       }
 
       "when user answered No on GroupAnnualRevenuesPage must go to GroupBalanceSheetController" in {
@@ -127,7 +127,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
 
-      "when user answered Yes on GroupBalanceSheetPage must go to EligibleGroupController" in {
+      "when user answered Yes on GroupBalanceSheetPage must go to EligibleController.onGroupPageLoad" in {
         navigator.nextPage(
           GroupBalanceSheetPage,
           NormalMode,
@@ -135,10 +135,10 @@ class NavigatorSpec extends SpecBase {
             "id",
             data = Json.obj(GroupBalanceSheetPage.toString -> GroupBalanceSheet.Yes.toString)
           )
-        ) mustBe routes.EligibleGroupController.onPageLoad()
+        ) mustBe routes.EligibleController.onGroupPageLoad()
       }
 
-      "when user answered No on GroupBalanceSheetPage must go to ServiceNotSuitableController" in {
+      "when user answered No on GroupBalanceSheetPage must go to ServiceNotSuitableController.onGroupUnderThresholdPageLoad" in {
         navigator.nextPage(
           GroupBalanceSheetPage,
           NormalMode,

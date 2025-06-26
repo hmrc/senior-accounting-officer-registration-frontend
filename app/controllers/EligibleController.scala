@@ -16,25 +16,31 @@
 
 package controllers
 
-import controllers.actions._
+import controllers.actions.*
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.EligibleGroupView
+import views.html.{EligibleGroupView, EligibleStandaloneView}
 
-class EligibleGroupController @Inject() (
+class EligibleController @Inject()(
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    view: EligibleGroupView
+    groupView: EligibleGroupView,
+    standaloneView: EligibleStandaloneView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(view())
+  def onGroupPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Ok(groupView())
+  }
+
+  def onStandalonePageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Ok(standaloneView())
   }
 
   def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>

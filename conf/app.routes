@@ -39,8 +39,9 @@ POST       /group-consolidated-annual-revenues                      controllers.
 GET        /change-group-consolidated-annual-revenues               controllers.GroupAnnualRevenuesController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-group-consolidated-annual-revenues               controllers.GroupAnnualRevenuesController.onSubmit(mode: Mode = CheckMode)
 
-GET        /company-eligible-group                                  controllers.EligibleGroupController.onPageLoad()
-POST       /company-eligible-group                                  controllers.EligibleGroupController.continue()
+GET        /company-eligible-group                                  controllers.EligibleController.onGroupPageLoad()
+GET        /company-eligible                                        controllers.EligibleController.onStandalonePageLoad()
+POST       /company-eligible                                        controllers.EligibleController.continue()
 
 GET        /eligibility/confirmation                                controllers.EligibilityConfirmationController.onPageLoad()
 
