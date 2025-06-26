@@ -1,0 +1,48 @@
+package models
+
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.OptionValues
+import play.api.libs.json.{JsError, JsString, Json}
+
+class IsGroupOrStandaloneSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+
+  "IsGroupOrStandalone" - {
+
+    "must deserialise valid values" in {
+
+      val gen = Gen.oneOf(IsGroupOrStandalone.values.toSeq)
+
+      forAll(gen) {
+        isGroupOrStandalone =>
+
+          JsString(isGroupOrStandalone.toString).validate[IsGroupOrStandalone].asOpt.value mustEqual isGroupOrStandalone
+      }
+    }
+
+    "must fail to deserialise invalid values" in {
+
+      val gen = arbitrary[String] suchThat (!IsGroupOrStandalone.values.map(_.toString).contains(_))
+
+      forAll(gen) {
+        invalidValue =>
+
+          JsString(invalidValue).validate[IsGroupOrStandalone] mustEqual JsError("error.invalid")
+      }
+    }
+
+    "must serialise" in {
+
+      val gen = Gen.oneOf(IsGroupOrStandalone.values.toSeq)
+
+      forAll(gen) {
+        isGroupOrStandalone =>
+
+          Json.toJson(isGroupOrStandalone) mustEqual JsString(isGroupOrStandalone.toString)
+      }
+    }
+  }
+}

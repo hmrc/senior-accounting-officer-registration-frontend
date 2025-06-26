@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
-import models.*
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import javax.inject.Inject
 
-trait ModelGenerators {
+import forms.mappings.Mappings
+import play.api.data.Form
+import models.IsGroupOrStandalone
 
-  implicit lazy val arbitraryIsGroupOrStandalone: Arbitrary[IsGroupOrStandalone] =
-    Arbitrary {
-      Gen.oneOf(IsGroupOrStandalone.values.toSeq)
-    }
+class IsGroupOrStandaloneFormProvider @Inject() extends Mappings {
 
-  implicit lazy val arbitraryIsIncorporatedUnderUkCompanyActs: Arbitrary[IsIncorporatedUnderUkCompanyActs] =
-    Arbitrary {
-      Gen.oneOf(IsIncorporatedUnderUkCompanyActs.values)
-    }
-
+  def apply(): Form[IsGroupOrStandalone] =
+    Form(
+      "value" -> enumerable[IsGroupOrStandalone]("isGroupOrStandalone.error.required")
+    )
 }

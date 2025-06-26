@@ -58,3 +58,11 @@ eligibility.isIncorporatedUnderUkCompanyActs.heading = Is the company incorporat
 eligibility.isIncorporatedUnderUkCompanyActs.checkYourAnswersLabel = Is the company incorporated in the UK under the Company Acts 2006?
 eligibility.isIncorporatedUnderUkCompanyActs.error.required = Select isIncorporatedUnderUkCompanyActs
 eligibility.isIncorporatedUnderUkCompanyActs.change.hidden = IsIncorporatedUnderUkCompanyActs
+
+isGroupOrStandalone.title = Select if your company is part of a group or standalone
+isGroupOrStandalone.heading = Select if your company is part of a group or standalone
+isGroupOrStandalone.group = Group
+isGroupOrStandalone.standalone = Standalone
+isGroupOrStandalone.checkYourAnswersLabel = Select if your company is part of a group or standalone
+isGroupOrStandalone.error.required = Select isGroupOrStandalone
+isGroupOrStandalone.change.hidden = IsGroupOrStandalone
