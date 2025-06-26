@@ -66,3 +66,6 @@ isGroupOrStandalone.standalone = Standalone
 isGroupOrStandalone.checkYourAnswersLabel = Select if your company is part of a group or standalone
 isGroupOrStandalone.error.required = Select isGroupOrStandalone
 isGroupOrStandalone.change.hidden = IsGroupOrStandalone
+
+serviceNotSuitable.title = serviceNotSuitable
+serviceNotSuitable.heading = serviceNotSuitable

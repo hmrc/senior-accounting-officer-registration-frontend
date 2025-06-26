@@ -24,20 +24,20 @@ sealed trait IsGroupOrStandalone
 
 object IsGroupOrStandalone extends Enumerable.Implicits {
 
-  case object Group extends WithName("group") with IsGroupOrStandalone
+  case object Group      extends WithName("group") with IsGroupOrStandalone
   case object Standalone extends WithName("standalone") with IsGroupOrStandalone
 
   val values: Seq[IsGroupOrStandalone] = Seq(
-    Group, Standalone
+    Group,
+    Standalone
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"isGroupOrStandalone.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
-      )
+  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
+    RadioItem(
+      content = Text(messages(s"isGroupOrStandalone.${value.toString}")),
+      value = Some(value.toString),
+      id = Some(s"value_$index")
+    )
   }
 
   implicit val enumerable: Enumerable[IsGroupOrStandalone] =

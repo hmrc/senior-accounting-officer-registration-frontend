@@ -26,25 +26,24 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object IsGroupOrStandaloneSummary  {
+object IsGroupOrStandaloneSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(IsGroupOrStandalonePage).map {
-      answer =>
+    answers.get(IsGroupOrStandalonePage).map { answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"isGroupOrStandalone.$answer"))
-          )
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"isGroupOrStandalone.$answer"))
         )
+      )
 
-        SummaryListRowViewModel(
-          key     = "isGroupOrStandalone.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.IsGroupOrStandaloneController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("isGroupOrStandalone.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "isGroupOrStandalone.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.IsGroupOrStandaloneController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("isGroupOrStandalone.change.hidden"))
         )
+      )
     }
 }

@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.routes
 import pages.*
 import models.*
+import play.api.libs.json.Json
 
 class NavigatorSpec extends SpecBase {
 
@@ -30,9 +31,40 @@ class NavigatorSpec extends SpecBase {
     "in Normal mode" - {
 
       "must go from a page that doesn't exist in the route map to Index" in {
-
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
+      }
+
+      "when user answered yes on IsIncorporatedUnderUkCompanyActsPage must go to IsGroupOrStandaloneController" in {
+        navigator.nextPage(
+          IsIncorporatedUnderUkCompanyActsPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data =
+              Json.obj(IsIncorporatedUnderUkCompanyActsPage.toString -> IsIncorporatedUnderUkCompanyActs.Yes.toString)
+          )
+        ) mustBe routes.IsGroupOrStandaloneController.onPageLoad(NormalMode)
+      }
+
+      "when user answered no on IsIncorporatedUnderUkCompanyActsPage must go to IsGroupOrStandaloneController" in {
+        navigator.nextPage(
+          IsIncorporatedUnderUkCompanyActsPage,
+          NormalMode,
+          UserAnswers(
+            "id",
+            data =
+              Json.obj(IsIncorporatedUnderUkCompanyActsPage.toString -> IsIncorporatedUnderUkCompanyActs.No.toString)
+          )
+        ) mustBe routes.ServiceNotSuitableController.onPageLoad()
+      }
+
+      "when user answered is missing on IsIncorporatedUnderUkCompanyActsPage must go to JourneyRecoveryController" in {
+        navigator.nextPage(
+          IsIncorporatedUnderUkCompanyActsPage,
+          NormalMode,
+          UserAnswers("id", data = Json.obj())
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
     }
 

@@ -17,7 +17,6 @@
 package navigation
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.Call
 import controllers.routes
 import pages.*
@@ -27,8 +26,15 @@ import models.*
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case IsIncorporatedUnderUkCompanyActsPage => _ => routes.IsGroupOrStandaloneController.onPageLoad(NormalMode)
-    case _                                    => _ => routes.IndexController.onPageLoad()
+    case IsIncorporatedUnderUkCompanyActsPage =>
+      _.get(IsIncorporatedUnderUkCompanyActsPage) match {
+        case Some(IsIncorporatedUnderUkCompanyActs.Yes) =>
+          routes.IsGroupOrStandaloneController.onPageLoad(NormalMode)
+        case Some(IsIncorporatedUnderUkCompanyActs.No) =>
+          routes.ServiceNotSuitableController.onPageLoad()
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
+    case _ => _ => routes.IndexController.onPageLoad()
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
