@@ -32,3 +32,8 @@ GET        /change-activities-company                               controllers.
 POST       /change-activities-company                               controllers.IsGroupOrStandaloneController.onSubmit(mode: Mode = CheckMode)
 
 GET        /service-not-suitable/not-active-in-uk                   controllers.ServiceNotSuitableController.onPageLoad()
+
+GET        /group-consolidated-annual-revenues                      controllers.GroupAnnualRevenuesController.onPageLoad(mode: Mode = NormalMode)
+POST       /group-consolidated-annual-revenues                      controllers.GroupAnnualRevenuesController.onSubmit(mode: Mode = NormalMode)
+GET        /change-group-consolidated-annual-revenues               controllers.GroupAnnualRevenuesController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-group-consolidated-annual-revenues               controllers.GroupAnnualRevenuesController.onSubmit(mode: Mode = CheckMode)

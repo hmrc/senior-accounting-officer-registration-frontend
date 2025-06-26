@@ -24,34 +24,34 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.OptionValues
 import play.api.libs.json.{JsError, JsString, Json}
 
-class IsGroupOrStandaloneSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class GroupAnnualRevenuesSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
-  "IsGroupOrStandalone" - {
+  "GroupAnnualRevenues" - {
 
     "must deserialise valid values" in {
 
-      val gen = Gen.oneOf(IsGroupOrStandalone.values)
+      val gen = Gen.oneOf(GroupAnnualRevenues.values)
 
-      forAll(gen) { isGroupOrStandalone =>
-        JsString(isGroupOrStandalone.toString).validate[IsGroupOrStandalone].asOpt.value mustEqual isGroupOrStandalone
+      forAll(gen) { groupAnnualRevenues =>
+        JsString(groupAnnualRevenues.toString).validate[GroupAnnualRevenues].asOpt.value mustEqual groupAnnualRevenues
       }
     }
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!IsGroupOrStandalone.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!GroupAnnualRevenues.values.map(_.toString).contains(_))
 
       forAll(gen) { invalidValue =>
-        JsString(invalidValue).validate[IsGroupOrStandalone] mustEqual JsError("error.invalid")
+        JsString(invalidValue).validate[GroupAnnualRevenues] mustEqual JsError("error.invalid")
       }
     }
 
     "must serialise" in {
 
-      val gen = Gen.oneOf(IsGroupOrStandalone.values)
+      val gen = Gen.oneOf(GroupAnnualRevenues.values)
 
-      forAll(gen) { isGroupOrStandalone =>
-        Json.toJson(isGroupOrStandalone) mustEqual JsString(isGroupOrStandalone.toString)
+      forAll(gen) { groupAnnualRevenues =>
+        Json.toJson(groupAnnualRevenues) mustEqual JsString(groupAnnualRevenues.toString)
       }
     }
   }

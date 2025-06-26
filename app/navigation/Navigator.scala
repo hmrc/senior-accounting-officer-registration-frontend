@@ -34,6 +34,12 @@ class Navigator @Inject() () {
           routes.ServiceNotSuitableController.onPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }
+    case IsGroupOrStandalonePage =>
+      _.get(IsGroupOrStandalonePage) match {
+        case Some(IsGroupOrStandalone.Group) =>
+          routes.GroupAnnualRevenuesController.onPageLoad(NormalMode)
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
     case _ => _ => routes.IndexController.onPageLoad()
   }
 

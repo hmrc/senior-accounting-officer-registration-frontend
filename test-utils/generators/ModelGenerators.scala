@@ -22,9 +22,14 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryGroupAnnualRevenues: Arbitrary[GroupAnnualRevenues] =
+    Arbitrary {
+      Gen.oneOf(GroupAnnualRevenues.values)
+    }
+
   implicit lazy val arbitraryIsGroupOrStandalone: Arbitrary[IsGroupOrStandalone] =
     Arbitrary {
-      Gen.oneOf(IsGroupOrStandalone.values.toSeq)
+      Gen.oneOf(IsGroupOrStandalone.values)
     }
 
   implicit lazy val arbitraryIsIncorporatedUnderUkCompanyActs: Arbitrary[IsIncorporatedUnderUkCompanyActs] =
