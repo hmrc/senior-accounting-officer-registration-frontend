@@ -21,7 +21,20 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("serviceNotSuitable.standalone.underThreshold.title"))) {
+@layout(pageTitle = titleNoForm(messages("eligibility.serviceNotSuitable.standalone.underThreshold.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("serviceNotSuitable.standalone.UnderThreshold.heading")</h1>
+   <h1 class="govuk-heading-l">@messages("eligibility.serviceNotSuitable.standalone.underThreshold.heading")</h1>
+
+   <p class="govuk-body">@messages("eligibility.serviceNotSuitable.standalone.underThreshold.p1")</p>
+
+   <ul class="govuk-list govuk-list--bullet">
+     <li>@messages("eligibility.serviceNotSuitable.standalone.underThreshold.b1")</li>
+     <li>@messages("eligibility.serviceNotSuitable.standalone.underThreshold.b2")</li>
+   </ul>
+
+   <p class="govuk-body">@messages("eligibility.serviceNotSuitable.standalone.underThreshold.p2")</p>
+   <p class="govuk-body"><a class="govuk-link" href="#">@messages(
+     "eligibility.serviceNotSuitable.standalone.underThreshold.l1"
+   )</a></p>
+
 }
