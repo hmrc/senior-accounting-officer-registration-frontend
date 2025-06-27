@@ -59,13 +59,11 @@ eligibility.isIncorporatedUnderUkCompanyActs.checkYourAnswersLabel = Is the comp
 eligibility.isIncorporatedUnderUkCompanyActs.error.required = Select isIncorporatedUnderUkCompanyActs
 eligibility.isIncorporatedUnderUkCompanyActs.change.hidden = IsIncorporatedUnderUkCompanyActs
 
-isGroupOrStandalone.title = Select if your company is part of a group or standalone
-isGroupOrStandalone.heading = Select if your company is part of a group or standalone
-isGroupOrStandalone.group = Group
-isGroupOrStandalone.standalone = Standalone
-isGroupOrStandalone.checkYourAnswersLabel = Select if your company is part of a group or standalone
-isGroupOrStandalone.error.required = Select isGroupOrStandalone
-isGroupOrStandalone.change.hidden = IsGroupOrStandalone
+eligibility.isGroupOrStandalone.title = Select if your company is part of a group or standalone
+eligibility.isGroupOrStandalone.heading = Select if your company is part of a group or standalone
+eligibility.isGroupOrStandalone.group = Group
+eligibility.isGroupOrStandalone.standalone = Standalone
+eligibility.isGroupOrStandalone.error.required = Select isGroupOrStandalone
 
 serviceNotSuitable.notInUk.title = serviceNotSuitable.notInUk
 serviceNotSuitable.notInUk.heading = serviceNotSuitable.notInUk

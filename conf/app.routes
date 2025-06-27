@@ -26,10 +26,8 @@ POST       /activities-within-the-uk                                controllers.
 GET        /change-activities-within-the-uk                         controllers.IsIncorporatedUnderUkCompanyActsController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-activities-within-the-uk                         controllers.IsIncorporatedUnderUkCompanyActsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /activities-company                                      controllers.IsGroupOrStandaloneController.onPageLoad(mode: Mode = NormalMode)
-POST       /activities-company                                      controllers.IsGroupOrStandaloneController.onSubmit(mode: Mode = NormalMode)
-GET        /change-activities-company                               controllers.IsGroupOrStandaloneController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-activities-company                               controllers.IsGroupOrStandaloneController.onSubmit(mode: Mode = CheckMode)
+GET        /activities-company                                      controllers.IsGroupOrStandaloneController.onPageLoad()
+POST       /activities-company                                      controllers.IsGroupOrStandaloneController.onSubmit()
 
 GET        /service-not-suitable/not-active-in-uk                   controllers.ServiceNotSuitableController.onNotInUkPageLoad()
 GET        /service-not-suitable/under-200-million-2-billion        controllers.ServiceNotSuitableController.onStandaloneUnderThresholdPageLoad()

@@ -16,11 +16,12 @@
 
 package navigation
 
-import javax.inject.{Inject, Singleton}
-import play.api.mvc.Call
 import controllers.routes
-import pages.*
 import models.*
+import pages.*
+import play.api.mvc.Call
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class Navigator @Inject() () {
@@ -29,7 +30,7 @@ class Navigator @Inject() () {
     case IsIncorporatedUnderUkCompanyActsPage =>
       _.get(IsIncorporatedUnderUkCompanyActsPage) match {
         case Some(IsIncorporatedUnderUkCompanyActs.Yes) =>
-          routes.IsGroupOrStandaloneController.onPageLoad(NormalMode)
+          routes.IsGroupOrStandaloneController.onPageLoad()
         case Some(IsIncorporatedUnderUkCompanyActs.No) =>
           routes.ServiceNotSuitableController.onNotInUkPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()

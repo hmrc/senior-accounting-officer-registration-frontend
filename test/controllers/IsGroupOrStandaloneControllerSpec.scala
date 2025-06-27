@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.IsGroupOrStandaloneFormProvider
-import models.{NormalMode, IsGroupOrStandalone, UserAnswers}
+import models.{IsGroupOrStandalone, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -27,7 +27,7 @@ import pages.IsGroupOrStandalonePage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import views.html.IsGroupOrStandaloneView
 
@@ -37,7 +37,7 @@ class IsGroupOrStandaloneControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val isGroupOrStandaloneRoute = routes.IsGroupOrStandaloneController.onPageLoad(NormalMode).url
+  lazy val isGroupOrStandaloneRoute = routes.IsGroupOrStandaloneController.onPageLoad().url
 
   val formProvider = new IsGroupOrStandaloneFormProvider()
   val form         = formProvider()
@@ -56,7 +56,7 @@ class IsGroupOrStandaloneControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[IsGroupOrStandaloneView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form)(request, messages(application)).toString
       }
     }
 
@@ -75,7 +75,7 @@ class IsGroupOrStandaloneControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(IsGroupOrStandalone.values.head), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(IsGroupOrStandalone.values.head))(
           request,
           messages(application)
         ).toString
@@ -124,7 +124,7 @@ class IsGroupOrStandaloneControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm)(request, messages(application)).toString
       }
     }
 
