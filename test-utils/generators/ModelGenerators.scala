@@ -32,11 +32,6 @@ trait ModelGenerators {
       Gen.oneOf(GroupBalanceSheet.values.toSeq)
     }
 
-  implicit lazy val arbitraryGroupAnnualRevenues: Arbitrary[GroupAnnualRevenues] =
-    Arbitrary {
-      Gen.oneOf(GroupAnnualRevenues.values)
-    }
-
   implicit lazy val arbitraryIsGroupOrStandalone: Arbitrary[IsGroupOrStandalone] =
     Arbitrary {
       Gen.oneOf(IsGroupOrStandalone.values)

@@ -75,7 +75,7 @@ class NavigatorSpec extends SpecBase {
             "id",
             data = Json.obj(IsGroupOrStandalonePage.toString -> IsGroupOrStandalone.Group.toString)
           )
-        ) mustBe routes.GroupAnnualRevenuesController.onPageLoad(NormalMode)
+        ) mustBe routes.GroupAnnualRevenuesController.onPageLoad()
       }
 
       "when user answered Standalone on IsGroupOrStandalonePage must go to StandaloneAnnualRevenuesController" in {
@@ -103,7 +103,7 @@ class NavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers(
             "id",
-            data = Json.obj(GroupAnnualRevenuesPage.toString -> GroupAnnualRevenues.Yes.toString)
+            data = Json.obj(GroupAnnualRevenuesPage.toString -> true)
           )
         ) mustBe routes.EligibleController.onGroupPageLoad()
       }
@@ -114,7 +114,7 @@ class NavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers(
             "id",
-            data = Json.obj(GroupAnnualRevenuesPage.toString -> GroupAnnualRevenues.No.toString)
+            data = Json.obj(GroupAnnualRevenuesPage.toString -> false)
           )
         ) mustBe routes.GroupBalanceSheetController.onPageLoad(NormalMode)
       }

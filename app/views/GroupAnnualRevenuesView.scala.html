@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import viewmodels.LegendSize
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -22,11 +24,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("groupAnnualRevenues.title"))) {
+@layout(pageTitle = title(form, messages("eligibility.groupAnnualRevenues.title"))) {
 
-    @formHelper(action = routes.GroupAnnualRevenuesController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.GroupAnnualRevenuesController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
@@ -35,8 +37,8 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("groupAnnualRevenues.heading")).asPageHeading(),
-                items  = GroupAnnualRevenues.options
+                legend = LegendViewModel(messages("eligibility.groupAnnualRevenues.heading")).asPageHeading(LegendSize.Large),
+                items  = HmrcYesNoRadioItems()
             )
         )
 
