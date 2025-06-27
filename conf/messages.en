@@ -78,8 +78,10 @@ eligibility.groupAnnualRevenues.title = Does the group have a total aggregated a
 eligibility.groupAnnualRevenues.heading = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
 eligibility.groupAnnualRevenues.error.required = Select groupAnnualRevenues
 
-eligible.group.title = eligibleGroup
-eligible.group.heading = eligibleGroup
+eligibility.eligible.group.title = You need to register this Group to submit a Senior Accounting Officer notification and certificate
+eligibility.eligible.group.heading = You need to register this Group to submit a Senior Accounting Officer notification and certificate
+eligibility.eligible.group.p1 = You now need to sign in with an organisation or individual Government Gateway user ID associated with your company.
+eligibility.eligible.group.warning = You cannot use an agent Government Gateway user ID to register.
 
 eligibility.eligible.standalone.title = You need to register this company to submit a Senior Accounting Officer notification and certificate
 eligibility.eligible.standalone.heading = You need to register this company to submit a Senior Accounting Officer notification and certificate
