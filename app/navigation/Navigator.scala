@@ -38,16 +38,16 @@ class Navigator @Inject() () {
     case IsGroupOrStandalonePage =>
       _.get(IsGroupOrStandalonePage) match {
         case Some(IsGroupOrStandalone.Group) =>
-          routes.GroupAnnualRevenuesController.onPageLoad(NormalMode)
+          routes.GroupAnnualRevenuesController.onPageLoad()
         case Some(IsGroupOrStandalone.Standalone) =>
           routes.StandaloneAnnualRevenuesController.onPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }
     case GroupAnnualRevenuesPage =>
       _.get(GroupAnnualRevenuesPage) match {
-        case Some(GroupAnnualRevenues.Yes) =>
+        case Some(true) =>
           routes.EligibleController.onGroupPageLoad()
-        case Some(GroupAnnualRevenues.No) =>
+        case Some(false) =>
           routes.GroupBalanceSheetController.onPageLoad(NormalMode)
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }

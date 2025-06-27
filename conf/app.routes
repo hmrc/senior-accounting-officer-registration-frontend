@@ -33,10 +33,8 @@ GET        /service-not-suitable/not-active-in-uk                   controllers.
 GET        /service-not-suitable/under-200-million-2-billion        controllers.ServiceNotSuitableController.onStandaloneUnderThresholdPageLoad()
 GET        /service-not-suitable/under-200-million-2-billion-group  controllers.ServiceNotSuitableController.onGroupUnderThresholdPageLoad()
 
-GET        /group-consolidated-annual-revenues                      controllers.GroupAnnualRevenuesController.onPageLoad(mode: Mode = NormalMode)
-POST       /group-consolidated-annual-revenues                      controllers.GroupAnnualRevenuesController.onSubmit(mode: Mode = NormalMode)
-GET        /change-group-consolidated-annual-revenues               controllers.GroupAnnualRevenuesController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-group-consolidated-annual-revenues               controllers.GroupAnnualRevenuesController.onSubmit(mode: Mode = CheckMode)
+GET        /group-consolidated-annual-revenues                      controllers.GroupAnnualRevenuesController.onPageLoad()
+POST       /group-consolidated-annual-revenues                      controllers.GroupAnnualRevenuesController.onSubmit()
 
 GET        /company-eligible-group                                  controllers.EligibleController.onGroupPageLoad()
 GET        /company-eligible                                        controllers.EligibleController.onStandalonePageLoad()
