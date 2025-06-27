@@ -71,8 +71,13 @@ serviceNotSuitable.notInUk.heading = serviceNotSuitable.notInUk
 serviceNotSuitable.group.underThreshold.title = serviceNotSuitable.group.underThreshold
 serviceNotSuitable.group.underThreshold.heading = serviceNotSuitable.group.underThreshold
 
-serviceNotSuitable.standalone.underThreshold.title = serviceNotSuitable.standalone.underThreshold
-serviceNotSuitable.standalone.underThreshold.heading = serviceNotSuitable.standalone.underThreshold
+eligibility.serviceNotSuitable.standalone.underThreshold.title = Your company does not need to submit a Senior Accounting Officer notification and certificate
+eligibility.serviceNotSuitable.standalone.underThreshold.heading = Your company does not need to submit a Senior Accounting Officer notification and certificate
+eligibility.serviceNotSuitable.standalone.underThreshold.p1 = The SAO requirements apply to UK-incorporated companies or groups that, in the previous financial year, had either:
+eligibility.serviceNotSuitable.standalone.underThreshold.b1 = a turnover of more than £200 million, or
+eligibility.serviceNotSuitable.standalone.underThreshold.b2 = a balance sheet total of more than £2 billion.
+eligibility.serviceNotSuitable.standalone.underThreshold.p2 = If your company meets either of these thresholds in a future financial year, you may need to submit a notification and certificate then.
+eligibility.serviceNotSuitable.standalone.underThreshold.l1 = Find out more about who is eligible for the Senior Accounting Officer notification and certificate service
 
 eligibility.groupAnnualRevenues.title = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
 eligibility.groupAnnualRevenues.heading = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
