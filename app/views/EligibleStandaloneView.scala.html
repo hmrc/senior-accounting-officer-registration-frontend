@@ -17,18 +17,25 @@
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        govukWarningText: GovukWarningText,
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("eligible.standalone.title"))) {
+@layout(pageTitle = titleNoForm(messages("eligibility.eligible.standalone.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("eligible.standalone.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("eligibility.eligible.standalone.heading")</h1>
+
+    <p class="govuk-body">@messages("eligibility.eligible.standalone.p1")</p>
+
+    @govukWarningText(WarningText(content = messages("eligibility.eligible.standalone.warning")))
 
     @formHelper(action = routes.EligibleController.continue()) {
         @govukButton(
-            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+            ButtonViewModel(messages("site.continue"))
+            .withAttribute("id", "submit")
+            .withCssClass("govuk-!-margin-top-5")
         )
     }
 }
