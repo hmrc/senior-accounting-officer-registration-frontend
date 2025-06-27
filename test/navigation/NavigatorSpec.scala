@@ -86,7 +86,7 @@ class NavigatorSpec extends SpecBase {
             "id",
             data = Json.obj(IsGroupOrStandalonePage.toString -> IsGroupOrStandalone.Standalone.toString)
           )
-        ) mustBe routes.StandaloneAnnualRevenuesController.onPageLoad(NormalMode)
+        ) mustBe routes.StandaloneAnnualRevenuesController.onPageLoad()
       }
 
       "when user answer is missing on IsGroupOrStandalonePage must go to JourneyRecoveryController" in {
@@ -163,7 +163,7 @@ class NavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers(
             "id",
-            data = Json.obj(StandaloneAnnualRevenuesPage.toString -> StandaloneAnnualRevenues.Yes.toString)
+            data = Json.obj(StandaloneAnnualRevenuesPage.toString -> true)
           )
         ) mustBe routes.EligibleController.onStandalonePageLoad()
       }
@@ -174,7 +174,7 @@ class NavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers(
             "id",
-            data = Json.obj(StandaloneAnnualRevenuesPage.toString -> StandaloneAnnualRevenues.No.toString)
+            data = Json.obj(StandaloneAnnualRevenuesPage.toString -> false)
           )
         ) mustBe routes.StandaloneBalanceSheetController.onPageLoad(NormalMode)
       }

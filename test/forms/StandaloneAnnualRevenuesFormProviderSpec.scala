@@ -16,24 +16,23 @@
 
 package forms
 
-import forms.behaviours.OptionFieldBehaviours
-import models.StandaloneAnnualRevenues
+import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class StandaloneAnnualRevenuesFormProviderSpec extends OptionFieldBehaviours {
+class StandaloneAnnualRevenuesFormProviderSpec extends BooleanFieldBehaviours {
 
   val form = new StandaloneAnnualRevenuesFormProvider()()
 
   ".value" - {
 
     val fieldName   = "value"
-    val requiredKey = "standaloneAnnualRevenues.error.required"
+    val requiredKey = "eligibility.standaloneAnnualRevenues.error.required"
+    val invalidKey  = "error.boolean"
 
-    behave like optionsField[StandaloneAnnualRevenues](
+    behave like booleanField(
       form,
       fieldName,
-      validValues = StandaloneAnnualRevenues.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(
