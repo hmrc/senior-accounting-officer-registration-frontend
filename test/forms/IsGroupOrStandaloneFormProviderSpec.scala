@@ -27,7 +27,7 @@ class IsGroupOrStandaloneFormProviderSpec extends OptionFieldBehaviours {
   ".value" - {
 
     val fieldName   = "value"
-    val requiredKey = "isGroupOrStandalone.error.required"
+    val requiredKey = "eligibility.isGroupOrStandalone.error.required"
 
     behave like optionsField[IsGroupOrStandalone](
       form,

@@ -18,8 +18,8 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import pages.*
 import models.*
+import pages.*
 import play.api.libs.json.Json
 
 class NavigatorSpec extends SpecBase {
@@ -44,7 +44,7 @@ class NavigatorSpec extends SpecBase {
             data =
               Json.obj(IsIncorporatedUnderUkCompanyActsPage.toString -> IsIncorporatedUnderUkCompanyActs.Yes.toString)
           )
-        ) mustBe routes.IsGroupOrStandaloneController.onPageLoad(NormalMode)
+        ) mustBe routes.IsGroupOrStandaloneController.onPageLoad()
       }
 
       "when user answered no on IsIncorporatedUnderUkCompanyActsPage must go to ServiceNotSuitableController.onNotInUkPageLoad" in {

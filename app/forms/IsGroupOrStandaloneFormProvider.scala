@@ -16,16 +16,16 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
-import play.api.data.Form
 import models.IsGroupOrStandalone
+import play.api.data.Form
+
+import javax.inject.Inject
 
 class IsGroupOrStandaloneFormProvider @Inject() extends Mappings {
 
   def apply(): Form[IsGroupOrStandalone] =
     Form(
-      "value" -> enumerable[IsGroupOrStandalone]("isGroupOrStandalone.error.required")
+      "value" -> enumerable[IsGroupOrStandalone]("eligibility.isGroupOrStandalone.error.required")
     )
 }
