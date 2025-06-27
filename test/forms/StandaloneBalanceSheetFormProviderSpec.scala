@@ -16,24 +16,23 @@
 
 package forms
 
-import forms.behaviours.OptionFieldBehaviours
-import models.StandaloneBalanceSheet
+import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class StandaloneBalanceSheetFormProviderSpec extends OptionFieldBehaviours {
+class StandaloneBalanceSheetFormProviderSpec extends BooleanFieldBehaviours {
 
   val form = new StandaloneBalanceSheetFormProvider()()
 
   ".value" - {
 
     val fieldName   = "value"
-    val requiredKey = "standaloneBalanceSheet.error.required"
+    val requiredKey = "eligibility.standaloneBalanceSheet.error.required"
+    val invalidKey  = "error.boolean"
 
-    behave like optionsField[StandaloneBalanceSheet](
+    behave like booleanField(
       form,
       fieldName,
-      validValues = StandaloneBalanceSheet.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(

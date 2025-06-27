@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import viewmodels.LegendSize
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -22,11 +24,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("standaloneBalanceSheet.title"))) {
+@layout(pageTitle = title(form, messages("eligibility.standaloneBalanceSheet.title"))) {
 
-    @formHelper(action = routes.StandaloneBalanceSheetController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.StandaloneBalanceSheetController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
@@ -35,8 +37,8 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("standaloneBalanceSheet.heading")).asPageHeading(),
-                items  = StandaloneBalanceSheet.options
+                legend = LegendViewModel(messages("eligibility.standaloneBalanceSheet.heading")).asPageHeading(LegendSize.Large),
+                items  = HmrcYesNoRadioItems()
             )
         )
 

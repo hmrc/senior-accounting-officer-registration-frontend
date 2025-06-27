@@ -20,12 +20,11 @@ import javax.inject.Inject
 
 import forms.mappings.Mappings
 import play.api.data.Form
-import models.StandaloneBalanceSheet
 
 class StandaloneBalanceSheetFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[StandaloneBalanceSheet] =
+  def apply(): Form[Boolean] =
     Form(
-      "value" -> enumerable[StandaloneBalanceSheet]("standaloneBalanceSheet.error.required")
+      "value" -> boolean("eligibility.standaloneBalanceSheet.error.required")
     )
 }
