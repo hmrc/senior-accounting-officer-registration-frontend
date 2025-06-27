@@ -22,11 +22,6 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryStandaloneBalanceSheet: Arbitrary[StandaloneBalanceSheet] =
-    Arbitrary {
-      Gen.oneOf(StandaloneBalanceSheet.values.toSeq)
-    }
-
   implicit lazy val arbitraryGroupBalanceSheet: Arbitrary[GroupBalanceSheet] =
     Arbitrary {
       Gen.oneOf(GroupBalanceSheet.values.toSeq)

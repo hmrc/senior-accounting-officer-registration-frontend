@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.StandaloneBalanceSheetFormProvider
-import models.{NormalMode, StandaloneBalanceSheet, UserAnswers}
+import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -27,7 +27,7 @@ import pages.StandaloneBalanceSheetPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import views.html.StandaloneBalanceSheetView
 
@@ -37,7 +37,7 @@ class StandaloneBalanceSheetControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val standaloneBalanceSheetRoute = routes.StandaloneBalanceSheetController.onPageLoad(NormalMode).url
+  lazy val standaloneBalanceSheetRoute = routes.StandaloneBalanceSheetController.onPageLoad().url
 
   val formProvider = new StandaloneBalanceSheetFormProvider()
   val form         = formProvider()
@@ -56,14 +56,14 @@ class StandaloneBalanceSheetControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[StandaloneBalanceSheetView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(StandaloneBalanceSheetPage, StandaloneBalanceSheet.values.head).success.value
+        UserAnswers(userAnswersId).set(StandaloneBalanceSheetPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +75,7 @@ class StandaloneBalanceSheetControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(StandaloneBalanceSheet.values.head), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true))(
           request,
           messages(application)
         ).toString
@@ -99,7 +99,7 @@ class StandaloneBalanceSheetControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, standaloneBalanceSheetRoute)
-            .withFormUrlEncodedBody(("value", StandaloneBalanceSheet.values.head.toString))
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -124,7 +124,7 @@ class StandaloneBalanceSheetControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm)(request, messages(application)).toString
       }
     }
 
@@ -149,7 +149,7 @@ class StandaloneBalanceSheetControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, standaloneBalanceSheetRoute)
-            .withFormUrlEncodedBody(("value", StandaloneBalanceSheet.values.head.toString))
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 

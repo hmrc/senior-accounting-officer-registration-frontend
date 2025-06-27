@@ -16,10 +16,9 @@
 
 package pages
 
-import models.StandaloneBalanceSheet
 import play.api.libs.json.JsPath
 
-case object StandaloneBalanceSheetPage extends QuestionPage[StandaloneBalanceSheet] {
+case object StandaloneBalanceSheetPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 

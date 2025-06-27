@@ -50,7 +50,5 @@ POST       /change-group-consolidated-balance-sheet                 controllers.
 GET        /individual-annual-revenues                              controllers.StandaloneAnnualRevenuesController.onPageLoad()
 POST       /individual-annual-revenues                              controllers.StandaloneAnnualRevenuesController.onSubmit()
 
-GET        /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onPageLoad(mode: Mode = NormalMode)
-POST       /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onSubmit(mode: Mode = NormalMode)
-GET        /change-individual-balance-sheet                         controllers.StandaloneBalanceSheetController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-individual-balance-sheet                         controllers.StandaloneBalanceSheetController.onSubmit(mode: Mode = CheckMode)
+GET        /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onPageLoad()
+POST       /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onSubmit()

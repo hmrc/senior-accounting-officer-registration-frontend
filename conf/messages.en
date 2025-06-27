@@ -99,10 +99,6 @@ eligibility.standaloneAnnualRevenues.title = Does the company have an annual tur
 eligibility.standaloneAnnualRevenues.heading = Does the company have an annual turnover of £200 million or more in the previous financial year?
 eligibility.standaloneAnnualRevenues.error.required = Select standaloneAnnualRevenues
 
-standaloneBalanceSheet.title = Does the company have balance sheet of £2 billion or more in the previous financial year?
-standaloneBalanceSheet.heading = Does the company have balance sheet of £2 billion or more in the previous financial year?
-standaloneBalanceSheet.yes = Yes
-standaloneBalanceSheet.no = No
-standaloneBalanceSheet.checkYourAnswersLabel = Does the company have balance sheet of £2 billion or more in the previous financial year?
-standaloneBalanceSheet.error.required = Select standaloneBalanceSheet
-standaloneBalanceSheet.change.hidden = StandaloneBalanceSheet
+eligibility.standaloneBalanceSheet.title = Does the company have balance sheet of £2 billion or more in the previous financial year?
+eligibility.standaloneBalanceSheet.heading = Does the company have balance sheet of £2 billion or more in the previous financial year?
+eligibility.standaloneBalanceSheet.error.required = Select standaloneBalanceSheet

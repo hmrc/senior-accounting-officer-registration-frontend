@@ -16,10 +16,9 @@
 
 package controllers
 
-import controllers.actions._
+import controllers.actions.*
 import forms.StandaloneBalanceSheetFormProvider
-import javax.inject.Inject
-import models.Mode
+import models.NormalMode
 import navigation.Navigator
 import pages.StandaloneBalanceSheetPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -28,6 +27,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.StandaloneBalanceSheetView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class StandaloneBalanceSheetController @Inject() (
@@ -46,27 +46,26 @@ class StandaloneBalanceSheetController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
 
     val preparedForm = request.userAnswers.get(StandaloneBalanceSheetPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode))
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(StandaloneBalanceSheetPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(StandaloneBalanceSheetPage, mode, updatedAnswers))
-        )
+  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(StandaloneBalanceSheetPage, value))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(StandaloneBalanceSheetPage, NormalMode, updatedAnswers))
+      )
   }
 }
