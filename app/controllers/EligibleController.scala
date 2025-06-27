@@ -17,35 +17,33 @@
 package controllers
 
 import controllers.actions.*
-import models.NormalMode
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IsCompanyEligibleView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.{EligibleGroupView, EligibleStandaloneView}
 
-class IndexController @Inject() (
+class EligibleController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
+    getData: DataRetrievalAction,
+    requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    sessionRepository: SessionRepository,
-    view: IsCompanyEligibleView
-)(using ExecutionContext)
-    extends FrontendBaseController
+    groupView: EligibleGroupView,
+    standaloneView: EligibleStandaloneView
+) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify { implicit request =>
-    sessionRepository.keepAlive(request.userId)
-    Ok(view())
+  def onGroupPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Ok(groupView())
   }
 
-  def continue: Action[AnyContent] = identify async { implicit request =>
-    for {
-      _ <- sessionRepository.keepAlive(request.userId)
-    } yield Redirect(routes.IsIncorporatedUnderUkCompanyActsController.onPageLoad(NormalMode))
+  def onStandalonePageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Ok(standaloneView())
   }
 
+  def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Redirect(routes.EligibilityConfirmationController.onPageLoad())
+  }
 }

@@ -17,7 +17,6 @@
 package navigation
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.Call
 import controllers.routes
 import pages.*
@@ -26,8 +25,56 @@ import models.*
 @Singleton
 class Navigator @Inject() () {
 
-  private val normalRoutes: Page => UserAnswers => Call = { case _ =>
-    _ => routes.IndexController.onPageLoad()
+  private val normalRoutes: Page => UserAnswers => Call = {
+    case IsIncorporatedUnderUkCompanyActsPage =>
+      _.get(IsIncorporatedUnderUkCompanyActsPage) match {
+        case Some(IsIncorporatedUnderUkCompanyActs.Yes) =>
+          routes.IsGroupOrStandaloneController.onPageLoad(NormalMode)
+        case Some(IsIncorporatedUnderUkCompanyActs.No) =>
+          routes.ServiceNotSuitableController.onNotInUkPageLoad()
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
+    case IsGroupOrStandalonePage =>
+      _.get(IsGroupOrStandalonePage) match {
+        case Some(IsGroupOrStandalone.Group) =>
+          routes.GroupAnnualRevenuesController.onPageLoad(NormalMode)
+        case Some(IsGroupOrStandalone.Standalone) =>
+          routes.StandaloneAnnualRevenuesController.onPageLoad(NormalMode)
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
+    case GroupAnnualRevenuesPage =>
+      _.get(GroupAnnualRevenuesPage) match {
+        case Some(GroupAnnualRevenues.Yes) =>
+          routes.EligibleController.onGroupPageLoad()
+        case Some(GroupAnnualRevenues.No) =>
+          routes.GroupBalanceSheetController.onPageLoad(NormalMode)
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
+    case GroupBalanceSheetPage =>
+      _.get(GroupBalanceSheetPage) match {
+        case Some(GroupBalanceSheet.Yes) =>
+          routes.EligibleController.onGroupPageLoad()
+        case Some(GroupBalanceSheet.No) =>
+          routes.ServiceNotSuitableController.onGroupUnderThresholdPageLoad()
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
+    case StandaloneAnnualRevenuesPage =>
+      _.get(StandaloneAnnualRevenuesPage) match {
+        case Some(StandaloneAnnualRevenues.Yes) =>
+          routes.EligibleController.onStandalonePageLoad()
+        case Some(StandaloneAnnualRevenues.No) =>
+          routes.StandaloneBalanceSheetController.onPageLoad(NormalMode)
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
+    case StandaloneBalanceSheetPage =>
+      _.get(StandaloneBalanceSheetPage) match {
+        case Some(StandaloneBalanceSheet.Yes) =>
+          routes.EligibleController.onStandalonePageLoad()
+        case Some(StandaloneBalanceSheet.No) =>
+          routes.ServiceNotSuitableController.onStandaloneUnderThresholdPageLoad()
+        case _ => routes.JourneyRecoveryController.onPageLoad()
+      }
+    case _ => _ => routes.IndexController.onPageLoad()
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = { case _ =>

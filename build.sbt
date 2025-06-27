@@ -29,7 +29,8 @@ lazy val microservice = (project in file("."))
       "views.ViewUtils.*",
       "models.Mode",
       "controllers.routes.*",
-      "viewmodels.govuk.all.*"
+      "viewmodels.govuk.all.*",
+      "viewmodels.*"
     ),
     scalacOptions ++= Seq(
       "-feature",

@@ -20,4 +20,36 @@ import models.*
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 
-trait ModelGenerators {}
+trait ModelGenerators {
+
+  implicit lazy val arbitraryStandaloneBalanceSheet: Arbitrary[StandaloneBalanceSheet] =
+    Arbitrary {
+      Gen.oneOf(StandaloneBalanceSheet.values.toSeq)
+    }
+
+  implicit lazy val arbitraryStandaloneAnnualRevenues: Arbitrary[StandaloneAnnualRevenues] =
+    Arbitrary {
+      Gen.oneOf(StandaloneAnnualRevenues.values.toSeq)
+    }
+
+  implicit lazy val arbitraryGroupBalanceSheet: Arbitrary[GroupBalanceSheet] =
+    Arbitrary {
+      Gen.oneOf(GroupBalanceSheet.values.toSeq)
+    }
+
+  implicit lazy val arbitraryGroupAnnualRevenues: Arbitrary[GroupAnnualRevenues] =
+    Arbitrary {
+      Gen.oneOf(GroupAnnualRevenues.values)
+    }
+
+  implicit lazy val arbitraryIsGroupOrStandalone: Arbitrary[IsGroupOrStandalone] =
+    Arbitrary {
+      Gen.oneOf(IsGroupOrStandalone.values)
+    }
+
+  implicit lazy val arbitraryIsIncorporatedUnderUkCompanyActs: Arbitrary[IsIncorporatedUnderUkCompanyActs] =
+    Arbitrary {
+      Gen.oneOf(IsIncorporatedUnderUkCompanyActs.values)
+    }
+
+}

@@ -1,4 +1,4 @@
-service.name = senior-accounting-officer-registration-frontend
+service.name = Senior Accounting Officer notification and certificate
 
 site.back = Back
 site.remove = Remove
@@ -27,10 +27,6 @@ error.title.prefix = Error:
 error.prefix = Error
 error.summary.title = There is a problem
 
-index.title = senior-accounting-officer-registration-frontend
-index.heading = senior-accounting-officer-registration-frontend
-index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
 checkYourAnswers.title = Check your answers
 checkYourAnswers.heading = Check your answers
 
@@ -47,3 +43,76 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+eligibility.isCompanyEligible.title = Check if your company is eligible
+eligibility.isCompanyEligible.heading = Check if your company is eligible
+eligibility.isCompanyEligible.p1 = To use this service, your company must be incorporated in the UK under the Companies Act 2006.
+eligibility.isCompanyEligible.p2 = In the previous financial year, it must either alone, or when aggregated with other UK companies in the same group, have had:
+eligibility.isCompanyEligible.b1 = a turnover of more than £200 million, and, or
+eligibility.isCompanyEligible.b2 = a balance sheet total of more than £2 billion
+eligibility.isCompanyEligible.p3 = You’ll now answer a few questions to check if your company meets the eligibility rules.
+
+
+eligibility.isIncorporatedUnderUkCompanyActs.title = Is the company incorporated in the UK under the Company Acts 2006?
+eligibility.isIncorporatedUnderUkCompanyActs.heading = Is the company incorporated in the UK under the Company Acts 2006?
+eligibility.isIncorporatedUnderUkCompanyActs.checkYourAnswersLabel = Is the company incorporated in the UK under the Company Acts 2006?
+eligibility.isIncorporatedUnderUkCompanyActs.error.required = Select isIncorporatedUnderUkCompanyActs
+eligibility.isIncorporatedUnderUkCompanyActs.change.hidden = IsIncorporatedUnderUkCompanyActs
+
+isGroupOrStandalone.title = Select if your company is part of a group or standalone
+isGroupOrStandalone.heading = Select if your company is part of a group or standalone
+isGroupOrStandalone.group = Group
+isGroupOrStandalone.standalone = Standalone
+isGroupOrStandalone.checkYourAnswersLabel = Select if your company is part of a group or standalone
+isGroupOrStandalone.error.required = Select isGroupOrStandalone
+isGroupOrStandalone.change.hidden = IsGroupOrStandalone
+
+serviceNotSuitable.notInUk.title = serviceNotSuitable.notInUk
+serviceNotSuitable.notInUk.heading = serviceNotSuitable.notInUk
+
+serviceNotSuitable.group.underThreshold.title = serviceNotSuitable.group.underThreshold
+serviceNotSuitable.group.underThreshold.heading = serviceNotSuitable.group.underThreshold
+
+serviceNotSuitable.standalone.underThreshold.title = serviceNotSuitable.standalone.underThreshold
+serviceNotSuitable.standalone.underThreshold.heading = serviceNotSuitable.standalone.underThreshold
+
+groupAnnualRevenues.title = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
+groupAnnualRevenues.heading = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
+groupAnnualRevenues.yes = Yes
+groupAnnualRevenues.no = No
+groupAnnualRevenues.checkYourAnswersLabel = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
+groupAnnualRevenues.error.required = Select groupAnnualRevenues
+groupAnnualRevenues.change.hidden = GroupAnnualRevenues
+
+eligible.group.title = eligibleGroup
+eligible.group.heading = eligibleGroup
+
+eligible.standalone.title = eligibleStandalone
+eligible.standalone.heading = eligibleStandalone
+
+eligibilityConfirmation.title = eligibilityConfirmation
+eligibilityConfirmation.heading = eligibilityConfirmation
+
+groupBalanceSheet.title = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
+groupBalanceSheet.heading = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
+groupBalanceSheet.yes = Yes
+groupBalanceSheet.no = No
+groupBalanceSheet.checkYourAnswersLabel = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
+groupBalanceSheet.error.required = Select groupBalanceSheet
+groupBalanceSheet.change.hidden = GroupBalanceSheet
+
+standaloneAnnualRevenues.title = Does the company have an annual turnover of £200 million or more in the previous financial year?
+standaloneAnnualRevenues.heading = Does the company have an annual turnover of £200 million or more in the previous financial year?
+standaloneAnnualRevenues.yes = Yes
+standaloneAnnualRevenues.no = No
+standaloneAnnualRevenues.checkYourAnswersLabel = Does the company have an annual turnover of £200 million or more in the previous financial year?
+standaloneAnnualRevenues.error.required = Select standaloneAnnualRevenues
+standaloneAnnualRevenues.change.hidden = StandaloneAnnualRevenues
+
+standaloneBalanceSheet.title = Does the company have balance sheet of £2 billion or more in the previous financial year?
+standaloneBalanceSheet.heading = Does the company have balance sheet of £2 billion or more in the previous financial year?
+standaloneBalanceSheet.yes = Yes
+standaloneBalanceSheet.no = No
+standaloneBalanceSheet.checkYourAnswersLabel = Does the company have balance sheet of £2 billion or more in the previous financial year?
+standaloneBalanceSheet.error.required = Select standaloneBalanceSheet
+standaloneBalanceSheet.change.hidden = StandaloneBalanceSheet
