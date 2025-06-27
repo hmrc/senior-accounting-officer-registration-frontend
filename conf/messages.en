@@ -81,8 +81,10 @@ eligibility.groupAnnualRevenues.error.required = Select groupAnnualRevenues
 eligible.group.title = eligibleGroup
 eligible.group.heading = eligibleGroup
 
-eligible.standalone.title = eligibleStandalone
-eligible.standalone.heading = eligibleStandalone
+eligibility.eligible.standalone.title = You need to register this company to submit a Senior Accounting Officer notification and certificate
+eligibility.eligible.standalone.heading = You need to register this company to submit a Senior Accounting Officer notification and certificate
+eligibility.eligible.standalone.p1 = You now need to sign in with an organisation or individual Government Gateway user ID associated with your company.
+eligibility.eligible.standalone.warning = You cannot use an agent Government Gateway user ID to register.
 
 eligibilityConfirmation.title = eligibilityConfirmation
 eligibilityConfirmation.heading = eligibilityConfirmation
