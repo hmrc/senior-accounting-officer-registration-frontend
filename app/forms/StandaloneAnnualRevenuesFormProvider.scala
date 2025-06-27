@@ -16,16 +16,15 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
 import play.api.data.Form
-import models.StandaloneAnnualRevenues
+
+import javax.inject.Inject
 
 class StandaloneAnnualRevenuesFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[StandaloneAnnualRevenues] =
+  def apply(): Form[Boolean] =
     Form(
-      "value" -> enumerable[StandaloneAnnualRevenues]("standaloneAnnualRevenues.error.required")
+      "value" -> boolean("eligibility.standaloneAnnualRevenues.error.required")
     )
 }

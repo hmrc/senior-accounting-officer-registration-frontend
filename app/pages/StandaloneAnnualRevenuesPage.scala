@@ -16,10 +16,9 @@
 
 package pages
 
-import models.StandaloneAnnualRevenues
 import play.api.libs.json.JsPath
 
-case object StandaloneAnnualRevenuesPage extends QuestionPage[StandaloneAnnualRevenues] {
+case object StandaloneAnnualRevenuesPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 

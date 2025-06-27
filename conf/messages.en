@@ -99,13 +99,9 @@ groupBalanceSheet.checkYourAnswersLabel = Does the group have a consolidated bal
 groupBalanceSheet.error.required = Select groupBalanceSheet
 groupBalanceSheet.change.hidden = GroupBalanceSheet
 
-standaloneAnnualRevenues.title = Does the company have an annual turnover of £200 million or more in the previous financial year?
-standaloneAnnualRevenues.heading = Does the company have an annual turnover of £200 million or more in the previous financial year?
-standaloneAnnualRevenues.yes = Yes
-standaloneAnnualRevenues.no = No
-standaloneAnnualRevenues.checkYourAnswersLabel = Does the company have an annual turnover of £200 million or more in the previous financial year?
-standaloneAnnualRevenues.error.required = Select standaloneAnnualRevenues
-standaloneAnnualRevenues.change.hidden = StandaloneAnnualRevenues
+eligibility.standaloneAnnualRevenues.title = Does the company have an annual turnover of £200 million or more in the previous financial year?
+eligibility.standaloneAnnualRevenues.heading = Does the company have an annual turnover of £200 million or more in the previous financial year?
+eligibility.standaloneAnnualRevenues.error.required = Select standaloneAnnualRevenues
 
 standaloneBalanceSheet.title = Does the company have balance sheet of £2 billion or more in the previous financial year?
 standaloneBalanceSheet.heading = Does the company have balance sheet of £2 billion or more in the previous financial year?
