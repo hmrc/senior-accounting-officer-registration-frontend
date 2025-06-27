@@ -116,7 +116,7 @@ class NavigatorSpec extends SpecBase {
             "id",
             data = Json.obj(GroupAnnualRevenuesPage.toString -> false)
           )
-        ) mustBe routes.GroupBalanceSheetController.onPageLoad(NormalMode)
+        ) mustBe routes.GroupBalanceSheetController.onPageLoad()
       }
 
       "when user answer is missing on GroupAnnualRevenuesPage must go to JourneyRecoveryController" in {
@@ -133,7 +133,7 @@ class NavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers(
             "id",
-            data = Json.obj(GroupBalanceSheetPage.toString -> GroupBalanceSheet.Yes.toString)
+            data = Json.obj(GroupBalanceSheetPage.toString -> true)
           )
         ) mustBe routes.EligibleController.onGroupPageLoad()
       }
@@ -144,7 +144,7 @@ class NavigatorSpec extends SpecBase {
           NormalMode,
           UserAnswers(
             "id",
-            data = Json.obj(GroupBalanceSheetPage.toString -> GroupBalanceSheet.No.toString)
+            data = Json.obj(GroupBalanceSheetPage.toString -> false)
           )
         ) mustBe routes.ServiceNotSuitableController.onGroupUnderThresholdPageLoad()
       }

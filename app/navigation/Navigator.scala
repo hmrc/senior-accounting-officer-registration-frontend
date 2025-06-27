@@ -48,14 +48,14 @@ class Navigator @Inject() () {
         case Some(true) =>
           routes.EligibleController.onGroupPageLoad()
         case Some(false) =>
-          routes.GroupBalanceSheetController.onPageLoad(NormalMode)
+          routes.GroupBalanceSheetController.onPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }
     case GroupBalanceSheetPage =>
       _.get(GroupBalanceSheetPage) match {
-        case Some(GroupBalanceSheet.Yes) =>
+        case Some(true) =>
           routes.EligibleController.onGroupPageLoad()
-        case Some(GroupBalanceSheet.No) =>
+        case Some(false) =>
           routes.ServiceNotSuitableController.onGroupUnderThresholdPageLoad()
         case _ => routes.JourneyRecoveryController.onPageLoad()
       }

@@ -20,12 +20,11 @@ import javax.inject.Inject
 
 import forms.mappings.Mappings
 import play.api.data.Form
-import models.GroupBalanceSheet
 
 class GroupBalanceSheetFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[GroupBalanceSheet] =
+  def apply(): Form[Boolean] =
     Form(
-      "value" -> enumerable[GroupBalanceSheet]("groupBalanceSheet.error.required")
+      "value" -> boolean("eligibility.groupBalanceSheet.error.required")
     )
 }
