@@ -16,10 +16,9 @@
 
 package pages
 
-import models.GroupBalanceSheet
 import play.api.libs.json.JsPath
 
-case object GroupBalanceSheetPage extends QuestionPage[GroupBalanceSheet] {
+case object GroupBalanceSheetPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 

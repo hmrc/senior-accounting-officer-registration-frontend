@@ -16,24 +16,23 @@
 
 package forms
 
-import forms.behaviours.OptionFieldBehaviours
-import models.GroupBalanceSheet
+import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class GroupBalanceSheetFormProviderSpec extends OptionFieldBehaviours {
+class GroupBalanceSheetFormProviderSpec extends BooleanFieldBehaviours {
 
   val form = new GroupBalanceSheetFormProvider()()
 
   ".value" - {
 
     val fieldName   = "value"
-    val requiredKey = "groupBalanceSheet.error.required"
+    val requiredKey = "eligibility.groupBalanceSheet.error.required"
+    val invalidKey  = "error.boolean"
 
-    behave like optionsField[GroupBalanceSheet](
+    behave like booleanField(
       form,
       fieldName,
-      validValues = GroupBalanceSheet.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(
