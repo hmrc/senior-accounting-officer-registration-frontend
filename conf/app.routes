@@ -41,6 +41,7 @@ GET        /company-eligible                                        controllers.
 POST       /company-eligible                                        controllers.EligibleController.continue()
 
 GET        /eligibility/confirmation                                controllers.EligibilityConfirmationController.onPageLoad()
+POST       /eligibility/confirmation                                controllers.EligibilityConfirmationController.continue()
 
 GET        /group-consolidated-balance-sheet                        controllers.GroupBalanceSheetController.onPageLoad()
 POST       /group-consolidated-balance-sheet                        controllers.GroupBalanceSheetController.onSubmit()

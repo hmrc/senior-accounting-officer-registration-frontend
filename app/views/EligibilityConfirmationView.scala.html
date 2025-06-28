@@ -16,12 +16,24 @@
 
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        govukPanel: GovukPanel,
+        formHelper: FormWithCSRF
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("eligibilityConfirmation.title"))) {
+@layout(pageTitle = titleNoForm(messages("eligibility.confirmation.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("eligibilityConfirmation.heading")</h1>
+    @govukPanel(Panel(
+       title= messages("eligibility.confirmation.heading")
+    ))
+
+    <p class="govuk-body">@messages("eligibility.confirmation.p1")</p>
+
+    @formHelper(action = routes.EligibilityConfirmationController.continue()) {
+        @govukButton(
+            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+        )
+    }
 }

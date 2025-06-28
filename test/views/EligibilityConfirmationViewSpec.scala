@@ -22,59 +22,42 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.test.FakeRequest
-import views.html.IsCompanyEligibleView
+import views.html.EligibilityConfirmationView
+
 import scala.jdk.CollectionConverters.*
 
-class IsCompanyEligibleViewSpec extends SpecBase with GuiceOneAppPerSuite {
+class EligibilityConfirmationViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
-  val SUT: IsCompanyEligibleView = app.injector.instanceOf[IsCompanyEligibleView]
-  given request: Request[_]      = FakeRequest()
-  given Messages                 = app.injector.instanceOf[MessagesApi].preferred(request)
+  val SUT: EligibilityConfirmationView = app.injector.instanceOf[EligibilityConfirmationView]
+  given request: Request[_]            = FakeRequest()
+  given Messages                       = app.injector.instanceOf[MessagesApi].preferred(request)
 
-  "IsCompanyEligibleView" - {
+  "EligibilityConfirmationView" - {
     "must generate a view" - {
       val doc = Jsoup.parse(SUT().toString)
 
       "with the correct heading" in {
         val mainContent = doc.getElementById("main-content")
 
-        val h1 = mainContent.getElementsByTag("h1")
+        val confirmationPanel = mainContent.getElementsByClass("govuk-panel govuk-panel--confirmation")
+        confirmationPanel.size() mustBe 1
+        val h1 = confirmationPanel.get(0).getElementsByTag("h1")
         h1.size() mustBe 1
 
-        h1.get(0).text() mustBe "Check if your company is eligible"
+        h1.get(0).text() mustBe "Eligibility complete"
       }
 
       "with the correct paragraphs" in {
         val mainContent = doc.getElementById("main-content")
 
         val paragraphs = mainContent.getElementsByTag("p")
-        paragraphs.size() mustBe 4
+        paragraphs.size() mustBe 2
         List.from(paragraphs.iterator().asScala).foreach(p => p.attr("class") mustBe "govuk-body")
 
         paragraphs
           .get(0)
-          .text() mustBe "To use this service, your company must be incorporated in the UK under the Companies Act 2006."
-        paragraphs
-          .get(1)
-          .text() mustBe "In the previous financial year, it must either alone, or when aggregated with other UK companies in the same group, have had:"
-        paragraphs
-          .get(2)
-          .text() mustBe "You’ll now answer a few questions to check if your company meets the eligibility rules."
-        paragraphs.get(3).text() mustBe "Is this page not working properly? (opens in new tab)"
-      }
-
-      "with the correct bullet points" in {
-        val mainContent = doc.getElementById("main-content")
-
-        val ul = mainContent.getElementsByTag("ul")
-        ul.size() mustBe 1
-        ul.attr("class") mustBe "govuk-list govuk-list--bullet"
-
-        val li = ul.get(0).getElementsByTag("li")
-        li.size() mustBe 2
-
-        li.get(0).text() mustBe "a turnover of more than £200 million, and, or"
-        li.get(1).text() mustBe "a balance sheet total of more than £2 billion"
+          .text() mustBe "You now need to sign in with an organisation Government Gateway user ID associated with the filing member."
+        paragraphs.get(1).text() mustBe "Is this page not working properly? (opens in new tab)"
       }
 
       "must have a continue button" in {

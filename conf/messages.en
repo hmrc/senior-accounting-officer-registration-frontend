@@ -98,8 +98,9 @@ eligibility.eligible.standalone.heading = You need to register this company to s
 eligibility.eligible.standalone.p1 = You now need to sign in with an organisation or individual Government Gateway user ID associated with your company.
 eligibility.eligible.standalone.warning = You cannot use an agent Government Gateway user ID to register.
 
-eligibilityConfirmation.title = eligibilityConfirmation
-eligibilityConfirmation.heading = eligibilityConfirmation
+eligibility.confirmation.title = Eligibility complete
+eligibility.confirmation.heading = Eligibility complete
+eligibility.confirmation.p1 = You now need to sign in with an organisation Government Gateway user ID associated with the filing member.
 
 eligibility.groupBalanceSheet.title = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
 eligibility.groupBalanceSheet.heading = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
