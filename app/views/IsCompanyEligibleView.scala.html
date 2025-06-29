@@ -14,26 +14,53 @@
  * limitations under the License.
  *@
 
+@import views.html.components._
+
 @this(
         layout: templates.Layout,
+        heading: heading,
+        p: paragraphBody,
+        bulletList: bulletList,
+        govukBreadcrumbs: GovukBreadcrumbs,
         formHelper: FormWithCSRF,
         govukButton: GovukButton
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(
 
-@layout(pageTitle = titleNoForm(messages("eligibility.isCompanyEligible.title"))) {
 
-    <h1 class="govuk-heading-l">@messages("eligibility.isCompanyEligible.heading")</h1>
+)(implicit request: Request[_], messages: Messages)
 
-    <p class="govuk-body">@messages("eligibility.isCompanyEligible.p1")</p>
-    <p class="govuk-body">@messages("eligibility.isCompanyEligible.p2")</p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("eligibility.isCompanyEligible.b1")</li>
-        <li>@messages("eligibility.isCompanyEligible.b2")</li>
-    </ul>
+@layout(pageTitle = titleNoForm(messages("eligibility.isCompanyEligible.title")),
+            showBackLink = false,
+            breadcrumbs = Some(
+                govukBreadcrumbs(Breadcrumbs(
+                    items = Seq(
+                        BreadcrumbsItem(
+                            content = Text("Home"),
+                            href = Some("#")
+                        ),
+                        BreadcrumbsItem(
+                            content = Text("Eligibility"),
+                            href = Some("#")
+                        )
+                    )
+                )
+            )
+        )
+) {
 
-    <p class="govuk-body">@messages("eligibility.isCompanyEligible.p3")</p>
+    @heading(messages("eligibility.isCompanyEligible.heading"), classes = "govuk-heading-l")
+
+    @p(messages("eligibility.isCompanyEligible.p1"))
+    @p(messages("eligibility.isCompanyEligible.p2"))
+
+    @bulletList(items = List(
+        Html(messages("eligibility.isCompanyEligible.b1")),
+        Html(messages("eligibility.isCompanyEligible.b2"))
+    ))
+
+    @p(messages("eligibility.isCompanyEligible.p3"))
 
     @formHelper(action = routes.IndexController.continue()) {
         @govukButton(

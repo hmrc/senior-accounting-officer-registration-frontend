@@ -29,7 +29,13 @@
     hmrcStandardPage: HmrcStandardPage
 )
 
-@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = true, showHmrcBanner: Boolean = false)(contentBlock: Html)(implicit rh: RequestHeader, messages: Messages)
+@(pageTitle: String,
+  showBackLink: Boolean = true,
+  timeout: Boolean = true,
+  breadcrumbs: Option[Html] = None,
+  showSignOut: Boolean = true,
+  showHmrcBanner: Boolean = false
+)(contentBlock: Html)(implicit rh: RequestHeader, messages: Messages)
 
 @head = {
 
@@ -60,7 +66,8 @@
 @hmrcStandardPage(HmrcStandardPageParams(
     pageTitle = Some(pageTitle),
     templateOverrides = TemplateOverrides(
-        additionalHeadBlock = Some(head)
+        additionalHeadBlock = Some(head),
+        beforeContentBlock = breadcrumbs
     ),
     serviceURLs = ServiceURLs(
         serviceUrl = Some(routes.IndexController.onPageLoad().url),
