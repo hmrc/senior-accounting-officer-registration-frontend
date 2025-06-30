@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.StandaloneBalanceSheetFormProvider
-import models.{NormalMode, UserAnswers}
+import models.UserAnswers
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
