@@ -100,6 +100,7 @@ eligibility.eligible.standalone.warning = You cannot use an agent Government Gat
 
 eligibility.confirmation.title = Eligibility complete
 eligibility.confirmation.heading = Eligibility complete
+eligibility.confirmation.panel.p1 = You can now register
 eligibility.confirmation.p1 = You now need to sign in with an organisation Government Gateway user ID associated with the filing member.
 
 eligibility.groupBalanceSheet.title = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?

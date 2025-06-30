@@ -26,7 +26,8 @@
 @layout(pageTitle = titleNoForm(messages("eligibility.confirmation.title"))) {
 
     @govukPanel(Panel(
-       title= messages("eligibility.confirmation.heading")
+       title= messages("eligibility.confirmation.heading"),
+       content= messages("eligibility.confirmation.panel.p1")
     ))
 
     <p class="govuk-body">@messages("eligibility.confirmation.p1")</p>

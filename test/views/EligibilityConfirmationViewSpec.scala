@@ -45,6 +45,11 @@ class EligibilityConfirmationViewSpec extends SpecBase with GuiceOneAppPerSuite 
         h1.size() mustBe 1
 
         h1.get(0).text() mustBe "Eligibility complete"
+
+        val p1 = confirmationPanel.get(0).select("div.govuk-panel__body")
+        p1.size() mustBe 1
+
+        p1.text() mustBe "You can now register"
       }
 
       "with the correct paragraphs" in {
