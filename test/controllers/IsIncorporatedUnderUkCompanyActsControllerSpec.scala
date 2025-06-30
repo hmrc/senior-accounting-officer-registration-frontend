@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.IsIncorporatedUnderUkCompanyActsFormProvider
-import models.{NormalMode, IsIncorporatedUnderUkCompanyActs, UserAnswers}
+import models.{IsIncorporatedUnderUkCompanyActs, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -38,7 +38,7 @@ class IsIncorporatedUnderUkCompanyActsControllerSpec extends SpecBase with Mocki
   def onwardRoute = Call("GET", "/foo")
 
   lazy val isIncorporatedUnderUkCompanyActsRoute =
-    routes.IsIncorporatedUnderUkCompanyActsController.onPageLoad(NormalMode).url
+    routes.IsIncorporatedUnderUkCompanyActsController.onPageLoad().url
 
   val formProvider = new IsIncorporatedUnderUkCompanyActsFormProvider()
   val form         = formProvider()
@@ -57,7 +57,7 @@ class IsIncorporatedUnderUkCompanyActsControllerSpec extends SpecBase with Mocki
         val view = application.injector.instanceOf[IsIncorporatedUnderUkCompanyActsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form)(request, messages(application)).toString
       }
     }
 
@@ -73,7 +73,7 @@ class IsIncorporatedUnderUkCompanyActsControllerSpec extends SpecBase with Mocki
         val view = application.injector.instanceOf[IsIncorporatedUnderUkCompanyActsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form)(request, messages(application)).toString
       }
     }
 
@@ -94,7 +94,7 @@ class IsIncorporatedUnderUkCompanyActsControllerSpec extends SpecBase with Mocki
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(IsIncorporatedUnderUkCompanyActs.values.head), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(IsIncorporatedUnderUkCompanyActs.values.head))(
           request,
           messages(application)
         ).toString
@@ -169,7 +169,7 @@ class IsIncorporatedUnderUkCompanyActsControllerSpec extends SpecBase with Mocki
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm)(request, messages(application)).toString
       }
     }
 
