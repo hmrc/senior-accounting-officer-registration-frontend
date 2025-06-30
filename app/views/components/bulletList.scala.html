@@ -20,10 +20,10 @@
 
 <ul class='govuk-list govuk-list--bullet@additionalListClasses.fold("")(cls => s" ${cls}")'>
     @items.map { item =>
-    @itemClasses.fold {
-    <li>@item</li>
-    } { cls =>
-    <li class="@cls">@item</li>
-    }
+        @itemClasses.fold {
+            <li>@item</li>
+        } { cls =>
+                <li class="@cls">@item</li>
+        }
     }
 </ul>

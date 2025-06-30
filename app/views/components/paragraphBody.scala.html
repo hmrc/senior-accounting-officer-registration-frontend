@@ -16,8 +16,8 @@
 
 @this()
 
-@(message: String, classes: String = "govuk-body", id: Option[String] = None, isBold: Boolean = false)
+@(message: String, id: Option[String] = None)
 
-<p class="@classes" @id.map{id => id="@id" }>
-    @{ if(isBold) { <strong> {Html(message)} </strong>} else Html(message)}
+<p class="govuk-body" @id.map{id => id="@id" }>
+    @{Html(message)}
 </p>

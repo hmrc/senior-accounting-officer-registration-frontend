@@ -18,7 +18,7 @@
 
 @this(
         layout: templates.Layout,
-        heading: heading,
+        heading: headingH1L,
         p: paragraphBody,
         bulletList: bulletList,
         govukBreadcrumbs: GovukBreadcrumbs,
@@ -50,7 +50,7 @@
         )
 ) {
 
-    @heading(messages("eligibility.isCompanyEligible.heading"), classes = "govuk-heading-l")
+    @heading(messages("eligibility.isCompanyEligible.heading"))
 
     @p(messages("eligibility.isCompanyEligible.p1"))
     @p(messages("eligibility.isCompanyEligible.p2"))
