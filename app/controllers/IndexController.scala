@@ -45,7 +45,7 @@ class IndexController @Inject() (
   def continue: Action[AnyContent] = identify async { implicit request =>
     for {
       _ <- sessionRepository.keepAlive(request.userId)
-    } yield Redirect(routes.IsIncorporatedUnderUkCompanyActsController.onPageLoad(NormalMode))
+    } yield Redirect(routes.IsIncorporatedUnderUkCompanyActsController.onPageLoad())
   }
 
 }

@@ -21,10 +21,9 @@ GET         /unauthorised                                           controllers.
 GET         /                                                       controllers.IndexController.onPageLoad()
 POST        /                                                       controllers.IndexController.continue()
 
-GET        /activities-within-the-uk                                controllers.IsIncorporatedUnderUkCompanyActsController.onPageLoad(mode: Mode = NormalMode)
-POST       /activities-within-the-uk                                controllers.IsIncorporatedUnderUkCompanyActsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-activities-within-the-uk                         controllers.IsIncorporatedUnderUkCompanyActsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-activities-within-the-uk                         controllers.IsIncorporatedUnderUkCompanyActsController.onSubmit(mode: Mode = CheckMode)
+GET        /activities-within-the-uk                                controllers.IsIncorporatedUnderUkCompanyActsController.onPageLoad()
+POST       /activities-within-the-uk                                controllers.IsIncorporatedUnderUkCompanyActsController.onSubmit()
+
 
 GET        /activities-company                                      controllers.IsGroupOrStandaloneController.onPageLoad()
 POST       /activities-company                                      controllers.IsGroupOrStandaloneController.onSubmit()

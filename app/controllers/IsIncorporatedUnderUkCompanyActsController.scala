@@ -20,7 +20,7 @@ import controllers.actions.*
 import forms.IsIncorporatedUnderUkCompanyActsFormProvider
 
 import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.{NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.IsIncorporatedUnderUkCompanyActsPage
 import play.api.Logger
@@ -47,21 +47,21 @@ class IsIncorporatedUnderUkCompanyActsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
 
     val preparedForm = request.userAnswers.flatMap(_.get(IsIncorporatedUnderUkCompanyActsPage)) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode))
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+  def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           val logger = Logger(this.getClass).logger
           logger.warn(s"value ${value}")
@@ -71,7 +71,7 @@ class IsIncorporatedUnderUkCompanyActsController @Inject() (
             _ = logger.warn(s"updatedAnswers ${updatedAnswers}")
             _ <- sessionRepository.set(updatedAnswers)
             _ = logger.warn(s"updatedAnswers updated")
-          } yield Redirect(navigator.nextPage(IsIncorporatedUnderUkCompanyActsPage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(IsIncorporatedUnderUkCompanyActsPage, NormalMode, updatedAnswers))
       )
   }
 }
