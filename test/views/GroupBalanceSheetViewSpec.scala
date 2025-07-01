@@ -118,7 +118,9 @@ class GroupBalanceSheetViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
         val errorMessages = errorSummary.get(0).select("ul.govuk-list.govuk-error-summary__list li")
         errorMessages.size() mustBe 1
-        errorMessages.get(0).text() mustBe "Select groupBalanceSheet"
+        errorMessages
+          .get(0)
+          .text() mustBe "Select yes if your group has a balance sheet of £2 billion or more in its previous financial year"
       }
     }
   }

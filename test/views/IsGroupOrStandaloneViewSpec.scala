@@ -117,7 +117,7 @@ class IsGroupOrStandaloneViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
         val errorMessages = errorSummary.get(0).select("ul.govuk-list.govuk-error-summary__list li")
         errorMessages.size() mustBe 1
-        errorMessages.get(0).text() mustBe "Select isGroupOrStandalone"
+        errorMessages.get(0).text() mustBe "Select if your company is part of a group or standalone company"
       }
     }
   }

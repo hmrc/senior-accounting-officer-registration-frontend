@@ -118,7 +118,9 @@ class IsCompanyIncorporatedInUKViewSpec extends SpecBase with GuiceOneAppPerSuit
 
         val errorMessages = errorSummary.get(0).select("ul.govuk-list.govuk-error-summary__list li")
         errorMessages.size() mustBe 1
-        errorMessages.get(0).text() mustBe "Select isIncorporatedUnderUkCompanyActs"
+        errorMessages
+          .get(0)
+          .text() mustBe "Select yes if the company is incorporated in the UK under the Company Act 2006"
       }
     }
   }
