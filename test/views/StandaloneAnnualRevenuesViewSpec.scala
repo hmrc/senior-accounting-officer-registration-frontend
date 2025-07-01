@@ -117,7 +117,9 @@ class StandaloneAnnualRevenuesViewSpec extends SpecBase with GuiceOneAppPerSuite
 
         val errorMessages = errorSummary.get(0).select("ul.govuk-list.govuk-error-summary__list li")
         errorMessages.size() mustBe 1
-        errorMessages.get(0).text() mustBe "Select standaloneAnnualRevenues"
+        errorMessages
+          .get(0)
+          .text() mustBe "Select yes if your company has an annual turnover of £200 million or more in its previous financial year"
       }
     }
   }

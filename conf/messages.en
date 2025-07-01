@@ -56,14 +56,13 @@ eligibility.isCompanyEligible.p3 = You’ll now answer a few questions to check 
 eligibility.isIncorporatedUnderUkCompanyActs.title = Is the company incorporated in the UK under the Company Acts 2006?
 eligibility.isIncorporatedUnderUkCompanyActs.heading = Is the company incorporated in the UK under the Company Acts 2006?
 eligibility.isIncorporatedUnderUkCompanyActs.checkYourAnswersLabel = Is the company incorporated in the UK under the Company Acts 2006?
-eligibility.isIncorporatedUnderUkCompanyActs.error.required = Select isIncorporatedUnderUkCompanyActs
-eligibility.isIncorporatedUnderUkCompanyActs.change.hidden = IsIncorporatedUnderUkCompanyActs
+eligibility.isIncorporatedUnderUkCompanyActs.error.required = Select yes if the company is incorporated in the UK under the Company Act 2006
 
 eligibility.isGroupOrStandalone.title = Select if your company is part of a group or standalone
 eligibility.isGroupOrStandalone.heading = Select if your company is part of a group or standalone
 eligibility.isGroupOrStandalone.group = Group
 eligibility.isGroupOrStandalone.standalone = Standalone
-eligibility.isGroupOrStandalone.error.required = Select isGroupOrStandalone
+eligibility.isGroupOrStandalone.error.required = Select if your company is part of a group or standalone company
 
 serviceNotSuitable.notInUk.title = serviceNotSuitable.notInUk
 serviceNotSuitable.notInUk.heading = serviceNotSuitable.notInUk
@@ -86,7 +85,7 @@ eligibility.serviceNotSuitable.standalone.underThreshold.l1 = Find out more abou
 
 eligibility.groupAnnualRevenues.title = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
 eligibility.groupAnnualRevenues.heading = Does the group have a total aggregated annual turnover of £200 million or more in its previous financial year?
-eligibility.groupAnnualRevenues.error.required = Select groupAnnualRevenues
+eligibility.groupAnnualRevenues.error.required = Select yes if your group has an annual turnover of £200 million or more in its previous financial year
 
 eligibility.eligible.group.title = You need to register this Group to submit a Senior Accounting Officer notification and certificate
 eligibility.eligible.group.heading = You need to register this Group to submit a Senior Accounting Officer notification and certificate
@@ -105,12 +104,12 @@ eligibility.confirmation.p1 = You now need to sign in with an organisation Gover
 
 eligibility.groupBalanceSheet.title = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
 eligibility.groupBalanceSheet.heading = Does the group have a consolidated balance sheet of £2 billion or more in its previous financial year?
-eligibility.groupBalanceSheet.error.required = Select groupBalanceSheet
+eligibility.groupBalanceSheet.error.required = Select yes if your group has a balance sheet of £2 billion or more in its previous financial year
 
 eligibility.standaloneAnnualRevenues.title = Does the company have an annual turnover of £200 million or more in the previous financial year?
 eligibility.standaloneAnnualRevenues.heading = Does the company have an annual turnover of £200 million or more in the previous financial year?
-eligibility.standaloneAnnualRevenues.error.required = Select standaloneAnnualRevenues
+eligibility.standaloneAnnualRevenues.error.required = Select yes if your company has an annual turnover of £200 million or more in its previous financial year
 
 eligibility.standaloneBalanceSheet.title = Does the company have balance sheet of £2 billion or more in the previous financial year?
 eligibility.standaloneBalanceSheet.heading = Does the company have balance sheet of £2 billion or more in the previous financial year?
-eligibility.standaloneBalanceSheet.error.required = Select standaloneBalanceSheet
+eligibility.standaloneBalanceSheet.error.required = Select yes if your company has a balance sheet of £2 billion or more in its previous financial year

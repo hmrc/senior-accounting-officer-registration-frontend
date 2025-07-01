@@ -118,7 +118,9 @@ class StandaloneBalanceSheetViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
         val errorMessages = errorSummary.get(0).select("ul.govuk-list.govuk-error-summary__list li")
         errorMessages.size() mustBe 1
-        errorMessages.get(0).text() mustBe "Select standaloneBalanceSheet"
+        errorMessages
+          .get(0)
+          .text() mustBe "Select yes if your company has a balance sheet of £2 billion or more in its previous financial year"
       }
     }
   }
