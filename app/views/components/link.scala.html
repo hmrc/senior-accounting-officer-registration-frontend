@@ -43,16 +43,16 @@
 
 @linkStyles = @{
   style match {
-    case Some(s) => Html("style=" + s)
-    case None => Html("")
+   case Some(s) => Html("style=" + s)
+   case None => Html("")
   }
 }
 
 @targetAttrs = @{
-  target.map {
-    t =>
-       val rel = if (t == "_blank") s""" rel="noopener noreferrer"""" else ""Html(s"""target="$t"$rel""")
-  }
+target.map { t =>
+    val rel = if (t == "_blank") s""" rel="noopener noreferrer"""" else ""
+        Html(s"""target="$t"$rel""")
+}
 }
 
 @* The <a> tag is split on purpose - to avoid inline-block whitespace problem *@
