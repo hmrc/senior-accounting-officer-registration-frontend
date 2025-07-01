@@ -14,8 +14,12 @@
  * limitations under the License.
  *@
 
+@import views.html.components._
+
 @this(
         layout: templates.Layout,
+        h1l: headingH1L,
+        p: paragraphBody,
         govukButton: GovukButton
 )
 
@@ -23,5 +27,10 @@
 
 @layout(pageTitle = titleNoForm(messages("serviceNotSuitable.notInUk.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("serviceNotSuitable.notInUk.heading")</h1>
+    @h1l(messages("serviceNotSuitable.notInUk.heading"))
+    @p(messages("serviceNotSuitable.notInUk.p1"))
+    @p(messages("serviceNotSuitable.notInUk.p2"))
+    <p class="govuk-body"><a class="govuk-link" href="#">@messages("serviceNotSuitable.notInUk.l1")</a></p>
+
+
 }

@@ -64,8 +64,11 @@ eligibility.isGroupOrStandalone.group = Group
 eligibility.isGroupOrStandalone.standalone = Standalone
 eligibility.isGroupOrStandalone.error.required = Select if your company is part of a group or standalone company
 
-serviceNotSuitable.notInUk.title = serviceNotSuitable.notInUk
-serviceNotSuitable.notInUk.heading = serviceNotSuitable.notInUk
+serviceNotSuitable.notInUk.title = Your company does not need to submit a Senior Accounting Officer notification and certificate in the UK
+serviceNotSuitable.notInUk.heading = Your company does not need to submit a Senior Accounting Officer notification and certificate in the UK
+serviceNotSuitable.notInUk.p1 = companies that are incorporated in the UK under the Companies Act 2006 need to submit a notification and certificate.
+serviceNotSuitable.notInUk.p2 = If you are part of a group that includes companies outside the UK, you should check if any of them have a liability in the UK.
+serviceNotSuitable.notInUk.l1 = Find out more about who is eligible for this service
 
 eligibility.serviceNotSuitable.group.underThreshold.title = Your group does not need to submit a Senior Accounting Officer notification and certificate
 eligibility.serviceNotSuitable.group.underThreshold.heading = Your group does not need to submit a Senior Accounting Officer notification and certificate
