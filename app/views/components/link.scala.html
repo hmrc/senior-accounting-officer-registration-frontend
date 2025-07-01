@@ -17,42 +17,42 @@
 @this()
 
 @(
-text: String,
-call: Call,
-target: Option[String] = None,
-id: Option[String] = None,
-classes: Option[String] = None,
-textHidden: Option[String] = None,
-style: Option[String] = None,
-fullStop: Boolean = false
+  text: String,
+  call: Call,
+  target: Option[String] = None,
+  id: Option[String] = None,
+  classes: Option[String] = None,
+  textHidden: Option[String] = None,
+  style: Option[String] = None,
+  fullStop: Boolean = false
 )
 
 @caption = @{
-if (textHidden.exists(_.trim.nonEmpty)) {
-Html(s"""<span aria-hidden="true">$text</span><span class="govuk-visually-hidden">${textHidden.getOrElse("")}</span>""")
-} else Html(s"$text")
+  if (textHidden.exists(_.trim.nonEmpty)) {
+    Html(s"""<span aria-hidden="true">$text</span><span class="govuk-visually-hidden">${textHidden.getOrElse("")}</span>""")
+  } else Html(s"$text")
 }
 
 @idAttr = @{
-id.map(i => Html(s"""id="$i""""))
+  id.map(i => Html(s"""id="$i""""))
 }
 
 @linkClasses = @{
-classes.getOrElse("govuk-link govuk-link--no-visited-state")
+  classes.getOrElse("govuk-link govuk-link--no-visited-state")
 }
 
 @linkStyles = @{
-style match {
-case Some(s) => Html("style=" + s)
-case None => Html("")
-}
+  style match {
+    case Some(s) => Html("style=" + s)
+    case None => Html("")
+  }
 }
 
 @targetAttrs = @{
-target.map { t =>
-val rel = if (t == "_blank") s""" rel="noopener noreferrer"""" else ""
-Html(s"""target="$t"$rel""")
-}
+  target.map {
+    t =>
+       val rel = if (t == "_blank") s""" rel="noopener noreferrer"""" else ""Html(s"""target="$t"$rel""")
+  }
 }
 
 @* The <a> tag is split on purpose - to avoid inline-block whitespace problem *@

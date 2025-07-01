@@ -20,7 +20,7 @@
         layout: templates.Layout,
         h1l: headingH1L,
         p: paragraphBody,
-        l: link,
+        link: link,
         govukButton: GovukButton
 )
 
@@ -31,7 +31,7 @@
     @h1l(messages("serviceNotSuitable.notInUk.heading"))
     @p(messages("serviceNotSuitable.notInUk.p1"))
     @p(messages("serviceNotSuitable.notInUk.p2"))
-    @p(l(
+    @p(link(
         id = Some("new-request"),
         text = messages("serviceNotSuitable.notInUk.l1"),
         call = Call("GET","#")
