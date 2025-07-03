@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package config
+package utils
 
-import com.google.inject.AbstractModule
-import controllers.actions.*
+import play.api.mvc.RequestHeader
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
 
-import java.time.{Clock, ZoneOffset}
-
-class Module extends AbstractModule {
-
-  override def configure(): Unit = {
-
-    bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
-    bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
-
-    bind(classOf[IdentifierAction]).to(classOf[FrontendAuthenticatedIdentifierAction]).asEagerSingleton()
-
-    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
-  }
+object FrontendHeaderCarrier extends FrontendHeaderCarrierProvider {
+  def apply(request: RequestHeader): HeaderCarrier = hc(request)
 }

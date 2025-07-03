@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package config
+@import controllers.testonly.routes
 
-import com.google.inject.AbstractModule
-import controllers.actions.*
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        formHelper: FormWithCSRF
+)
 
-import java.time.{Clock, ZoneOffset}
+@(journeyId: String)(implicit request: Request[_], messages: Messages)
 
-class Module extends AbstractModule {
 
-  override def configure(): Unit = {
+@layout(pageTitle = titleNoForm("Stub GRS Response")) {
 
-    bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
-    bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
-
-    bind(classOf[IdentifierAction]).to(classOf[FrontendAuthenticatedIdentifierAction]).asEagerSingleton()
-
-    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
-  }
+    @formHelper(action = routes.GrsController.postStubGrs(journeyId)) {
+        @govukButton(
+            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+        )
+    }
 }

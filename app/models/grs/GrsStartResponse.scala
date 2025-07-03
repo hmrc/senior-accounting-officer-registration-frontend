@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package config
+package models.grs
 
-import com.google.inject.AbstractModule
-import controllers.actions.*
+import play.api.libs.json.{Json, OFormat, Reads}
 
-import java.time.{Clock, ZoneOffset}
+final case class GrsStartResponse(journeyStartUrl: String)
 
-class Module extends AbstractModule {
-
-  override def configure(): Unit = {
-
-    bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
-    bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
-
-    bind(classOf[IdentifierAction]).to(classOf[FrontendAuthenticatedIdentifierAction]).asEagerSingleton()
-
-    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
-  }
+object GrsStartResponse {
+  given OFormat[GrsStartResponse] = Json.format[GrsStartResponse]
 }
