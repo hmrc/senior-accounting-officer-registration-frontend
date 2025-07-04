@@ -50,3 +50,9 @@ POST       /individual-annual-revenues                              controllers.
 
 GET        /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onPageLoad()
 POST       /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onSubmit()
+
+GET        /dashboard                                               controllers.DashboardController.onPageLoad()
+
+GET        /check-your-answers                                      controllers.CheckYourAnswersController.onPageLoad()
+
+GET        /registration-complete                                   controllers.RegistrationCompleteController.onPageLoad()

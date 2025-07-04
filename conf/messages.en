@@ -116,3 +116,13 @@ eligibility.standaloneAnnualRevenues.error.required = Select yes if your company
 eligibility.standaloneBalanceSheet.title = Does the company have balance sheet of £2 billion or more in the previous financial year?
 eligibility.standaloneBalanceSheet.heading = Does the company have balance sheet of £2 billion or more in the previous financial year?
 eligibility.standaloneBalanceSheet.error.required = Select yes if your company has a balance sheet of £2 billion or more in its previous financial year
+
+registerYourCompany.title = registerYourCompany
+registerYourCompany.heading = registerYourCompany
+
+checkYourAnswers.title = checkYourAnswers
+checkYourAnswers.heading = checkYourAnswers
+
+registrationComplete.title = registrationComplete
+registrationComplete.heading = registrationComplete
+
