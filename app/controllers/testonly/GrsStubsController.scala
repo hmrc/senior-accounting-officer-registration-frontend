@@ -22,12 +22,13 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.IdentifierGenerator
 import views.html.testonly.StubGrsView
 
 import java.util.UUID
 import javax.inject.Inject
 
-class GrsController @Inject() (
+class GrsStubsController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     apiIdentify: ApiAuthenticatedIdentifierAction,
@@ -38,7 +39,7 @@ class GrsController @Inject() (
 
   def startGrs(): Action[AnyContent] = apiIdentify { implicit request =>
     val uuid            = UUID.randomUUID()
-    val journeyStartUrl = routes.GrsController.getStubGrs(uuid.toString).absoluteURL()
+    val journeyStartUrl = routes.GrsStubsController.getStubGrs(uuid.toString).absoluteURL()
 
     Ok(Json.toJson(NewJourneyResponse(journeyStartUrl)))
   }
@@ -48,13 +49,13 @@ class GrsController @Inject() (
   }
 
   def postStubGrs(journeyId: String): Action[AnyContent] = identify { implicit request =>
-    val redirectUrl = controllers.testonly.routes.TempTestGrsController.callBack(journeyId).absoluteURL()
+    val redirectUrl = controllers.routes.GrsController.callBack(journeyId).absoluteURL()
     SeeOther(redirectUrl)
   }
 
   def getGrs(journeyId: String): Action[AnyContent] = apiIdentify { implicit request =>
-    Ok(Json.parse("""
-        |{"companyProfile":{"companyName":"Test Company Ltd","companyNumber":"AB123456","dateOfIncorporation":"2020-01-01","unsanitisedCHROAddress":{"address_line_1":"testLine1","address_line_2":"test town","care_of":"test name","country":"United Kingdom","locality":"test city","po_box":"123","postal_code":"AA11AA","premises":"1","region":"test region"}},"identifiersMatch":true,"registration":{"registrationStatus":"REGISTERED","registeredBusinessPartnerId":"X00000123456789"},"ctutr":"1234567890"}
+    Ok(Json.parse(s"""
+        |{"companyProfile":{"companyName":"Test Company Ltd","companyNumber":"${IdentifierGenerator.randomCompanyNumber}","dateOfIncorporation":"2020-01-01","unsanitisedCHROAddress":{"address_line_1":"testLine1","address_line_2":"test town","care_of":"test name","country":"United Kingdom","locality":"test city","po_box":"123","postal_code":"AA11AA","premises":"1","region":"test region"}},"identifiersMatch":true,"registration":{"registrationStatus":"REGISTERED","registeredBusinessPartnerId":"${IdentifierGenerator.randomSafeId}"},"ctutr":"${IdentifierGenerator.randomUtr}"}
         |""".stripMargin))
   }
 

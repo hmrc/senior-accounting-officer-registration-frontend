@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package models.grs.create
+package utils
 
-import play.api.libs.json.{Json, OFormat}
+import scala.util.Random
 
-final case class NewJourneyResponse(journeyStartUrl: String)
+object IdentifierGenerator {
+  def randomUtr: String           = f"${Random.nextLong(10000000000L)}%010d"
+  def randomCompanyNumber: String =
+    f"${Random.alphanumeric.take(2).mkString("").toUpperCase}${Random.nextInt(1000000)}%06d"
 
-object NewJourneyResponse {
-  given OFormat[NewJourneyResponse] = Json.format[NewJourneyResponse]
+  def randomSafeId: String =
+    f"X${Random.alphanumeric.take(1).mkString("").toUpperCase}${Random.nextLong(10000000000000L)}%013d"
 }

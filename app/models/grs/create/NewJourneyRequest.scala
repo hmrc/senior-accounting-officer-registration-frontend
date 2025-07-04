@@ -25,7 +25,7 @@ final case class NewJourneyRequest(
     regime: String,
     accessibilityUrl: String,
     businessVerificationCheck: Boolean,
-    labels: Option[ServiceLabels]
+    labels: ServiceLabels
 )
 
 object NewJourneyRequest {

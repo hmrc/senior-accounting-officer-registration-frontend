@@ -18,7 +18,6 @@ package models.grs.retrieve
 
 import play.api.libs.json.{JsObject, Json, Reads}
 
-
 final case class CompanyDetails(
     companyProfile: CompanyProfile,
     ctutr: String,
@@ -39,5 +38,3 @@ final case class CompanyProfile(
 object CompanyProfile {
   given Reads[CompanyProfile] = Json.reads[CompanyProfile]
 }
-
-

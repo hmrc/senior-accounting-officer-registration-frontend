@@ -36,7 +36,7 @@ import java.time.temporal.ChronoUnit
 import java.util.concurrent.Executors
 import scala.concurrent.{ExecutionContext, Future}
 
-class SessionRepositorySpec
+class SessionRepositoryISpec
     extends AnyFreeSpec
     with Matchers
     with DefaultPlayMongoRepositorySupport[UserAnswers]

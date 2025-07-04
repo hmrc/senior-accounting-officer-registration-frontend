@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package models.grs.create
+package models.registration
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class NewJourneyResponse(journeyStartUrl: String)
+final case class CompanyDetails(
+    companyName: String,
+    companyNumber: String,
+    ctUtr: String,
+    registeredBusinessPartnerId: String
+)
 
-object NewJourneyResponse {
-  given OFormat[NewJourneyResponse] = Json.format[NewJourneyResponse]
+object CompanyDetails {
+  given OFormat[CompanyDetails] = Json.format[CompanyDetails]
 }

@@ -29,6 +29,7 @@ class Module extends AbstractModule {
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
 
     bind(classOf[IdentifierAction]).to(classOf[FrontendAuthenticatedIdentifierAction]).asEagerSingleton()
+    bind(classOf[ApiAuthenticatedIdentifierAction]).to(classOf[ApiAuthenticatedIdentifierActionImpl]).asEagerSingleton()
 
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
   }

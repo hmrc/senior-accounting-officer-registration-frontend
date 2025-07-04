@@ -24,12 +24,11 @@
 
 @(journeyId: String)(implicit request: Request[_], messages: Messages)
 
-
-@layout(pageTitle = titleNoForm("Stub GRS Response")) {
-
-    @formHelper(action = routes.GrsController.postStubGrs(journeyId)) {
+@layout(pageTitle = titleNoForm("GRS Stubs")) {
+    <h1 class="govuk-heading-l">GRS Stubs</h1>
+    @formHelper(action = routes.GrsStubsController.postStubGrs(journeyId)) {
         @govukButton(
-            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+            ButtonViewModel("Stub response").withAttribute("id", "submit")
         )
     }
 }

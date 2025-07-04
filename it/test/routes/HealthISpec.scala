@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package models.grs.create
+package routes
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.http.Status
+import support.{ISpecBase, MockAuthHelper}
 
-final case class NewJourneyResponse(journeyStartUrl: String)
+class HealthISpec extends ISpecBase {
 
-object NewJourneyResponse {
-  given OFormat[NewJourneyResponse] = Json.format[NewJourneyResponse]
+  "service health endpoint must" - {
+    "respond with 200 status" in {
+      val response =
+        wsClient
+          .url(s"$baseUrl/ping/ping")
+          .get()
+          .futureValue
+
+      response.status mustBe Status.OK
+      MockAuthHelper.verifyAuthWasCalled(times = 0)
+    }
+  }
 }

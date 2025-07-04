@@ -40,12 +40,15 @@ final class FrontendAuthenticatedIdentifierAction @Inject() (
 )(using ExecutionContext)
     extends AuthenticatedIdentifierAction(config, parser, isFrontend = true)
 
-final class ApiAuthenticatedIdentifierAction @Inject() (
+trait ApiAuthenticatedIdentifierAction extends IdentifierAction
+
+class ApiAuthenticatedIdentifierActionImpl @Inject() (
     override val authConnector: AuthConnector,
     config: FrontendAppConfig,
     override val parser: BodyParsers.Default
 )(using ExecutionContext)
     extends AuthenticatedIdentifierAction(config, parser, isFrontend = false)
+    with ApiAuthenticatedIdentifierAction
 
 abstract class AuthenticatedIdentifierAction(
     config: FrontendAppConfig,

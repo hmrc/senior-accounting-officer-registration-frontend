@@ -17,29 +17,34 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
+import config.FeatureSwitch.*
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import FrontendAppConfig.*
 
 @Singleton
-class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Configuration) {
+class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Configuration)
+    extends FeatureConfigSupport {
+  given Configuration = configuration
 
-  val host: String    = configuration.get[String]("host")
+  val host: String    = configuration.get[String]("host").removeTrailingPathSeparator
   val appName: String = configuration.get[String]("appName")
 
-  private val contactHost                  = configuration.get[String]("contact-frontend.host")
+  private val contactHost = configuration.get[String]("contact-frontend.host").removeTrailingPathSeparator
   val contactFormServiceIdentifier: String = configuration.get[String]("serviceId")
 
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
-  val loginUrl: String         = configuration.get[String]("urls.login")
-  val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
-  val signOutUrl: String       = configuration.get[String]("urls.signOut")
+  val loginUrl: String         = configuration.get[String]("urls.login").removeTrailingPathSeparator
+  val loginContinueUrl: String = configuration.get[String]("urls.loginContinue").removeTrailingPathSeparator
+  val signOutUrl: String       = configuration.get[String]("urls.signOut").removeTrailingPathSeparator
 
-  private val exitSurveyBaseUrl: String = configuration.get[String]("feedback-frontend.host")
-  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/$contactFormServiceIdentifier"
+  private val exitSurveyBaseUrl: String =
+    configuration.get[String]("feedback-frontend.host").removeTrailingPathSeparator
+  val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/$contactFormServiceIdentifier"
 
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
@@ -55,5 +60,11 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
   val grsBaseUrl: String = servicesConfig.baseUrl("incorporated-entity-identification-frontend")
-  def stubGrs: Boolean   = configuration.get[Boolean]("features.stubGrs")
+  def stubGrs: Boolean   = isEnabled(StubGrs)
+}
+
+object FrontendAppConfig {
+  extension (str: String) {
+    def removeTrailingPathSeparator: String = str.replaceAll("/$", "")
+  }
 }

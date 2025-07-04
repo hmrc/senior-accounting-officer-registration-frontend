@@ -1,10 +1,7 @@
 
-GET        /temp/grs/start                    controllers.testonly.TempTestGrsController.get()
-GET        /temp/grs/callback                 controllers.testonly.TempTestGrsController.callBack(journeyId: String)
-
 + nocsrf
-POST       /grs-stub/start                    controllers.testonly.GrsController.startGrs()
-GET        /grs-stub/:journeyid               controllers.testonly.GrsController.getStubGrs(journeyid)
+POST       /grs-stub/start                    controllers.testonly.GrsStubsController.startGrs()
+GET        /grs-stub/:journeyid               controllers.testonly.GrsStubsController.getStubGrs(journeyid)
 + nocsrf
-POST       /grs-stub/:journeyid               controllers.testonly.GrsController.postStubGrs(journeyid)
-GET        /grs-stub/journey/:journeyid       controllers.testonly.GrsController.getGrs(journeyid)
+POST       /grs-stub/:journeyid               controllers.testonly.GrsStubsController.postStubGrs(journeyid)
+GET        /grs-stub/journey/:journeyid       controllers.testonly.GrsStubsController.getGrs(journeyid)

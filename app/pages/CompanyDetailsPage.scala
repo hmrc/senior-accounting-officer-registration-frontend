@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package models.grs.create
+package pages
 
-import play.api.libs.json.{Json, OFormat}
+import models.registration.CompanyDetails
+import play.api.libs.json.JsPath
 
-final case class NewJourneyResponse(journeyStartUrl: String)
+case object CompanyDetailsPage extends QuestionPage[CompanyDetails] {
+  override def path: JsPath = JsPath \ toString
 
-object NewJourneyResponse {
-  given OFormat[NewJourneyResponse] = Json.format[NewJourneyResponse]
+  override def toString: String = "companyDetails"
 }
