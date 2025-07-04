@@ -22,13 +22,66 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("registerYourCompany.title"))) {
+@layout(pageTitle = titleNoForm(messages("registration.dashboard.title"))) {
+
+    <h1 class="govuk-heading-l">@messages("registration.dashboard.heading")</h1>
+    <p class="govuk-body">@messages("registration.dashboard.p1")</p>
+    <p class="govuk-body">@messages("registration.dashboard.p2")</p>
+    <!-- COMPANY DETAILS -->
+    <h2 class="govuk-heading-m">@messages("registration.dashboard.heading1")</h2>
+
+    <ul class="govuk-task-list">
+        <li class="govuk-task-list__item govuk-task-list__item--with-link">
+            <div class="govuk-task-list__name-and-hint">
+                <a class="govuk-link govuk-task-list__link" href="/business-matching/company-details/match-hmrc-records.html" aria-describedby="first-section-1-status">
+                    @messages("registration.dashboard.linkText1")
+                </a>
+            </div>
+            <div class="govuk-task-list__status" id="first-section-1-status">
+                <strong class="govuk-tag govuk-tag--green">
+                    @messages("registration.dashboard.labelText3")
+                </strong>
+            </div>
+        </li>
+    </ul>
 
 
-  @formHelper(action = routes.DashboardController.continue()) {
-     @govukButton(
-         ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
-     )
-  }
+    <!-- CONTACT  DETAILS -->
+    <h2 class="govuk-heading-m">@messages("registration.dashboard.heading2")</h2>
+    <ul class="govuk-task-list">
+        <li class="govuk-task-list__item govuk-task-list__item--with-link">
+            <div class="govuk-task-list__name-and-hint">
+                <a class="govuk-link govuk-task-list__link" href="#" aria-describedby="third-section-1-status">
+                    @messages("registration.dashboard.linkText2")
+                </a>
+            </div>
+            <div class="govuk-task-list__status" id="third-section-1-status">
+                <strong class="govuk-tag govuk-tag--green">
+                    @messages("registration.dashboard.labelText3")
+                </strong>
+            </div>
+        </li>
+    </ul>
+
+    <!-- REVIEW AND SUBMIT -->
+    <h2 class="govuk-heading-m govuk-!-margin-top-5">@messages("registration.dashboard.heading3")</h2>
+    <ul class="govuk-task-list">
+        <li class="govuk-task-list__item govuk-task-list__item--with-link">
+            <div class="govuk-task-list__name-and-hint">
+                <a class="govuk-link govuk-task-list__link"
+                   href="check-your-answers"
+                   aria-describedby="second-section-1-status">
+                    @messages("registration.dashboard.linkText3")
+                </a>
+            </div>
+            <div class="govuk-task-list__status" id="second-section-1-status">
+                <strong class="govuk-tag govuk-tag--green">
+                    @messages("registration.dashboard.labelText3")
+                </strong>
+            </div>
+        </li>
+    </ul>
+    <p class="govuk-body">@messages("registration.dashboard.p3")</p>
+
 
 }
