@@ -16,12 +16,19 @@
 
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        formHelper: FormWithCSRF
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("registerYourCompany.title"))) {
 
+
+  @formHelper(action = routes.DashboardController.continue()) {
+     @govukButton(
+         ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+     )
+  }
 
 }

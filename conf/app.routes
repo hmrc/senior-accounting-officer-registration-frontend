@@ -52,7 +52,10 @@ GET        /individual-balance-sheet                                controllers.
 POST       /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onSubmit()
 
 GET        /dashboard                                               controllers.DashboardController.onPageLoad()
+POST       /dashboard                                               controllers.DashboardController.continue()
 
 GET        /check-your-answers                                      controllers.CheckYourAnswersController.onPageLoad()
+POST       /check-your-answers                                      controllers.CheckYourAnswersController.continue()
 
 GET        /registration-complete                                   controllers.RegistrationCompleteController.onPageLoad()
+POST       /registration-complete                                   controllers.RegistrationCompleteController.continue()

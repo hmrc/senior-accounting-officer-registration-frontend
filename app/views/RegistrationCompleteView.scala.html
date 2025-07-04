@@ -16,7 +16,8 @@
 
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        formHelper: FormWithCSRF
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -24,4 +25,10 @@
 @layout(pageTitle = titleNoForm(messages("registrationComplete.title"))) {
 
     <h1 class="govuk-heading-xl">@messages("registrationComplete.heading")</h1>
+
+    @formHelper(action = routes.RegistrationCompleteController.continue()) {
+        @govukButton(
+           ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+        )
+    }
 }

@@ -36,4 +36,8 @@ class RegistrationCompleteController @Inject() (
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     Ok(view())
   }
+
+  def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    NotImplemented
+  }
 }

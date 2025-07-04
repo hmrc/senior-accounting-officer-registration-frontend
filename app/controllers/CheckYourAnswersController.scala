@@ -42,4 +42,8 @@ class CheckYourAnswersController @Inject() (
 
     Ok(view(list))
   }
+
+  def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Redirect(routes.RegistrationCompleteController.onPageLoad())
+  }
 }

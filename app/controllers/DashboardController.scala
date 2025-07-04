@@ -38,4 +38,7 @@ class DashboardController @Inject() (
     Ok(view())
   }
 
+  def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Redirect(routes.CheckYourAnswersController.onPageLoad())
+  }
 }
