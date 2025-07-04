@@ -15,23 +15,20 @@
  *@
 
 @this(
-    layout: templates.Layout,
-    govukSummaryList: GovukSummaryList,
-    govukButton: GovukButton,
-    formHelper: FormWithCSRF
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        formHelper: FormWithCSRF
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+@layout(pageTitle = titleNoForm(messages("registerYourCompany.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
 
-    @govukSummaryList(list)
+  @formHelper(action = routes.DashboardController.continue()) {
+     @govukButton(
+         ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+     )
+  }
 
-    @formHelper(action = routes.CheckYourAnswersController.continue()) {
-        @govukButton(
-            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
-        )
-    }
 }

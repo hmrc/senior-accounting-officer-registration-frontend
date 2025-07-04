@@ -16,20 +16,21 @@
 
 package controllers
 
-import controllers.actions._
+import controllers.actions.*
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.EligibilityConfirmationView
+import views.html.DashboardView
 
-class EligibilityConfirmationController @Inject() (
+class DashboardController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    view: EligibilityConfirmationView
+    view: DashboardView
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -38,6 +39,6 @@ class EligibilityConfirmationController @Inject() (
   }
 
   def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Redirect(routes.DashboardController.onPageLoad())
+    Redirect(routes.CheckYourAnswersController.onPageLoad())
   }
 }
