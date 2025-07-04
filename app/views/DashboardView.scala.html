@@ -22,7 +22,7 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("registration.dashboard.title"))) {
+@layout(showBackLink = false, pageTitle = titleNoForm(messages("registration.dashboard.title"))) {
 
     <h1 class="govuk-heading-l">@messages("registration.dashboard.heading")</h1>
     <p class="govuk-body">@messages("registration.dashboard.p1")</p>

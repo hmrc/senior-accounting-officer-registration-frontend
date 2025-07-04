@@ -18,7 +18,6 @@ package views
 
 import base.SpecBase
 import org.jsoup.Jsoup
-import org.scalatest.matchers.should.Matchers.shouldBe
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
