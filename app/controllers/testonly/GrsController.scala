@@ -17,7 +17,7 @@
 package controllers.testonly
 
 import controllers.actions.{ApiAuthenticatedIdentifierAction, IdentifierAction}
-import models.grs.GrsStartResponse
+import models.grs.create.NewJourneyResponse
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -37,11 +37,10 @@ class GrsController @Inject() (
     with I18nSupport {
 
   def startGrs(): Action[AnyContent] = apiIdentify { implicit request =>
-
     val uuid            = UUID.randomUUID()
     val journeyStartUrl = routes.GrsController.getStubGrs(uuid.toString).absoluteURL()
 
-    Ok(Json.toJson(GrsStartResponse(journeyStartUrl)))
+    Ok(Json.toJson(NewJourneyResponse(journeyStartUrl)))
   }
 
   def getStubGrs(journeyId: String): Action[AnyContent] = identify { implicit request =>

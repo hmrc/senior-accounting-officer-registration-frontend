@@ -14,12 +14,30 @@
  * limitations under the License.
  */
 
-package models.grs
+package models.grs.retrieve
 
-import play.api.libs.json.{Json, OFormat, Reads}
+import play.api.libs.json.{JsObject, Json, Reads}
 
-final case class GrsStartResponse(journeyStartUrl: String)
 
-object GrsStartResponse {
-  given OFormat[GrsStartResponse] = Json.format[GrsStartResponse]
+final case class CompanyDetails(
+    companyProfile: CompanyProfile,
+    ctutr: String,
+    identifiersMatch: Boolean,
+    businessVerification: Option[BusinessVerificationStatus],
+    registration: Registration
+)
+
+object CompanyDetails {
+  given Reads[CompanyDetails] = Json.reads[CompanyDetails]
 }
+
+final case class CompanyProfile(
+    companyName: String,
+    companyNumber: String
+)
+
+object CompanyProfile {
+  given Reads[CompanyProfile] = Json.reads[CompanyProfile]
+}
+
+

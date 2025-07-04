@@ -16,13 +16,17 @@
 
 package controllers.testonly
 
+import config.FrontendAppConfig
 import connectors.GrsConnector
 import controllers.actions.IdentifierAction
-import models.grs.GrsStartResponse
-import play.api.i18n.{I18nSupport, MessagesApi}
+import models.grs.create.{NewJourneyRequest, NewJourneyResponse, ServiceLabels}
+import models.grs.retrieve.CompanyDetails
+import play.api.Logger
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.hmrcfrontend.config.AccessibilityStatementConfig
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -31,7 +35,9 @@ class TempTestGrsController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     grsConnector: GrsConnector,
-    val controllerComponents: MessagesControllerComponents
+    val controllerComponents: MessagesControllerComponents,
+    appConfig: FrontendAppConfig,
+    accessibilityStatementConfig: AccessibilityStatementConfig
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -40,36 +46,26 @@ class TempTestGrsController @Inject() (
     val continueUrl =
       controllers.testonly.routes.TempTestGrsController.callBack("").absoluteURL().replaceAll("\\?.*$", "")
 
+    val grsStartRequest = NewJourneyRequest(
+      continueUrl = continueUrl,
+      businessVerificationCheck = false,
+      deskProServiceId = appConfig.contactFormServiceIdentifier,
+      signOutUrl = controllers.auth.routes.AuthController.signOut().absoluteURL(),
+      regime = "VATC",
+      accessibilityUrl = accessibilityStatementConfig.url.get,
+      labels = Some(ServiceLabels(en = messagesApi.preferred(Seq(Lang("en"))).messages("service.name")))
+    )
+
     for {
-      r <- grsConnector.start(Json.parse(s"""
-                               |{
-                               |  "continueUrl": "$continueUrl",
-                               |  "businessVerificationCheck": false,
-                               |  "deskProServiceId": "DeskProServiceId",
-                               |  "signOutUrl": "/testSignOutUrl",
-                               |  "regime": "VATC",
-                               |  "accessibilityUrl": "/accessibility-statement/my-service",
-                               |  "labels": {
-                               |    "cy": {
-                               |      "optServiceName": "Service name translated into welsh"
-                               |    },
-                               |    "en": {
-                               |      "optServiceName": "Service name in english"
-                               |    }
-                               |  }
-                               |}
-                               |""".stripMargin))
-    } yield {
-      SeeOther(Json.parse(r.body).as[GrsStartResponse].journeyStartUrl)
-    }
+      r <- grsConnector.start(grsStartRequest)
+    } yield SeeOther(Json.parse(r.body).as[NewJourneyResponse].journeyStartUrl)
   }
 
   def callBack(journeyId: String): Action[AnyContent] = identify.async { implicit request =>
     for {
       r <- grsConnector.retrieve(journeyId)
-    } yield {
-      Ok(Json.parse(r.body))
-    }
+      if (!Json.parse(r.body).validate[CompanyDetails].isError)
+    } yield Ok(Json.parse(r.body))
   }
 
 }

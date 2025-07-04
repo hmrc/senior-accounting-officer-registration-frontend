@@ -17,7 +17,8 @@
 package connectors
 
 import config.FrontendAppConfig
-import play.api.libs.json.JsValue
+import models.grs.create.NewJourneyRequest
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.writeableOf_JsValue
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
@@ -33,7 +34,7 @@ class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(us
     ExecutionContext
 ) {
 
-  def start(value: JsValue)(using RequestHeader): Future[HttpResponse] = {
+  def start(value: NewJourneyRequest)(using RequestHeader): Future[HttpResponse] = {
     given HeaderCarrier = FrontendHeaderCarrier(implicitly[RequestHeader])
 
     val url: String =
@@ -45,7 +46,7 @@ class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(us
 
     http
       .post(new URI(url).toURL)(implicitly[HeaderCarrier])
-      .withBody(value)
+      .withBody(Json.toJson(value))
       .execute[HttpResponse]
   }
 
