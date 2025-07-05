@@ -69,7 +69,8 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
         val headings2 = mainContent.getElementsByTag("h2")
         headings2.size() mustBe 3
-        headings2.attr("class") mustBe "govuk-heading-m"
+
+        headings2.asScala.foreach(h2 => h2.attr("class") mustBe "govuk-heading-m")
         headings2.get(0).text() mustBe "Company details"
         headings2.get(1).text() mustBe "Contact details"
         headings2.get(2).text() mustBe "Review and submit"
@@ -87,14 +88,19 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
       "with the correct label texts" in {
         val mainContent = doc.getElementById("main-content")
-        val choices     = Seq("Completed", "Cannot start yet", "Not started")
         val statusTags  = mainContent.getElementsByClass("govuk-task-list__status")
 
         statusTags.size() mustBe 3
 
-        choices must contain(statusTags.get(0).text())
-        choices must contain(statusTags.get(1).text())
-        choices must contain(statusTags.get(2).text())
+        statusTags.asScala.foreach(tag =>
+          tag.text() mustBe "Completed"
+          tag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--green"
+        )
+      }
+
+      "must not show a back link" in {
+        val backLink = doc.getElementsByClass("govuk-back-link")
+        backLink.size() mustBe 0
       }
 
       "must show help link" in {
@@ -105,5 +111,4 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
       }
     }
   }
-
 }
