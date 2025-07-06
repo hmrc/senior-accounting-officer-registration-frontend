@@ -22,12 +22,20 @@ Goto http://localhost:10057/senior-accounting-officer/registration
 
 ## Testing
 
+### Feature toggles
+All feature toggles are defined in `application.conf` under `features`.
+The internal model for feature toggles are kept at `models.config.FeatureToggle`.
+
+If test-only routes are enabled, then feature toggles can be configured for a given instance at runtime via
+
+http://localhost:10057/senior-accounting-officer/registration/test-only/feature-toggle
+
 ### Testing GRS integration locally
 Start dependent GRS services using service-manager
 
 `sm2 --start INCORPORATED_ENTITY_IDENTIFICATION INCORPORATED_ENTITY_IDENTIFICATION_FRONTEND`
 
-Set `features.stubGrs=false` either in application.conf or via `-Dfeatures.stubGrs=false` and restart the service
+Set the `features.stubGrs` feature to false e.g. `features.stubGrs=false` or disable `Stub GRS` on the feature toggle page
 
 ### License
 

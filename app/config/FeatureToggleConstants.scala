@@ -18,30 +18,25 @@ package config
 
 import play.api.Configuration
 import FeatureToggleConstants.*
-
-enum FeatureSwitch(name: String) {
-  override def toString: String = s"features.$name"
-
-  case StubGrs extends FeatureSwitch("stubGrs")
-}
+import models.config.FeatureToggle
 
 object FeatureToggleConstants {
   val FEATURE_SWITCH_ON  = "true"
   val FEATURE_SWITCH_OFF = "false"
 }
 
-trait FeatureToggle {
+trait FeatureToggleSupport {
 
-  def enable(featureSwitch: FeatureSwitch): Unit =
+  def enable(featureSwitch: FeatureToggle): Unit =
     sys.props += featureSwitch.toString -> FEATURE_SWITCH_ON
 
-  def disable(featureSwitch: FeatureSwitch): Unit =
+  def disable(featureSwitch: FeatureToggle): Unit =
     sys.props += featureSwitch.toString -> FEATURE_SWITCH_OFF
 
 }
 
 trait FeatureConfigSupport {
-  def isEnabled(featureSwitch: FeatureSwitch)(using config: Configuration): Boolean = {
+  def isEnabled(featureSwitch: FeatureToggle)(using config: Configuration): Boolean = {
     val key = featureSwitch.toString
     sys.props
       .get(key)

@@ -1,3 +1,5 @@
+GET       /feature-toggle                     controllers.testonly.FeatureToggleController.get()
+POST      /feature-toggle                     controllers.testonly.FeatureToggleController.update()
 
 + nocsrf
 POST       /grs-stub/start                    controllers.testonly.GrsStubsController.startGrs()

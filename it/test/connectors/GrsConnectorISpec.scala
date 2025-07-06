@@ -18,8 +18,8 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import config.FeatureSwitch.StubGrs
-import config.FeatureToggle
+import models.config.FeatureToggle.StubGrs
+import config.FeatureToggleSupport
 import connectors.GrsConnectorISpec.*
 import models.grs.create.{NewJourneyRequest, ServiceLabels}
 import models.grs.retrieve.*
@@ -34,7 +34,7 @@ import utils.IdentifierGenerator
 
 import java.util.UUID
 
-class GrsConnectorISpec extends ISpecBase with FeatureToggle with EitherValues {
+class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherValues {
 
   override def additionalConfigs: Map[String, Any] = Map(
     "features.stubGrs" -> "true",
