@@ -60,3 +60,20 @@ POST       /registration-complete                                   controllers.
 
 GET        /business-match                                          controllers.GrsController.start()
 GET        /business-match/result                                   controllers.GrsController.callBack(journeyId: String)
+
+GET        /contact-details                                         controllers.ContactDetailsController.onPageLoad()
+
+GET        /contact-details/primary-contact-details                 controllers.PrimaryContactDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /contact-details/primary-contact-details                 controllers.PrimaryContactDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /contact-details/change-primary-contact-details          controllers.PrimaryContactDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /contact-details/change-primary-contact-details          controllers.PrimaryContactDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /contact-details/secondary-contact-details               controllers.SecondaryContactDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /contact-details/secondary-contact-details               controllers.SecondaryContactDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /contact-details/change-secondary-contact-details        controllers.SecondaryContactDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /contact-details/change-secondary-contact-details        controllers.SecondaryContactDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /contact-details/tertiary-contact-details                controllers.TertiaryContactDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /contact-details/tertiary-contact-details                controllers.TertiaryContactDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /contact-details/change-tertiary-contact-details         controllers.TertiaryContactDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /contact-details/change-tertiary-contact-details         controllers.TertiaryContactDetailsController.onSubmit(mode: Mode = CheckMode)
