@@ -1,0 +1,9 @@
+GET       /feature-toggle                     controllers.testonly.FeatureToggleController.get()
+POST      /feature-toggle                     controllers.testonly.FeatureToggleController.update()
+
++ nocsrf
+POST       /grs-stub/start                    controllers.testonly.GrsStubsController.startGrs()
+GET        /grs-stub/:journeyid               controllers.testonly.GrsStubsController.getStubGrs(journeyid)
++ nocsrf
+POST       /grs-stub/:journeyid               controllers.testonly.GrsStubsController.postStubGrs(journeyid)
+GET        /grs-stub/journey/:journeyid       controllers.testonly.GrsStubsController.getGrs(journeyid)

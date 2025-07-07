@@ -11,6 +11,7 @@ object CodeCoverageSettings {
     ".*viewmodels.govuk.*",
     "uk.gov.hmrc.BuildInfo",
     "app.*",
+    "config.*",
     "prod.*",
     ".*Routes.*",
     ".*views.*",

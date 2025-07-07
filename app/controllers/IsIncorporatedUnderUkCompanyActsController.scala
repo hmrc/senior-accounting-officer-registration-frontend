@@ -18,18 +18,16 @@ package controllers
 
 import controllers.actions.*
 import forms.IsIncorporatedUnderUkCompanyActsFormProvider
-
-import javax.inject.Inject
 import models.{NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.IsIncorporatedUnderUkCompanyActsPage
-import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.IsIncorporatedUnderUkCompanyActsView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class IsIncorporatedUnderUkCompanyActsController @Inject() (
@@ -63,14 +61,10 @@ class IsIncorporatedUnderUkCompanyActsController @Inject() (
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
-          val logger = Logger(this.getClass).logger
-          logger.warn(s"value ${value}")
           val userAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
           for {
             updatedAnswers <- Future.fromTry(userAnswers.set(IsIncorporatedUnderUkCompanyActsPage, value))
-            _ = logger.warn(s"updatedAnswers ${updatedAnswers}")
-            _ <- sessionRepository.set(updatedAnswers)
-            _ = logger.warn(s"updatedAnswers updated")
+            _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(IsIncorporatedUnderUkCompanyActsPage, NormalMode, updatedAnswers))
       )
   }
