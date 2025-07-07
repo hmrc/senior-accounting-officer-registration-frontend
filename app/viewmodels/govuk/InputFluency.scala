@@ -30,6 +30,13 @@ trait InputFluency {
 
   object InputViewModel extends ErrorMessageAwareness {
 
+    def submitButton(field: Field, valueOverride: Option[String] = None): Input =
+      Input(
+        id = field.id,
+        name = field.name,
+        value = valueOverride.orElse(field.value)
+      ).withInputType("submit")
+
     def apply(
         field: Field,
         label: Label

@@ -142,3 +142,27 @@ registrationcheckYourAnswers.heading = checkYourAnswers
 registration.complete.title = registrationComplete
 registration.complete.heading = registrationComplete
 
+
+contactDetails.title = contactDetails
+contactDetails.heading = contactDetails
+
+primaryContactDetails.title = primaryContactDetails
+primaryContactDetails.heading = primaryContactDetails
+primaryContactDetails.checkYourAnswersLabel = primaryContactDetails
+primaryContactDetails.error.required = Enter primaryContactDetails
+primaryContactDetails.error.length = PrimaryContactDetails must be 105 characters or less
+primaryContactDetails.change.hidden = PrimaryContactDetails
+
+secondaryContactDetails.title = secondaryContactDetails
+secondaryContactDetails.heading = secondaryContactDetails
+secondaryContactDetails.checkYourAnswersLabel = secondaryContactDetails
+secondaryContactDetails.error.required = Enter secondaryContactDetails
+secondaryContactDetails.error.length = SecondaryContactDetails must be 105 characters or less
+secondaryContactDetails.change.hidden = SecondaryContactDetails
+
+tertiaryContactDetails.title = tertiaryContactDetails
+tertiaryContactDetails.heading = tertiaryContactDetails
+tertiaryContactDetails.checkYourAnswersLabel = tertiaryContactDetails
+tertiaryContactDetails.error.required = Enter tertiaryContactDetails
+tertiaryContactDetails.error.length = TertiaryContactDetails must be 105 characters or less
+tertiaryContactDetails.change.hidden = TertiaryContactDetails
