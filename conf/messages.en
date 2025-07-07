@@ -117,12 +117,28 @@ eligibility.standaloneBalanceSheet.title = Does the company have balance sheet o
 eligibility.standaloneBalanceSheet.heading = Does the company have balance sheet of £2 billion or more in the previous financial year?
 eligibility.standaloneBalanceSheet.error.required = Select yes if your company has a balance sheet of £2 billion or more in its previous financial year
 
-registerYourCompany.title = registerYourCompany
-registerYourCompany.heading = registerYourCompany
+registration.dashboard.title = Register your company
+registration.dashboard.heading = Register your company
 
-checkYourAnswers.title = checkYourAnswers
-checkYourAnswers.heading = checkYourAnswers
+registration.dashboard.p1 = Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from.
+registration.dashboard.p2 = If your group has more than one SAO, you’ll need to complete a separate registration for each SAO.
+registration.dashboard.p3 = At the 'Review and submit' section of this registration, you can amend your answers and print or save them for your own records.
 
-registrationComplete.title = registrationComplete
-registrationComplete.heading = registrationComplete
+registration.dashboard.heading1 = Company details
+registration.dashboard.heading2 = Contact details
+registration.dashboard.heading3 = Review and submit
+
+registration.dashboard.linkText1 = Company details
+registration.dashboard.linkText2 = Contact details
+registration.dashboard.linkText3 = Check your answers before submitting your registration
+
+registration.dashboard.labelText1 = Not started
+registration.dashboard.labelText2 = Cannot start yet
+registration.dashboard.labelText3 = Completed
+
+registration.checkYourAnswers.title = checkYourAnswers
+registrationcheckYourAnswers.heading = checkYourAnswers
+
+registration.complete.title = registrationComplete
+registration.complete.heading = registrationComplete
 
