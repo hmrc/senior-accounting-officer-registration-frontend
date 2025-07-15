@@ -22,7 +22,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IsCompanyEligibleView
+import views.html.DashboardView
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -32,7 +32,7 @@ class IndexController @Inject() (
     identify: IdentifierAction,
     val controllerComponents: MessagesControllerComponents,
     sessionRepository: SessionRepository,
-    view: IsCompanyEligibleView
+    view: DashboardView
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -42,10 +42,10 @@ class IndexController @Inject() (
     Ok(view())
   }
 
-  def continue: Action[AnyContent] = identify async { implicit request =>
+  /*def continue: Action[AnyContent] = identify async { implicit request =>
     for {
       _ <- sessionRepository.keepAlive(request.userId)
     } yield Redirect(routes.IsIncorporatedUnderUkCompanyActsController.onPageLoad())
-  }
+  }*/
 
 }
