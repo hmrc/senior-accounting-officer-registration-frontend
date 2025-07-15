@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import views.html.IsCompanyEligibleView
+import views.html.DashboardView
 
 class IndexControllerSpec extends SpecBase {
 
@@ -34,7 +34,7 @@ class IndexControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[IsCompanyEligibleView]
+        val view = application.injector.instanceOf[DashboardView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString

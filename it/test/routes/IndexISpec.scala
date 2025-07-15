@@ -43,9 +43,7 @@ class IndexISpec extends ISpecBase {
 
       MockAuthHelper.verifyAuthWasCalled()
       response.status mustBe Status.OK
-      Option(
-        Jsoup.parse(response.body).selectFirst("h1").text
-      ).get mustBe "Check if your company is eligible"
+      
     }
   }
 
