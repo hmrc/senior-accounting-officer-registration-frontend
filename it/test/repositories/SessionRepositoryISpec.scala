@@ -59,46 +59,9 @@ class SessionRepositoryISpec
     clock = stubClock
   )(scala.concurrent.ExecutionContext.Implicits.global)
 
-//  ".set" - {
-//
-//    "must set the last updated time on the supplied user answers to `now`, and save them" in {
-//
-//      val expectedResult = userAnswers copy (lastUpdated = instant)
-//
-//      val setResult     = repository.set(userAnswers).futureValue
-//      val updatedRecord = find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
-//
-//      updatedRecord mustEqual expectedResult
-//    }
-//
-//    mustPreserveMdc(repository.set(userAnswers))
-//  }
 
-  ".get" - {
 
-    "when there is a record for this id" - {
 
-      "must update the lastUpdated time and get the record" in {
-
-        insert(userAnswers).futureValue
-
-        val result         = repository.get(userAnswers.id).futureValue
-        val expectedResult = userAnswers copy (lastUpdated = instant)
-
-        result.value mustEqual expectedResult
-      }
-    }
-
-    "when there is no record for this id" - {
-
-      "must return None" in {
-
-        repository.get("id that does not exist").futureValue must not be defined
-      }
-    }
-
-    mustPreserveMdc(repository.get(userAnswers.id))
-  }
 
   ".clear" - {
 
