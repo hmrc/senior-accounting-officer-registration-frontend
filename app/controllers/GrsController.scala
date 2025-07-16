@@ -54,7 +54,6 @@ class GrsController @Inject() (
   def start(): Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>
     val continueUrl =
       controllers.routes.GrsController.callBack("").absoluteURL().replaceAll("\\?.*$", "")
-    println("**************************************************")
     val grsStartRequest = NewJourneyRequest(
       continueUrl = continueUrl,
       businessVerificationCheck = false,
