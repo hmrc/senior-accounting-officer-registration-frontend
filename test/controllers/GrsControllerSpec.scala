@@ -48,16 +48,21 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
       )
 
   "GrsController.start" - {
-    "when there are no user answer must redirect the user to there is a problem page" in {
+    "when GRS returns a valid response must redirect the user to the url in the GRS response" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.GrsController.start().url)
+        val grsConnector = application.injector.instanceOf[GrsConnector]
+        val request      = FakeRequest(GET, routes.GrsController.start().url)
+
+        when(grsConnector.start(any())(using any())).thenReturn(
+          Future.successful(HttpResponse(status = 200, body = validStartResponse))
+        )
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        headers(result).get("Location").value mustEqual "/senior-accounting-officer/registration/there-is-a-problem"
+        headers(result).get("Location").value mustEqual testGrsJourneyStartLocation
       }
     }
     "when there is prior user answer must call GRS" - {
@@ -136,16 +141,36 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
   "GrsController.callBack" - {
     val journeyId = UUID.randomUUID().toString
 
-    "when there are no user answers must redirect the user to there is a problem page" in {
+    "when there are no user answers must store a new user answers with the sanitised company details in mongo then redirect to registration dashboard" in {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
+        val grsConnector      = application.injector.instanceOf[GrsConnector]
+        val request           = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
+        val sessionRepository = application.injector.instanceOf[SessionRepository]
+
+        when(grsConnector.retrieve(any())(using any())).thenReturn(
+          Future.successful(Right(validGrsCompanyDetails))
+        )
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        headers(result).get("Location").value mustEqual "/senior-accounting-officer/registration/there-is-a-problem"
+        headers(result).get("Location").value mustEqual "/senior-accounting-officer/registration"
+
+        val inMongo = sessionRepository
+          .get(userAnswersId)
+          .futureValue
+          .value
+          .get(CompanyDetailsPage)
+          .value
+
+        inMongo mustBe CompanyDetails(
+          companyName = testCompanyName,
+          companyNumber = testCompanyNumber,
+          ctUtr = testCtUtr,
+          registeredBusinessPartnerId = testRegisteredBusinessPartnerId
+        )
       }
     }
 
@@ -167,7 +192,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          headers(result).get("Location").value mustEqual "/senior-accounting-officer/registration/dashboard"
+          headers(result).get("Location").value mustEqual "/senior-accounting-officer/registration"
 
           val inMongo = sessionRepository
             .get(answer.id)

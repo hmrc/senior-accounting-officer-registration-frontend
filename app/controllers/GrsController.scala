@@ -18,7 +18,8 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.GrsConnector
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import models.UserAnswers
 import models.grs.create.{NewJourneyRequest, NewJourneyResponse, ServiceLabels}
 import models.grs.retrieve.CompanyDetails as GrsCompanyDetails
 import models.registration.CompanyDetails
@@ -40,7 +41,6 @@ class GrsController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
-    requireData: DataRequiredAction,
     grsConnector: GrsConnector,
     val controllerComponents: MessagesControllerComponents,
     grsMappingService: GrsMappingService,
@@ -51,7 +51,7 @@ class GrsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def start(): Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>
+  def start(): Action[AnyContent] = identify.async { implicit request =>
     val continueUrl =
       controllers.routes.GrsController.callBack("").absoluteURL().replaceAll("\\?.*$", "")
     val grsStartRequest = NewJourneyRequest(
@@ -73,21 +73,23 @@ class GrsController @Inject() (
     }
   }
 
-  def callBack(journeyId: String): Action[AnyContent] = (identify andThen getData andThen requireData) async {
-    implicit request =>
-      def convert(grsCompanyDetailsOrException: Either[Option[Exception], GrsCompanyDetails]): CompanyDetails = {
-        for {
-          grsCompanyDetails <- grsCompanyDetailsOrException
-          companyDetails    <- grsMappingService.map(grsCompanyDetails)
-        } yield companyDetails
-      }.getOrElse(throw new InternalServerException("Invalid response from GRS"))
-
+  def callBack(journeyId: String): Action[AnyContent] = (identify andThen getData) async { implicit request =>
+    def convert(grsCompanyDetailsOrException: Either[Option[Exception], GrsCompanyDetails]): CompanyDetails = {
       for {
-        grsCompanyDetailsOrException <- grsConnector.retrieve(journeyId)
-        companyDetails = convert(grsCompanyDetailsOrException)
-        updatedAnswer  = request.userAnswers.set(CompanyDetailsPage, companyDetails).get
-        _ <- sessionRepository.set(updatedAnswer)
-      } yield Redirect(routes.DashboardController.onPageLoad())
+        grsCompanyDetails <- grsCompanyDetailsOrException
+        companyDetails    <- grsMappingService.map(grsCompanyDetails)
+      } yield companyDetails
+    }.getOrElse(throw new InternalServerException("Invalid response from GRS"))
+
+    for {
+      grsCompanyDetailsOrException <- grsConnector.retrieve(journeyId)
+      companyDetails = convert(grsCompanyDetailsOrException)
+      updatedAnswer  = request.userAnswers
+        .getOrElse(UserAnswers(request.userId))
+        .set(CompanyDetailsPage, companyDetails)
+        .get
+      _ <- sessionRepository.set(updatedAnswer)
+    } yield Redirect(routes.IndexController.onPageLoad())
 
   }
 
