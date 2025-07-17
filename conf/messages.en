@@ -69,3 +69,11 @@ registrationcheckYourAnswers.heading = checkYourAnswers
 registration.complete.title = registrationComplete
 registration.complete.heading = registrationComplete
 
+contactDetailsGuidance.title = contactDetailsGuidance
+contactDetailsGuidance.caption = Contact details
+contactDetailsGuidance.heading = We need contact details for this [company/group]
+contactDetailsGuidance.p1 = Provide HMRC with contact details for the person or team responsible for this company or group.
+contactDetailsGuidance.p2 = We’ll use these details to:
+contactDetailsGuidance.b1 = contact the right person if we have questions about the company’s tax accounting arrangements
+contactDetailsGuidance.b2 = send confirmation when the notification and certificate have been submitted
+contactDetailsGuidance.p3 = You could also include the Senior Accounting Officer’s contact details so they can stay informed.
