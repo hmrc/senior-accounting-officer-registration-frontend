@@ -1,7 +1,7 @@
 
 # senior-accounting-officer-registration-frontend
 
-This is a placeholder README.md for a new repository
+This frontend allows customers to register to the Senior Accounting Officer notification and certificate service.
 
 ## How to use the service
 
