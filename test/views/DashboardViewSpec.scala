@@ -32,7 +32,7 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
   given request: Request[_] = FakeRequest()
   given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
 
-  "IsDashboardView" - {
+  "DashboardView" - {
     "must generate a view" - {
       val doc = Jsoup.parse(SUT().toString)
 
