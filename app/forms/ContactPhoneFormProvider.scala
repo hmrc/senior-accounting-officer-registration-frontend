@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
-import models.*
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import javax.inject.Inject
 
-trait ModelGenerators
+import forms.mappings.Mappings
+import play.api.data.Form
 
-implicit lazy val arbitraryContactHaveYouAddedAll: Arbitrary[ContactHaveYouAddedAll] =
-  Arbitrary {
-    Gen.oneOf(ContactHaveYouAddedAll.values.toSeq)
-  }
+class ContactPhoneFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("contactPhone.error.required")
+        .verifying(maxLength(100, "contactPhone.error.length"))
+    )
+}

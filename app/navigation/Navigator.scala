@@ -18,6 +18,7 @@ package navigation
 
 import controllers.routes
 import models.*
+import models.ContactType.*
 import pages.*
 import play.api.mvc.Call
 
@@ -26,8 +27,27 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class Navigator @Inject() () {
 
-  private val normalRoutes: Page => UserAnswers => Call = { case _ =>
-    _ => routes.IndexController.onPageLoad()
+  private val normalRoutes: Page => UserAnswers => Call = {
+    case ContactNamePage(contactType)  => _ => routes.ContactRoleController.onPageLoad(contactType, NormalMode)
+    case ContactRolePage(contactType)  => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
+    case ContactEmailPage(contactType) => _ => routes.ContactPhoneController.onPageLoad(contactType, NormalMode)
+    case ContactPhonePage(contactType @ (First | Second)) =>
+      _ => routes.ContactHaveYouAddedAllController.onPageLoad(contactType)
+    case ContactPhonePage(Third) => _ => routes.ContactCheckYourAnswersController.onPageLoad()
+    case ContactHaveYouAddedAllPage(contactType @ (First | Second)) =>
+      userAnswers =>
+        if (userAnswers.get(ContactHaveYouAddedAllPage(contactType)).contains(ContactHaveYouAddedAll.Yes)) {
+          routes.ContactCheckYourAnswersController.onPageLoad()
+        } else {
+          routes.ContactNameController.onPageLoad(
+            contactType match {
+              case First  => Second
+              case Second => Third
+            },
+            NormalMode
+          )
+        }
+    case _ => _ => routes.IndexController.onPageLoad()
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
