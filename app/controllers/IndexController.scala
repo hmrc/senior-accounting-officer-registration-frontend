@@ -17,12 +17,10 @@
 package controllers
 
 import controllers.actions.*
-import models.NormalMode
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IsCompanyEligibleView
+import views.html.DashboardView
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -30,22 +28,19 @@ import scala.concurrent.ExecutionContext
 class IndexController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
+    getData: DataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
-    sessionRepository: SessionRepository,
-    view: IsCompanyEligibleView
+    view: DashboardView
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify { implicit request =>
-    sessionRepository.keepAlive(request.userId)
+  def onPageLoad: Action[AnyContent] = (identify andThen getData) { implicit request =>
     Ok(view())
   }
 
-  def continue: Action[AnyContent] = identify async { implicit request =>
-    for {
-      _ <- sessionRepository.keepAlive(request.userId)
-    } yield Redirect(routes.IsIncorporatedUnderUkCompanyActsController.onPageLoad())
+  def continue: Action[AnyContent] = (identify andThen getData) { implicit request =>
+    Redirect(routes.CheckYourAnswersController.onPageLoad())
   }
 
 }

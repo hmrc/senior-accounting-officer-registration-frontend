@@ -20,16 +20,4 @@ import models.*
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 
-trait ModelGenerators {
-
-  implicit lazy val arbitraryIsGroupOrStandalone: Arbitrary[IsGroupOrStandalone] =
-    Arbitrary {
-      Gen.oneOf(IsGroupOrStandalone.values)
-    }
-
-  implicit lazy val arbitraryIsIncorporatedUnderUkCompanyActs: Arbitrary[IsIncorporatedUnderUkCompanyActs] =
-    Arbitrary {
-      Gen.oneOf(IsIncorporatedUnderUkCompanyActs.values)
-    }
-
-}
+trait ModelGenerators

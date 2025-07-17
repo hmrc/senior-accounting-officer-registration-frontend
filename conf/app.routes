@@ -19,44 +19,11 @@ GET         /unauthorised                                           controllers.
 GET         /                                                       controllers.IndexController.onPageLoad()
 POST        /                                                       controllers.IndexController.continue()
 
-GET        /activities-within-the-uk                                controllers.IsIncorporatedUnderUkCompanyActsController.onPageLoad()
-POST       /activities-within-the-uk                                controllers.IsIncorporatedUnderUkCompanyActsController.onSubmit()
+GET         /check-your-answers                                     controllers.CheckYourAnswersController.onPageLoad()
+POST        /check-your-answers                                     controllers.CheckYourAnswersController.continue()
 
+GET         /registration-complete                                  controllers.RegistrationCompleteController.onPageLoad()
+POST        /registration-complete                                  controllers.RegistrationCompleteController.continue()
 
-GET        /activities-company                                      controllers.IsGroupOrStandaloneController.onPageLoad()
-POST       /activities-company                                      controllers.IsGroupOrStandaloneController.onSubmit()
-
-GET        /service-not-suitable/not-active-in-uk                   controllers.ServiceNotSuitableController.onNotInUkPageLoad()
-GET        /service-not-suitable/under-200-million-2-billion        controllers.ServiceNotSuitableController.onStandaloneUnderThresholdPageLoad()
-GET        /service-not-suitable/under-200-million-2-billion-group  controllers.ServiceNotSuitableController.onGroupUnderThresholdPageLoad()
-
-GET        /group-consolidated-annual-revenues                      controllers.GroupAnnualRevenuesController.onPageLoad()
-POST       /group-consolidated-annual-revenues                      controllers.GroupAnnualRevenuesController.onSubmit()
-
-GET        /company-eligible-group                                  controllers.EligibleController.onGroupPageLoad()
-GET        /company-eligible                                        controllers.EligibleController.onStandalonePageLoad()
-POST       /company-eligible                                        controllers.EligibleController.continue()
-
-GET        /eligibility/confirmation                                controllers.EligibilityConfirmationController.onPageLoad()
-POST       /eligibility/confirmation                                controllers.EligibilityConfirmationController.continue()
-
-GET        /group-consolidated-balance-sheet                        controllers.GroupBalanceSheetController.onPageLoad()
-POST       /group-consolidated-balance-sheet                        controllers.GroupBalanceSheetController.onSubmit()
-
-GET        /individual-annual-revenues                              controllers.StandaloneAnnualRevenuesController.onPageLoad()
-POST       /individual-annual-revenues                              controllers.StandaloneAnnualRevenuesController.onSubmit()
-
-GET        /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onPageLoad()
-POST       /individual-balance-sheet                                controllers.StandaloneBalanceSheetController.onSubmit()
-
-GET        /dashboard                                               controllers.DashboardController.onPageLoad()
-POST       /dashboard                                               controllers.DashboardController.continue()
-
-GET        /check-your-answers                                      controllers.CheckYourAnswersController.onPageLoad()
-POST       /check-your-answers                                      controllers.CheckYourAnswersController.continue()
-
-GET        /registration-complete                                   controllers.RegistrationCompleteController.onPageLoad()
-POST       /registration-complete                                   controllers.RegistrationCompleteController.continue()
-
-GET        /business-match                                          controllers.GrsController.start()
-GET        /business-match/result                                   controllers.GrsController.callBack(journeyId: String)
+GET         /business-match                                         controllers.GrsController.start()
+GET         /business-match/result                                  controllers.GrsController.callBack(journeyId: String)
