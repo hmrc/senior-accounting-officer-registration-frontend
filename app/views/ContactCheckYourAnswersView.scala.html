@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package generators
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton
+)
 
-import models.*
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+@()(implicit request: Request[_], messages: Messages)
 
-trait ModelGenerators
+@layout(pageTitle = titleNoForm(messages("contactCheckYourAnswers.title"))) {
 
-implicit lazy val arbitraryContactHaveYouAddedAll: Arbitrary[ContactHaveYouAddedAll] =
-  Arbitrary {
-    Gen.oneOf(ContactHaveYouAddedAll.values.toSeq)
-  }
+    <h1 class="govuk-heading-xl">@messages("contactCheckYourAnswers.heading")</h1>
+}

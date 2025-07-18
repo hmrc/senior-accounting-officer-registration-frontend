@@ -77,3 +77,50 @@ contactDetailsGuidance.p2 = We’ll use these details to:
 contactDetailsGuidance.b1 = contact the right person if we have questions about the company’s tax accounting arrangements
 contactDetailsGuidance.b2 = send confirmation when the notification and certificate have been submitted
 contactDetailsGuidance.p3 = You could also include the Senior Accounting Officer’s contact details so they can stay informed.
+
+contact.first.caption = First contact details
+contact.second.caption = Second contact details
+contact.third.caption = Third contact details
+
+contactName.title = Enter full name
+contactName.heading = Enter full name
+contactName.hint = Add the full name, role and contact details of the person or team that is able to deal with enquiries about the company's account and management of tax accounting arrangements.
+contactName.checkYourAnswersLabel = contactName
+contactName.error.required = Enter contactName
+contactName.error.length = ContactName must be 100 characters or less
+contactName.change.hidden = ContactName
+
+contactRole.title = Enter role
+contactRole.heading = Enter role
+contactRole.hint = For example, ‘Chief Financial Officer’.
+contactRole.checkYourAnswersLabel = contactRole
+contactRole.error.required = Enter contactRole
+contactRole.error.length = contactRole must be 100 characters or less
+contactRole.change.hidden = contactRole
+
+contactEmail.title = Enter email address
+contactEmail.heading = Enter email address
+contactEmail.hint = We’ll only use this to contact you about the company’s tax accounting arrangements
+contactEmail.checkYourAnswersLabel = contactEmail
+contactEmail.error.required = Enter contactEmail
+contactEmail.error.length = ContactEmail must be 100 characters or less
+contactEmail.change.hidden = ContactEmail
+
+contactPhone.title = Phone number
+contactPhone.heading = Phone number
+contactPhone.hint = We’ll only use this to contact you about the company’s tax accounting arrangements
+contactPhone.checkYourAnswersLabel = contactPhone
+contactPhone.error.required = Enter contactPhone
+contactPhone.error.length = ContactPhone must be 100 characters or less
+contactPhone.change.hidden = ContactPhone
+
+contactHaveYouAddedAll.title = Have you added all the contacts you need?
+contactHaveYouAddedAll.heading = Have you added all the contacts you need?
+contactHaveYouAddedAll.yes = Yes
+contactHaveYouAddedAll.no = No, add another contact
+contactHaveYouAddedAll.checkYourAnswersLabel = Have you added all the contacts you need?
+contactHaveYouAddedAll.error.required = Select contactHaveYouAddedAll
+contactHaveYouAddedAll.change.hidden = ContactHaveYouAddedAll
+
+contactCheckYourAnswers.title = contactCheckYourAnswers
+contactCheckYourAnswers.heading = contactCheckYourAnswers

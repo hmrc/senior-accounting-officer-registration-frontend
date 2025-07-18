@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models.*
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import models.ContactType
+import play.api.libs.json.JsPath
 
-trait ModelGenerators
+final case class ContactRolePage(contactType: ContactType) extends QuestionPage[String] {
 
-implicit lazy val arbitraryContactHaveYouAddedAll: Arbitrary[ContactHaveYouAddedAll] =
-  Arbitrary {
-    Gen.oneOf(ContactHaveYouAddedAll.values.toSeq)
-  }
+  override def path: JsPath = JsPath \ contactType.toMongoPath \ toString
+
+  override def toString: String = s"${contactType.toMongoPath}.contactRole"
+}

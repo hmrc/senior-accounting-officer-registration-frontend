@@ -1,32 +1,100 @@
 # microservice specific routes
 
-->          /hmrc-frontend                                          hmrcfrontend.Routes
+->          /hmrc-frontend                                     hmrcfrontend.Routes
 
-GET         /assets/*file                                           controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                                      controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /language/:lang                                         controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /language/:lang                                    controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET         /refresh-session                                        controllers.KeepAliveController.keepAlive()
+GET         /refresh-session                                   controllers.KeepAliveController.keepAlive()
 
-GET         /there-is-a-problem                                     controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+GET         /there-is-a-problem                                controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /account/sign-out-survey                                controllers.auth.AuthController.signOut()
-GET         /account/sign-out                                       controllers.auth.AuthController.signOutNoSurvey()
-GET         /account/signed-out                                     controllers.auth.SignedOutController.onPageLoad()
+GET         /account/sign-out-survey                           controllers.auth.AuthController.signOut()
+GET         /account/sign-out                                  controllers.auth.AuthController.signOutNoSurvey()
+GET         /account/signed-out                                controllers.auth.SignedOutController.onPageLoad()
 
-GET         /unauthorised                                           controllers.UnauthorisedController.onPageLoad()
+GET         /unauthorised                                      controllers.UnauthorisedController.onPageLoad()
 
-GET         /                                                       controllers.IndexController.onPageLoad()
-POST        /                                                       controllers.IndexController.continue()
+GET         /                                                  controllers.IndexController.onPageLoad()
+POST        /                                                  controllers.IndexController.continue()
 
-GET         /check-your-answers                                     controllers.CheckYourAnswersController.onPageLoad()
-POST        /check-your-answers                                     controllers.CheckYourAnswersController.continue()
+GET         /check-your-answers                                controllers.CheckYourAnswersController.onPageLoad()
+POST        /check-your-answers                                controllers.CheckYourAnswersController.continue()
 
-GET         /registration-complete                                  controllers.RegistrationCompleteController.onPageLoad()
-POST        /registration-complete                                  controllers.RegistrationCompleteController.continue()
+GET         /registration-complete                             controllers.RegistrationCompleteController.onPageLoad()
+POST        /registration-complete                             controllers.RegistrationCompleteController.continue()
 
-GET         /business-match                                         controllers.GrsController.start()
-GET         /business-match/result                                  controllers.GrsController.callBack(journeyId: String)
+GET         /business-match                                    controllers.GrsController.start()
+GET         /business-match/result                             controllers.GrsController.callBack(journeyId: String)
 
-GET         /contact-details                                        controllers.ContactDetailsGuidanceController.onPageLoad()
-POST        /contact-details                                        controllers.ContactDetailsGuidanceController.continue()
+GET         /contact-details                                   controllers.ContactDetailsGuidanceController.onPageLoad()
+POST        /contact-details                                   controllers.ContactDetailsGuidanceController.continue()
+
+GET         /contact-details/first/name                        controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
+POST        /contact-details/first/name                        controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
+GET         /contact-details/first/change-name                 controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+POST        /contact-details/first/change-name                 controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+
+GET         /contact-details/second/name                       controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
+POST        /contact-details/second/name                       controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
+GET         /contact-details/second/change-name                controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+POST        /contact-details/second/change-name                controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+
+GET         /contact-details/third/name                        controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
+POST        /contact-details/third/name                        controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
+GET         /contact-details/third/change-name                 controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
+POST        /contact-details/third/change-name                 controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
+
+GET         /contact-details/first/role                        controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
+POST        /contact-details/first/role                        controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
+GET         /contact-details/first/change-role                 controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+POST        /contact-details/first/change-role                 controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+
+GET         /contact-details/second/role                       controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
+POST        /contact-details/second/role                       controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
+GET         /contact-details/second/change-role                controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+POST        /contact-details/second/change-role                controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+
+GET         /contact-details/third/role                        controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
+POST        /contact-details/third/role                        controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
+GET         /contact-details/third/change-role                 controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
+POST        /contact-details/third/change-role                 controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
+
+GET         /contact-details/first/email                       controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
+POST        /contact-details/first/email                       controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
+GET         /contact-details/first/change-email                controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+POST        /contact-details/first/change-email                controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+
+GET         /contact-details/second/email                      controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
+POST        /contact-details/second/email                      controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
+GET         /contact-details/second/change-email               controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+POST        /contact-details/second/change-email               controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+
+GET         /contact-details/third/email                       controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
+POST        /contact-details/third/email                       controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
+GET         /contact-details/third/change-email                controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
+POST        /contact-details/third/change-email                controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
+
+GET         /contact-details/first/phone-number                controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
+POST        /contact-details/first/phone-number                controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
+GET         /contact-details/first/change-phone-number         controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+POST        /contact-details/first/change-phone-number         controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+
+GET         /contact-details/second/phone-number               controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
+POST        /contact-details/second/phone-number               controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
+GET         /contact-details/second/change-phone-number        controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+POST        /contact-details/second/change-phone-number        controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+
+GET         /contact-details/third/phone-number                controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
+POST        /contact-details/third/phone-number                controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
+GET         /contact-details/third/change-phone-number         controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
+POST        /contact-details/third/change-phone-number         controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
+
+GET         /contact-details/first/add-another                 controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.First)
+POST        /contact-details/first/add-another                 controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.First)
+
+GET         /contact-details/second/add-another                 controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.Second)
+POST        /contact-details/second/add-another                 controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.Second)
+
+GET         /contact-details/check-your-answers                controllers.ContactCheckYourAnswersController.onPageLoad()

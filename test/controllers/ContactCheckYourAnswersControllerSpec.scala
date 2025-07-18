@@ -17,45 +17,28 @@
 package controllers
 
 import base.SpecBase
-import models.ContactType.First
-import models.NormalMode
 import play.api.test.FakeRequest
-import play.api.test.Helpers.*
-import views.html.ContactDetailsGuidanceView
+import play.api.test.Helpers._
+import views.html.ContactCheckYourAnswersView
 
-class ContactDetailsGuidanceControllerSpec extends SpecBase {
+class ContactCheckYourAnswersControllerSpec extends SpecBase {
 
-  "ContactDetailsGuidance Controller" - {
+  "ContactCheckYourAnswers Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ContactDetailsGuidanceController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ContactDetailsGuidanceView]
+        val view = application.injector.instanceOf[ContactCheckYourAnswersView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }
-
-    "must Redirect to First Contact Name for a Continue" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(POST, routes.ContactDetailsGuidanceController.onPageLoad().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).get mustEqual routes.ContactNameController.onPageLoad(First, NormalMode).url
-      }
-    }
-
   }
 }

@@ -16,31 +16,24 @@
 
 package controllers
 
-import controllers.actions.*
-import models.ContactType.First
-import models.NormalMode
-
+import controllers.actions._
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ContactDetailsGuidanceView
+import views.html.ContactCheckYourAnswersView
 
-class ContactDetailsGuidanceController @Inject() (
+class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    view: ContactDetailsGuidanceView
+    view: ContactCheckYourAnswersView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     Ok(view())
-  }
-
-  def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Redirect(routes.ContactNameController.onPageLoad(First, NormalMode))
   }
 }
