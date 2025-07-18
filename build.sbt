@@ -9,8 +9,8 @@ ThisBuild / scalaVersion := "3.3.6"
 
 lazy val microservice = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
-  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
-  .settings(inConfig(Test)(testSettings)*)
+  .disablePlugins(JUnitXmlReportPlugin) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .settings(inConfig(Test)(testSettings) *)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
     name := appName,
@@ -36,12 +36,12 @@ lazy val microservice = (project in file("."))
       "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
-    retrieveManaged := true,
-    pipelineStages := Seq(digest),
-    Assets / pipelineStages := Seq(concat),
+    retrieveManaged          := true,
+    pipelineStages           := Seq(digest),
+    Assets / pipelineStages  := Seq(concat),
     PlayKeys.playDefaultPort := 10057
   )
-  .settings(CodeCoverageSettings.settings*)
+  .settings(CodeCoverageSettings.settings *)
 
 lazy val testSettings: Seq[Def.Setting[_]] = Seq(
   fork := true,
