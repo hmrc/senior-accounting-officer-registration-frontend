@@ -72,7 +72,7 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
       status(result) mustEqual SEE_OTHER
       headers(result)
         .get("Location")
-        .value mustBe s"http://localhost/senior-accounting-officer/registration/business-match/result?journeyId=$testJourneyId"
+        .value mustBe s"http://localhost:10057/senior-accounting-officer/registration/business-match/result?journeyId=$testJourneyId"
     }
   }
 

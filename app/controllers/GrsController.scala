@@ -53,12 +53,12 @@ class GrsController @Inject() (
 
   def start(): Action[AnyContent] = identify.async { implicit request =>
     val continueUrl =
-      controllers.routes.GrsController.callBack("").absoluteURL().replaceAll("\\?.*$", "")
+      appConfig.prependHost(controllers.routes.GrsController.callBack("").url().replaceAll("\\?.*$", ""))
     val grsStartRequest = NewJourneyRequest(
       continueUrl = continueUrl,
       businessVerificationCheck = false,
       deskProServiceId = appConfig.contactFormServiceIdentifier,
-      signOutUrl = controllers.auth.routes.AuthController.signOut().absoluteURL(),
+      signOutUrl = appConfig.prependHost(controllers.auth.routes.AuthController.signOut()),
       regime = "VATC", // TODO confirm
       accessibilityUrl = accessibilityStatementConfig.url.get,
       labels = ServiceLabels(en = messagesApi.preferred(Seq(Lang("en"))).messages("service.name"))
