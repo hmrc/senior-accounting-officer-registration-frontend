@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import models.config.FeatureToggle.*
 import play.api.Configuration
 import play.api.i18n.Lang
-import play.api.mvc.RequestHeader
+import play.api.mvc.{Call, RequestHeader}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import FrontendAppConfig.*
 
@@ -64,7 +64,16 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
 }
 
 object FrontendAppConfig {
+  private val pathSeparator: String = "/"
+
   extension (str: String) {
-    def removeTrailingPathSeparator: String = str.replaceAll("/$", "")
+    def removeTrailingPathSeparator: String = str.replaceAll(pathSeparator + "$", "")
+  }
+
+  extension (appConfig: FrontendAppConfig) {
+    def prependHost(url: String): String =
+      s"${appConfig.host}${if url.startsWith(pathSeparator) then "" else pathSeparator}$url"
+
+    def prependHost(call: Call): String = prependHost(call.url)
   }
 }

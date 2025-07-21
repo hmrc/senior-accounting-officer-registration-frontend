@@ -57,7 +57,6 @@ class ContactEmailViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
           val caption = mainContent.select("span.govuk-caption-m")
           caption.size() mustBe 1
-
           caption.get(0).text() mustBe (contactType match {
             case First  => "First contact details"
             case Second => "Second contact details"

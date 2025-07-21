@@ -53,12 +53,12 @@ class GrsController @Inject() (
 
   def start(): Action[AnyContent] = identify.async { implicit request =>
     val continueUrl =
-      controllers.routes.GrsController.callBack("").absoluteURL().replaceAll("\\?.*$", "")
+      appConfig.prependHost(controllers.routes.GrsController.callBack("").url().replaceAll("\\?.*$", ""))
     val grsStartRequest = NewJourneyRequest(
       continueUrl = continueUrl,
       businessVerificationCheck = false,
       deskProServiceId = appConfig.contactFormServiceIdentifier,
-      signOutUrl = controllers.auth.routes.AuthController.signOut().absoluteURL(),
+      signOutUrl = appConfig.prependHost(controllers.auth.routes.AuthController.signOut()),
       regime = "VATC", // TODO confirm
       accessibilityUrl = accessibilityStatementConfig.url.get,
       labels = ServiceLabels(en = messagesApi.preferred(Seq(Lang("en"))).messages("service.name"))
@@ -67,9 +67,15 @@ class GrsController @Inject() (
     for {
       r <- grsConnector.start(grsStartRequest)
     } yield {
-      val response = Try(Json.parse(r.body).as[NewJourneyResponse])
-        .getOrElse(throw InternalServerException("Invalid start journey response from GRS"))
-      SeeOther(response.journeyStartUrl)
+      r.status match {
+        case OK =>
+          val response =
+            Try(Json.parse(r.body).as[NewJourneyResponse])
+              .getOrElse(throw InternalServerException("Malformatted start journey response from GRS"))
+          SeeOther(response.journeyStartUrl)
+        case code =>
+          throw InternalServerException(s"Invalid start journey response from GRS, status=$code")
+      }
     }
   }
 
