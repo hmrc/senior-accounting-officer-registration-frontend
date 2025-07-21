@@ -26,16 +26,18 @@ import views.html.ContactCheckYourAnswersView
 
 import scala.jdk.CollectionConverters.*
 import org.jsoup.nodes.Element
+import models.ContactInfo
 
 class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   val SUT: ContactCheckYourAnswersView = app.injector.instanceOf[ContactCheckYourAnswersView]
   given request: Request[_]            = FakeRequest()
   given Messages                       = app.injector.instanceOf[MessagesApi].preferred(request)
-
+  
   "ContactCheckYourAnswersView" - {
     "must generate a view" - {
-      val doc = Jsoup.parse(SUT().toString)
+      val contact = ContactInfo("Jackson Ross", "Finance Manager", "jacksonr@abclimited.co.uk", "07717384239")
+      val doc = Jsoup.parse(SUT(contact).toString)
 
       "with the correct heading" in {
         val mainContent = doc.getElementById("main-content")
@@ -69,7 +71,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
           valueText = "Jackson Ross",
           actionText = "Change",
           actionHiddenText = "change the full name",
-          actionHref = "#"
+          actionHref = "/senior-accounting-officer/registration/contact-details/first/change-name"
         )
         validateRow(
           row = rows.get(1),
@@ -77,7 +79,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
           valueText = "Finance Manager",
           actionText = "Change",
           actionHiddenText = "change the role",
-          actionHref = "#"
+          actionHref = "/senior-accounting-officer/registration/contact-details/first/change-role"
         )
         validateRow(
           row = rows.get(2),
@@ -85,7 +87,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
           valueText = "jacksonr@abclimited.co.uk",
           actionText = "Change",
           actionHiddenText = "change the email address",
-          actionHref = "#"
+          actionHref = "/senior-accounting-officer/registration/contact-details/first/change-email"
         )
         validateRow(
           row = rows.get(3),
@@ -93,7 +95,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
           valueText = "07717384239",
           actionText = "Change",
           actionHiddenText = "change the phone number",
-          actionHref = "#"
+          actionHref = "/senior-accounting-officer/registration/contact-details/first/change-phone-number"
         )
         def validateRow(
             row: Element,

@@ -19,7 +19,7 @@ layout: templates.Layout,
 govukButton: GovukButton
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(contact: ContactInfo)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("contactCheckYourAnswers.title"))) {
 
@@ -33,11 +33,11 @@ govukButton: GovukButton
             @messages("contactCheckYourAnswers.name")
         </dt>
         <dd class="govuk-summary-list__value">
-            Jackson Ross
+            @contact.name
         </dd>
 
         <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactName.change.hidden")</span></a>
+            <a class="govuk-link" href="@routes.ContactNameController.onPageLoad(ContactType.First, CheckMode).url">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactName.change.hidden")</span></a>
 
         </dd>
 
@@ -50,11 +50,11 @@ govukButton: GovukButton
             @messages("contactCheckYourAnswers.role")
         </dt>
         <dd class="govuk-summary-list__value">
-            Finance Manager
+            @contact.role
         </dd>
 
         <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactRole.change.hidden")</span></a>
+            <a class="govuk-link" href="@routes.ContactRoleController.onPageLoad(ContactType.First, CheckMode).url">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactRole.change.hidden")</span></a>
 
         </dd>
 
@@ -67,11 +67,11 @@ govukButton: GovukButton
             @messages("contactCheckYourAnswers.email")
         </dt>
         <dd class="govuk-summary-list__value">
-            jacksonr@@abclimited.co.uk
+            @contact.email
         </dd>
 
         <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactEmail.change.hidden")</span></a>
+            <a class="govuk-link" href="@routes.ContactEmailController.onPageLoad(ContactType.First, CheckMode).url">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactEmail.change.hidden")</span></a>
         </dd>
     </div>
 
@@ -82,11 +82,11 @@ govukButton: GovukButton
             @messages("contactCheckYourAnswers.phone")
         </dt>
         <dd class="govuk-summary-list__value">
-            07717384239
+            @contact.phone
         </dd>
 
         <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactPhone.change.hidden")</span></a>
+            <a class="govuk-link" href="@routes.ContactPhoneController.onPageLoad(ContactType.First, CheckMode).url">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactPhone.change.hidden")</span></a>
 
         </dd>
 
