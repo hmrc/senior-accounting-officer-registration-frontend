@@ -1,101 +1,99 @@
 @*
- * Copyright 2025 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
+* Copyright 2025 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 
 @this(
 layout: templates.Layout,
 govukButton: GovukButton
 )
 
-@(contact: ContactInfo)(implicit request: Request[_], messages: Messages)
+@(contacts: List[ContactInfo])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("contactCheckYourAnswers.title"))) {
 
-<h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
-<h2 class="govuk-heading-s">First contact details</h2>
-<dl class="govuk-summary-list">
+    <h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
+    <h2 class="govuk-heading-s">First contact details</h2>
+    <dl class="govuk-summary-list">
+        @for((contact, index) <- contacts.zipWithIndex){ <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @messages("contactCheckYourAnswers.name")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @contact.name
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link"
+                    href="@routes.ContactNameController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
+                        class="govuk-visually-hidden">@messages("contactName.change.hidden")</span></a>
+            </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @messages("contactCheckYourAnswers.role")
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @contact.role
+                </dd>
 
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link"
+                        href="@routes.ContactRoleController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
+                            class="govuk-visually-hidden">@messages("contactRole.change.hidden")</span></a>
 
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("contactCheckYourAnswers.name")
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @contact.name
-        </dd>
+                </dd>
 
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="@routes.ContactNameController.onPageLoad(ContactType.First, CheckMode).url">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactName.change.hidden")</span></a>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @messages("contactCheckYourAnswers.email")
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @contact.email
+                </dd>
 
-        </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link"
+                        href="@routes.ContactEmailController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
+                            class="govuk-visually-hidden">@messages("contactEmail.change.hidden")</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @messages("contactCheckYourAnswers.phone")
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @contact.phone
+                </dd>
 
-    </div>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link"
+                        href="@routes.ContactPhoneController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
+                            class="govuk-visually-hidden">@messages("contactPhone.change.hidden")</span></a>
+                </dd>
+            </div>
+        }
+    </dl>
 
-
-
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("contactCheckYourAnswers.role")
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @contact.role
-        </dd>
-
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="@routes.ContactRoleController.onPageLoad(ContactType.First, CheckMode).url">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactRole.change.hidden")</span></a>
-
-        </dd>
-
-    </div>
-
-
-
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("contactCheckYourAnswers.email")
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @contact.email
-        </dd>
-
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="@routes.ContactEmailController.onPageLoad(ContactType.First, CheckMode).url">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactEmail.change.hidden")</span></a>
-        </dd>
-    </div>
-
-
-
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @messages("contactCheckYourAnswers.phone")
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @contact.phone
-        </dd>
-
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="@routes.ContactPhoneController.onPageLoad(ContactType.First, CheckMode).url">@messages("site.change")<span class="govuk-visually-hidden">@messages("contactPhone.change.hidden")</span></a>
-
-        </dd>
-
-    </div>
-
-
-</dl>
-
-@govukButton(
-            ButtonViewModel(messages("contactCheckYourAnswers.continue")).withAttribute("id", "submit")
-        )
+    @govukButton(
+        ButtonViewModel(messages("contactCheckYourAnswers.continue")).withAttribute("id", "submit")
+    )
 }
+
+@contactType(index: Int) = @{
+    index match{
+        case 0 => ContactType.First
+        case 1 => ContactType.Second
+        case _ => ContactType.Third
+    }}

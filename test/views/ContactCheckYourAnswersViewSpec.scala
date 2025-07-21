@@ -36,8 +36,8 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
   
   "ContactCheckYourAnswersView" - {
     "must generate a view" - {
-      val contact = ContactInfo("Jackson Ross", "Finance Manager", "jacksonr@abclimited.co.uk", "07717384239")
-      val doc = Jsoup.parse(SUT(contact).toString)
+      val contacts = List(ContactInfo("Jackson Ross", "Finance Manager", "jacksonr@abclimited.co.uk", "07717384239"))
+      val doc = Jsoup.parse(SUT(contacts).toString)
 
       "with the correct heading" in {
         val mainContent = doc.getElementById("main-content")

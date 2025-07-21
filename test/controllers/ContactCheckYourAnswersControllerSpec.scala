@@ -38,10 +38,10 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[ContactCheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(ContactInfo(name = "Jackson Ross",
+        contentAsString(result) mustEqual view(List(ContactInfo(name = "Jackson Ross",
       role = "Finance Manager",
       email = "jacksonr@abclimited.co.uk",
-      phone = "07717384239"))(request, messages(application)).toString
+      phone = "07717384239")))(request, messages(application)).toString
       }
     }
   }

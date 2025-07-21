@@ -35,11 +35,11 @@ class ContactCheckYourAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(view(ContactInfo(
+    Ok(view(List[ContactInfo](ContactInfo(
       name = "Jackson Ross",
       role = "Finance Manager",
       email = "jacksonr@abclimited.co.uk",
-      phone = "07717384239"
+      phone = "07717384239")
     )))
   }
 }
