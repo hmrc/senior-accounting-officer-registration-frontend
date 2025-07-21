@@ -88,7 +88,7 @@ contactName.hint = Add the full name, role and contact details of the person or 
 contactName.checkYourAnswersLabel = contactName
 contactName.error.required = Enter contactName
 contactName.error.length = ContactName must be 100 characters or less
-contactName.change.hidden = ContactName
+contactName.change.hidden = change the full name
 
 contactRole.title = Enter role
 contactRole.heading = Enter role
@@ -96,7 +96,7 @@ contactRole.hint = For example, ‘Chief Financial Officer’.
 contactRole.checkYourAnswersLabel = contactRole
 contactRole.error.required = Enter contactRole
 contactRole.error.length = contactRole must be 100 characters or less
-contactRole.change.hidden = contactRole
+contactRole.change.hidden = change the role
 
 contactEmail.title = Enter email address
 contactEmail.heading = Enter email address
@@ -104,7 +104,7 @@ contactEmail.hint = We’ll only use this to contact you about the company’s t
 contactEmail.checkYourAnswersLabel = contactEmail
 contactEmail.error.required = Enter contactEmail
 contactEmail.error.length = ContactEmail must be 100 characters or less
-contactEmail.change.hidden = ContactEmail
+contactEmail.change.hidden = change the email address
 
 contactPhone.title = Phone number
 contactPhone.heading = Phone number
@@ -112,7 +112,7 @@ contactPhone.hint = We’ll only use this to contact you about the company’s t
 contactPhone.checkYourAnswersLabel = contactPhone
 contactPhone.error.required = Enter contactPhone
 contactPhone.error.length = ContactPhone must be 100 characters or less
-contactPhone.change.hidden = ContactPhone
+contactPhone.change.hidden = change the phone number
 
 contactHaveYouAddedAll.title = Have you added all the contacts you need?
 contactHaveYouAddedAll.heading = Have you added all the contacts you need?
@@ -125,3 +125,7 @@ contactHaveYouAddedAll.change.hidden = ContactHaveYouAddedAll
 contactCheckYourAnswers.title = Check your answers
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Save and Continue
+contactCheckYourAnswers.name = Full name
+contactCheckYourAnswers.role = Role
+contactCheckYourAnswers.email = Email address
+contactCheckYourAnswers.phone = Phone number
