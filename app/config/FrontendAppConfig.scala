@@ -60,6 +60,7 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
   val grsBaseUrl: String = servicesConfig.baseUrl("incorporated-entity-identification-frontend")
+  val grsStubsBaseUrl: String = servicesConfig.baseUrl("incorporated-entity-identification-frontend-stubs")
   def stubGrs: Boolean   = isEnabled(StubGrs)
 }
 

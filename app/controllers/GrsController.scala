@@ -74,7 +74,7 @@ class GrsController @Inject() (
               .getOrElse(throw InternalServerException("Malformatted start journey response from GRS"))
           SeeOther(response.journeyStartUrl)
         case code =>
-          throw InternalServerException(s"Invalid start journey response from GRS, status=$code")
+          throw InternalServerException(s"Invalid start journey response from GRS, status=$code body=${r.body}")
       }
     }
   }

@@ -43,7 +43,7 @@ class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(us
 
     val url: String =
       if (appConfig.stubGrs) {
-        appConfig.prependHost(controllers.testonly.routes.GrsStubsController.startGrs())
+        s"${appConfig.grsStubsBaseUrl}${controllers.testonly.routes.GrsStubsController.startGrs()}"
       } else {
         s"${appConfig.grsBaseUrl}/incorporated-entity-identification/api/limited-company-journey"
       }
@@ -58,7 +58,7 @@ class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(us
     given HeaderCarrier = FrontendHeaderCarrier(implicitly[RequestHeader])
     val path            =
       if (appConfig.stubGrs) {
-        appConfig.prependHost(controllers.testonly.routes.GrsStubsController.getGrs(journeyId).url())
+        s"${appConfig.grsStubsBaseUrl}${controllers.testonly.routes.GrsStubsController.getGrs(journeyId).url()}"
       } else {
         s"${appConfig.grsBaseUrl}/incorporated-entity-identification/api/journey/$journeyId"
       }
