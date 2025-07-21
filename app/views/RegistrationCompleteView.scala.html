@@ -24,7 +24,27 @@
 
 @layout(pageTitle = titleNoForm(messages("registrationComplete.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("registrationComplete.heading")</h1>
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+            @messages("registration.complete.heading")
+        </h1>
+        <div class="govuk-panel__body">
+            @messages("registration.complete.referenceNumberPrefix") <strong>XMPLR0123456789</strong>
+        </div>
+    </div>
+
+    <p class="govuk-body">ABC Ltd @messages("registration.complete.p1") 17 January 2025 at 11:45am (GMT).</p>
+    <p class="govuk-body">@messages("registration.complete.p2"). </p>
+    <p class="govuk-body">@messages("registration.complete.p3")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li><a class="govuk-link" href="#">@messages("registration.complete.a1")</a></li>
+        <li><a class="govuk-link" href="#">@messages("registration.complete.a2")</a></li>
+    </ul>
+
+    <h2 class="govuk-heading-m">@messages("registration.complete.h2")</h2>
+    <p class="govuk-body">@messages("registration.complete.p4")
+        <a class="govuk-link" href="/beta/beta-sao-digitalisation-dashboard.html">@messages("registration.complete.a3").</a>
+    </p>
 
     @formHelper(action = routes.RegistrationCompleteController.continue()) {
         @govukButton(
