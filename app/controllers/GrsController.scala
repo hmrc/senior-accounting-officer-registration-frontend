@@ -54,7 +54,7 @@ class GrsController @Inject() (
       r <- grsConnector.start(grsStartRequest)
     } yield {
       r.status match {
-        case OK =>
+        case CREATED =>
           val response =
             Try(Json.parse(r.body).as[NewJourneyResponse])
               .getOrElse(throw InternalServerException("Malformatted start journey response from GRS"))

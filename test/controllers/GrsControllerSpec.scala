@@ -56,7 +56,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         val request      = FakeRequest(GET, routes.GrsController.start().url)
 
         when(grsConnector.start(any())(using any())).thenReturn(
-          Future.successful(HttpResponse(status = 200, body = validStartResponse))
+          Future.successful(HttpResponse(status = CREATED, body = validStartResponse))
         )
 
         val result = route(application, request).value
@@ -74,7 +74,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
           val request      = FakeRequest(GET, routes.GrsController.start().url)
 
           when(grsConnector.start(any())(using any())).thenReturn(
-            Future.successful(HttpResponse(status = 200, body = validStartResponse))
+            Future.successful(HttpResponse(status = CREATED, body = validStartResponse))
           )
 
           val result = route(application, request).value
@@ -84,7 +84,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "when GRS returns a 200 with an invalid json must throw InternalServerException" in {
+      "when GRS returns a 201 with an invalid json must throw InternalServerException" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -92,7 +92,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
           val request      = FakeRequest(GET, routes.GrsController.start().url)
 
           when(grsConnector.start(any())(using any())).thenReturn(
-            Future.successful(HttpResponse(status = 200))
+            Future.successful(HttpResponse(status = CREATED))
           )
 
           val result = route(application, request).value
@@ -109,7 +109,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
           val request      = FakeRequest(GET, routes.GrsController.start().url)
 
           when(grsConnector.start(any())(using any())).thenReturn(
-            Future.successful(HttpResponse(status = 404))
+            Future.successful(HttpResponse(status = NOT_FOUND))
           )
 
           val result = route(application, request).value
@@ -126,7 +126,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
           val request      = FakeRequest(GET, routes.GrsController.start().url)
 
           when(grsConnector.start(any())(using any())).thenReturn(
-            Future.successful(HttpResponse(status = 500))
+            Future.successful(HttpResponse(status = INTERNAL_SERVER_ERROR))
           )
 
           val result = route(application, request).value
