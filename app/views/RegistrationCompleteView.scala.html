@@ -20,7 +20,7 @@
         formHelper: FormWithCSRF
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(registeredCompany:String, registrationId: String, registrationDate: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("registrationComplete.title"))) {
 
@@ -29,11 +29,11 @@
             @messages("registration.complete.heading")
         </h1>
         <div class="govuk-panel__body">
-            @messages("registration.complete.referenceNumberPrefix") <strong>XMPLR0123456789</strong>
+            @messages("registration.complete.referenceNumberPrefix") <strong>@registrationId</strong>
         </div>
     </div>
 
-    <p class="govuk-body">ABC Ltd @messages("registration.complete.p1") 17 January 2025 at 11:45am (GMT).</p>
+    <p class="govuk-body">@registeredCompany @messages("registration.complete.p1") @registrationDate.</p>
     <p class="govuk-body">@messages("registration.complete.p2"). </p>
     <p class="govuk-body">@messages("registration.complete.p3")</p>
     <ul class="govuk-list govuk-list--bullet">
