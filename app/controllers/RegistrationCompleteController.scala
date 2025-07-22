@@ -16,12 +16,16 @@
 
 package controllers
 
-import controllers.actions._
+import controllers.actions.*
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
+import models.registration.RegistrationCompleteDetails
+
+import java.time.LocalDateTime
 
 class RegistrationCompleteController @Inject() (
     override val messagesApi: MessagesApi,
@@ -34,12 +38,18 @@ class RegistrationCompleteController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = identify { implicit request =>
-    //hard coded values below for now
-    val registeredCompany = "ABCD Ltd"
-    val registrationId = "XMPLR0123456789"
+    // hard coded values below for now
+    val registeredCompany    = "ABCD Ltd"
+    val registrationId       = "XMPLR0123456789"
     val registrationDateTime = "17 January 2025 at 11:45am (GMT)"
 
-    Ok(view(registeredCompany, registrationId, registrationDateTime))
+    val registrationCompleteDetails = RegistrationCompleteDetails(
+      companyName = "ABC Ltd",
+      registrationId = "XMPLR0123456789",
+      registrationDateTime = LocalDateTime.of(2025, 1, 17, 11, 45)
+    )
+
+    Ok(view(registrationCompleteDetails))
   }
 
   def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>

@@ -17,6 +17,7 @@
 package views
 
 import base.SpecBase
+import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
@@ -24,6 +25,7 @@ import play.api.mvc.Request
 import play.api.test.FakeRequest
 import views.html.{ContactDetailsGuidanceView, RegistrationCompleteView}
 
+import java.time.LocalDateTime
 import scala.jdk.CollectionConverters.*
 
 class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
@@ -31,10 +33,17 @@ class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
   val SUT: RegistrationCompleteView = app.injector.instanceOf[RegistrationCompleteView]
   given request: Request[_]         = FakeRequest()
   given Messages                    = app.injector.instanceOf[MessagesApi].preferred(request)
+  private val testDateTime          = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
+
+  private val registrationCompleteDetails = RegistrationCompleteDetails(
+    companyName = "Test Corp Ltd",
+    registrationId = "REG12345",
+    registrationDateTime = testDateTime
+  )
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
-      val doc = Jsoup.parse(SUT().toString)
+      val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
       "with the correct heading" in {
         val mainContent = doc.getElementById("main-content")

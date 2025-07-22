@@ -14,13 +14,16 @@
  * limitations under the License.
  *@
 
+@import java.time.format.DateTimeFormatter
+@import models.registration.RegistrationCompleteDetails
+
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         formHelper: FormWithCSRF
 )
 
-@(registeredCompany:String, registrationId: String, registrationDate: String)(implicit request: Request[_], messages: Messages)
+@(details: RegistrationCompleteDetails)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("registrationComplete.title"))) {
 
@@ -29,11 +32,12 @@
             @messages("registration.complete.heading")
         </h1>
         <div class="govuk-panel__body">
-            @messages("registration.complete.referenceNumberPrefix") <strong>@registrationId</strong>
+            @messages("registration.complete.referenceNumberPrefix") <strong>@details.registrationId</strong>
         </div>
     </div>
 
-    <p class="govuk-body">@registeredCompany @messages("registration.complete.p1") @registrationDate.</p>
+    <p class="govuk-body">@details.companyName @messages("registration.complete.p1")
+        @details.formattedDateTime</p>
     <p class="govuk-body">@messages("registration.complete.p2"). </p>
     <p class="govuk-body">@messages("registration.complete.p3")</p>
     <ul class="govuk-list govuk-list--bullet">
