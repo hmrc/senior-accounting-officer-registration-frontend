@@ -16,20 +16,18 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import connectors.GrsConnector
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import models.UserAnswers
-import models.grs.create.{NewJourneyRequest, NewJourneyResponse, ServiceLabels}
+import models.grs.create.NewJourneyResponse
 import models.grs.retrieve.CompanyDetails as GrsCompanyDetails
 import models.registration.CompanyDetails
 import pages.CompanyDetailsPage
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import services.GrsMappingService
-import uk.gov.hmrc.hmrcfrontend.config.AccessibilityStatementConfig
+import services.GrsService
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -43,26 +41,14 @@ class GrsController @Inject() (
     getData: DataRetrievalAction,
     grsConnector: GrsConnector,
     val controllerComponents: MessagesControllerComponents,
-    grsMappingService: GrsMappingService,
-    appConfig: FrontendAppConfig,
-    accessibilityStatementConfig: AccessibilityStatementConfig,
+    grsMappingService: GrsService,
     sessionRepository: SessionRepository
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   def start(): Action[AnyContent] = identify.async { implicit request =>
-    val continueUrl =
-      appConfig.prependHost(controllers.routes.GrsController.callBack("").url().replaceAll("\\?.*$", ""))
-    val grsStartRequest = NewJourneyRequest(
-      continueUrl = continueUrl,
-      businessVerificationCheck = false,
-      deskProServiceId = appConfig.contactFormServiceIdentifier,
-      signOutUrl = appConfig.prependHost(controllers.auth.routes.AuthController.signOut()),
-      regime = "VATC", // TODO confirm
-      accessibilityUrl = accessibilityStatementConfig.url.get,
-      labels = ServiceLabels(en = messagesApi.preferred(Seq(Lang("en"))).messages("service.name"))
-    )
+    val grsStartRequest = grsMappingService.newRequest()
 
     for {
       r <- grsConnector.start(grsStartRequest)

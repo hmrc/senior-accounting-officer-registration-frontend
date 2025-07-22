@@ -25,7 +25,8 @@ import viewmodels.govuk.checkbox.*
 enum FeatureToggle(val key: String, val name: String) {
   override def toString: String = s"features.$key"
 
-  case StubGrs extends FeatureToggle("stubGrs", "Stub GRS")
+  case StubGrs             extends FeatureToggle("stubGrs", "Stub GRS")
+  case GrsAllowRelativeUrl extends FeatureToggle("grsAllowsRelativeUrl", "GRS Allows Relative URL")
 }
 
 object FeatureToggle extends FeatureConfigSupport {
