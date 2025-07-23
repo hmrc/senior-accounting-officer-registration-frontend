@@ -43,7 +43,7 @@ class GrsStubsController @Inject() (
     val uuid            = UUID.randomUUID()
     val journeyStartUrl = appConfig.prependHost(routes.GrsStubsController.getStubGrs(uuid.toString))
 
-    Ok(Json.toJson(NewJourneyResponse(journeyStartUrl)))
+    Created(Json.toJson(NewJourneyResponse(journeyStartUrl)))
   }
 
   def getStubGrs(journeyId: String): Action[AnyContent] = identify { implicit request =>

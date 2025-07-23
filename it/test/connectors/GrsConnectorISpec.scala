@@ -37,8 +37,8 @@ import java.util.UUID
 class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherValues {
 
   override def additionalConfigs: Map[String, Any] = Map(
-    "features.stubGrs" -> "true",
-    "host"             -> wireMockBaseUrlAsString
+    "features.stubGrs"                                                             -> "true",
+    "microservice.services.incorporated-entity-identification-frontend-stubs.port" -> wireMockPort
   )
 
   val SUT          = app.injector.instanceOf[GrsConnector]
