@@ -18,7 +18,7 @@ package models.registration
 
 import play.api.i18n.Messages
 import play.api.libs.json.Reads.*
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, OFormat, OWrites}
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -31,9 +31,9 @@ final case class RegistrationCompleteDetails(
 )
 
 object RegistrationCompleteDetails {
-  private val customDateFormatter1           = DateTimeFormatter.ofPattern("d MMMM yyyy")
-  private val customDateFormatter2           = DateTimeFormatter.ofPattern("h.mma '(GMT)'")
-  given OFormat[RegistrationCompleteDetails] = Json.format[RegistrationCompleteDetails]
+  private val customDateFormatter1                  = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  private val customDateFormatter2                  = DateTimeFormatter.ofPattern("h:mma '(GMT)'")
+  given reads: OFormat[RegistrationCompleteDetails] = Json.format[RegistrationCompleteDetails]
 
   extension (details: RegistrationCompleteDetails) {
     def formattedDateTime(messages: Messages): String = {

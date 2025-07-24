@@ -55,7 +55,7 @@ class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
       "with the correct heading panel text" in {
         val mainContent = doc.getElementById("main-content")
         val panel       = mainContent.getElementsByClass("govuk-panel__body")
-        panel.get(0).text() must include("Your reference number ")
+        panel.get(0).text() mustBe "Your reference number REG12345"
       }
 
       "with the correct links and texts" in {
@@ -81,9 +81,9 @@ class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
         paragraphs
           .get(0)
-          .text() must include(
-          "has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on"
-        )
+          .text() mustBe
+          "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT)"
+
         paragraphs
           .get(1)
           .text() mustBe "We have sent a confirmation email with your reference ID to al the contact you gave during registration."

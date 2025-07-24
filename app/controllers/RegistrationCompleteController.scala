@@ -38,10 +38,6 @@ class RegistrationCompleteController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = identify { implicit request =>
-    // hard coded values below for now
-    val registeredCompany    = "ABCD Ltd"
-    val registrationId       = "XMPLR0123456789"
-    val registrationDateTime = "17 January 2025 at 11:45am (GMT)"
 
     val registrationCompleteDetails = RegistrationCompleteDetails(
       companyName = "ABC Ltd",

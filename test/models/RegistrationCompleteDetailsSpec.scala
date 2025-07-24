@@ -42,13 +42,13 @@ class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers with Sca
   private val registrationCompleteDetailsJsonObj = Json.obj(
     "companyName"          -> "Test Corp Ltd",
     "registrationId"       -> "REG12345",
-    "registrationDateTime" -> "17 January 2025 at 11.45AM (GMT)"
+    "registrationDateTime" -> "17 January 2025 at 11:45AM (GMT)"
   )
 
   "The formattedDatetimeHelperMethod" - {
 
     "must return the date string in the correct custom format for a standard AM time in english" in {
-      val expectedFormat = "17 January 2025 at 11.45am (GMT)"
+      val expectedFormat = "17 January 2025 at 11:45am (GMT)"
       when(messages("registration-complete.dateStr1")) thenReturn "at"
       when(messages.lang) thenReturn new Lang(Locale.forLanguageTag("en"))
       registrationCompleteDetails.formattedDateTime(messages) mustBe expectedFormat
@@ -58,7 +58,7 @@ class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers with Sca
       when(messages("registration-complete.dateStr1")) thenReturn "someWelshStringFromWelshMessages"
       when(messages.lang) thenReturn new Lang(Locale.forLanguageTag("cy"))
       registrationCompleteDetails.formattedDateTime(messages) must include("17 Ionawr 2025")
-      registrationCompleteDetails.formattedDateTime(messages) must include("11.45yb (GMT)")
+      registrationCompleteDetails.formattedDateTime(messages) must include("11:45yb (GMT)")
     }
   }
 }
