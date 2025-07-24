@@ -20,11 +20,14 @@ import models.registration.RegistrationCompleteDetails
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.must.Matchers.mustBe
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.i18n.Messages
 import play.api.libs.json.{JsError, JsPath, JsResult, JsSuccess, JsValue, Json}
 
 import java.time.LocalDateTime
 
 class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers {
+  val messages                            = mock[Messages]
   private val testDateTime                = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
   private val registrationCompleteDetails = RegistrationCompleteDetails(
     companyName = "Test Corp Ltd",
@@ -135,8 +138,8 @@ class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers {
     "The formattedDatetimeHelperMethod" - {
 
       "must return the date string in the correct custom format for a standard AM time" in {
-        val expectedFormat = "17 January 2025 at 11.45AM (GMT)"
-        registrationCompleteDetails.formattedDateTime mustBe expectedFormat
+        val expectedFormat = "17 January 2025 at 11.45am (GMT)"
+        registrationCompleteDetails.formattedDateTime("en", messages) mustBe expectedFormat
       }
     }
 

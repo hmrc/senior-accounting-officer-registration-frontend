@@ -50,15 +50,14 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
     configuration.get[Boolean]("features.welsh-translation")
 
   def languageMap: Map[String, Lang] = Map(
-    "en" -> Lang("en")
-//    "cy" -> Lang("cy")
+    "en" -> Lang("en"),
+    "cy" -> Lang("cy")
   )
 
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
-
 
   val grsBaseUrl: String            = servicesConfig.baseUrl("incorporated-entity-identification-frontend")
   val grsStubsBaseUrl: String       = servicesConfig.baseUrl("incorporated-entity-identification-frontend-stubs")

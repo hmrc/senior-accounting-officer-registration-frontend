@@ -16,21 +16,38 @@
 
 package models.registration
 
+import play.api.i18n.Messages
 import play.api.libs.functional.syntax.{toApplicativeOps, toFunctionalBuilderOps, unlift}
 import play.api.libs.json.Reads.*
 import play.api.libs.json.{Format, JsError, JsPath, JsString, JsSuccess, Json, OFormat, Reads, Writes}
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}
+import java.util.Locale
 
 final case class RegistrationCompleteDetails(
     companyName: String,
     registrationId: String,
     registrationDateTime: LocalDateTime
 ) {
-  // helper method
-  def formattedDateTime: String = {
-    registrationDateTime.format(RegistrationCompleteDetails.customDateFormatter)
+
+  def formattedDateTime(localeStr: String, messages: Messages): String = {
+    localeStr match {
+      case ("en") =>
+        registrationDateTime
+          .format(RegistrationCompleteDetails.customDateFormatter.withLocale(Locale.forLanguageTag("en")))
+          .replace("AM", "am")
+          .replace("PM", "pm")
+      case "cy" =>
+        registrationDateTime
+          .format(RegistrationCompleteDetails.customDateFormatter.withLocale(Locale.forLanguageTag("cy")))
+          .replace(" at ", s" ${messages("registration-complete.dateStr1")} ")
+      case _ =>
+        registrationDateTime
+          .format(RegistrationCompleteDetails.customDateFormatter.withLocale(Locale.forLanguageTag("en")))
+          .replace("AM", "am")
+          .replace("PM", "pm")
+    }
   }
 }
 

@@ -43,7 +43,7 @@ class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
-      val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
+      val doc = Jsoup.parse(SUT(registrationCompleteDetails, "en").toString)
 
       "with the correct heading" in {
         val mainContent = doc.getElementById("main-content")
