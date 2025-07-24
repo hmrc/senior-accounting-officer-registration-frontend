@@ -18,40 +18,40 @@
 @import models.registration.RegistrationCompleteDetails
 
 @this(
-layout: templates.Layout,
-govukButton: GovukButton,
-formHelper: FormWithCSRF
+    layout: templates.Layout,
+    govukButton: GovukButton,
+    formHelper: FormWithCSRF
 )
 
-@(details: RegistrationCompleteDetails, lang:String)(implicit request: Request[_], messages: Messages)
+@(details: RegistrationCompleteDetails)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("registrationComplete.title"))) {
 
-<div class="govuk-panel govuk-panel--confirmation">
-    <h1 class="govuk-panel__title">
-        @messages("registration.complete.heading")
-    </h1>
-    <div class="govuk-panel__body">
-        @messages("registration.complete.referenceNumberPrefix") <strong>@details.registrationId</strong>
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+            @messages("registration.complete.heading")
+        </h1>
+        <div class="govuk-panel__body">
+            @messages("registration.complete.referenceNumberPrefix") <strong>@details.registrationId</strong>
+        </div>
     </div>
-</div>
 
-<p class="govuk-body">@details.companyName @messages("registration.complete.p1") @details.formattedDateTime(lang, messages)</p>
-<p class="govuk-body">@messages("registration.complete.p2"). </p>
-<p class="govuk-body">@messages("registration.complete.p3")</p>
-<ul class="govuk-list govuk-list--bullet">
-    <li><a class="govuk-link" href="#">@messages("registration.complete.a1")</a></li>
-    <li><a class="govuk-link" href="#">@messages("registration.complete.a2")</a></li>
-</ul>
+    <p class="govuk-body">@details.companyName @messages("registration.complete.p1") @details.formattedDateTime(messages)</p>
+    <p class="govuk-body">@messages("registration.complete.p2"). </p>
+    <p class="govuk-body">@messages("registration.complete.p3")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li><a class="govuk-link" href="#">@messages("registration.complete.a1")</a></li>
+        <li><a class="govuk-link" href="#">@messages("registration.complete.a2")</a></li>
+    </ul>
 
-<h2 class="govuk-heading-m">@messages("registration.complete.h2")</h2>
-<p class="govuk-body">@messages("registration.complete.p4")
-    <a class="govuk-link" href="/beta/beta-sao-digitalisation-dashboard.html">@messages("registration.complete.a3").</a>
-</p>
+    <h2 class="govuk-heading-m">@messages("registration.complete.h2")</h2>
+    <p class="govuk-body">@messages("registration.complete.p4")
+        <a class="govuk-link" href="/beta/beta-sao-digitalisation-dashboard.html">@messages("registration.complete.a3").</a>
+    </p>
 
-@formHelper(action = routes.RegistrationCompleteController.continue()) {
-@govukButton(
-ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
-)
-}
+    @formHelper(action = routes.RegistrationCompleteController.continue()) {
+        @govukButton(
+            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+        )
+    }
 }

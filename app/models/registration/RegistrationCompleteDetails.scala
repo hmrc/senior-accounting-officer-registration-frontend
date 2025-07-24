@@ -17,77 +17,34 @@
 package models.registration
 
 import play.api.i18n.Messages
-import play.api.libs.functional.syntax.{toApplicativeOps, toFunctionalBuilderOps, unlift}
 import play.api.libs.json.Reads.*
-import play.api.libs.json.{Format, JsError, JsPath, JsString, JsSuccess, Json, OFormat, Reads, Writes}
+import play.api.libs.json.{Json, OFormat}
 
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalDateTime}
 import java.util.Locale
 
 final case class RegistrationCompleteDetails(
     companyName: String,
     registrationId: String,
     registrationDateTime: LocalDateTime
-) {
+)
 
-  def formattedDateTime(localeStr: String, messages: Messages): String = {
-    localeStr match {
-      case ("en") =>
-        registrationDateTime
-          .format(RegistrationCompleteDetails.customDateFormatter.withLocale(Locale.forLanguageTag("en")))
-          .replace("AM", "am")
-          .replace("PM", "pm")
-      case "cy" =>
-        registrationDateTime
-          .format(RegistrationCompleteDetails.customDateFormatter.withLocale(Locale.forLanguageTag("cy")))
-          .replace(" at ", s" ${messages("registration-complete.dateStr1")} ")
-      case _ =>
-        registrationDateTime
-          .format(RegistrationCompleteDetails.customDateFormatter.withLocale(Locale.forLanguageTag("en")))
+object RegistrationCompleteDetails {
+  private val customDateFormatter1           = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  private val customDateFormatter2           = DateTimeFormatter.ofPattern("h.mma '(GMT)'")
+  given OFormat[RegistrationCompleteDetails] = Json.format[RegistrationCompleteDetails]
+
+  extension (details: RegistrationCompleteDetails) {
+    def formattedDateTime(messages: Messages): String = {
+      val locale = Locale.forLanguageTag(messages.lang.code)
+      details.registrationDateTime.format(
+        customDateFormatter1.withLocale(locale)
+      ) + s" ${messages("registration-complete.dateStr1")} " +
+        details.registrationDateTime
+          .format(customDateFormatter2.withLocale(locale))
           .replace("AM", "am")
           .replace("PM", "pm")
     }
   }
-}
-
-object RegistrationCompleteDetails {
-
-  val customDateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy 'at' h.mma '(GMT)'")
-
-  given localDateTimeFormat: Format[LocalDateTime] = Format(
-    Reads[LocalDateTime] { json =>
-      json.validate[String].flatMap { dateStr =>
-        try {
-          JsSuccess(LocalDateTime.parse(dateStr, customDateFormatter))
-        } catch {
-          case _: Exception =>
-            try {
-              JsSuccess(LocalDateTime.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-            } catch {
-              case e: Exception => JsError(s"Invalid date time format r: ${e.getMessage}")
-            }
-        }
-      }
-    },
-    Writes[LocalDateTime] { dateTime =>
-      JsString(dateTime.format(customDateFormatter))
-    }
-  )
-
-  given registrationReads: Reads[RegistrationCompleteDetails] = (
-    (JsPath \ "companyName").read[String](minLength[String](1) keepAnd maxLength[String](255)) and
-      (JsPath \ "registrationId").read[String](minLength[String](1) keepAnd maxLength[String](255)) and
-      (JsPath \ "registrationDateTime").read[LocalDateTime]
-  )(RegistrationCompleteDetails.apply _)
-
-  given registrationWrites: Writes[RegistrationCompleteDetails] = (
-    (JsPath \ "companyName").write[String] and
-      (JsPath \ "registrationId").write[String] and
-      (JsPath \ "registrationDateTime").write[LocalDateTime]
-  )((details: RegistrationCompleteDetails) =>
-    (details.companyName, details.registrationId, details.registrationDateTime)
-  )
-
-  given registrationFormat: Format[RegistrationCompleteDetails] = Format(registrationReads, registrationWrites)
 }

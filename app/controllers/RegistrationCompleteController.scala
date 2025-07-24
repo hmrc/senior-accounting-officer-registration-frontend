@@ -49,7 +49,7 @@ class RegistrationCompleteController @Inject() (
       registrationDateTime = LocalDateTime.of(2025, 1, 17, 11, 45)
     )
 
-    Ok(view(registrationCompleteDetails, messagesApi.preferred(request).lang.code))
+    Ok(view(registrationCompleteDetails))
   }
 
   def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>

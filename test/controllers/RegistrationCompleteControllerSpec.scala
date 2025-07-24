@@ -43,7 +43,7 @@ class RegistrationCompleteControllerSpec extends SpecBase {
         )
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(registrationData, "en")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(registrationData)(request, messages(application)).toString
       }
     }
   }
