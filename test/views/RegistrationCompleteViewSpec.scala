@@ -23,7 +23,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.test.FakeRequest
-import views.html.{ContactDetailsGuidanceView, RegistrationCompleteView}
+import views.html.RegistrationCompleteView
 
 import java.time.LocalDateTime
 import scala.jdk.CollectionConverters.*
