@@ -28,18 +28,7 @@ import java.time.LocalDateTime
 
 class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks {
 
-  private val app = new GuiceApplicationBuilder()
-    .configure(
-      Map(
-        "play.i8n.langs"        -> Seq("en"),
-        "play.i8n.translations" -> Map(
-          "en" -> Map(
-            "registration-complete.dateStr1" -> "{0} at {1} (GMT)."
-          )
-        )
-      )
-    )
-    .build()
+  private val app = new GuiceApplicationBuilder().build()
 
   private val testDateTime = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
 
