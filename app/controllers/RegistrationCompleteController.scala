@@ -17,17 +17,15 @@
 package controllers
 
 import controllers.actions.*
-import models.grs.retrieve.{CompanyDetails, CompanyProfile}
-
-import javax.inject.Inject
+import models.registration.RegistrationCompleteDetails
+import pages.CompanyDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
-import models.registration.RegistrationCompleteDetails
-import pages.CompanyDetailsPage
 
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 class RegistrationCompleteController @Inject() (
     override val messagesApi: MessagesApi,
