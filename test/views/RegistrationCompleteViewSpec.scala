@@ -115,12 +115,6 @@ class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
         li.get(1).text() mustBe "Download as PDF"
       }
 
-      "must have a continue button" in {
-        val mainContent = doc.getElementById("main-content")
-
-        mainContent.getElementById("submit").text() mustBe "Continue"
-      }
-
       "must show a back link" in {
         val backLink = doc.getElementsByClass("govuk-back-link")
         backLink.size() mustBe 1

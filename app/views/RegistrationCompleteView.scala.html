@@ -48,9 +48,5 @@
         <a class="govuk-link" href="/beta/beta-sao-digitalisation-dashboard.html">@messages("registration.complete.a3").</a>
     </p>
 
-    @formHelper(action = routes.RegistrationCompleteController.continue()) {
-        @govukButton(
-            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
-        )
-    }
+
 }
