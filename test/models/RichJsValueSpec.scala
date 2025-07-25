@@ -17,7 +17,7 @@
 package models
 
 import generators.ModelGenerators
-import org.scalacheck.{Gen, Shrink}
+import org.scalacheck.*
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
@@ -273,17 +273,19 @@ class RichJsValueSpec
       } yield (keys, values, keyToRemove, valueToRemove)
 
       forAll(gen) { case (keys, values, keyToRemove, valueToRemove) =>
+        whenever(!keys.contains(keyToRemove)) {
 
-        val initialObj: JsObject = keys.zip(values).foldLeft(JsObject.empty) { case (acc, (key, value)) =>
-          acc + (key -> JsString(value))
+          val initialObj: JsObject = keys.zip(values).foldLeft(JsObject.empty) { case (acc, (key, value)) =>
+            acc + (key -> JsString(value))
+          }
+
+          val testObject: JsObject = initialObj + (keyToRemove -> Json.toJson(valueToRemove))
+
+          val pathToRemove = JsPath \ keyToRemove
+
+          testObject mustNot equal(initialObj)
+          testObject.remove(pathToRemove) mustEqual JsSuccess(initialObj)
         }
-
-        val testObject: JsObject = initialObj + (keyToRemove -> Json.toJson(valueToRemove))
-
-        val pathToRemove = JsPath \ keyToRemove
-
-        testObject mustNot equal(initialObj)
-        testObject.remove(pathToRemove) mustEqual JsSuccess(initialObj)
       }
     }
 
