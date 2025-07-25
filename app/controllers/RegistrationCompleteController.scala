@@ -17,15 +17,15 @@
 package controllers
 
 import controllers.actions.*
-import models.registration.RegistrationCompleteDetails
-import pages.CompanyDetailsPage
+
+import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
+import models.registration.RegistrationCompleteDetails
 
 import java.time.LocalDateTime
-import javax.inject.Inject
 
 class RegistrationCompleteController @Inject() (
     override val messagesApi: MessagesApi,
@@ -38,16 +38,13 @@ class RegistrationCompleteController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers
-      .get(CompanyDetailsPage)
-      .map { companyDetails =>
-        val registrationDetails = RegistrationCompleteDetails(
-          companyName = companyDetails.companyName,
-          registrationId = companyDetails.registeredBusinessPartnerId,
-          registrationDateTime = LocalDateTime.now()
-        )
-        Ok(view(registrationDetails))
-      }
-      .getOrElse(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+
+    val registrationCompleteDetails = RegistrationCompleteDetails(
+      companyName = "ABC Ltd",
+      registrationId = "XMPLR0123456789",
+      registrationDateTime = LocalDateTime.of(2025, 1, 17, 11, 45)
+    )
+
+    Ok(view(registrationCompleteDetails))
   }
 }
