@@ -21,15 +21,14 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.must.Matchers.mustBe
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
 
 import java.time.LocalDateTime
 
 class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks {
 
-  def fakeApp() = new GuiceApplicationBuilder()
+  private val app = new GuiceApplicationBuilder()
     .configure(
       Map(
         "play.i8n.langs"        -> Seq("en"),
@@ -49,21 +48,13 @@ class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers with Sca
     registrationId = "REG12345",
     registrationDateTime = testDateTime
   )
-  private val registrationCompleteDetailsJsonObj = Json.obj(
-    "companyName"          -> "Test Corp Ltd",
-    "registrationId"       -> "REG12345",
-    "registrationDateTime" -> "17 January 2025 at 11:45AM (GMT)"
-  )
 
   "The formattedDatetimeHelperMethod" - {
-
     "must return the date string in the correct custom format for a standard AM time in english" in {
-      val app                           = fakeApp()
-      lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-      implicit lazy val messages        = messagesApi.preferred(Seq(Lang("en")))
-      val expectedFormat                = "17 January 2025 at 11:45am (GMT)."
+      val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+      val messages: Messages       = messagesApi.preferred(Seq(Lang("en")))
+      val expectedFormat: String   = "17 January 2025 at 11:45am (GMT)."
       registrationCompleteDetails.formattedDateTime(messages) mustBe expectedFormat
     }
-
   }
 }
