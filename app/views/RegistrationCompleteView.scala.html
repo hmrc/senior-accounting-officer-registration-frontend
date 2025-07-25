@@ -17,9 +17,7 @@
 @import models.registration.RegistrationCompleteDetails
 
 @this(
-    layout: templates.Layout,
-    govukButton: GovukButton,
-    formHelper: FormWithCSRF
+    layout: templates.Layout
 )
 
 @(details: RegistrationCompleteDetails)(implicit request: Request[_], messages: Messages)
