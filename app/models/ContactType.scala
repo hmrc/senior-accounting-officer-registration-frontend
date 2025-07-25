@@ -16,7 +16,6 @@
 
 package models
 
-import models.ContactType.First
 import play.api.mvc.JavascriptLiteral
 
 enum ContactType {
@@ -42,12 +41,4 @@ object ContactType {
     case Second => "Second"
     case Third  => "Third"
   }
-
-  type NoneFinal = First.type | Second.type
-
-  given JavascriptLiteral[NoneFinal] = {
-    case First  => "First"
-    case Second => "Second"
-  }
-
 }

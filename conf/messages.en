@@ -79,7 +79,7 @@ registration.complete.a2 = Download as PDF
 registration.complete.a3 = submit a notification and certificate
 registration-complete.dateStr1 = {0} at {1} (GMT).
 
-contactDetailsGuidance.title = contactDetailsGuidance
+contactDetailsGuidance.title = Contact details
 contactDetailsGuidance.caption = Contact details
 contactDetailsGuidance.heading = We need contact details for this [company/group]
 contactDetailsGuidance.p1 = Provide HMRC with contact details for the person or team responsible for this company or group.
