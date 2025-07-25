@@ -82,8 +82,7 @@ class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
         paragraphs
           .get(0)
           .text() mustBe
-          "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT)"
-
+          "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT)."
         paragraphs
           .get(1)
           .text() mustBe "We have sent a confirmation email with your reference ID to al the contact you gave during registration."

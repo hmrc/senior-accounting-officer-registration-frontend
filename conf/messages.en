@@ -77,7 +77,7 @@ registration.complete.h2 = What happens next
 registration.complete.a1 = Print the page
 registration.complete.a2 = Download as PDF
 registration.complete.a3 = submit a notification and certificate
-registration-complete.dateStr1 = at
+registration-complete.dateStr1 = {0} at {1} (GMT).
 
 contactDetailsGuidance.title = contactDetailsGuidance
 contactDetailsGuidance.caption = Contact details

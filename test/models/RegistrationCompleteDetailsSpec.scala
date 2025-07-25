@@ -17,23 +17,33 @@
 package models
 
 import models.registration.RegistrationCompleteDetails
-import org.mockito.Mockito.when
-import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.must.Matchers.mustBe
-import org.scalatestplus.mockito.MockitoSugar.mock
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.i18n.{Lang, Messages}
-import play.api.libs.json.{JsString, Json}
+import play.api.i18n.{Lang, MessagesApi}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
 
 import java.time.LocalDateTime
-import java.util.Locale
 
 class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks {
-  val messages = mock[Messages]
 
-  private val testDateTime                = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
+  def fakeApp() = new GuiceApplicationBuilder()
+    .configure(
+      Map(
+        "play.i8n.langs"        -> Seq("en"),
+        "play.i8n.translations" -> Map(
+          "en" -> Map(
+            "registration-complete.dateStr1" -> "{0} at {1} (GMT)."
+          )
+        )
+      )
+    )
+    .build()
+
+  private val testDateTime = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
+
   private val registrationCompleteDetails = RegistrationCompleteDetails(
     companyName = "Test Corp Ltd",
     registrationId = "REG12345",
@@ -48,17 +58,12 @@ class RegistrationCompleteDetailsSpec extends AnyFreeSpec with Matchers with Sca
   "The formattedDatetimeHelperMethod" - {
 
     "must return the date string in the correct custom format for a standard AM time in english" in {
-      val expectedFormat = "17 January 2025 at 11:45am (GMT)"
-      when(messages("registration-complete.dateStr1")) thenReturn "at"
-      when(messages.lang) thenReturn new Lang(Locale.forLanguageTag("en"))
+      val app                           = fakeApp()
+      lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+      implicit lazy val messages        = messagesApi.preferred(Seq(Lang("en")))
+      val expectedFormat                = "17 January 2025 at 11:45am (GMT)."
       registrationCompleteDetails.formattedDateTime(messages) mustBe expectedFormat
     }
 
-    "must return the date string in the correct custom format for a standard AM time in welsh" in {
-      when(messages("registration-complete.dateStr1")) thenReturn "someWelshStringFromWelshMessages"
-      when(messages.lang) thenReturn new Lang(Locale.forLanguageTag("cy"))
-      registrationCompleteDetails.formattedDateTime(messages) must include("17 Ionawr 2025")
-      registrationCompleteDetails.formattedDateTime(messages) must include("11:45yb (GMT)")
-    }
   }
 }

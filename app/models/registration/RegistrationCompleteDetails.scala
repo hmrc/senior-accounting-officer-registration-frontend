@@ -32,19 +32,18 @@ final case class RegistrationCompleteDetails(
 
 object RegistrationCompleteDetails {
   private val customDateFormatter1                  = DateTimeFormatter.ofPattern("d MMMM yyyy")
-  private val customDateFormatter2                  = DateTimeFormatter.ofPattern("h:mma '(GMT)'")
+  private val customDateFormatter2                  = DateTimeFormatter.ofPattern("h:mma")
   given reads: OFormat[RegistrationCompleteDetails] = Json.format[RegistrationCompleteDetails]
 
   extension (details: RegistrationCompleteDetails) {
     def formattedDateTime(messages: Messages): String = {
-      val locale = Locale.forLanguageTag(messages.lang.code)
-      details.registrationDateTime.format(
-        customDateFormatter1.withLocale(locale)
-      ) + s" ${messages("registration-complete.dateStr1")} " +
-        details.registrationDateTime
-          .format(customDateFormatter2.withLocale(locale))
-          .replace("AM", "am")
-          .replace("PM", "pm")
+      val locale       = Locale.forLanguageTag(messages.lang.code)
+      val dateStrPart1 = details.registrationDateTime.format(customDateFormatter1.withLocale(locale))
+      val dateStrPart2 = details.registrationDateTime
+        .format(customDateFormatter2.withLocale(locale))
+        .replace("AM", "am")
+        .replace("PM", "pm")
+      messages("registration-complete.dateStr1", dateStrPart1, dateStrPart2)
     }
   }
 }
