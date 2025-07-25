@@ -17,6 +17,7 @@
 package controllers
 
 import controllers.actions.*
+import models.grs.retrieve.{CompanyDetails, CompanyProfile}
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -24,6 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
 import models.registration.RegistrationCompleteDetails
+import pages.CompanyDetailsPage
 
 import java.time.LocalDateTime
 
@@ -37,14 +39,17 @@ class RegistrationCompleteController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify { implicit request =>
-
-    val registrationCompleteDetails = RegistrationCompleteDetails(
-      companyName = "ABC Ltd",
-      registrationId = "XMPLR0123456789",
-      registrationDateTime = LocalDateTime.of(2025, 1, 17, 11, 45)
-    )
-
-    Ok(view(registrationCompleteDetails))
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    request.userAnswers
+      .get(CompanyDetailsPage)
+      .map { companyDetails =>
+        val registrationDetails = RegistrationCompleteDetails(
+          companyName = companyDetails.companyName,
+          registrationId = companyDetails.registeredBusinessPartnerId,
+          registrationDateTime = LocalDateTime.now()
+        )
+        Ok(view(registrationDetails))
+      }
+      .getOrElse(Redirect(routes.JourneyRecoveryController.onPageLoad()))
   }
 }

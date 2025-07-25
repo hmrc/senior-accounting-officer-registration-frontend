@@ -17,33 +17,50 @@
 package controllers
 
 import base.SpecBase
-import models.registration.RegistrationCompleteDetails
+import models.registration.CompanyDetails
+import org.jsoup.Jsoup
+import pages.CompanyDetailsPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.RegistrationCompleteView
-
-import java.time.LocalDateTime
 
 class RegistrationCompleteControllerSpec extends SpecBase {
 
   "RegistrationComplete Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      val companyDetails = CompanyDetails(
+        companyName = "Test Company",
+        companyNumber = "123456",
+        ctUtr = "1234567890",
+        registeredBusinessPartnerId = "XB000000000001"
+      )
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      val userAnswers = emptyUserAnswers.set(CompanyDetailsPage, companyDetails).success.value
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
       running(application) {
-        val request          = FakeRequest(GET, routes.RegistrationCompleteController.onPageLoad().url)
-        val result           = route(application, request).value
-        val view             = application.injector.instanceOf[RegistrationCompleteView]
-        val registrationData = RegistrationCompleteDetails(
-          companyName = "ABC Ltd",
-          registrationId = "XMPLR0123456789",
-          registrationDateTime = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
-        )
+        val request = FakeRequest(GET, routes.RegistrationCompleteController.onPageLoad().url)
+        val result  = route(application, request).value
+        val view    = application.injector.instanceOf[RegistrationCompleteView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(registrationData)(request, messages(application)).toString
+        val content = contentAsString(result)
+        val doc     = Jsoup.parse(content)
+
+        doc.text() must include("Test Company")
+        doc.text() must include("XB000000000001")
+      }
+    }
+
+    "must redirect to journeyController if no userAnswers are found" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      running(application) {
+        val request = FakeRequest(GET, routes.RegistrationCompleteController.onPageLoad().url)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
