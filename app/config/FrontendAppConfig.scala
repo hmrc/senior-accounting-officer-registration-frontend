@@ -51,7 +51,7 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
 
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en")
-//    "cy" -> Lang("cy")
+    // "cy" -> Lang("cy")
   )
 
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
@@ -63,6 +63,7 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
   val grsStubsBaseUrl: String       = servicesConfig.baseUrl("incorporated-entity-identification-frontend-stubs")
   def stubGrs: Boolean              = isEnabled(StubGrs)
   def grsAllowsRelativeUrl: Boolean = isEnabled(GrsAllowRelativeUrl)
+
 }
 
 object FrontendAppConfig {

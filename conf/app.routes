@@ -23,7 +23,6 @@ GET         /check-your-answers                                controllers.Check
 POST        /check-your-answers                                controllers.CheckYourAnswersController.continue()
 
 GET         /registration-complete                             controllers.RegistrationCompleteController.onPageLoad()
-POST        /registration-complete                             controllers.RegistrationCompleteController.continue()
 
 GET         /business-match                                    controllers.GrsController.start()
 GET         /business-match/result                             controllers.GrsController.callBack(journeyId: String)

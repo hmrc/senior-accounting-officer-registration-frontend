@@ -17,9 +17,12 @@
 package controllers
 
 import base.SpecBase
+import models.registration.RegistrationCompleteDetails
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import views.html.RegistrationCompleteView
+
+import java.time.LocalDateTime
 
 class RegistrationCompleteControllerSpec extends SpecBase {
 
@@ -30,14 +33,17 @@ class RegistrationCompleteControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.RegistrationCompleteController.onPageLoad().url)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[RegistrationCompleteView]
+        val request          = FakeRequest(GET, routes.RegistrationCompleteController.onPageLoad().url)
+        val result           = route(application, request).value
+        val view             = application.injector.instanceOf[RegistrationCompleteView]
+        val registrationData = RegistrationCompleteDetails(
+          companyName = "ABC Ltd",
+          registrationId = "XMPLR0123456789",
+          registrationDateTime = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
+        )
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(registrationData)(request, messages(application)).toString
       }
     }
   }
