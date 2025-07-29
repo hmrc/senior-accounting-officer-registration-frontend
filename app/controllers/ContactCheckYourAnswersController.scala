@@ -23,6 +23,12 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactCheckYourAnswersView
 import models.ContactInfo
+import models.ContactType
+import models.Mode
+import pages.ContactEmailPage
+import pages.ContactRolePage
+import pages.ContactNamePage
+import pages.ContactPhonePage
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
@@ -34,12 +40,20 @@ class ContactCheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(view(List[ContactInfo](ContactInfo(
-      name = "Jackson Ross",
-      role = "Finance Manager",
-      email = "jacksonr@abclimited.co.uk",
-      phone = "07717384239")
-    )))
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { 
+    implicit request =>
+      val firstAnswer = for {
+        name <- request.userAnswers.get(ContactNamePage(ContactType.First))
+        role <- request.userAnswers.get(ContactRolePage(ContactType.First))
+        email <- request.userAnswers.get(ContactEmailPage(ContactType.First))
+        phone <- request.userAnswers.get(ContactPhonePage(ContactType.First))
+      } yield {
+          ContactInfo(name, role, email, phone)
+      }
+      Ok(view(firstAnswer.toList))
+      //   request.userAnswers.get(ContactNamePage(ContactType.First)) ->
+      //   request.userAnswers.get(ContactRolePage(ContactType.First)) ->
+      //   request.userAnswers.get(ContactEmailPage(ContactType.First)) ->
+      //   request.userAnswers.get(ContactPhonePage(ContactType.First))
   }
 }
