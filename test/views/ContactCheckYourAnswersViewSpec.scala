@@ -322,11 +322,11 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
 }
 
 object ContactCheckYourAnswersViewSpec {
-  val minContacts = List(ContactInfo("Jackson Ross", "Finance Manager", "jacksonr@abclimited.co.uk", "07717384239"))
+  val minContacts = List(ContactInfo("name1", "role1", "email1", "phone1"))
   val maxContacts = List(
-    ContactInfo("Jackson Ross", "Finance Manager", "jacksonr@abclimited.co.uk", "07717384239"),
-    ContactInfo("Brad B", "Architect", "b@b.bb", "07712345678"),
-    ContactInfo("a", "roleB", "email@c", "07712345678")
+    ContactInfo("name1", "role1", "email1", "phone1"),
+    ContactInfo("name2", "role2", "email2", "phone2"),
+    ContactInfo("name3", "role3", "email3", "phone3")
   )
 
 }

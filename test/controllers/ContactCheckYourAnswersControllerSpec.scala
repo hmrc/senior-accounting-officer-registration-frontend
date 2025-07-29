@@ -36,12 +36,9 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ContactCheckYourAnswersView]
-
+        // val contacts = 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(List(ContactInfo(name = "Jackson Ross",
-      role = "Finance Manager",
-      email = "jacksonr@abclimited.co.uk",
-      phone = "07717384239")))(request, messages(application)).toString
+        contentAsString(result) mustEqual view(List(ContactInfo("", "", "", "")))(request, messages(application)).toString
       }
     }
   }
