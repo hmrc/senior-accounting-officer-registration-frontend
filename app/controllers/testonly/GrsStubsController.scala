@@ -16,6 +16,7 @@
 
 package controllers.testonly
 
+import config.FrontendAppConfig
 import controllers.actions.{ApiAuthenticatedIdentifierAction, IdentifierAction}
 import models.grs.create.NewJourneyResponse
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -33,15 +34,16 @@ class GrsStubsController @Inject() (
     identify: IdentifierAction,
     apiIdentify: ApiAuthenticatedIdentifierAction,
     stubGrsView: StubGrsView,
-    val controllerComponents: MessagesControllerComponents
+    val controllerComponents: MessagesControllerComponents,
+    appConfig: FrontendAppConfig
 ) extends FrontendBaseController
     with I18nSupport {
 
   def startGrs(): Action[AnyContent] = apiIdentify { implicit request =>
     val uuid            = UUID.randomUUID()
-    val journeyStartUrl = routes.GrsStubsController.getStubGrs(uuid.toString).absoluteURL()
+    val journeyStartUrl = appConfig.prependHost(routes.GrsStubsController.getStubGrs(uuid.toString))
 
-    Ok(Json.toJson(NewJourneyResponse(journeyStartUrl)))
+    Created(Json.toJson(NewJourneyResponse(journeyStartUrl)))
   }
 
   def getStubGrs(journeyId: String): Action[AnyContent] = identify { implicit request =>
@@ -49,7 +51,7 @@ class GrsStubsController @Inject() (
   }
 
   def postStubGrs(journeyId: String): Action[AnyContent] = identify { implicit request =>
-    val redirectUrl = controllers.routes.GrsController.callBack(journeyId).absoluteURL()
+    val redirectUrl = appConfig.prependHost(controllers.routes.GrsController.callBack(journeyId))
     SeeOther(redirectUrl)
   }
 

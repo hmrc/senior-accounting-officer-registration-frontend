@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import models.config.FeatureToggle.*
 import play.api.Configuration
 import play.api.i18n.Lang
-import play.api.mvc.RequestHeader
+import play.api.mvc.{Call, RequestHeader}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import FrontendAppConfig.*
 
@@ -51,7 +51,7 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
 
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en")
-//    "cy" -> Lang("cy")
+    // "cy" -> Lang("cy")
   )
 
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
@@ -59,12 +59,24 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
 
   val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  val grsBaseUrl: String = servicesConfig.baseUrl("incorporated-entity-identification-frontend")
-  def stubGrs: Boolean   = isEnabled(StubGrs)
+  val grsBaseUrl: String            = servicesConfig.baseUrl("incorporated-entity-identification-frontend")
+  val grsStubsBaseUrl: String       = servicesConfig.baseUrl("incorporated-entity-identification-frontend-stubs")
+  def stubGrs: Boolean              = isEnabled(StubGrs)
+  def grsAllowsRelativeUrl: Boolean = isEnabled(GrsAllowRelativeUrl)
+
 }
 
 object FrontendAppConfig {
+  private val pathSeparator: String = "/"
+
   extension (str: String) {
-    def removeTrailingPathSeparator: String = str.replaceAll("/$", "")
+    def removeTrailingPathSeparator: String = str.replaceAll(pathSeparator + "$", "")
+  }
+
+  extension (appConfig: FrontendAppConfig) {
+    def prependHost(url: String): String =
+      s"${appConfig.host}${if url.startsWith(pathSeparator) then "" else pathSeparator}$url"
+
+    def prependHost(call: Call): String = prependHost(call.url)
   }
 }

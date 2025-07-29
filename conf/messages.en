@@ -64,12 +64,22 @@ registration.dashboard.labelText2 = Cannot start yet
 registration.dashboard.labelText3 = Completed
 
 registration.checkYourAnswers.title = checkYourAnswers
-registrationcheckYourAnswers.heading = checkYourAnswers
+registration.checkYourAnswers.heading = checkYourAnswers
 
-registration.complete.title = registrationComplete
-registration.complete.heading = registrationComplete
+registration.complete.title = Registration Complete
+registration.complete.heading = Registration Complete
+registration.complete.referenceNumberPrefix = Your reference number
+registration.complete.p1 = has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on
+registration.complete.p2 = We have sent a confirmation email with your reference ID to al the contact you gave during registration.
+registration.complete.p3 = If you need to keep a record of your registration
+registration.complete.p4 = You can now log into your Senior Accounting Officer notification and certificate service account to
+registration.complete.h2 = What happens next
+registration.complete.a1 = Print the page
+registration.complete.a2 = Download as PDF
+registration.complete.a3 = submit a notification and certificate
+registration-complete.dateStr1 = {0} at {1} (GMT).
 
-contactDetailsGuidance.title = contactDetailsGuidance
+contactDetailsGuidance.title = Contact details
 contactDetailsGuidance.caption = Contact details
 contactDetailsGuidance.heading = We need contact details for this [company/group]
 contactDetailsGuidance.p1 = Provide HMRC with contact details for the person or team responsible for this company or group.

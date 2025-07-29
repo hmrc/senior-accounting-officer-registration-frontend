@@ -40,12 +40,12 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
   val testJourneyId = UUID.randomUUID().toString
 
   "GrsStubsController.startGrs" - {
-    "must return 200 with a valid NewJourneyResponse" in {
+    "must return 201 with a valid NewJourneyResponse" in {
       val request = FakeRequest(POST, controllers.testonly.routes.GrsStubsController.startGrs().url)
 
       val result = route(app, request).value
 
-      status(result) mustEqual OK
+      status(result) mustEqual CREATED
       contentAsJson(result) mustBe a(newJourneyResponse)
     }
   }
@@ -72,7 +72,7 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
       status(result) mustEqual SEE_OTHER
       headers(result)
         .get("Location")
-        .value mustBe s"http://localhost/senior-accounting-officer/registration/business-match/result?journeyId=$testJourneyId"
+        .value mustBe s"http://localhost:10057/senior-accounting-officer/registration/business-match/result?journeyId=$testJourneyId"
     }
   }
 
