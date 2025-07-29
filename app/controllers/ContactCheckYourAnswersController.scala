@@ -40,20 +40,19 @@ class ContactCheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { 
-    implicit request =>
-      val firstAnswer = for {
-        name <- request.userAnswers.get(ContactNamePage(ContactType.First))
-        role <- request.userAnswers.get(ContactRolePage(ContactType.First))
-        email <- request.userAnswers.get(ContactEmailPage(ContactType.First))
-        phone <- request.userAnswers.get(ContactPhonePage(ContactType.First))
-      } yield {
-          ContactInfo(name, role, email, phone)
-      }
-      Ok(view(firstAnswer.toList))
-      //   request.userAnswers.get(ContactNamePage(ContactType.First)) ->
-      //   request.userAnswers.get(ContactRolePage(ContactType.First)) ->
-      //   request.userAnswers.get(ContactEmailPage(ContactType.First)) ->
-      //   request.userAnswers.get(ContactPhonePage(ContactType.First))
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val firstAnswer = for {
+      name  <- request.userAnswers.get(ContactNamePage(ContactType.First))
+      role  <- request.userAnswers.get(ContactRolePage(ContactType.First))
+      email <- request.userAnswers.get(ContactEmailPage(ContactType.First))
+      phone <- request.userAnswers.get(ContactPhonePage(ContactType.First))
+    } yield {
+      ContactInfo(name, role, email, phone)
+    }
+    Ok(view(firstAnswer.toList))
+    //   request.userAnswers.get(ContactNamePage(ContactType.First)) ->
+    //   request.userAnswers.get(ContactRolePage(ContactType.First)) ->
+    //   request.userAnswers.get(ContactEmailPage(ContactType.First)) ->
+    //   request.userAnswers.get(ContactPhonePage(ContactType.First))
   }
 }

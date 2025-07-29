@@ -70,13 +70,41 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
           )
         }
       }
+       "when the user answer for `haveYouAnsweredAllContact(First)` is empty" - {
+        "then return a list with only the first contact info" in {
+          val userAnswers = emptyUserAnswers
+            .updateContact(ContactType.First, "name", "role", "email", "phone")
+            .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
 
+          val result = sut.getContactInfos(userAnswers)
+          result mustBe List(
+            ContactInfo("name", "role", "email", "phone")
+          )
+        }
+      }
+      "when the user answer for `haveYouAnsweredAllContact(Second)` is empty" - {
+        "then return a list with only the first contact info" in {
+          val userAnswers = emptyUserAnswers
+            .updateContact(ContactType.First, "name", "role", "email", "phone")
+            .updateContact(ContactType.First, haveYouAddedAllContacts = false)
+            .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
+            .updateContact(ContactType.Third, "name3", "role3", "email3", "phone3")
+
+          val result = sut.getContactInfos(userAnswers)
+          result mustBe List(
+            ContactInfo("name", "role", "email", "phone"),
+            ContactInfo("name2", "role2", "email2", "phone2")
+          )
+        }
+      }
     }
     "given userAnswers has a complete set of first, second & third contact info" - {
       "then return a list with first, second & third contact info" in {
         val userAnswers = emptyUserAnswers
           .updateContact(ContactType.First, "name", "role", "email", "phone")
+          .updateContact(ContactType.First, haveYouAddedAllContacts = false)
           .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
+          .updateContact(ContactType.Second, haveYouAddedAllContacts = false)
           .updateContact(ContactType.Third, "name3", "role3", "email3", "phone3")
 
         val result = sut.getContactInfos(userAnswers)
@@ -136,8 +164,16 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
 
 object ContactCheckYourAnswersServiceSpec {
   extension (userAnswers: UserAnswers) {
-    def updateContact(contactType: ContactType.First.type | ContactType.Second.type, haveYouAddedAllContacts: Boolean): UserAnswers = {
-      userAnswers.set(ContactHaveYouAddedAllPage(contactType), if haveYouAddedAllContacts then ContactHaveYouAddedAll.Yes else ContactHaveYouAddedAll.No).get
+    def updateContact(
+        contactType: ContactType.First.type | ContactType.Second.type,
+        haveYouAddedAllContacts: Boolean
+    ): UserAnswers = {
+      userAnswers
+        .set(
+          ContactHaveYouAddedAllPage(contactType),
+          if haveYouAddedAllContacts then ContactHaveYouAddedAll.Yes else ContactHaveYouAddedAll.No
+        )
+        .get
     }
 
     def updateContact(

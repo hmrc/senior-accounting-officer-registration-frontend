@@ -24,21 +24,20 @@ govukButton: GovukButton
 @layout(pageTitle = titleNoForm(messages("contactCheckYourAnswers.title"))) {
 
     <h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
-    @for((contact, index) <- contacts.zipWithIndex){ 
-        <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
-            <dl class="govuk-summary-list">
+    @for((contact, index) <- contacts.zipWithIndex){ <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
+        <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                @messages("contactCheckYourAnswers.name")
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @contact.name
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                <a class="govuk-link"
-                    href="@routes.ContactNameController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
-                        class="govuk-visually-hidden">@messages("contactName.change.hidden")</span></a>
-            </dd>
+                <dt class="govuk-summary-list__key">
+                    @messages("contactCheckYourAnswers.name")
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @contact.name
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link"
+                        href="@routes.ContactNameController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
+                            class="govuk-visually-hidden">@messages("contactName.change.hidden")</span></a>
+                </dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
@@ -47,14 +46,11 @@ govukButton: GovukButton
                 <dd class="govuk-summary-list__value">
                     @contact.role
                 </dd>
-
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link"
                         href="@routes.ContactRoleController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
                             class="govuk-visually-hidden">@messages("contactRole.change.hidden")</span></a>
-
                 </dd>
-
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
@@ -63,7 +59,6 @@ govukButton: GovukButton
                 <dd class="govuk-summary-list__value">
                     @contact.email
                 </dd>
-
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link"
                         href="@routes.ContactEmailController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
@@ -77,7 +72,6 @@ govukButton: GovukButton
                 <dd class="govuk-summary-list__value">
                     @contact.phone
                 </dd>
-
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link"
                         href="@routes.ContactPhoneController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
@@ -85,16 +79,17 @@ govukButton: GovukButton
                 </dd>
             </div>
         </dl>
-        }
+    }
 
     @govukButton(
-        ButtonViewModel(messages("contactCheckYourAnswers.continue")).withAttribute("id", "submit")
+    ButtonViewModel(messages("contactCheckYourAnswers.continue")).withAttribute("id", "submit")
     )
-}
+    }
 
-@contactType(index: Int) = @{
+    @contactType(index: Int) = @{
     index match{
-        case 0 => ContactType.First
-        case 1 => ContactType.Second
-        case _ => ContactType.Third
-    }}
+    case 0 => ContactType.First
+    case 1 => ContactType.Second
+    case _ => ContactType.Third
+    }
+}

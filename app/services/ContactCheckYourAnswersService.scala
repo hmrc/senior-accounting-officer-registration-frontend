@@ -20,18 +20,28 @@ import models.*
 import pages.*
 
 class ContactCheckYourAnswersService {
+  def getContactInfos(userAnswers: UserAnswers): List[ContactInfo] = {
+    val isFirstContactFinal = userAnswers
+      .get(ContactHaveYouAddedAllPage(ContactType.First))
+      .forall(_ == ContactHaveYouAddedAll.Yes)
 
-  def getContactInfos(userAnswers: UserAnswers): List[ContactInfo] = { 
-    ContactType.values.flatMap {
-      contactType => getContactInfo(userAnswers, contactType)
+    val isSecondContactFinal = userAnswers
+      .get(ContactHaveYouAddedAllPage(ContactType.Second))
+      .forall(_ == ContactHaveYouAddedAll.Yes)
+
+    ContactType.values.flatMap { contactType =>
+      contactType match {
+        case ContactType.Second if isFirstContactFinal                        => None
+        case ContactType.Third if isFirstContactFinal || isSecondContactFinal => None
+        case _ => getContactInfo(userAnswers, contactType)
+      }
     }.toList
-    
   }
 
-  private[services] def getContactInfo(userAnswers: UserAnswers, contactType: ContactType): Option[ContactInfo] = 
+  private[services] def getContactInfo(userAnswers: UserAnswers, contactType: ContactType): Option[ContactInfo] =
     for {
-      name <- userAnswers.get(ContactNamePage(contactType))
-      role <- userAnswers.get(ContactRolePage(contactType))
+      name  <- userAnswers.get(ContactNamePage(contactType))
+      role  <- userAnswers.get(ContactRolePage(contactType))
       email <- userAnswers.get(ContactEmailPage(contactType))
       phone <- userAnswers.get(ContactPhonePage(contactType))
     } yield ContactInfo(name, role, email, phone)

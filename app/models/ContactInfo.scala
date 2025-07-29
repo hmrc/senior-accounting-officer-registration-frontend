@@ -16,4 +16,4 @@
 
 package models
 
-final case class ContactInfo (name: String, role: String, email: String, phone: String)
+final case class ContactInfo(name: String, role: String, email: String, phone: String)
