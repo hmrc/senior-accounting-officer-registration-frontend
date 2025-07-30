@@ -23,13 +23,13 @@ import base.SpecBase
 import services.ContactCheckYourAnswersServiceSpec.*
 
 class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSuite {
-  val sut = app.injector.instanceOf[ContactCheckYourAnswersService]
+  val SUT = app.injector.instanceOf[ContactCheckYourAnswersService]
 
   "ContactCheckYourAnswersService.GetContactInfos" - {
     "given no user answers" - {
       "then return empty list" in {
         val userAnswers = emptyUserAnswers
-        val result      = sut.getContactInfos(userAnswers)
+        val result      = SUT.getContactInfos(userAnswers)
         result mustBe List.empty
       }
     }
@@ -37,7 +37,7 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
       "then return a list with one contact info" in {
         val userAnswers = emptyUserAnswers
           .updateContact(ContactType.First, "name", "role", "email", "phone")
-        val result = sut.getContactInfos(userAnswers)
+        val result = SUT.getContactInfos(userAnswers)
         println(result)
         result mustBe List(ContactInfo("name", "role", "email", "phone"))
       }
@@ -50,7 +50,7 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
             .updateContact(ContactType.First, haveYouAddedAllContacts = false)
             .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
 
-          val result = sut.getContactInfos(userAnswers)
+          val result = SUT.getContactInfos(userAnswers)
           result mustBe List(
             ContactInfo("name", "role", "email", "phone"),
             ContactInfo("name2", "role2", "email2", "phone2")
@@ -64,19 +64,19 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
             .updateContact(ContactType.First, haveYouAddedAllContacts = true)
             .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
 
-          val result = sut.getContactInfos(userAnswers)
+          val result = SUT.getContactInfos(userAnswers)
           result mustBe List(
             ContactInfo("name", "role", "email", "phone")
           )
         }
       }
-       "when the user answer for `haveYouAnsweredAllContact(First)` is empty" - {
+      "when the user answer for `haveYouAnsweredAllContact(First)` is empty" - {
         "then return a list with only the first contact info" in {
           val userAnswers = emptyUserAnswers
             .updateContact(ContactType.First, "name", "role", "email", "phone")
             .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
 
-          val result = sut.getContactInfos(userAnswers)
+          val result = SUT.getContactInfos(userAnswers)
           result mustBe List(
             ContactInfo("name", "role", "email", "phone")
           )
@@ -90,7 +90,7 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
             .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
             .updateContact(ContactType.Third, "name3", "role3", "email3", "phone3")
 
-          val result = sut.getContactInfos(userAnswers)
+          val result = SUT.getContactInfos(userAnswers)
           result mustBe List(
             ContactInfo("name", "role", "email", "phone"),
             ContactInfo("name2", "role2", "email2", "phone2")
@@ -107,7 +107,7 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
           .updateContact(ContactType.Second, haveYouAddedAllContacts = false)
           .updateContact(ContactType.Third, "name3", "role3", "email3", "phone3")
 
-        val result = sut.getContactInfos(userAnswers)
+        val result = SUT.getContactInfos(userAnswers)
         result mustBe List(
           ContactInfo("name", "role", "email", "phone"),
           ContactInfo("name2", "role2", "email2", "phone2"),
@@ -128,32 +128,32 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
           val userAnswers = emptyUserAnswers
             .updateContact(contactType, "name", "role", "email", "phone")
 
-          val result = sut.getContactInfo(userAnswers, contactType)
+          val result = SUT.getContactInfo(userAnswers, contactType)
 
           result mustBe Some(ContactInfo("name", "role", "email", "phone"))
         }
         "when userAnswer has no name then return None" in {
           val userAnswers = emptyUserAnswers
             .updateContact(contactType, None, Some("role"), Some("email"), Some("phone"))
-          val result = sut.getContactInfo(userAnswers, contactType)
+          val result = SUT.getContactInfo(userAnswers, contactType)
           result mustBe None
         }
         "when userAnswer has no role then return None" in {
           val userAnswers = emptyUserAnswers
             .updateContact(contactType, Some("name"), None, Some("email"), Some("phone"))
-          val result = sut.getContactInfo(userAnswers, contactType)
+          val result = SUT.getContactInfo(userAnswers, contactType)
           result mustBe None
         }
         "when userAnswer has no email then return None" in {
           val userAnswers = emptyUserAnswers
             .updateContact(contactType, Some("name"), Some("role"), None, Some("phone"))
-          val result = sut.getContactInfo(userAnswers, contactType)
+          val result = SUT.getContactInfo(userAnswers, contactType)
           result mustBe None
         }
         "when userAnswer has no phone then return None" in {
           val userAnswers = emptyUserAnswers
             .updateContact(contactType, Some("name"), Some("role"), Some("email"), None)
-          val result = sut.getContactInfo(userAnswers, contactType)
+          val result = SUT.getContactInfo(userAnswers, contactType)
           result mustBe None
         }
       }

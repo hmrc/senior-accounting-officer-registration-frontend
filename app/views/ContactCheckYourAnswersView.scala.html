@@ -15,8 +15,9 @@
  *@
 
 @this(
-layout: templates.Layout,
-govukButton: GovukButton
+  layout: templates.Layout,
+  govukButton: GovukButton,
+  formHelper: FormWithCSRF
 )
 
 @(contacts: List[ContactInfo])(implicit request: Request[_], messages: Messages)
@@ -24,7 +25,8 @@ govukButton: GovukButton
 @layout(pageTitle = titleNoForm(messages("contactCheckYourAnswers.title"))) {
 
     <h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
-    @for((contact, index) <- contacts.zipWithIndex){ <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
+    @for((contact, index) <- contacts.zipWithIndex) {
+        <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
@@ -81,15 +83,17 @@ govukButton: GovukButton
         </dl>
     }
 
-    @govukButton(
-    ButtonViewModel(messages("contactCheckYourAnswers.continue")).withAttribute("id", "submit")
-    )
+    @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinue()) {
+        @govukButton(
+            ButtonViewModel(messages("contactCheckYourAnswers.continue")).withAttribute("id", "submit")
+        )
     }
+}
 
-    @contactType(index: Int) = @{
-    index match{
-    case 0 => ContactType.First
-    case 1 => ContactType.Second
-    case _ => ContactType.Third
+@contactType(index: Int) = @{
+    index match {
+        case 0 => ContactType.First
+        case 1 => ContactType.Second
+        case _ => ContactType.Third
     }
 }

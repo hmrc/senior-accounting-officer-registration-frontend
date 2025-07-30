@@ -24,7 +24,6 @@ import play.api.mvc.Request
 import play.api.test.FakeRequest
 import views.html.ContactCheckYourAnswersView
 
-import scala.jdk.CollectionConverters.*
 import org.jsoup.nodes.Element
 import models.ContactInfo
 import ContactCheckYourAnswersViewSpec.*
@@ -36,44 +35,44 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
   given Messages                       = app.injector.instanceOf[MessagesApi].preferred(request)
 
   "ContactCheckYourAnswersView" - {
-    Map("the view has mininimum contacts" -> minContacts, 
-    "the view has maximum contacts" -> maxContacts).foreach((key, contacts) => {
-    s"When $key must generate a view" - {
-      
-      val doc = Jsoup.parse(SUT(contacts).toString)
+    Map("the view has minimum contacts" -> minContacts, "the view has maximum contacts" -> maxContacts).foreach(
+      (key, contacts) => {
+        s"When $key must generate a view" - {
 
-      "with the correct heading" in {
-        val mainContent = doc.getElementById("main-content")
+          val doc = Jsoup.parse(SUT(contacts).toString)
 
-        val h1 = mainContent.getElementsByTag("h1")
-        h1.size() mustBe 1
+          "with the correct heading" in {
+            val mainContent = doc.getElementById("main-content")
 
-        h1.get(0).text() mustBe "Check your answers"
+            val h1 = mainContent.getElementsByTag("h1")
+            h1.size() mustBe 1
+
+            h1.get(0).text() mustBe "Check your answers"
+          }
+
+          "must have a continue button" in {
+            val mainContent = doc.getElementById("main-content")
+
+            mainContent.getElementById("submit").text() mustBe "Save and Continue"
+          }
+
+          "must show a back link" in {
+            val backLink = doc.getElementsByClass("govuk-back-link")
+            backLink.size() mustBe 1
+          }
+
+          "must show help link" in {
+            val mainContent = doc.getElementById("main-content")
+
+            val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
+            helpLink.size() mustBe 1
+          }
+        }
       }
-
-      "must have a continue button" in {
-        val mainContent = doc.getElementById("main-content")
-
-        mainContent.getElementById("submit").text() mustBe "Save and Continue"
-      }
-
-      "must show a back link" in {
-        val backLink = doc.getElementsByClass("govuk-back-link")
-        backLink.size() mustBe 1
-      }
-
-      "must show help link" in {
-        val mainContent = doc.getElementById("main-content")
-
-        val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
-        helpLink.size() mustBe 1
-      }
-    }    
-    })
+    )
     "when the view has minimum contacts" - {
       val contacts = minContacts
-      val doc = Jsoup.parse(SUT(contacts).toString)
-
+      val doc      = Jsoup.parse(SUT(contacts).toString)
 
       "must show the h2" in {
         val mainContent = doc.getElementById("main-content")
@@ -94,7 +93,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
         validateRow(
           row = rows.get(0),
           keyText = "Full name",
-          valueText = "Jackson Ross",
+          valueText = "name1",
           actionText = "Change",
           actionHiddenText = "change the full name",
           actionHref = "/senior-accounting-officer/registration/contact-details/first/change-name"
@@ -102,7 +101,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
         validateRow(
           row = rows.get(1),
           keyText = "Role",
-          valueText = "Finance Manager",
+          valueText = "role1",
           actionText = "Change",
           actionHiddenText = "change the role",
           actionHref = "/senior-accounting-officer/registration/contact-details/first/change-role"
@@ -110,7 +109,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
         validateRow(
           row = rows.get(2),
           keyText = "Email address",
-          valueText = "jacksonr@abclimited.co.uk",
+          valueText = "email1",
           actionText = "Change",
           actionHiddenText = "change the email address",
           actionHref = "/senior-accounting-officer/registration/contact-details/first/change-email"
@@ -118,7 +117,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
         validateRow(
           row = rows.get(3),
           keyText = "Phone number",
-          valueText = "07717384239",
+          valueText = "phone1",
           actionText = "Change",
           actionHiddenText = "change the phone number",
           actionHref = "/senior-accounting-officer/registration/contact-details/first/change-phone-number"
@@ -153,11 +152,10 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
         }
       }
 
-      
     }
     "when the view has maximum contacts" - {
       val contacts = maxContacts
-      val doc = Jsoup.parse(SUT(contacts).toString)
+      val doc      = Jsoup.parse(SUT(contacts).toString)
       "must show the h2" in {
         val mainContent = doc.getElementById("main-content")
 
@@ -170,7 +168,7 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
       }
 
       "must have correct content in the tables" - {
-        
+
         val mainContent = doc.getElementById("main-content")
         val dl          = mainContent.getElementsByTag("dl")
         "must have 3 tables" in {
@@ -178,116 +176,116 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
         }
 
         "first table must have correct content" in {
-        val rows = dl.get(0).select("div.govuk-summary-list__row")
-        rows.size() mustBe 4
+          val rows = dl.get(0).select("div.govuk-summary-list__row")
+          rows.size() mustBe 4
           validateRow(
-          row = rows.get(0),
-          keyText = "Full name",
-          valueText = "Jackson Ross",
-          actionText = "Change",
-          actionHiddenText = "change the full name",
-          actionHref = "/senior-accounting-officer/registration/contact-details/first/change-name"
-        )
-        validateRow(
-          row = rows.get(1),
-          keyText = "Role",
-          valueText = "Finance Manager",
-          actionText = "Change",
-          actionHiddenText = "change the role",
-          actionHref = "/senior-accounting-officer/registration/contact-details/first/change-role"
-        )
-        validateRow(
-          row = rows.get(2),
-          keyText = "Email address",
-          valueText = "jacksonr@abclimited.co.uk",
-          actionText = "Change",
-          actionHiddenText = "change the email address",
-          actionHref = "/senior-accounting-officer/registration/contact-details/first/change-email"
-        )
-        validateRow(
-          row = rows.get(3),
-          keyText = "Phone number",
-          valueText = "07717384239",
-          actionText = "Change",
-          actionHiddenText = "change the phone number",
-          actionHref = "/senior-accounting-officer/registration/contact-details/first/change-phone-number"
-        )
+            row = rows.get(0),
+            keyText = "Full name",
+            valueText = "name1",
+            actionText = "Change",
+            actionHiddenText = "change the full name",
+            actionHref = "/senior-accounting-officer/registration/contact-details/first/change-name"
+          )
+          validateRow(
+            row = rows.get(1),
+            keyText = "Role",
+            valueText = "role1",
+            actionText = "Change",
+            actionHiddenText = "change the role",
+            actionHref = "/senior-accounting-officer/registration/contact-details/first/change-role"
+          )
+          validateRow(
+            row = rows.get(2),
+            keyText = "Email address",
+            valueText = "email1",
+            actionText = "Change",
+            actionHiddenText = "change the email address",
+            actionHref = "/senior-accounting-officer/registration/contact-details/first/change-email"
+          )
+          validateRow(
+            row = rows.get(3),
+            keyText = "Phone number",
+            valueText = "phone1",
+            actionText = "Change",
+            actionHiddenText = "change the phone number",
+            actionHref = "/senior-accounting-officer/registration/contact-details/first/change-phone-number"
+          )
         }
 
         "second table must have correct content" in {
-        val rows = dl.get(1).select("div.govuk-summary-list__row")
-        rows.size() mustBe 4
+          val rows = dl.get(1).select("div.govuk-summary-list__row")
+          rows.size() mustBe 4
           validateRow(
-          row = rows.get(0),
-          keyText = "Full name",
-          valueText = "Brad B",
-          actionText = "Change",
-          actionHiddenText = "change the full name",
-          actionHref = "/senior-accounting-officer/registration/contact-details/second/change-name"
-        )
-        validateRow(
-          row = rows.get(1),
-          keyText = "Role",
-          valueText = "Architect",
-          actionText = "Change",
-          actionHiddenText = "change the role",
-          actionHref = "/senior-accounting-officer/registration/contact-details/second/change-role"
-        )
-        validateRow(
-          row = rows.get(2),
-          keyText = "Email address",
-          valueText = "b@b.bb",
-          actionText = "Change",
-          actionHiddenText = "change the email address",
-          actionHref = "/senior-accounting-officer/registration/contact-details/second/change-email"
-        )
-        validateRow(
-          row = rows.get(3),
-          keyText = "Phone number",
-          valueText = "07712345678",
-          actionText = "Change",
-          actionHiddenText = "change the phone number",
-          actionHref = "/senior-accounting-officer/registration/contact-details/second/change-phone-number"
-        )
+            row = rows.get(0),
+            keyText = "Full name",
+            valueText = "name2",
+            actionText = "Change",
+            actionHiddenText = "change the full name",
+            actionHref = "/senior-accounting-officer/registration/contact-details/second/change-name"
+          )
+          validateRow(
+            row = rows.get(1),
+            keyText = "Role",
+            valueText = "role2",
+            actionText = "Change",
+            actionHiddenText = "change the role",
+            actionHref = "/senior-accounting-officer/registration/contact-details/second/change-role"
+          )
+          validateRow(
+            row = rows.get(2),
+            keyText = "Email address",
+            valueText = "email2",
+            actionText = "Change",
+            actionHiddenText = "change the email address",
+            actionHref = "/senior-accounting-officer/registration/contact-details/second/change-email"
+          )
+          validateRow(
+            row = rows.get(3),
+            keyText = "Phone number",
+            valueText = "phone2",
+            actionText = "Change",
+            actionHiddenText = "change the phone number",
+            actionHref = "/senior-accounting-officer/registration/contact-details/second/change-phone-number"
+          )
         }
 
         "third table must have correct content" in {
-        val rows = dl.get(2).select("div.govuk-summary-list__row")
-        rows.size() mustBe 4
+          val rows = dl.get(2).select("div.govuk-summary-list__row")
+          rows.size() mustBe 4
           validateRow(
-          row = rows.get(0),
-          keyText = "Full name",
-          valueText = "a",
-          actionText = "Change",
-          actionHiddenText = "change the full name",
-          actionHref = "/senior-accounting-officer/registration/contact-details/third/change-name"
-        )
-        validateRow(
-          row = rows.get(1),
-          keyText = "Role",
-          valueText = "roleB",
-          actionText = "Change",
-          actionHiddenText = "change the role",
-          actionHref = "/senior-accounting-officer/registration/contact-details/third/change-role"
-        )
-        validateRow(
-          row = rows.get(2),
-          keyText = "Email address",
-          valueText = "email@c",
-          actionText = "Change",
-          actionHiddenText = "change the email address",
-          actionHref = "/senior-accounting-officer/registration/contact-details/third/change-email"
-        )
-        validateRow(
-          row = rows.get(3),
-          keyText = "Phone number",
-          valueText = "07712345678",
-          actionText = "Change",
-          actionHiddenText = "change the phone number",
-          actionHref = "/senior-accounting-officer/registration/contact-details/third/change-phone-number"
-        )
+            row = rows.get(0),
+            keyText = "Full name",
+            valueText = "name3",
+            actionText = "Change",
+            actionHiddenText = "change the full name",
+            actionHref = "/senior-accounting-officer/registration/contact-details/third/change-name"
+          )
+          validateRow(
+            row = rows.get(1),
+            keyText = "Role",
+            valueText = "role3",
+            actionText = "Change",
+            actionHiddenText = "change the role",
+            actionHref = "/senior-accounting-officer/registration/contact-details/third/change-role"
+          )
+          validateRow(
+            row = rows.get(2),
+            keyText = "Email address",
+            valueText = "email3",
+            actionText = "Change",
+            actionHiddenText = "change the email address",
+            actionHref = "/senior-accounting-officer/registration/contact-details/third/change-email"
+          )
+          validateRow(
+            row = rows.get(3),
+            keyText = "Phone number",
+            valueText = "phone3",
+            actionText = "Change",
+            actionHiddenText = "change the phone number",
+            actionHref = "/senior-accounting-officer/registration/contact-details/third/change-phone-number"
+          )
         }
-        
+
         def validateRow(
             row: Element,
             keyText: String,
@@ -316,15 +314,14 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
           linkText.get(0).select("span.govuk-visually-hidden").remove()
           withClue("row actionText mismatch:\n") { linkText.get(0).text() mustBe actionText }
         }
-      }      
+      }
     }
   }
 }
 
 object ContactCheckYourAnswersViewSpec {
-  val minContacts = List(ContactInfo("name1", "role1", "email1", "phone1"))
-  val maxContacts = List(
-    ContactInfo("name1", "role1", "email1", "phone1"),
+  val minContacts: List[ContactInfo] = List(ContactInfo("name1", "role1", "email1", "phone1"))
+  val maxContacts: List[ContactInfo] = minContacts ++ List(
     ContactInfo("name2", "role2", "email2", "phone2"),
     ContactInfo("name3", "role3", "email3", "phone3")
   )

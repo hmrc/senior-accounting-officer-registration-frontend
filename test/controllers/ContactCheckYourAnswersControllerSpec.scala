@@ -18,11 +18,24 @@ package controllers
 
 import base.SpecBase
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import views.html.ContactCheckYourAnswersView
-import models.ContactInfo
+import models.{ContactInfo, UserAnswers}
+import org.mockito.ArgumentMatchers.*
+import org.mockito.Mockito.*
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject.guice.GuiceApplicationBuilder
+import services.ContactCheckYourAnswersService
+import play.api.inject.bind
 
-class ContactCheckYourAnswersControllerSpec extends SpecBase {
+class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
+
+  override protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+    super
+      .applicationBuilder(userAnswers)
+      .overrides(
+        bind[ContactCheckYourAnswersService].toInstance(mock[ContactCheckYourAnswersService])
+      )
 
   "ContactCheckYourAnswers Controller" - {
 
@@ -31,14 +44,19 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
+        val testContactInfos                   = List(ContactInfo("", "", "", ""))
+        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+        when(mockContactCheckYourAnswersService.getContactInfos(any())).thenReturn(testContactInfos)
         val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ContactCheckYourAnswersView]
-        // val contacts = 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(List(ContactInfo("", "", "", "")))(request, messages(application)).toString
+        contentAsString(result) mustEqual view(testContactInfos)(
+          request,
+          messages(application)
+        ).toString
       }
     }
   }

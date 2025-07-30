@@ -38,4 +38,8 @@ class ContactCheckYourAnswersController @Inject() (
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     Ok(view(service.getContactInfos(request.userAnswers)))
   }
+
+  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Redirect(routes.IndexController.onPageLoad())
+  }
 }
