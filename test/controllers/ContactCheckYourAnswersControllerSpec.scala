@@ -59,5 +59,21 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         ).toString
       }
     }
+
+     "must redirect to journey recovery when no contacts found" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+        when(mockContactCheckYourAnswersService.getContactInfos(any())).thenReturn(List.empty)
+        val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
+      }
+    }
   }
 }

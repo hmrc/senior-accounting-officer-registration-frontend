@@ -36,7 +36,10 @@ class ContactCheckYourAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(view(service.getContactInfos(request.userAnswers)))
+    val contactInfos = service.getContactInfos(request.userAnswers)
+    if contactInfos.isEmpty
+    then Redirect(routes.JourneyRecoveryController.onPageLoad())
+    else Ok(view(contactInfos))
   }
 
   def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
