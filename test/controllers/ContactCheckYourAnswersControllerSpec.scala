@@ -38,41 +38,55 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       )
 
   "ContactCheckYourAnswers Controller" - {
+    "onPageLoad endpoint:" - {
+      "must return OK and the correct view for a GET" in {
 
-    "must return OK and the correct view for a GET" in {
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        running(application) {
+          val testContactInfos                   = List(ContactInfo("", "", "", ""))
+          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+          when(mockContactCheckYourAnswersService.getContactInfos(any())).thenReturn(testContactInfos)
+          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
 
-      running(application) {
-        val testContactInfos                   = List(ContactInfo("", "", "", ""))
-        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-        when(mockContactCheckYourAnswersService.getContactInfos(any())).thenReturn(testContactInfos)
-        val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
+          val result = route(application, request).value
 
-        val result = route(application, request).value
+          val view = application.injector.instanceOf[ContactCheckYourAnswersView]
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(testContactInfos)(
+            request,
+            messages(application)
+          ).toString
+        }
+      }
 
-        val view = application.injector.instanceOf[ContactCheckYourAnswersView]
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(testContactInfos)(
-          request,
-          messages(application)
-        ).toString
+      "must redirect to journey recovery when no contacts found" in {
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+        running(application) {
+          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+          when(mockContactCheckYourAnswersService.getContactInfos(any())).thenReturn(List.empty)
+          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
+        }
       }
     }
-
-     "must redirect to journey recovery when no contacts found" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-        when(mockContactCheckYourAnswersService.getContactInfos(any())).thenReturn(List.empty)
-        val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
+    "saveAndContinue endpoint:" - {
+      "must redirect to index controller when record saved" in {
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        running(application) {
+          val testContactInfos                   = List(ContactInfo("", "", "", ""))
+          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+          when(mockContactCheckYourAnswersService.getContactInfos(any())).thenReturn(testContactInfos)
+          val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+          val result = route(application, request).value
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+        }
       }
     }
   }

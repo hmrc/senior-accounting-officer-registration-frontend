@@ -23,6 +23,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactCheckYourAnswersView
 import services.ContactCheckYourAnswersService
+import models.ContactInfo
+import pages.ContactsPage
+import repositories.SessionRepository
+import scala.concurrent.{Future, ExecutionContext}
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
@@ -31,8 +35,10 @@ class ContactCheckYourAnswersController @Inject() (
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
-    service: ContactCheckYourAnswersService
-) extends FrontendBaseController
+    service: ContactCheckYourAnswersService,
+    sessionRepository: SessionRepository
+)(using ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
@@ -42,7 +48,13 @@ class ContactCheckYourAnswersController @Inject() (
     else Ok(view(contactInfos))
   }
 
-  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Redirect(routes.IndexController.onPageLoad())
+  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>
+    for {
+      contactInfos <- Future.successful(service.getContactInfos(request.userAnswers))
+      updatedAnswer = request.userAnswers
+        .set(ContactsPage, contactInfos)
+        .get
+      _ <- sessionRepository.set(updatedAnswer)
+    } yield Redirect(routes.IndexController.onPageLoad())
   }
 }
