@@ -21,7 +21,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.ContactCheckYourAnswersView
 import models.{ContactInfo, UserAnswers}
-import org.mockito.ArgumentMatchers.{eq => meq, *}
+import org.mockito.ArgumentMatchers.{eq => meq}
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.guice.GuiceApplicationBuilder
