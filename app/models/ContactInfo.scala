@@ -23,5 +23,5 @@ import play.api.libs.json.OFormat
 final case class ContactInfo(name: String, role: String, email: String, phone: String)
 
 object ContactInfo {
-    given OFormat[ContactInfo] = Json.format[ContactInfo]
+  given OFormat[ContactInfo] = Json.format[ContactInfo]
 }

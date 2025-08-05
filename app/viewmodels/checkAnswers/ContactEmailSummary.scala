@@ -28,13 +28,13 @@ import viewmodels.implicits.*
 object ContactEmailSummary {
 
   def row(contactType: ContactType, email: String)(implicit messages: Messages): SummaryListRow =
-      SummaryListRowViewModel(
-        key = "contactEmail.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlFormat.escape(email).toString),
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.ContactEmailController.onPageLoad(contactType, CheckMode).url)
-            .withVisuallyHiddenText(messages(s"contactEmail.change.${contactType.messageKey}.hidden"))
-        )
+    SummaryListRowViewModel(
+      key = "contactEmail.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(email).toString),
+      actions = Seq(
+        ActionItemViewModel("site.change", routes.ContactEmailController.onPageLoad(contactType, CheckMode).url)
+          .withVisuallyHiddenText(messages(s"contactEmail.change.${contactType.messageKey}.hidden"))
       )
-    
+    )
+
 }

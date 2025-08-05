@@ -29,7 +29,7 @@ import services.ContactCheckYourAnswersService
 import play.api.inject.bind
 
 class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
-  val testUserAnswers                              = emptyUserAnswers
+  val testUserAnswers = emptyUserAnswers
 
   override protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     super
@@ -82,7 +82,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
           when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
           val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-          val result = route(application, request).value
+          val result  = route(application, request).value
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
         }

@@ -48,17 +48,17 @@ class ContactCheckYourAnswersController @Inject() (
     else Ok(view(contactInfos))
   }
 
-  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>    
+  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>
     val contactInfos = service.getContactInfos(request.userAnswers)
-    request.userAnswers.set(ContactsPage, contactInfos).fold(
-      error => {
-        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-      },
-      updatedAnswers => {
-        sessionRepository.set(updatedAnswers).map { _ =>
-          Redirect(routes.IndexController.onPageLoad())
+    request.userAnswers
+      .set(ContactsPage, contactInfos)
+      .fold(
+        error => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())),
+        updatedAnswers => {
+          sessionRepository
+            .set(updatedAnswers)
+            .map { _ => Redirect(routes.IndexController.onPageLoad()) }
         }
-      }
-    )
+      )
   }
 }
