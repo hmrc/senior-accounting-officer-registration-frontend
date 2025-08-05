@@ -50,9 +50,15 @@ class ContactCheckYourAnswersController @Inject() (
 
   def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>    
     val contactInfos = service.getContactInfos(request.userAnswers)
-    val updatedAnswer = request.userAnswers.set(ContactsPage, contactInfos).get
-    sessionRepository.set(updatedAnswer).map { _ =>
-      Redirect(routes.IndexController.onPageLoad())
-    }
+    request.userAnswers.set(ContactsPage, contactInfos).fold(
+      error => {
+        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      },
+      updatedAnswers => {
+        sessionRepository.set(updatedAnswers).map { _ =>
+          Redirect(routes.IndexController.onPageLoad())
+        }
+      }
+    )
   }
 }
