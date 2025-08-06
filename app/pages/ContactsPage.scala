@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package models
+package pages
 
-import play.api.libs.json.Reads
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
+import play.api.libs.json.JsPath
+import models.ContactInfo
 
-final case class ContactInfo(name: String, role: String, email: String, phone: String)
+case object ContactsPage extends QuestionPage[List[ContactInfo]] {
+  override def path: JsPath = JsPath \ toString
 
-object ContactInfo {
-  given OFormat[ContactInfo] = Json.format[ContactInfo]
+  override def toString: String = "contacts"
 }

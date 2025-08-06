@@ -17,7 +17,6 @@
 package routes
 
 import config.FrontendAppConfig
-import org.jsoup.Jsoup
 import play.api.http.{HeaderNames, Status}
 import support.MockAuthHelper.authSession
 import support.{ISpecBase, MockAuthHelper, SessionCookieBaker}
@@ -43,7 +42,7 @@ class IndexISpec extends ISpecBase {
 
       MockAuthHelper.verifyAuthWasCalled()
       response.status mustBe Status.OK
-      
+
     }
   }
 

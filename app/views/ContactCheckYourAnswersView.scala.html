@@ -14,10 +14,12 @@
  * limitations under the License.
  *@
 
+@import viewmodels.checkAnswers.*
 @this(
   layout: templates.Layout,
   govukButton: GovukButton,
-  formHelper: FormWithCSRF
+  formHelper: FormWithCSRF,
+  govukSummaryList: GovukSummaryList
 )
 
 @(contacts: List[ContactInfo])(implicit request: Request[_], messages: Messages)
@@ -27,60 +29,12 @@
     <h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
     @for((contact, index) <- contacts.zipWithIndex) {
         <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
-        <dl class="govuk-summary-list">
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    @messages("contactCheckYourAnswers.name")
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @contact.name
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link"
-                        href="@routes.ContactNameController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
-                            class="govuk-visually-hidden">@messages("contactName.change.hidden")</span></a>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    @messages("contactCheckYourAnswers.role")
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @contact.role
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link"
-                        href="@routes.ContactRoleController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
-                            class="govuk-visually-hidden">@messages("contactRole.change.hidden")</span></a>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    @messages("contactCheckYourAnswers.email")
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @contact.email
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link"
-                        href="@routes.ContactEmailController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
-                            class="govuk-visually-hidden">@messages("contactEmail.change.hidden")</span></a>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    @messages("contactCheckYourAnswers.phone")
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @contact.phone
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link"
-                        href="@routes.ContactPhoneController.onPageLoad(contactType(index), CheckMode).url">@messages("site.change")<span
-                            class="govuk-visually-hidden">@messages("contactPhone.change.hidden")</span></a>
-                </dd>
-            </div>
-        </dl>
+        @govukSummaryList(SummaryListViewModel(rows = Seq(
+            ContactNameSummary.row(contactType(index), contact.name), 
+            ContactRoleSummary.row(contactType(index), contact.role),
+            ContactEmailSummary.row(contactType(index), contact.email),
+            ContactPhoneSummary.row(contactType(index), contact.phone)
+        )))
     }
 
     @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinue()) {

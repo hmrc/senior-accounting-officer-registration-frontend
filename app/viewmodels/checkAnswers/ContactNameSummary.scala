@@ -17,8 +17,8 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, ContactType, UserAnswers}
-import pages.ContactNamePage
+import models.CheckMode
+import models.ContactType
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -27,15 +27,13 @@ import viewmodels.implicits.*
 
 object ContactNameSummary {
 
-  def row(contactType: ContactType, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ContactNamePage(contactType)).map { answer =>
-      SummaryListRowViewModel(
-        key = "contactName.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlFormat.escape(answer).toString),
-        actions = Seq(
-          ActionItemViewModel("site.change", routes.ContactNameController.onPageLoad(contactType, CheckMode).url)
-            .withVisuallyHiddenText(messages("contactName.change.hidden"))
-        )
+  def row(contactType: ContactType, contactName: String)(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "contactName.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(contactName).toString),
+      actions = Seq(
+        ActionItemViewModel("site.change", routes.ContactNameController.onPageLoad(contactType, CheckMode).url)
+          .withVisuallyHiddenText(messages(s"contactName.change.${contactType.messageKey}.hidden"))
       )
-    }
+    )
 }

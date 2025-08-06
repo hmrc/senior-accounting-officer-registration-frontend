@@ -23,6 +23,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactCheckYourAnswersView
 import services.ContactCheckYourAnswersService
+import models.ContactInfo
+import pages.ContactsPage
+import repositories.SessionRepository
+import scala.concurrent.{Future, ExecutionContext}
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
@@ -31,15 +35,30 @@ class ContactCheckYourAnswersController @Inject() (
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
-    service: ContactCheckYourAnswersService
-) extends FrontendBaseController
+    service: ContactCheckYourAnswersService,
+    sessionRepository: SessionRepository
+)(using ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(view(service.getContactInfos(request.userAnswers)))
+    val contactInfos = service.getContactInfos(request.userAnswers)
+    if contactInfos.isEmpty
+    then Redirect(routes.JourneyRecoveryController.onPageLoad())
+    else Ok(view(contactInfos))
   }
 
-  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Redirect(routes.IndexController.onPageLoad())
+  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>
+    val contactInfos = service.getContactInfos(request.userAnswers)
+    request.userAnswers
+      .set(ContactsPage, contactInfos)
+      .fold(
+        error => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())),
+        updatedAnswers => {
+          sessionRepository
+            .set(updatedAnswers)
+            .map { _ => Redirect(routes.IndexController.onPageLoad()) }
+        }
+      )
   }
 }
