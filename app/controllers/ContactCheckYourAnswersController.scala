@@ -17,6 +17,8 @@
 package controllers
 
 import controllers.actions.*
+import forms.ContactCheckYourAnswersFormProvider
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,6 +35,7 @@ class ContactCheckYourAnswersController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
+    formProvider: ContactCheckYourAnswersFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
     service: ContactCheckYourAnswersService,
@@ -40,6 +43,8 @@ class ContactCheckYourAnswersController @Inject() (
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
+
+  val form = formProvider()
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val contactInfos = service.getContactInfos(request.userAnswers)
@@ -49,16 +54,20 @@ class ContactCheckYourAnswersController @Inject() (
   }
 
   def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>
-    val contactInfos = service.getContactInfos(request.userAnswers)
-    request.userAnswers
-      .set(ContactsPage, contactInfos)
+    form
+      .bindFromRequest()
       .fold(
-        error => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())),
-        updatedAnswers => {
-          sessionRepository
-            .set(updatedAnswers)
-            .map { _ => Redirect(routes.IndexController.onPageLoad()) }
-        }
+        _ => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())),
+        dataReceived =>
+          for {
+            compare <- Future.successful(service.getContactInfos(request.userAnswers) == dataReceived)
+            // only commit when the data in the form matches the data found in repo
+            response <- if (compare) Future
+              .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
+              .flatMap(sessionRepository.set)
+              .map(_ => Redirect(routes.IndexController.onPageLoad())) 
+              else Future.failed(???)
+          } yield { response }
       )
   }
 }
