@@ -5,6 +5,7 @@ import models.requests.OptionalDataRequest
 import javax.inject.Inject
 import repositories.SessionRepository
 import scala.concurrent.ExecutionContext
+import play.api.mvc.ActionRefiner
 
 class RedirectActionImpl @Inject() (
     val sessionRepository: SessionRepository
@@ -16,3 +17,6 @@ class RedirectActionImpl @Inject() (
     }
   }
 }
+
+trait RedirectAction extends ActionRefiner[OptionalDataRequest[A], ]
+
