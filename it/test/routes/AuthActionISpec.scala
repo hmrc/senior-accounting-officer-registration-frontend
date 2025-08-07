@@ -17,9 +17,8 @@
 package routes
 
 import config.FrontendAppConfig
-import support.MockAuthHelper.authSession
-import org.jsoup.Jsoup
 import play.api.http.{HeaderNames, Status}
+import support.MockAuthHelper.authSession
 import support.{ISpecBase, MockAuthHelper, SessionCookieBaker}
 
 class AuthActionISpec extends ISpecBase {

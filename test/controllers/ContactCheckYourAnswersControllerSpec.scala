@@ -88,20 +88,32 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "must redirect to JourneyRecoveryController when form binding fails" in {
+      "must redirect to journey recovery when no contacts found" in {
         val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-        val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-          .withFormUrlEncodedBody(
-            "contacts[0].name"  -> "name",
-            "contacts[0].role"  -> "role",
-            "contacts[0].email" -> "email",
-            "contacts[0].phone" -> "this string has more than 12 characters"
-          )
+        running(application) {
+          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+          when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(List.empty)
+          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.JourneyRecoveryController.onPageLoad().url)
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
+        }
+      }
+    }
+    "saveAndContinue endpoint:" - {
+      "must redirect to index controller when record saved" in {
+        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+        running(application) {
+          val testContactInfos                   = List(ContactInfo("", "", "", ""))
+          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+          when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
+          val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+          val result  = route(application, request).value
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+        }
       }
     }
   }
