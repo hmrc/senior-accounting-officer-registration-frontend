@@ -17,16 +17,20 @@
 package forms.mappings
 
 import models.Enumerable
-import play.api.data.FieldMapping
+import play.api.data.{Mapping, FieldMapping}
 import play.api.data.Forms.of
 import play.api.i18n.Messages
-
 import java.time.LocalDate
+
 
 trait Mappings extends Formatters with Constraints {
 
   protected def text(errorKey: String = "error.required", args: Seq[String] = Seq.empty): FieldMapping[String] =
+    of(stringFormatter(errorKey, args))    
+  
+  protected def phone(errorKey: String = "error.required", args: Seq[String] = Seq.empty): Mapping[String] =
     of(stringFormatter(errorKey, args))
+    .verifying(maxLength(12, "phone field has too many characters"))
 
   protected def int(
       requiredKey: String = "error.required",

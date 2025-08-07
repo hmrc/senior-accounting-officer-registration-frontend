@@ -87,6 +87,22 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
           redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
         }
       }
+
+      "must redirect to JourneyRecoveryController when form binding fails" in {
+        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+        val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+          .withFormUrlEncodedBody(
+            "contacts[0].name"  -> "name",
+            "contacts[0].role"  -> "role",
+            "contacts[0].email" -> "email",
+            "contacts[0].phone" -> "this string has more than 12 characters"
+          )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.JourneyRecoveryController.onPageLoad().url)
+      }
     }
   }
 }
