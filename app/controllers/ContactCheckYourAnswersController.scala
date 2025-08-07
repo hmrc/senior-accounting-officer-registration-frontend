@@ -61,7 +61,7 @@ class ContactCheckYourAnswersController @Inject() (
         _ =>
           Future.failed(
             BadRequestException("invalid ContactCheckYourAnswersForm submitted")
-          ), // Redirect(routes.JourneyRecoveryController.onPageLoad())),
+          ),
         dataReceived =>
           if service.getContactInfos(request.userAnswers) == dataReceived then
             for {
