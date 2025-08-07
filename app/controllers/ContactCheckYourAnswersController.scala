@@ -59,15 +59,13 @@ class ContactCheckYourAnswersController @Inject() (
       .fold(
         _ => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())),
         dataReceived =>
+        if service.getContactInfos(request.userAnswers) == dataReceived then
           for {
-            compare <- Future.successful(service.getContactInfos(request.userAnswers) == dataReceived)
-            // only commit when the data in the form matches the data found in repo
-            response <- if (compare) Future
+            response <- Future
               .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
-              .flatMap(sessionRepository.set)
-              .map(_ => Redirect(routes.IndexController.onPageLoad())) 
-              else Future.failed(???)
-          } yield { response }
+            _ <- sessionRepository.set(request.userAnswers)
+          } yield { Redirect(routes.IndexController.onPageLoad()) }
+          else ???
       )
   }
 }
