@@ -71,7 +71,7 @@ class ContactCheckYourAnswersController @Inject() (
             } yield {
               Redirect(routes.IndexController.onPageLoad())
             }
-          else Future.failed(BadRequestException("The CheckYourAnswersPage submitted is out of date"))
+          else Future.failed(BadRequestException("The ContactCheckYourAnswersForm submitted is out of date"))
       )
   }
 }

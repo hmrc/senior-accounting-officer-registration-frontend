@@ -114,7 +114,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         val exception = intercept[BadRequestException] {
           await(result)
         }
-        exception.message mustBe "The CheckYourAnswersPage submitted is out of date"
+        exception.message mustBe "The ContactCheckYourAnswersForm submitted is out of date"
       }
     }
     "must throw BadRequestException when the request contains an invalid form" in {
