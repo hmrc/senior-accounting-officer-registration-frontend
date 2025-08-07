@@ -10,8 +10,7 @@ import play.api.mvc.ActionRefiner
 class RedirectActionImpl @Inject() (
     val sessionRepository: SessionRepository
 )(implicit val executionContext: ExecutionContext){
-    override protected def transform[A](): Future[OptionalDataRequest[A]] = {
-
+    override protected def transform[A](request: Any): Future[OptionalDataRequest[A]] = {
     sessionRepository.get(request.userId).map {
       OptionalDataRequest(request.request, request.userId, _)
     }
