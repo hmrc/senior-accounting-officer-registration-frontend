@@ -80,15 +80,15 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       "must redirect to index controller when record saved" in {
         val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
         running(application) {
-          val testContactInfos                   = List(ContactInfo("", "", "", ""))
+          val testContactInfos                   = List(ContactInfo("name", "role", "email", "phone"))
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
           when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
           val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
             .withFormUrlEncodedBody(
-              "contacts[0].name"  -> "",
-              "contacts[0].role"  -> "",
-              "contacts[0].email" -> "",
-              "contacts[0].phone" -> ""
+              "contacts[0].name"  -> "name",
+              "contacts[0].role"  -> "role",
+              "contacts[0].email" -> "email",
+              "contacts[0].phone" -> "phone"
             )
           val result = route(application, request).value
           status(result) mustEqual SEE_OTHER
@@ -100,11 +100,17 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     "must throw BadRequestException when service contactInfo and form are misaligned" in {
       val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
       running(application) {
-        val testContactInfos                   = List(ContactInfo("", "", "", ""))
+        val testContactInfos                   = List(ContactInfo("name", "role", "email", "phone"))
         val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
         when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
         val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-        val result  = route(application, request).value
+          .withFormUrlEncodedBody(
+            "contacts[0].name"  -> "differentName",
+            "contacts[0].role"  -> "anotherRole",
+            "contacts[0].email" -> "stolenEmail",
+            "contacts[0].phone" -> "newPhone"
+          )
+        val result = route(application, request).value
         intercept[BadRequestException] {
           await(result)
         }
