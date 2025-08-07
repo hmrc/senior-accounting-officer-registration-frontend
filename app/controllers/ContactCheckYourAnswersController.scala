@@ -58,15 +58,20 @@ class ContactCheckYourAnswersController @Inject() (
     form
       .bindFromRequest()
       .fold(
-        _ => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())),
+        _ =>
+          Future.failed(
+            BadRequestException("data is not sufficient")
+          ), // Redirect(routes.JourneyRecoveryController.onPageLoad())),
         dataReceived =>
           if service.getContactInfos(request.userAnswers) == dataReceived then
             for {
               response <- Future
                 .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
               _ <- sessionRepository.set(request.userAnswers)
-            } yield { Redirect(routes.IndexController.onPageLoad()) }
-          else throw new BadRequestException("The CheckYourAnswersPage submitted is out of date")
+            } yield {
+              Redirect(routes.IndexController.onPageLoad())
+            }
+          else Future.failed(BadRequestException("The CheckYourAnswersPage submitted is out of date"))
       )
   }
 }

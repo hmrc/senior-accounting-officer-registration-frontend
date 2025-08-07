@@ -110,10 +110,31 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
             "contacts[0].email" -> "stolenEmail",
             "contacts[0].phone" -> "newPhone"
           )
-        val result = route(application, request).value
-        intercept[BadRequestException] {
+        val result    = route(application, request).value
+        val exception = intercept[BadRequestException] {
           await(result)
         }
+        exception.message mustBe "The CheckYourAnswersPage submitted is out of date"
+      }
+    }
+    "must throw BadRequestException when the request contains an invalid form" in {
+      val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+      running(application) {
+        val testContactInfos                   = List(ContactInfo("", "", "", ""))
+        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+        when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
+        val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+          .withFormUrlEncodedBody(
+            "contacts[0].name"  -> "",
+            "contacts[0].role"  -> "",
+            "contacts[0].email" -> "",
+            "contacts[0].phone" -> ""
+          )
+        val result    = route(application, request).value
+        val exception = intercept[BadRequestException] {
+          await(result)
+        }
+        exception.message mustBe "data is not sufficient"
       }
     }
   }
