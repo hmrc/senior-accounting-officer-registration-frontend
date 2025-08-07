@@ -134,7 +134,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         val exception = intercept[BadRequestException] {
           await(result)
         }
-        exception.message mustBe "data is not sufficient"
+        exception.message mustBe "invalid ContactCheckYourAnswersForm submitted"
       }
     }
   }
