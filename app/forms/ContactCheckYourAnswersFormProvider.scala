@@ -32,7 +32,7 @@ class ContactCheckYourAnswersFormProvider @Inject() extends Mappings {
             "name"  -> text(s"contact.name"),
             "role"  -> text(s"contact.role"),
             "email" -> text(s"contact.email"),
-            "phone" -> phone(s"contact.phone")
+            "phone" -> text(s"contact.phone")
           )(ContactInfo.apply)(o => Some(Tuple.fromProductTyped(o)))
         )
       )(identity)(Some(_))

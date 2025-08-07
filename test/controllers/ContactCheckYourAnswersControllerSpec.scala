@@ -27,6 +27,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.guice.GuiceApplicationBuilder
 import services.ContactCheckYourAnswersService
 import play.api.inject.bind
+import uk.gov.hmrc.http.BadRequestException
 
 class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
   val testUserAnswers = emptyUserAnswers
@@ -74,6 +75,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         }
       }
     }
+
     "saveAndContinue endpoint:" - {
       "must redirect to index controller when record saved" in {
         val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
@@ -82,37 +84,29 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
           when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
           val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-          val result  = route(application, request).value
+            .withFormUrlEncodedBody(
+              "contacts[0].name"  -> "",
+              "contacts[0].role"  -> "",
+              "contacts[0].email" -> "",
+              "contacts[0].phone" -> ""
+            )
+          val result = route(application, request).value
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
-        }
-      }
-
-      "must redirect to journey recovery when no contacts found" in {
-        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-        running(application) {
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(List.empty)
-          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
         }
       }
     }
-    "saveAndContinue endpoint:" - {
-      "must redirect to index controller when record saved" in {
-        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-        running(application) {
-          val testContactInfos                   = List(ContactInfo("", "", "", ""))
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
-          val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-          val result  = route(application, request).value
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+
+    "must throw BadRequestException when service contactInfo and form are misaligned" in {
+      val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+      running(application) {
+        val testContactInfos                   = List(ContactInfo("", "", "", ""))
+        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+        when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
+        val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+        val result  = route(application, request).value
+        intercept[BadRequestException] {
+          await(result)
         }
       }
     }

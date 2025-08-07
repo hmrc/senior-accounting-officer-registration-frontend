@@ -29,6 +29,7 @@ import models.ContactInfo
 import pages.ContactsPage
 import repositories.SessionRepository
 import scala.concurrent.{Future, ExecutionContext}
+import uk.gov.hmrc.http.BadRequestException
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
@@ -59,13 +60,13 @@ class ContactCheckYourAnswersController @Inject() (
       .fold(
         _ => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())),
         dataReceived =>
-        if service.getContactInfos(request.userAnswers) == dataReceived then
-          for {
-            response <- Future
-              .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
-            _ <- sessionRepository.set(request.userAnswers)
-          } yield { Redirect(routes.IndexController.onPageLoad()) }
-          else ???
+          if service.getContactInfos(request.userAnswers) == dataReceived then
+            for {
+              response <- Future
+                .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
+              _ <- sessionRepository.set(request.userAnswers)
+            } yield { Redirect(routes.IndexController.onPageLoad()) }
+          else throw new BadRequestException("The CheckYourAnswersPage submitted is out of date")
       )
   }
 }
