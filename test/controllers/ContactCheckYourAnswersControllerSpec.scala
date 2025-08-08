@@ -31,7 +31,7 @@ import uk.gov.hmrc.http.BadRequestException
 
 class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
   val testUserAnswers = emptyUserAnswers
-
+  
   override protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     super
       .applicationBuilder(userAnswers)

@@ -36,6 +36,7 @@ class ContactCheckYourAnswersController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
+    filterCompleted: RedirectAction,
     formProvider: ContactCheckYourAnswersFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
@@ -47,7 +48,7 @@ class ContactCheckYourAnswersController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen filterCompleted) { implicit request =>
     val contactInfos = service.getContactInfos(request.userAnswers)
     if contactInfos.isEmpty
     then Redirect(routes.JourneyRecoveryController.onPageLoad())
