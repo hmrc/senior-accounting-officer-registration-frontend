@@ -17,11 +17,14 @@ import base.SpecBase
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import models.UserAnswers
+import pages.ContactHaveYouAddedAllPage
+import models.ContactType
+import models.ContactHaveYouAddedAll
 
 class RedirectActionSpec extends SpecBase {
 
-  class Harness(authAction: RedirectAction) {
-    // def onPageLoad(): Action[AnyContent] =
+  class Harness(action: RedirectAction) {
+    def onPageLoad(): Action[AnyContent] = _ => Results.Ok
   }
 
   "Redirect Action" - {
@@ -29,8 +32,8 @@ class RedirectActionSpec extends SpecBase {
       "must not redirect user" in {
         val application = applicationBuilder(userAnswers = None).build()
         running(application) {
-        val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
           //   val authAction = new FrontendAuthenticatedIdentifierAction(
           //     new FakeFailingAuthConnector(new MissingBearerToken),
@@ -47,12 +50,18 @@ class RedirectActionSpec extends SpecBase {
     }
     "when the contactHaveYouAddedAll == No" - {
       "must redirect user" in {
-        val userAnswers = UserAnswers("id").set(ContactHaveYouAddedAllPage(ContactType.First), ContactHaveYouAddedAll.Yes).get
+        val userAnswers = UserAnswers("id")
+          .set(ContactHaveYouAddedAllPage(ContactType.First), ContactHaveYouAddedAll.Yes)
+          .fold(
+            _ => None,
+            Some(_)
+          )
         val application = applicationBuilder(userAnswers = userAnswers).build()
         running(application) {
-        val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
+        }
       }
     }
   }
