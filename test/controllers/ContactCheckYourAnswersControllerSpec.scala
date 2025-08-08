@@ -21,13 +21,16 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.ContactCheckYourAnswersView
 import models.{ContactInfo, UserAnswers}
-import org.mockito.ArgumentMatchers.{eq => meq}
+import org.mockito.ArgumentMatchers.{eq => meq, any}
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.guice.GuiceApplicationBuilder
 import services.ContactCheckYourAnswersService
 import play.api.inject.bind
 import uk.gov.hmrc.http.BadRequestException
+import repositories.SessionRepository
+import scala.concurrent.Future
+import pages.ContactsPage
 
 class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
   val testUserAnswers = emptyUserAnswers
@@ -36,6 +39,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     super
       .applicationBuilder(userAnswers)
       .overrides(
+        bind[SessionRepository].toInstance(mock[SessionRepository]),
         bind[ContactCheckYourAnswersService].toInstance(mock[ContactCheckYourAnswersService])
       )
 
@@ -77,22 +81,32 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "saveAndContinue endpoint:" - {
-      "must redirect to index controller when record saved" in {
-        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-        running(application) {
-          val testContactInfos                   = List(ContactInfo("name", "role", "email", "phone"))
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
-          val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-            .withFormUrlEncodedBody(
-              "contacts[0].name"  -> "name",
-              "contacts[0].role"  -> "role",
-              "contacts[0].email" -> "email",
-              "contacts[0].phone" -> "phone"
-            )
-          val result = route(application, request).value
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+      "must redirect to index controller when record saved" - {
+        "Data saved to the SessionRepository must be the sanitised contacts" in {
+          val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+          running(application) {
+
+            val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
+
+            val mockedSessionRepository = application.injector.instanceOf[SessionRepository]
+            when(mockedSessionRepository.set(any())).thenReturn(Future.successful(true))
+            val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+            when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
+
+            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+              .withFormUrlEncodedBody(
+                "contacts[0].name"  -> "name",
+                "contacts[0].role"  -> "role",
+                "contacts[0].email" -> "email",
+                "contacts[0].phone" -> "phone"
+              )
+            val result = route(application, request).value
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+            withClue("verify that the mongo instance was called once to update with bound Page -> UserAnswers\n") {
+              verify(mockedSessionRepository, times(1)).set(testUserAnswers.set(ContactsPage, testContactInfos).get)
+            }
+          }
         }
       }
     }
