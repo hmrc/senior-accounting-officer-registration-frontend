@@ -65,9 +65,9 @@ class ContactCheckYourAnswersController @Inject() (
         dataReceived =>
           if service.getContactInfos(request.userAnswers) == dataReceived then
             for {
-              response <- Future
+              updatedUserAnswers <- Future
                 .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
-              _ <- sessionRepository.set(request.userAnswers)
+              _ <- sessionRepository.set(updatedUserAnswers)
             } yield {
               Redirect(routes.IndexController.onPageLoad())
             }
