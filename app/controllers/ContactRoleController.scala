@@ -38,6 +38,7 @@ class ContactRoleController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
+    filterCompleted: RedirectAction,
     formProvider: ContactRoleFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactRoleView
@@ -48,7 +49,7 @@ class ContactRoleController @Inject() (
   val form = formProvider()
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData) { implicit request =>
+    (identify andThen getData andThen requireData andThen filterCompleted) { implicit request =>
 
       val preparedForm = request.userAnswers.get(ContactRolePage(contactType)) match {
         case None        => form

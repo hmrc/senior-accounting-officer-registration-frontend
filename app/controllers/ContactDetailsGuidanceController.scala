@@ -31,12 +31,13 @@ class ContactDetailsGuidanceController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
+    filterCompleted: RedirectAction,
     val controllerComponents: MessagesControllerComponents,
     view: ContactDetailsGuidanceView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen filterCompleted) { implicit request =>
     Ok(view())
   }
 

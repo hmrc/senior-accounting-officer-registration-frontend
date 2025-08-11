@@ -38,6 +38,7 @@ class ContactPhoneController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
+    filterCompleted: RedirectAction,
     formProvider: ContactPhoneFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactPhoneView
@@ -48,7 +49,7 @@ class ContactPhoneController @Inject() (
   val form = formProvider()
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData) { implicit request =>
+    (identify andThen getData andThen requireData andThen filterCompleted) { implicit request =>
 
       val preparedForm = request.userAnswers.get(ContactPhonePage(contactType)) match {
         case None        => form
