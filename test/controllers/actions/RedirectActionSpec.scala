@@ -31,8 +31,8 @@ import models.requests.OptionalDataRequest
 
 class RedirectActionSpec extends SpecBase with MockitoSugar {
 
-  class Harness(sessionRepository: SessionRepository) extends RedirectActionImpl(sessionRepository) {
-    def callFilter(request: DataRequest[UserAnswers]): Future[Option[Result]] = filter(request) 
+  class Harness() extends RedirectActionImpl() {
+    def callFilter(request: DataRequest[UserAnswers]): Future[Option[Result]] = filter(request)
   }
 
   "Redirect Action" - {
@@ -44,43 +44,42 @@ class RedirectActionSpec extends SpecBase with MockitoSugar {
         //   val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
         //   val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          //   val authAction = new FrontendAuthenticatedIdentifierAction(
-          //     new FakeFailingAuthConnector(new MissingBearerToken),
-          //     appConfig,
-          //     bodyParsers
-          //   )
-          //   val controller = new Harness(authAction)
-          //   val result     = controller.onPageLoad()(FakeRequest())
+        //   val authAction = new FrontendAuthenticatedIdentifierAction(
+        //     new FakeFailingAuthConnector(new MissingBearerToken),
+        //     appConfig,
+        //     bodyParsers
+        //   )
+        //   val controller = new Harness(authAction)
+        //   val result     = controller.onPageLoad()(FakeRequest())
 
-          //   status(result) mustBe SEE_OTHER
-          //   redirectLocation(result).value must startWith(appConfig.loginUrl)
-        }
+        //   status(result) mustBe SEE_OTHER
+        //   redirectLocation(result).value must startWith(appConfig.loginUrl)
       }
     }
-    "must not redirect user" - {
-      "when the contactHaveYouAddedAll flag == No" in {
-        // val userAnswers = UserAnswers("id")
-        //   .set(ContactHaveYouAddedAllPage(ContactType.First), ContactHaveYouAddedAll.Yes)
-        //   .fold(
-        //     _ => None,
-        //     Some(_)
-        //   )
-        // val application = applicationBuilder(userAnswers = userAnswers).build()
-        // running(application) {
-        //   val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        //   val appConfig   = application.injector.instanceOf[FrontendAppConfig]
-true
-        // }
-      //}
-      "when the contactHaveYouAddedAll flag is not set" in {
-        val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(None)
-        val action = new Harness(sessionRepository)
+  }
+  "must not redirect user" - {
+    "when the contactHaveYouAddedAll flag == No" in {
+      // val userAnswers = UserAnswers("id")
+      //   .set(ContactHaveYouAddedAllPage(ContactType.First), ContactHaveYouAddedAll.Yes)
+      //   .fold(
+      //     _ => None,
+      //     Some(_)
+      //   )
+      // val application = applicationBuilder(userAnswers = userAnswers).build()
+      // running(application) {
+      //   val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+      //   val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+      true
+    }
 
-        val result = action.callFilter(new OptionalDataRequest[UserAnswers](
-          FakeRequest(), "id", emptyUserAnswers)).futureValue
+    "when the contactHaveYouAddedAll flag is not set" in {
+      val sessionRepository = mock[SessionRepository]
+      when(sessionRepository.get("id")) thenReturn Future(None)
+      val action = new Harness()
 
-      }
+      val result =
+        action.callFilter(new DataRequest(FakeRequest[UserAnswers](), "id", emptyUserAnswers)).futureValue
+
     }
   }
 }

@@ -32,7 +32,6 @@ import pages.ContactHaveYouAddedAllPage
 import models.ContactType
 
 class RedirectActionImpl @Inject() (
-     val sessionRepository: SessionRepository
 )(implicit val executionContext: ExecutionContext) extends RedirectAction {
   override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = {
     request.userAnswers.get(ContactHaveYouAddedAllPage(ContactType.First)) match {
