@@ -38,6 +38,15 @@ class RedirectActionImpl @Inject() (
     request.userAnswers.get(ContactHaveYouAddedAllPage(ContactType.First)) match {
       case Some(ContactHaveYouAddedAll.Yes) => Future.successful(Some(Redirect(routes.IndexController.onPageLoad())))
       case _ => Future.successful(None)
+      // case _ => for {
+      //   storedData <- sessionRepository.get(request.userId)
+      //   _ <- storedData match {
+      //     case Some(data) if data.get(ContactHaveYouAddedAllPage(ContactType.First)).contains(ContactHaveYouAddedAll.Yes) =>
+      //       Future.successful(Some(Redirect(routes.IndexController.onPageLoad())))
+      //     case _ =>
+      //       Future.successful(None)
+      //   }
+      // } yield {}
     }
   }
 }
