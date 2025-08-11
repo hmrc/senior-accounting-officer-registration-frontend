@@ -27,6 +27,8 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
+import pages.ContactsPage
+import models.ContactInfo
 
 trait SpecBase
     extends AnyFreeSpec
@@ -36,9 +38,11 @@ trait SpecBase
     with ScalaFutures
     with IntegrationPatience {
 
-  val userAnswersId: String = "id"
-
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+  val userAnswersId: String             = "id"
+  def emptyUserAnswers: UserAnswers     = UserAnswers(userAnswersId)
+  def completedUserAnswers: UserAnswers = UserAnswers(id = userAnswersId)
+    .set(ContactsPage, List(ContactInfo("name", "email", "phone", "address")))
+    .success.value
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 

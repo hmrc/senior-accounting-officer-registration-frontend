@@ -26,28 +26,20 @@ import play.api.mvc.ActionFilter
 import play.api.mvc.Results.{Redirect}
 import play.api.mvc.Result
 
-import models.ContactHaveYouAddedAll
 import controllers.routes
-import pages.ContactHaveYouAddedAllPage
-import models.ContactType
+import models.ContactInfo
+import pages.ContactsPage
 
 class RedirectActionImpl @Inject() (
-)(implicit val executionContext: ExecutionContext) extends RedirectAction {
+)(implicit val executionContext: ExecutionContext)
+    extends RedirectAction {
   override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = {
-    request.userAnswers.get(ContactHaveYouAddedAllPage(ContactType.First)) match {
-      case Some(ContactHaveYouAddedAll.Yes) => Future.successful(Some(Redirect(routes.IndexController.onPageLoad())))
-      case _ => Future.successful(None)
-      // case _ => for {
-      //   storedData <- sessionRepository.get(request.userId)
-      //   _ <- storedData match {
-      //     case Some(data) if data.get(ContactHaveYouAddedAllPage(ContactType.First)).contains(ContactHaveYouAddedAll.Yes) =>
-      //       Future.successful(Some(Redirect(routes.IndexController.onPageLoad())))
-      //     case _ =>
-      //       Future.successful(None)
-      //   }
-      // } yield {}
+    if (request.userAnswers.get(ContactsPage).exists(_.nonEmpty))
+      Future.successful(Some(Redirect(routes.IndexController.onPageLoad())))
+    else {
+      Future.successful(None)
     }
   }
 }
-trait RedirectAction extends ActionFilter[DataRequest]
 
+trait RedirectAction extends ActionFilter[DataRequest]
