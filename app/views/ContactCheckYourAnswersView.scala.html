@@ -28,19 +28,19 @@
 
     <h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
     @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinue()) {
-    @for((contact, index) <- contacts.zipWithIndex) {
-        <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
-        @govukSummaryList(SummaryListViewModel(rows = Seq(
-            ContactNameSummary.row(contactType(index), contact.name), 
-            ContactRoleSummary.row(contactType(index), contact.role),
-            ContactEmailSummary.row(contactType(index), contact.email),
-            ContactPhoneSummary.row(contactType(index), contact.phone)
-        )))
-        <input type="hidden" name="contacts[@index].name" value="@contact.name"/>
-        <input type="hidden" name="contacts[@index].role" value="@contact.role"/>
-        <input type="hidden" name="contacts[@index].email" value="@contact.email"/>
-        <input type="hidden" name="contacts[@index].phone" value="@contact.phone"/>
-    }
+        @for((contact, index) <- contacts.zipWithIndex) {
+            <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
+            @govukSummaryList(SummaryListViewModel(rows = Seq(
+                ContactNameSummary.row(contactType(index), contact.name), 
+                ContactRoleSummary.row(contactType(index), contact.role),
+                ContactEmailSummary.row(contactType(index), contact.email),
+                ContactPhoneSummary.row(contactType(index), contact.phone)
+            )))
+            <input type="hidden" name="contacts[@index].name" value="@contact.name"/>
+            <input type="hidden" name="contacts[@index].role" value="@contact.role"/>
+            <input type="hidden" name="contacts[@index].email" value="@contact.email"/>
+            <input type="hidden" name="contacts[@index].phone" value="@contact.phone"/>
+        }
 
         @govukButton(
             ButtonViewModel(messages("contactCheckYourAnswers.continue")).withAttribute("id", "submit")
