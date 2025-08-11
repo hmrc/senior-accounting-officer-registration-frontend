@@ -28,16 +28,15 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 import org.slf4j.MDC
 import play.api.libs.json.Json
+import uk.gov.hmrc.mdc.MdcExecutionContext
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
-import uk.gov.hmrc.play.bootstrap.dispatchers.MDCPropagatingExecutorService
 
-import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
-import java.util.concurrent.Executors
+import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.{ExecutionContext, Future}
 
 class SessionRepositoryISpec
-    extends AnyFreeSpec
+  extends AnyFreeSpec
     with Matchers
     with DefaultPlayMongoRepositorySupport[UserAnswers]
     with ScalaFutures
@@ -151,11 +150,9 @@ class SessionRepositoryISpec
   private def mustPreserveMdc[A](f: => Future[A])(implicit pos: Position): Unit =
     "must preserve MDC" in {
 
-      implicit lazy val ec: ExecutionContext =
-        ExecutionContext.fromExecutor(new MDCPropagatingExecutorService(Executors.newFixedThreadPool(2)))
+      given productionLikeTestMdcExecutionContext: ExecutionContext = MdcExecutionContext()
 
       MDC.put("test", "foo")
-      while Option(MDC.get("test")).isEmpty do { Thread.sleep(10) }
 
       f.map { _ =>
         MDC.get("test") mustEqual "foo"
