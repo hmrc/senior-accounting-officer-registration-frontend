@@ -27,7 +27,7 @@ class ContactDetailsGuidanceControllerSpec extends SpecBase {
 
   "ContactDetailsGuidance Controller" - {
     "must redirect to index when contacts have been submitted onPageLoad endpoint" in {
-      val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithContacts)).build()
       running(application) {
         val request = FakeRequest(GET, routes.ContactDetailsGuidanceController.onPageLoad().url)
         val result  = route(application, request).value
@@ -37,7 +37,7 @@ class ContactDetailsGuidanceControllerSpec extends SpecBase {
       }
     }
     "must redirect to index when contacts have been submitted on continue endpoint" in {
-      val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithContacts)).build()
       running(application) {
         val request = FakeRequest(GET, routes.ContactDetailsGuidanceController.continue().url)
         val result  = route(application, request).value
