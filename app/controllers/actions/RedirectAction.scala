@@ -19,7 +19,6 @@ package controllers.actions
 import scala.concurrent.Future
 import models.requests.DataRequest
 import javax.inject.Inject
-import repositories.SessionRepository
 import scala.concurrent.ExecutionContext
 
 import play.api.mvc.ActionFilter
