@@ -27,6 +27,7 @@ class Module extends AbstractModule {
 
     bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
+    
     bind(classOf[IdentifierAction]).to(classOf[FrontendAuthenticatedIdentifierAction]).asEagerSingleton()
     bind(classOf[ApiAuthenticatedIdentifierAction]).to(classOf[ApiAuthenticatedIdentifierActionImpl]).asEagerSingleton()
 
