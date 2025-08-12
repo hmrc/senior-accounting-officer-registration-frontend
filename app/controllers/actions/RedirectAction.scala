@@ -30,16 +30,13 @@ import controllers.routes
 import models.ContactInfo
 import pages.ContactsPage
 
-class RedirectActionImpl @Inject() (
-)(implicit val executionContext: ExecutionContext)
-    extends RedirectAction {
+class RedirectAction @Inject() (
+)(implicit val executionContext: ExecutionContext) extends ActionFilter[DataRequest]{
   override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = {
-    if (request.userAnswers.get(ContactsPage).exists(_.nonEmpty))
-      Future.successful(Some(Redirect(routes.IndexController.onPageLoad())))
-    else {
-      Future.successful(None)
-    }
+    Future.successful(request.userAnswers.get(ContactsPage).flatMap(
+      {
+        case list if list.nonEmpty => Some(Redirect(routes.IndexController.onPageLoad()))
+        case _ => None
+      }))
   }
 }
-
-trait RedirectAction extends ActionFilter[DataRequest]
