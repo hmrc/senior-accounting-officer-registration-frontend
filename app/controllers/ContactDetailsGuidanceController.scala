@@ -37,11 +37,13 @@ class ContactDetailsGuidanceController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>
-    Ok(view())
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) {
+    implicit request =>
+      Ok(view())
   }
 
-  def continue: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>
-    Redirect(routes.ContactNameController.onPageLoad(First, NormalMode))
+  def continue: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) {
+    implicit request =>
+      Redirect(routes.ContactNameController.onPageLoad(First, NormalMode))
   }
 }

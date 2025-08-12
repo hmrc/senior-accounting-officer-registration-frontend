@@ -38,12 +38,13 @@ trait SpecBase
     with ScalaFutures
     with IntegrationPatience {
 
-  val userAnswersId: String             = "id"
-  def emptyUserAnswers: UserAnswers     = UserAnswers(userAnswersId)
+  val userAnswersId: String         = "id"
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
   // this is for a user who has SUBMITTED their SAO contacts
   def userAnswersWithContacts: UserAnswers = UserAnswers(id = userAnswersId)
     .set(ContactsPage, List(ContactInfo("name", "email", "phone", "address")))
-    .success.value
+    .success
+    .value
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 

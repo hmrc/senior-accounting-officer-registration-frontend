@@ -30,12 +30,15 @@ import models.ContactInfo
 import pages.ContactsPage
 
 class BlockConfirmedContactsFilter @Inject() (
-)(implicit val executionContext: ExecutionContext) extends ActionFilter[DataRequest]{
+)(implicit val executionContext: ExecutionContext)
+    extends ActionFilter[DataRequest] {
   override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = {
-    Future.successful(request.userAnswers.get(ContactsPage).flatMap(
-      {
-        case list if list.nonEmpty => Some(Redirect(routes.IndexController.onPageLoad()))
-        case _ => None
-      }))
+    Future.successful(
+      request.userAnswers
+        .get(ContactsPage)
+        .collect {
+          case list if list.nonEmpty => Redirect(routes.IndexController.onPageLoad())
+        }
+    )
   }
 }
