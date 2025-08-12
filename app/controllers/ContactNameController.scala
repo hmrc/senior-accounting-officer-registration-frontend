@@ -38,7 +38,7 @@ class ContactNameController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    filterCompleted: RedirectAction,
+    filterCompleted: FilterCompletedSubmissionsAction,
     formProvider: ContactNameFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactNameView

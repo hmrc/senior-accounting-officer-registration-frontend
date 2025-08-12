@@ -37,7 +37,7 @@ class ContactHaveYouAddedAllController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    filterCompleted: RedirectAction,
+    filterCompleted: FilterCompletedSubmissionsAction,
     formProvider: ContactHaveYouAddedAllFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactHaveYouAddedAllView

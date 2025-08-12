@@ -38,7 +38,7 @@ class ContactPhoneController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    filterCompleted: RedirectAction,
+    filterCompleted: FilterCompletedSubmissionsAction,
     formProvider: ContactPhoneFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactPhoneView

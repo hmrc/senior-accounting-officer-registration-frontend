@@ -38,7 +38,7 @@ class ContactRoleController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    filterCompleted: RedirectAction,
+    filterCompleted: FilterCompletedSubmissionsAction,
     formProvider: ContactRoleFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactRoleView

@@ -38,7 +38,7 @@ class ContactEmailController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    filterCompleted: RedirectAction,
+    filterCompleted: FilterCompletedSubmissionsAction,
     formProvider: ContactEmailFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactEmailView

@@ -31,7 +31,7 @@ class ContactDetailsGuidanceController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    filterCompleted: RedirectAction,
+    filterCompleted: FilterCompletedSubmissionsAction,
     val controllerComponents: MessagesControllerComponents,
     view: ContactDetailsGuidanceView
 ) extends FrontendBaseController
