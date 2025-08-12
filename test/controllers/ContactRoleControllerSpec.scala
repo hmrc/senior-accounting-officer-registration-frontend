@@ -45,7 +45,7 @@ class ContactRoleControllerSpec extends SpecBase with MockitoSugar {
       s"When the ContactType is $contactType" - {
         lazy val contactRoleRoute = routes.ContactRoleController.onPageLoad(contactType, NormalMode).url
         s"must redirect to index when contacts have been submitted onPageLoad endpoint with contactType: $contactType" in {
-          val application = applicationBuilder(userAnswers = Some(userAnswersWithContacts)).build()
+          val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
             val request = FakeRequest(GET, contactRoleRoute)
             val result  = route(application, request).value
@@ -157,7 +157,7 @@ class ContactRoleControllerSpec extends SpecBase with MockitoSugar {
           }
         }
         s"must redirect to index when contacts have been submitted onSubmit endpoint with contactType: $contactType" in {
-          val application = applicationBuilder(userAnswers = Some(userAnswersWithContacts)).build()
+          val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
             val request = FakeRequest(POST, routes.ContactRoleController.onSubmit(contactType, NormalMode).url)
             val result  = route(application, request).value

@@ -45,7 +45,7 @@ class ContactPhoneControllerSpec extends SpecBase with MockitoSugar {
       s"When the ContactType is $contactType" - {
         lazy val contactPhoneRoute = routes.ContactPhoneController.onPageLoad(contactType, NormalMode).url
         s"must redirect to index when contacts have been submitted onSubmit endpoint" in {
-          val application = applicationBuilder(userAnswers = Some(userAnswersWithContacts)).build()
+          val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
             val request = FakeRequest(POST, routes.ContactPhoneController.onSubmit(contactType, NormalMode).url)
             val result  = route(application, request).value
@@ -55,7 +55,7 @@ class ContactPhoneControllerSpec extends SpecBase with MockitoSugar {
           }
         }
         s"must redirect to index when contacts have been submitted onPageLoad endpoint" in {
-          val application = applicationBuilder(userAnswers = Some(userAnswersWithContacts)).build()
+          val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
             val request = FakeRequest(GET, contactPhoneRoute)
             val result  = route(application, request).value
