@@ -60,7 +60,7 @@ class ContactPhoneController @Inject() (
     }
 
   def onSubmit(contactType: ContactType, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (identify andThen getData andThen requireData andThen filterCompleted).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

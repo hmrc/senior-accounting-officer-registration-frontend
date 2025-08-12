@@ -41,7 +41,7 @@ class ContactDetailsGuidanceController @Inject() (
     Ok(view())
   }
 
-  def continue: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def continue: Action[AnyContent] = (identify andThen getData andThen requireData andThen filterCompleted) { implicit request =>
     Redirect(routes.ContactNameController.onPageLoad(First, NormalMode))
   }
 }

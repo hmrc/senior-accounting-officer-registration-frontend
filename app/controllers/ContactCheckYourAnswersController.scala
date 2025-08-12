@@ -55,7 +55,7 @@ class ContactCheckYourAnswersController @Inject() (
     else Ok(view(contactInfos))
   }
 
-  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>
+  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData andThen filterCompleted) async { implicit request =>
     form
       .bindFromRequest()
       .fold(
