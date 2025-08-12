@@ -22,7 +22,7 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 import play.api.mvc.ActionFilter
-import play.api.mvc.Results.{Redirect}
+import play.api.mvc.Results.Redirect
 import play.api.mvc.Result
 
 import controllers.routes
@@ -30,7 +30,7 @@ import models.ContactInfo
 import pages.ContactsPage
 
 class BlockConfirmedContactsFilter @Inject() (
-)(implicit val executionContext: ExecutionContext)
+)(override implicit val executionContext: ExecutionContext)
     extends ActionFilter[DataRequest] {
   override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = 
     Future.successful(

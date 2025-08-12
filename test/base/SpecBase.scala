@@ -40,7 +40,6 @@ trait SpecBase
 
   val userAnswersId: String         = "id"
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
-  // this is for a user who has SUBMITTED their SAO contacts
   def userAnswersWithConfirmedContacts: UserAnswers = UserAnswers(id = userAnswersId)
     .set(ContactsPage, List(ContactInfo("name", "email", "phone", "address")))
     .success
