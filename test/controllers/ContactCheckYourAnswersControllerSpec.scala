@@ -34,7 +34,7 @@ import pages.ContactsPage
 
 class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
   val testUserAnswers = emptyUserAnswers
-  
+
   override protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     super
       .applicationBuilder(userAnswers)
@@ -83,40 +83,40 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
         running(application) {
           val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
-          val result = route(application, request).value
+          val result  = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
         }
       }
     }
+  }
 
-    "saveAndContinue endpoint:" - {
-      "must redirect to index controller when record saved" - {
-        "Data saved to the SessionRepository must be the sanitised contacts" in {
-          val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-          running(application) {
+  "saveAndContinue endpoint:" - {
+    "must redirect to index controller when record saved" - {
+      "Data saved to the SessionRepository must be the sanitised contacts" in {
+        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+        running(application) {
 
-            val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
+          val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
 
-            val mockedSessionRepository = application.injector.instanceOf[SessionRepository]
-            when(mockedSessionRepository.set(any())).thenReturn(Future.successful(true))
-            val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-            when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
+          val mockedSessionRepository = application.injector.instanceOf[SessionRepository]
+          when(mockedSessionRepository.set(any())).thenReturn(Future.successful(true))
+          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+          when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
 
-            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-              .withFormUrlEncodedBody(
-                "contacts[0].name"  -> "name",
-                "contacts[0].role"  -> "role",
-                "contacts[0].email" -> "email",
-                "contacts[0].phone" -> "phone"
-              )
-            val result = route(application, request).value
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
-            withClue("verify that the mongo instance was called once to update with bound Page -> UserAnswers\n") {
-              verify(mockedSessionRepository, times(1)).set(testUserAnswers.set(ContactsPage, testContactInfos).get)
-            }
+          val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+            .withFormUrlEncodedBody(
+              "contacts[0].name"  -> "name",
+              "contacts[0].role"  -> "role",
+              "contacts[0].email" -> "email",
+              "contacts[0].phone" -> "phone"
+            )
+          val result = route(application, request).value
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+          withClue("verify that the mongo instance was called once to update with bound Page -> UserAnswers\n") {
+            verify(mockedSessionRepository, times(1)).set(testUserAnswers.set(ContactsPage, testContactInfos).get)
           }
         }
       }

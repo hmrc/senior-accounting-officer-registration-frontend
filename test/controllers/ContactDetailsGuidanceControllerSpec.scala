@@ -26,10 +26,20 @@ import views.html.ContactDetailsGuidanceView
 class ContactDetailsGuidanceControllerSpec extends SpecBase {
 
   "ContactDetailsGuidance Controller" - {
-    "must redirect to index when contacts have been submitted" in {
+    "must redirect to index when contacts have been submitted onPageLoad endpoint" in {
       val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
       running(application) {
         val request = FakeRequest(GET, routes.ContactDetailsGuidanceController.onPageLoad().url)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+      }
+    }
+    "must redirect to index when contacts have been submitted on continue endpoint" in {
+      val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
+      running(application) {
+        val request = FakeRequest(GET, routes.ContactDetailsGuidanceController.continue().url)
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER

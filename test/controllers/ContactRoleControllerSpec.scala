@@ -44,7 +44,7 @@ class ContactRoleControllerSpec extends SpecBase with MockitoSugar {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
         lazy val contactRoleRoute = routes.ContactRoleController.onPageLoad(contactType, NormalMode).url
-        "must redirect to index when contacts have been submitted" in {
+        s"must redirect to index when contacts have been submitted onPageLoad endpoint with contactType: $contactType" in {
           val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
           running(application) {
             val request = FakeRequest(GET, contactRoleRoute)
@@ -156,7 +156,16 @@ class ContactRoleControllerSpec extends SpecBase with MockitoSugar {
             redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
           }
         }
+        s"must redirect to index when contacts have been submitted onSubmit endpoint with contactType: $contactType" in {
+          val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
+          running(application) {
+            val request = FakeRequest(POST, routes.ContactRoleController.onSubmit(contactType, NormalMode).url)
+            val result  = route(application, request).value
 
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+          }
+        }
         "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
           val application = applicationBuilder(userAnswers = None).build()
