@@ -44,7 +44,16 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
         lazy val contactEmailRoute = routes.ContactEmailController.onPageLoad(contactType, NormalMode).url
+        "must redirect to index when contacts have been submitted" in {
+          val application = applicationBuilder(userAnswers = Some(completedUserAnswers)).build()
+          running(application) {
+            val request = FakeRequest(GET, contactEmailRoute)
+            val result  = route(application, request).value
 
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+          }
+        }
         "must return OK and the correct view for a GET" in {
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
