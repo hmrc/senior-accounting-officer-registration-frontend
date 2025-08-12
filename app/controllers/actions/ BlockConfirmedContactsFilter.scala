@@ -32,7 +32,7 @@ import pages.ContactsPage
 class BlockConfirmedContactsFilter @Inject() (
 )(implicit val executionContext: ExecutionContext)
     extends ActionFilter[DataRequest] {
-  override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = {
+  override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = 
     Future.successful(
       request.userAnswers
         .get(ContactsPage)
@@ -40,5 +40,4 @@ class BlockConfirmedContactsFilter @Inject() (
           case list if list.nonEmpty => Redirect(routes.IndexController.onPageLoad())
         }
     )
-  }
 }
