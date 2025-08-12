@@ -29,7 +29,7 @@ import controllers.routes
 import models.ContactInfo
 import pages.ContactsPage
 
-class FilterCompletedSubmissionsAction @Inject() (
+class BlockConfirmedContactsFilter @Inject() (
 )(implicit val executionContext: ExecutionContext) extends ActionFilter[DataRequest]{
   override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = {
     Future.successful(request.userAnswers.get(ContactsPage).flatMap(

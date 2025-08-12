@@ -36,7 +36,7 @@ class ContactCheckYourAnswersController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    filterCompleted: FilterCompletedSubmissionsAction,
+    blockConfirmedContacts: BlockConfirmedContactsFilter,
     formProvider: ContactCheckYourAnswersFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
@@ -48,14 +48,14 @@ class ContactCheckYourAnswersController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen filterCompleted) { implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>
     val contactInfos = service.getContactInfos(request.userAnswers)
     if contactInfos.isEmpty
     then Redirect(routes.JourneyRecoveryController.onPageLoad())
     else Ok(view(contactInfos))
   }
 
-  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData andThen filterCompleted) async { implicit request =>
+  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) async { implicit request =>
     form
       .bindFromRequest()
       .fold(

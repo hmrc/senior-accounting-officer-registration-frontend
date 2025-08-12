@@ -38,7 +38,7 @@ class ContactPhoneController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    filterCompleted: FilterCompletedSubmissionsAction,
+    blockConfirmedContacts: BlockConfirmedContactsFilter,
     formProvider: ContactPhoneFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactPhoneView
@@ -49,7 +49,7 @@ class ContactPhoneController @Inject() (
   val form = formProvider()
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen filterCompleted) { implicit request =>
+    (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>
 
       val preparedForm = request.userAnswers.get(ContactPhonePage(contactType)) match {
         case None        => form
@@ -60,7 +60,7 @@ class ContactPhoneController @Inject() (
     }
 
   def onSubmit(contactType: ContactType, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen filterCompleted).async { implicit request =>
+    (identify andThen getData andThen requireData andThen blockConfirmedContacts).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
