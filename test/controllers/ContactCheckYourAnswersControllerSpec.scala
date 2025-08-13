@@ -46,13 +46,17 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
   "ContactCheckYourAnswers Controller" - {
     "onPageLoad endpoint:" - {
       "must return OK and the correct view for a GET" in {
-        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+        val request          = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
+        val testContactInfos = List(ContactInfo("", "", "", ""))
+        val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
         running(application) {
-          val testContactInfos                   = List(ContactInfo("", "", "", ""))
+          val view                               = application.injector.instanceOf[ContactCheckYourAnswersView]
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
-          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
-          val view = application.injector.instanceOf[ContactCheckYourAnswersView]
+          when(
+            mockContactCheckYourAnswersService
+              .getContactInfos(meq(testUserAnswers))
+          )
+            .thenReturn(testContactInfos)
 
           val result = route(application, request).value
 
@@ -65,11 +69,11 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       }
 
       "must redirect to journey recovery when no contacts found" in {
+        val request     = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
         val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
         running(application) {
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
           when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(List.empty)
-          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
 
           val result = route(application, request).value
 
@@ -79,11 +83,11 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       }
 
       "must redirect to index when contacts have been submitted" in {
+        val request     = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
         val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
         running(application) {
-          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
-          
-          val result  = route(application, request).value
+
+          val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
@@ -95,24 +99,23 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
   "saveAndContinue endpoint:" - {
     "must redirect to index controller when record saved" - {
       "Data saved to the SessionRepository must be the sanitised contacts" in {
-        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+        val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+          .withFormUrlEncodedBody(
+            "contacts[0].name"  -> "name",
+            "contacts[0].role"  -> "role",
+            "contacts[0].email" -> "email",
+            "contacts[0].phone" -> "phone"
+          )
+        val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
+        val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
         running(application) {
-
-          val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
-
           val mockedSessionRepository = application.injector.instanceOf[SessionRepository]
           when(mockedSessionRepository.set(any())).thenReturn(Future.successful(true))
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
           when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
 
-          val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-            .withFormUrlEncodedBody(
-              "contacts[0].name"  -> "name",
-              "contacts[0].role"  -> "role",
-              "contacts[0].email" -> "email",
-              "contacts[0].phone" -> "phone"
-            )
           val result = route(application, request).value
+
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
           withClue("verify that the mongo instance was called once to update with bound Page -> UserAnswers\n") {
@@ -123,19 +126,21 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must throw BadRequestException when service contactInfo and form are misaligned" in {
+      val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
+      val request          = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+        .withFormUrlEncodedBody(
+          "contacts[0].name"  -> "differentName",
+          "contacts[0].role"  -> "anotherRole",
+          "contacts[0].email" -> "stolenEmail",
+          "contacts[0].phone" -> "newPhone"
+        )
       val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
       running(application) {
-        val testContactInfos                   = List(ContactInfo("name", "role", "email", "phone"))
         val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
         when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
-        val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-          .withFormUrlEncodedBody(
-            "contacts[0].name"  -> "differentName",
-            "contacts[0].role"  -> "anotherRole",
-            "contacts[0].email" -> "stolenEmail",
-            "contacts[0].phone" -> "newPhone"
-          )
-        val result    = route(application, request).value
+
+        val result = route(application, request).value
+
         val exception = intercept[BadRequestException] {
           await(result)
         }
@@ -143,19 +148,21 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       }
     }
     "must throw BadRequestException when the request contains an invalid form" in {
-      val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+      val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+        .withFormUrlEncodedBody(
+          "contacts[0].name"  -> "",
+          "contacts[0].role"  -> "",
+          "contacts[0].email" -> "",
+          "contacts[0].phone" -> ""
+        )
+      val testContactInfos = List(ContactInfo("", "", "", ""))
+      val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
       running(application) {
-        val testContactInfos                   = List(ContactInfo("", "", "", ""))
         val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
         when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
-        val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
-          .withFormUrlEncodedBody(
-            "contacts[0].name"  -> "",
-            "contacts[0].role"  -> "",
-            "contacts[0].email" -> "",
-            "contacts[0].phone" -> ""
-          )
+        
         val result    = route(application, request).value
+        
         val exception = intercept[BadRequestException] {
           await(result)
         }
