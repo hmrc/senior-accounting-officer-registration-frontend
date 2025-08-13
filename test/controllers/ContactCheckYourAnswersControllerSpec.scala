@@ -47,16 +47,15 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     "onPageLoad endpoint:" - {
       "must return OK and the correct view for a GET" in {
         val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-
         running(application) {
           val testContactInfos                   = List(ContactInfo("", "", "", ""))
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
           when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
           val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
+          val view = application.injector.instanceOf[ContactCheckYourAnswersView]
 
           val result = route(application, request).value
 
-          val view = application.injector.instanceOf[ContactCheckYourAnswersView]
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(testContactInfos)(
             request,
@@ -83,6 +82,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
         running(application) {
           val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
+          
           val result  = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
