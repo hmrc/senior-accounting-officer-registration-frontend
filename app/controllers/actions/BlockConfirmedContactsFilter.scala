@@ -32,7 +32,7 @@ import pages.ContactsPage
 class BlockConfirmedContactsFilter @Inject() (
 )(override implicit val executionContext: ExecutionContext)
     extends ActionFilter[DataRequest] {
-  override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = 
+  override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] =
     Future.successful(
       request.userAnswers
         .get(ContactsPage)
