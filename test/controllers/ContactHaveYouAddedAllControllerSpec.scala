@@ -48,7 +48,7 @@ class ContactHaveYouAddedAllControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
           running(application) {
             val request = FakeRequest(GET, contactHaveYouAddedAllRoute)
-            val view = application.injector.instanceOf[ContactHaveYouAddedAllView]
+            val view    = application.injector.instanceOf[ContactHaveYouAddedAllView]
 
             val result = route(application, request).value
 
@@ -66,7 +66,7 @@ class ContactHaveYouAddedAllControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
           running(application) {
             val request = FakeRequest(GET, contactHaveYouAddedAllRoute)
-            val view = application.injector.instanceOf[ContactHaveYouAddedAllView]
+            val view    = application.injector.instanceOf[ContactHaveYouAddedAllView]
 
             val result = route(application, request).value
 
@@ -107,7 +107,7 @@ class ContactHaveYouAddedAllControllerSpec extends SpecBase with MockitoSugar {
               FakeRequest(POST, contactHaveYouAddedAllRoute)
                 .withFormUrlEncodedBody(("value", "invalid value"))
             val boundForm = form.bind(Map("value" -> "invalid value"))
-            val view = application.injector.instanceOf[ContactHaveYouAddedAllView]
+            val view      = application.injector.instanceOf[ContactHaveYouAddedAllView]
 
             val result = route(application, request).value
 

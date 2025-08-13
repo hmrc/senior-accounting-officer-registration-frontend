@@ -160,9 +160,9 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
         when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
-        
-        val result    = route(application, request).value
-        
+
+        val result = route(application, request).value
+
         val exception = intercept[BadRequestException] {
           await(result)
         }

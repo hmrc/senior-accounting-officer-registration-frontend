@@ -38,8 +38,8 @@ trait SpecBase
     with ScalaFutures
     with IntegrationPatience {
 
-  val userAnswersId: String         = "id"
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+  val userAnswersId: String                         = "id"
+  def emptyUserAnswers: UserAnswers                 = UserAnswers(userAnswersId)
   def userAnswersWithConfirmedContacts: UserAnswers = UserAnswers(id = userAnswersId)
     .set(ContactsPage, List(ContactInfo("name", "email", "phone", "address")))
     .success

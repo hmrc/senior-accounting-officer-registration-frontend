@@ -48,8 +48,8 @@ class ContactPhoneControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
             val request = FakeRequest(POST, routes.ContactPhoneController.onSubmit(contactType, NormalMode).url)
-            
-            val result  = route(application, request).value
+
+            val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
@@ -59,8 +59,8 @@ class ContactPhoneControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
             val request = FakeRequest(GET, contactPhoneRoute)
-            
-            val result  = route(application, request).value
+
+            val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
@@ -70,7 +70,7 @@ class ContactPhoneControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
           running(application) {
             val request = FakeRequest(GET, contactPhoneRoute)
-            val view = application.injector.instanceOf[ContactPhoneView]
+            val view    = application.injector.instanceOf[ContactPhoneView]
 
             val result = route(application, request).value
 
@@ -87,7 +87,7 @@ class ContactPhoneControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
           running(application) {
             val request = FakeRequest(GET, contactPhoneRoute)
-            val view = application.injector.instanceOf[ContactPhoneView]
+            val view    = application.injector.instanceOf[ContactPhoneView]
 
             val result = route(application, request).value
 
@@ -128,7 +128,7 @@ class ContactPhoneControllerSpec extends SpecBase with MockitoSugar {
               FakeRequest(POST, contactPhoneRoute)
                 .withFormUrlEncodedBody(("value", ""))
             val boundForm = form.bind(Map("value" -> ""))
-            val view = application.injector.instanceOf[ContactPhoneView]
+            val view      = application.injector.instanceOf[ContactPhoneView]
 
             val result = route(application, request).value
 

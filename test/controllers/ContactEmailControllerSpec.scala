@@ -48,8 +48,8 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
             val request = FakeRequest(GET, contactEmailRoute)
-            
-            val result  = route(application, request).value
+
+            val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
@@ -59,8 +59,8 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
             val request = FakeRequest(GET, routes.ContactEmailController.onSubmit(contactType, NormalMode).url)
-            
-            val result  = route(application, request).value
+
+            val result = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
@@ -87,7 +87,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
           running(application) {
             val request = FakeRequest(GET, contactEmailRoute)
-            val view = application.injector.instanceOf[ContactEmailView]
+            val view    = application.injector.instanceOf[ContactEmailView]
 
             val result = route(application, request).value
 
@@ -128,7 +128,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
               FakeRequest(POST, contactEmailRoute)
                 .withFormUrlEncodedBody(("value", ""))
             val boundForm = form.bind(Map("value" -> ""))
-            val view = application.injector.instanceOf[ContactEmailView]
+            val view      = application.injector.instanceOf[ContactEmailView]
 
             val result = route(application, request).value
 
