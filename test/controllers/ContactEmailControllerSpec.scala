@@ -44,10 +44,10 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
         lazy val contactEmailRoute = routes.ContactEmailController.onPageLoad(contactType, NormalMode).url
-        "must redirect to index when contacts have been submitted onPageLoad" in {
+        "must redirect to index when contacts have been confirmed onPageLoad" in {
+          val request     = FakeRequest(GET, contactEmailRoute)
           val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
-            val request = FakeRequest(GET, contactEmailRoute)
 
             val result = route(application, request).value
 
@@ -55,10 +55,10 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
             redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
           }
         }
-        "must redirect to index when contacts have been submitted onSubmit" in {
+        "must redirect to index when contacts have been confirmed onSubmit" in {
+          val request     = FakeRequest(GET, routes.ContactEmailController.onSubmit(contactType, NormalMode).url)
           val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
-            val request = FakeRequest(GET, routes.ContactEmailController.onSubmit(contactType, NormalMode).url)
 
             val result = route(application, request).value
 
@@ -67,13 +67,13 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
           }
         }
         "must return OK and the correct view for a GET" in {
+          val request     = FakeRequest(GET, contactEmailRoute)
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+          val view        = application.injector.instanceOf[ContactEmailView]
           running(application) {
-            val request = FakeRequest(GET, contactEmailRoute)
 
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[ContactEmailView]
             status(result) mustEqual OK
             contentAsString(result) mustEqual view(form, contactType, NormalMode)(
               request,
@@ -83,11 +83,11 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must populate the view correctly on a GET when the question has previously been answered" in {
+          val request     = FakeRequest(GET, contactEmailRoute)
           val userAnswers = UserAnswers(userAnswersId).set(ContactEmailPage(contactType), "answer").success.value
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+          val view        = application.injector.instanceOf[ContactEmailView]
           running(application) {
-            val request = FakeRequest(GET, contactEmailRoute)
-            val view    = application.injector.instanceOf[ContactEmailView]
 
             val result = route(application, request).value
 
@@ -100,6 +100,9 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to the next page when valid data is submitted" in {
+          val request =
+            FakeRequest(POST, contactEmailRoute)
+              .withFormUrlEncodedBody(("value", "answer"))
           val mockSessionRepository = mock[SessionRepository]
           when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
           val application =
@@ -110,9 +113,6 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
               )
               .build()
           running(application) {
-            val request =
-              FakeRequest(POST, contactEmailRoute)
-                .withFormUrlEncodedBody(("value", "answer"))
 
             val result = route(application, request).value
 
@@ -122,13 +122,13 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must return a Bad Request and errors when invalid data is submitted" in {
+          val request =
+            FakeRequest(POST, contactEmailRoute)
+              .withFormUrlEncodedBody(("value", ""))
+          val boundForm   = form.bind(Map("value" -> ""))
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
           running(application) {
-            val request =
-              FakeRequest(POST, contactEmailRoute)
-                .withFormUrlEncodedBody(("value", ""))
-            val boundForm = form.bind(Map("value" -> ""))
-            val view      = application.injector.instanceOf[ContactEmailView]
+            val view = application.injector.instanceOf[ContactEmailView]
 
             val result = route(application, request).value
 
@@ -141,9 +141,9 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to Journey Recovery for a GET if no existing data is found" in {
+          val request     = FakeRequest(GET, contactEmailRoute)
           val application = applicationBuilder(userAnswers = None).build()
           running(application) {
-            val request = FakeRequest(GET, contactEmailRoute)
 
             val result = route(application, request).value
 
@@ -153,11 +153,11 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to Journey Recovery for a POST if no existing data is found" in {
+          val request =
+            FakeRequest(POST, contactEmailRoute)
+              .withFormUrlEncodedBody(("value", "answer"))
           val application = applicationBuilder(userAnswers = None).build()
           running(application) {
-            val request =
-              FakeRequest(POST, contactEmailRoute)
-                .withFormUrlEncodedBody(("value", "answer"))
 
             val result = route(application, request).value
 

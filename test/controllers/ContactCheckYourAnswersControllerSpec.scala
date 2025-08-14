@@ -49,14 +49,10 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         val request          = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
         val testContactInfos = List(ContactInfo("", "", "", ""))
         val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+        val view             = application.injector.instanceOf[ContactCheckYourAnswersView]
+        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+        when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(testContactInfos)
         running(application) {
-          val view                               = application.injector.instanceOf[ContactCheckYourAnswersView]
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(
-            mockContactCheckYourAnswersService
-              .getContactInfos(meq(testUserAnswers))
-          )
-            .thenReturn(testContactInfos)
 
           val result = route(application, request).value
 
@@ -71,9 +67,9 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       "must redirect to journey recovery when no contacts found" in {
         val request     = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
         val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+        when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(List.empty)
         running(application) {
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfos(meq(testUserAnswers))).thenReturn(List.empty)
 
           val result = route(application, request).value
 
@@ -82,7 +78,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "must redirect to index when contacts have been submitted" in {
+      "must redirect to index when contacts have been confirmed" in {
         val request     = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
         val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
         running(application) {

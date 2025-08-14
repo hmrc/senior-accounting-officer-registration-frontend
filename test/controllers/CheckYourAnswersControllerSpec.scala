@@ -44,11 +44,9 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
+      val request     = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
       val application = applicationBuilder(userAnswers = None).build()
-
       running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
 
         val result = route(application, request).value
 
