@@ -16,15 +16,15 @@
 
 package forms.behaviours
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import org.scalacheck.Gen
 import play.api.data.{Form, FormError}
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 class DateBehaviours extends FieldBehaviours {
 
-  def dateField(form: Form[_], key: String, validData: Gen[LocalDate]): Unit = {
+  def dateField(form: Form[?], key: String, validData: Gen[LocalDate]): Unit = {
 
     "bind valid data" in {
 
@@ -44,7 +44,7 @@ class DateBehaviours extends FieldBehaviours {
     }
   }
 
-  def dateFieldWithMax(form: Form[_], key: String, max: LocalDate, formError: FormError): Unit = {
+  def dateFieldWithMax(form: Form[?], key: String, max: LocalDate, formError: FormError): Unit = {
 
     s"fail to bind a date greater than ${max.format(DateTimeFormatter.ISO_LOCAL_DATE)}" in {
 
@@ -65,7 +65,7 @@ class DateBehaviours extends FieldBehaviours {
     }
   }
 
-  def dateFieldWithMin(form: Form[_], key: String, min: LocalDate, formError: FormError): Unit = {
+  def dateFieldWithMin(form: Form[?], key: String, min: LocalDate, formError: FormError): Unit = {
 
     s"fail to bind a date earlier than ${min.format(DateTimeFormatter.ISO_LOCAL_DATE)}" in {
 
@@ -87,7 +87,7 @@ class DateBehaviours extends FieldBehaviours {
   }
 
   def mandatoryDateField(
-      form: Form[_],
+      form: Form[?],
       key: String,
       requiredAllKey: String,
       errorArgs: Seq[String] = Seq.empty

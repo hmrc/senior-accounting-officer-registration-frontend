@@ -18,7 +18,7 @@ package services
 
 import config.FrontendAppConfig
 import models.grs.create.{NewJourneyRequest, ServiceLabels}
-import models.grs.retrieve.{Registration, CompanyDetails as GrsCompanyDetails}
+import models.grs.retrieve.{CompanyDetails as GrsCompanyDetails, Registration}
 import models.registration.CompanyDetails
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.Request
@@ -34,7 +34,7 @@ class GrsService @Inject() (
     messagesApi: MessagesApi
 ) {
 
-  def newRequest()(using request: Request[_]): NewJourneyRequest = {
+  def newRequest()(using request: Request[?]): NewJourneyRequest = {
     val continueUrl =
       appConfig.prependHost(controllers.routes.GrsController.callBack("").url().replaceAll("\\?.*$", ""))
     val request = NewJourneyRequest(

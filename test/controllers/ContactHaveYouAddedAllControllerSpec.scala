@@ -32,13 +32,14 @@ import repositories.SessionRepository
 import views.html.ContactHaveYouAddedAllView
 
 import scala.concurrent.Future
+import play.api.data.Form
 
 class ContactHaveYouAddedAllControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider = new ContactHaveYouAddedAllFormProvider()
-  val form         = formProvider()
+  val formProvider                       = new ContactHaveYouAddedAllFormProvider()
+  val form: Form[ContactHaveYouAddedAll] = formProvider()
 
   "ContactHaveYouAddedAll Controller" - {
     List(ContactType.First, ContactType.Second).foreach { contactType =>

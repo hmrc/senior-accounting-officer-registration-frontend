@@ -29,7 +29,7 @@ import scala.jdk.CollectionConverters.*
 class ContactDetailsGuidanceViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   val SUT: ContactDetailsGuidanceView = app.injector.instanceOf[ContactDetailsGuidanceView]
-  given request: Request[_]           = FakeRequest()
+  given request: Request[?]           = FakeRequest()
   given Messages                      = app.injector.instanceOf[MessagesApi].preferred(request)
 
   "ContactDetailsGuidanceView" - {

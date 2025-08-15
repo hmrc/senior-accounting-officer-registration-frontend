@@ -16,9 +16,9 @@
 
 package models
 
-import play.api.libs.json.Reads
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
+import play.api.libs.json.Reads
 
 final case class ContactInfo(name: String, role: String, email: String, phone: String)
 

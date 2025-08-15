@@ -18,17 +18,18 @@ package controllers.testonly
 
 import base.SpecBase
 import models.grs.create.NewJourneyResponse
+import models.grs.retrieve.CompanyDetails
 import org.scalatest.matchers.{BePropertyMatchResult, BePropertyMatcher}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.libs.json.JsValue
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import GrsStubsControllerSpec.*
-import models.grs.retrieve.CompanyDetails
 import views.html.testonly.StubGrsView
 
 import java.util.UUID
+
+import GrsStubsControllerSpec.*
 
 class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
 
@@ -37,7 +38,7 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
       .configure(Map("application.router" -> "testOnlyDoNotUseInAppConf.Routes"))
       .build()
 
-  val testJourneyId = UUID.randomUUID().toString
+  val testJourneyId: String = UUID.randomUUID().toString
 
   "GrsStubsController.startGrs" - {
     "must return 201 with a valid NewJourneyResponse" in {

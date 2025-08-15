@@ -18,18 +18,19 @@ package controllers
 
 import controllers.actions.*
 import forms.ContactCheckYourAnswersFormProvider
-
-import javax.inject.Inject
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ContactCheckYourAnswersView
-import services.ContactCheckYourAnswersService
 import models.ContactInfo
 import pages.ContactsPage
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import scala.concurrent.{Future, ExecutionContext}
+import services.ContactCheckYourAnswersService
 import uk.gov.hmrc.http.BadRequestException
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.ContactCheckYourAnswersView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
+import play.api.data.Form
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
@@ -46,7 +47,7 @@ class ContactCheckYourAnswersController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[List[ContactInfo]] = formProvider()
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) {
     implicit request =>

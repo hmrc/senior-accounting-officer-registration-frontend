@@ -21,7 +21,7 @@ import connectors.GrsConnector
 import controllers.GrsControllerSpec.*
 import models.UserAnswers
 import models.grs.retrieve.Registration.Registered
-import models.grs.retrieve.{CompanyProfile, CompanyDetails as GrsCompanyDetails}
+import models.grs.retrieve.{CompanyDetails as GrsCompanyDetails, CompanyProfile}
 import models.registration.CompanyDetails
 import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.*

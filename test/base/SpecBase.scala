@@ -17,18 +17,18 @@
 package base
 
 import controllers.actions.*
+import models.ContactInfo
 import models.UserAnswers
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
+import pages.ContactsPage
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import pages.ContactsPage
-import models.ContactInfo
 
 trait SpecBase
     extends AnyFreeSpec

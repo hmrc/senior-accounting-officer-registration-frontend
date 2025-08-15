@@ -21,7 +21,7 @@ import play.api.data.{Form, FormError}
 trait CurrencyFieldBehaviours extends FieldBehaviours {
 
   def currencyField(
-      form: Form[_],
+      form: Form[?],
       fieldName: String,
       nonNumericError: FormError,
       invalidNumericError: FormError
@@ -42,7 +42,7 @@ trait CurrencyFieldBehaviours extends FieldBehaviours {
   }
 
   def currencyFieldWithMinimum(
-      form: Form[_],
+      form: Form[?],
       fieldName: String,
       minimum: BigDecimal,
       expectedError: FormError
@@ -56,7 +56,7 @@ trait CurrencyFieldBehaviours extends FieldBehaviours {
   }
 
   def currencyFieldWithMaximum(
-      form: Form[_],
+      form: Form[?],
       fieldName: String,
       maximum: BigDecimal,
       expectedError: FormError

@@ -17,20 +17,21 @@
 package controllers
 
 import base.SpecBase
-import play.api.test.FakeRequest
-import play.api.test.Helpers.*
-import views.html.ContactCheckYourAnswersView
 import models.{ContactInfo, UserAnswers}
-import org.mockito.ArgumentMatchers.{eq => meq, any}
+import org.mockito.ArgumentMatchers.{any, eq as meq}
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.guice.GuiceApplicationBuilder
-import services.ContactCheckYourAnswersService
-import play.api.inject.bind
-import uk.gov.hmrc.http.BadRequestException
-import repositories.SessionRepository
-import scala.concurrent.Future
 import pages.ContactsPage
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.FakeRequest
+import play.api.test.Helpers.*
+import repositories.SessionRepository
+import services.ContactCheckYourAnswersService
+import uk.gov.hmrc.http.BadRequestException
+import views.html.ContactCheckYourAnswersView
+
+import scala.concurrent.Future
 
 class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
   val testUserAnswers = emptyUserAnswers

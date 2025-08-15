@@ -41,7 +41,7 @@ class FeatureToggleController @Inject() (
     val enableList =
       request.body.toSeq.filter((k, _) => k != "csrfToken").map((_, v) => FeatureToggle.fromOrdinal(v.head.toInt))
     FeatureToggle.values.foreach(feature => {
-      if (enableList.contains(feature)) {
+      if enableList.contains(feature) then {
         enable(feature)
       } else {
         disable(feature)

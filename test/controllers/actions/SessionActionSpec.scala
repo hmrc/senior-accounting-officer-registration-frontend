@@ -17,7 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
-import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
+import play.api.mvc.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import uk.gov.hmrc.http.SessionKeys

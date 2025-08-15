@@ -31,7 +31,7 @@ class ContactEmailViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   val SUT: ContactEmailView = app.injector.instanceOf[ContactEmailView]
 
-  given request: Request[_] = FakeRequest()
+  given request: Request[?] = FakeRequest()
 
   given Messages = app.injector.instanceOf[MessagesApi].preferred(request)
 

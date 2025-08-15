@@ -16,8 +16,8 @@
 
 package pages
 
-import play.api.libs.json.JsPath
 import models.ContactInfo
+import play.api.libs.json.JsPath
 
 case object ContactsPage extends QuestionPage[List[ContactInfo]] {
   override def path: JsPath = JsPath \ toString

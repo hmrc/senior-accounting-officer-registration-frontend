@@ -31,7 +31,7 @@ class ContactRoleViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   val SUT: ContactRoleView = app.injector.instanceOf[ContactRoleView]
 
-  given request: Request[_] = FakeRequest()
+  given request: Request[?] = FakeRequest()
 
   given Messages = app.injector.instanceOf[MessagesApi].preferred(request)
 
