@@ -25,15 +25,15 @@ import play.api.mvc.Request
 import play.api.test.FakeRequest
 import views.html.RegistrationCompleteView
 
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 import scala.jdk.CollectionConverters.*
 
 class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   val SUT: RegistrationCompleteView = app.injector.instanceOf[RegistrationCompleteView]
-  given request: Request[_]         = FakeRequest()
+  given request: Request[?]         = FakeRequest()
   given Messages                    = app.injector.instanceOf[MessagesApi].preferred(request)
-  private val testDateTime          = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
+  private val testDateTime          = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
 
   private val registrationCompleteDetails = RegistrationCompleteDetails(
     companyName = "Test Corp Ltd",

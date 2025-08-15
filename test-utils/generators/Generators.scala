@@ -16,11 +16,11 @@
 
 package generators
 
-import java.time.{Instant, LocalDate, ZoneOffset}
-
 import org.scalacheck.Arbitrary.*
 import org.scalacheck.Gen.*
 import org.scalacheck.{Gen, Shrink}
+
+import java.time.{Instant, LocalDate, ZoneOffset}
 
 trait Generators extends ModelGenerators {
 
@@ -97,7 +97,7 @@ trait Generators extends ModelGenerators {
     nonEmptyString suchThat (!excluded.contains(_))
 
   def oneOf[T](xs: Seq[Gen[T]]): Gen[T] =
-    if (xs.isEmpty) {
+    if xs.isEmpty then {
       throw new IllegalArgumentException("oneOf called on empty collection")
     } else {
       val vector = xs.toVector
