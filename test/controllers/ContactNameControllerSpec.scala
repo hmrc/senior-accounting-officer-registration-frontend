@@ -42,19 +42,39 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
 
   "ContactName Controller" - {
     ContactType.values.foreach { contactType =>
-      s"When the ContactType is $contactType" - {
-        lazy val contactNameRoute = routes.ContactNameController.onPageLoad(contactType, NormalMode).url
-
-        "must return OK and the correct view for a GET" in {
-
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      "must redirect to index when contacts have been confirmed and user calls" - {
+        s"onPageLoad endpoint with contactType: $contactType" in {
+          val request     = FakeRequest(GET, routes.ContactNameController.onPageLoad(contactType, NormalMode).url)
+          val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
           running(application) {
-            val request = FakeRequest(GET, contactNameRoute)
 
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[ContactNameView]
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+          }
+        }
+        s"onSubmit endpoint with contactType: $contactType" in {
+          val request     = FakeRequest(POST, routes.ContactNameController.onSubmit(contactType, NormalMode).url)
+          val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
+          running(application) {
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+          }
+        }
+      }
+      s"When the ContactType is $contactType" - {
+        lazy val contactNameRoute = routes.ContactNameController.onPageLoad(contactType, NormalMode).url
+        "must return OK and the correct view for a GET" in {
+          val request     = FakeRequest(GET, contactNameRoute)
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+          val view        = application.injector.instanceOf[ContactNameView]
+          running(application) {
+
+            val result = route(application, request).value
 
             status(result) mustEqual OK
             contentAsString(result) mustEqual view(form, contactType, NormalMode)(
@@ -65,15 +85,11 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must populate the view correctly on a GET when the question has previously been answered" in {
-
+          val request     = FakeRequest(GET, contactNameRoute)
           val userAnswers = UserAnswers(userAnswersId).set(ContactNamePage(contactType), "answer").success.value
-
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
+          val view        = application.injector.instanceOf[ContactNameView]
           running(application) {
-            val request = FakeRequest(GET, contactNameRoute)
-
-            val view = application.injector.instanceOf[ContactNameView]
 
             val result = route(application, request).value
 
@@ -86,11 +102,10 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to the next page when valid data is submitted" in {
-
+          val request = FakeRequest(POST, contactNameRoute)
+            .withFormUrlEncodedBody(("value", "answer"))
           val mockSessionRepository = mock[SessionRepository]
-
           when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
           val application =
             applicationBuilder(userAnswers = Some(emptyUserAnswers))
               .overrides(
@@ -98,11 +113,7 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
                 bind[SessionRepository].toInstance(mockSessionRepository)
               )
               .build()
-
           running(application) {
-            val request =
-              FakeRequest(POST, contactNameRoute)
-                .withFormUrlEncodedBody(("value", "answer"))
 
             val result = route(application, request).value
 
@@ -112,17 +123,12 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must return a Bad Request and errors when invalid data is submitted" in {
-
+          val boundForm = form.bind(Map("value" -> ""))
+          val request   = FakeRequest(POST, contactNameRoute)
+            .withFormUrlEncodedBody(("value", ""))
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+          val view        = application.injector.instanceOf[ContactNameView]
           running(application) {
-            val request =
-              FakeRequest(POST, contactNameRoute)
-                .withFormUrlEncodedBody(("value", ""))
-
-            val boundForm = form.bind(Map("value" -> ""))
-
-            val view = application.injector.instanceOf[ContactNameView]
 
             val result = route(application, request).value
 
@@ -135,11 +141,9 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
+          val request     = FakeRequest(GET, contactNameRoute)
           val application = applicationBuilder(userAnswers = None).build()
-
           running(application) {
-            val request = FakeRequest(GET, contactNameRoute)
 
             val result = route(application, request).value
 
@@ -149,13 +153,9 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
+          val request     = FakeRequest(POST, contactNameRoute).withFormUrlEncodedBody(("value", "answer"))
           val application = applicationBuilder(userAnswers = None).build()
-
           running(application) {
-            val request =
-              FakeRequest(POST, contactNameRoute)
-                .withFormUrlEncodedBody(("value", "answer"))
 
             val result = route(application, request).value
 

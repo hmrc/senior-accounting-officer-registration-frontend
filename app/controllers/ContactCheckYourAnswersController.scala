@@ -36,6 +36,7 @@ class ContactCheckYourAnswersController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
+    blockConfirmedContacts: BlockConfirmedContactsFilter,
     formProvider: ContactCheckYourAnswersFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
@@ -47,31 +48,33 @@ class ContactCheckYourAnswersController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val contactInfos = service.getContactInfos(request.userAnswers)
-    if contactInfos.isEmpty
-    then Redirect(routes.JourneyRecoveryController.onPageLoad())
-    else Ok(view(contactInfos))
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) {
+    implicit request =>
+      val contactInfos = service.getContactInfos(request.userAnswers)
+      if contactInfos.isEmpty
+      then Redirect(routes.JourneyRecoveryController.onPageLoad())
+      else Ok(view(contactInfos))
   }
 
-  def saveAndContinue: Action[AnyContent] = (identify andThen getData andThen requireData) async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        _ =>
-          Future.failed(
-            BadRequestException("invalid ContactCheckYourAnswersForm submitted")
-          ),
-        dataReceived =>
-          if service.getContactInfos(request.userAnswers) == dataReceived then
-            for {
-              updatedUserAnswers <- Future
-                .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
-              _ <- sessionRepository.set(updatedUserAnswers)
-            } yield {
-              Redirect(routes.IndexController.onPageLoad())
-            }
-          else Future.failed(BadRequestException("The ContactCheckYourAnswersForm submitted is out of date"))
-      )
-  }
+  def saveAndContinue: Action[AnyContent] =
+    (identify andThen getData andThen requireData andThen blockConfirmedContacts) async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          _ =>
+            Future.failed(
+              BadRequestException("invalid ContactCheckYourAnswersForm submitted")
+            ),
+          dataReceived =>
+            if service.getContactInfos(request.userAnswers) == dataReceived then
+              for {
+                updatedUserAnswers <- Future
+                  .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
+                _ <- sessionRepository.set(updatedUserAnswers)
+              } yield {
+                Redirect(routes.IndexController.onPageLoad())
+              }
+            else Future.failed(BadRequestException("The ContactCheckYourAnswersForm submitted is out of date"))
+        )
+    }
 }

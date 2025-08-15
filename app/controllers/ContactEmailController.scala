@@ -38,6 +38,7 @@ class ContactEmailController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
+    blockConfirmedContacts: BlockConfirmedContactsFilter,
     formProvider: ContactEmailFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactEmailView
@@ -48,7 +49,7 @@ class ContactEmailController @Inject() (
   val form = formProvider()
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData) { implicit request =>
+    (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>
 
       val preparedForm = request.userAnswers.get(ContactEmailPage(contactType)) match {
         case None        => form
@@ -59,7 +60,7 @@ class ContactEmailController @Inject() (
     }
 
   def onSubmit(contactType: ContactType, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (identify andThen getData andThen requireData andThen blockConfirmedContacts).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

@@ -26,17 +26,35 @@ import views.html.ContactDetailsGuidanceView
 class ContactDetailsGuidanceControllerSpec extends SpecBase {
 
   "ContactDetailsGuidance Controller" - {
-
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+    "must redirect to index when contacts have been confirmed onPageLoad endpoint" in {
+      val request     = FakeRequest(GET, routes.ContactDetailsGuidanceController.onPageLoad().url)
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
       running(application) {
-        val request = FakeRequest(GET, routes.ContactDetailsGuidanceController.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ContactDetailsGuidanceView]
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+      }
+    }
+    "must redirect to index when contacts have been confirmed on continue endpoint" in {
+      val request     = FakeRequest(GET, routes.ContactDetailsGuidanceController.continue().url)
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithConfirmedContacts)).build()
+      running(application) {
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustEqual Some(routes.IndexController.onPageLoad().url)
+      }
+    }
+    "must return OK and the correct view for a GET" in {
+      val request     = FakeRequest(GET, routes.ContactDetailsGuidanceController.onPageLoad().url)
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val view        = application.injector.instanceOf[ContactDetailsGuidanceView]
+      running(application) {
+
+        val result = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
@@ -44,11 +62,9 @@ class ContactDetailsGuidanceControllerSpec extends SpecBase {
     }
 
     "must Redirect to First Contact Name for a Continue" in {
-
+      val request     = FakeRequest(POST, routes.ContactDetailsGuidanceController.onPageLoad().url)
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
       running(application) {
-        val request = FakeRequest(POST, routes.ContactDetailsGuidanceController.onPageLoad().url)
 
         val result = route(application, request).value
 
@@ -56,6 +72,5 @@ class ContactDetailsGuidanceControllerSpec extends SpecBase {
         redirectLocation(result).get mustEqual routes.ContactNameController.onPageLoad(First, NormalMode).url
       }
     }
-
   }
 }
