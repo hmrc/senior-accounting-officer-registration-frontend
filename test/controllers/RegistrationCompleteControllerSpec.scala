@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.RegistrationCompleteView
 
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 
 class RegistrationCompleteControllerSpec extends SpecBase {
 
@@ -39,7 +39,7 @@ class RegistrationCompleteControllerSpec extends SpecBase {
         val registrationData = RegistrationCompleteDetails(
           companyName = "ABC Ltd",
           registrationId = "XMPLR0123456789",
-          registrationDateTime = LocalDateTime.of(2025, 1, 17, 11, 45, 0)
+          registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
         )
 
         status(result) mustEqual OK

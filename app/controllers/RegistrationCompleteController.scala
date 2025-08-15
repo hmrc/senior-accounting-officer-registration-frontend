@@ -17,15 +17,14 @@
 package controllers
 
 import controllers.actions.*
-
-import javax.inject.Inject
+import models.registration.RegistrationCompleteDetails
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
-import models.registration.RegistrationCompleteDetails
 
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
+import javax.inject.Inject
 
 class RegistrationCompleteController @Inject() (
     override val messagesApi: MessagesApi,
@@ -42,7 +41,7 @@ class RegistrationCompleteController @Inject() (
     val registrationCompleteDetails = RegistrationCompleteDetails(
       companyName = "ABC Ltd",
       registrationId = "XMPLR0123456789",
-      registrationDateTime = LocalDateTime.of(2025, 1, 17, 11, 45)
+      registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
     )
 
     Ok(view(registrationCompleteDetails))

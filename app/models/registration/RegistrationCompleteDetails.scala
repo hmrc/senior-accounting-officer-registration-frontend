@@ -20,30 +20,42 @@ import play.api.i18n.Messages
 import play.api.libs.json.Reads.*
 import play.api.libs.json.{Json, OFormat, OWrites}
 
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.{ZoneId, ZonedDateTime}
 import java.util.Locale
 
 final case class RegistrationCompleteDetails(
     companyName: String,
     registrationId: String,
-    registrationDateTime: LocalDateTime
+    registrationDateTime: ZonedDateTime
 )
 
 object RegistrationCompleteDetails {
-  private val customDateFormatter1                  = DateTimeFormatter.ofPattern("d MMMM yyyy")
-  private val customDateFormatter2                  = DateTimeFormatter.ofPattern("h:mma")
   given reads: OFormat[RegistrationCompleteDetails] = Json.format[RegistrationCompleteDetails]
+
+  private def delimiter = "/"
+
+  private def registrationDateTimeFormatter = {
+    val zoneIdUk: ZoneId = ZoneId.of("Europe/London")
+    val dateFormat       = "d MMMM yyyy"
+    val time12HourFormat = "h:mma"
+    val timeZone         = "z"
+    DateTimeFormatter
+      .ofPattern(
+        List(dateFormat, time12HourFormat, timeZone).mkString(s"'$delimiter'")
+      )
+      .withZone(zoneIdUk)
+  }
 
   extension (details: RegistrationCompleteDetails) {
     def formattedDateTime(messages: Messages): String = {
-      val locale       = Locale.forLanguageTag(messages.lang.code)
-      val dateStrPart1 = details.registrationDateTime.format(customDateFormatter1.withLocale(locale))
-      val dateStrPart2 = details.registrationDateTime
-        .format(customDateFormatter2.withLocale(locale))
-        .replace("AM", "am")
-        .replace("PM", "pm")
-      messages("registration-complete.dateStr1", dateStrPart1, dateStrPart2)
+      val locale                      = Locale.forLanguageTag(messages.lang.code)
+      val Array(date, time, timeZone) =
+        details.registrationDateTime
+          .format(registrationDateTimeFormatter.withLocale(locale))
+          .split(delimiter)
+
+      messages("registration-complete.dateTime", date, time.toLowerCase, timeZone)
     }
   }
 }
