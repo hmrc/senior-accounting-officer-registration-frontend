@@ -16,18 +16,17 @@
 
 package controllers.actions
 
-import scala.concurrent.Future
-import models.requests.DataRequest
-import javax.inject.Inject
-import scala.concurrent.ExecutionContext
-
-import play.api.mvc.ActionFilter
-import play.api.mvc.Results.Redirect
-import play.api.mvc.Result
-
 import controllers.routes
 import models.ContactInfo
+import models.requests.DataRequest
 import pages.ContactsPage
+import play.api.mvc.ActionFilter
+import play.api.mvc.Result
+import play.api.mvc.Results.Redirect
+
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 class BlockConfirmedContactsFilter @Inject() (
 )(override implicit val executionContext: ExecutionContext)

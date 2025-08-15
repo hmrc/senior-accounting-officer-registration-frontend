@@ -29,7 +29,7 @@ import scala.jdk.CollectionConverters.*
 class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   val SUT: DashboardView    = app.injector.instanceOf[DashboardView]
-  given request: Request[_] = FakeRequest()
+  given request: Request[?] = FakeRequest()
   given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
 
   "DashboardView" - {

@@ -32,13 +32,14 @@ import repositories.SessionRepository
 import views.html.ContactPhoneView
 
 import scala.concurrent.Future
+import play.api.data.Form
 
 class ContactPhoneControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider = new ContactPhoneFormProvider()
-  val form         = formProvider()
+  val formProvider       = new ContactPhoneFormProvider()
+  val form: Form[String] = formProvider()
 
   "ContactPhone Controller" - {
     ContactType.values.foreach { contactType =>

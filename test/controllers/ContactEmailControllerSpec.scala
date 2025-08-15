@@ -32,13 +32,14 @@ import repositories.SessionRepository
 import views.html.ContactEmailView
 
 import scala.concurrent.Future
+import play.api.data.Form
 
 class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider = new ContactEmailFormProvider()
-  val form         = formProvider()
+  val formProvider       = new ContactEmailFormProvider()
+  val form: Form[String] = formProvider()
 
   "ContactEmail Controller" - {
     ContactType.values.foreach { contactType =>

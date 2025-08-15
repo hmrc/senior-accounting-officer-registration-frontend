@@ -16,8 +16,6 @@
 
 package forms.mappings
 
-import java.time.LocalDate
-
 import generators.Generators
 import org.scalacheck.Gen
 import org.scalatest.OptionValues
@@ -27,6 +25,8 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
+
+import java.time.LocalDate
 
 class DateMappingsSpec
     extends AnyFreeSpec
@@ -38,7 +38,7 @@ class DateMappingsSpec
 
   private implicit val messages: Messages = stubMessages()
 
-  val form = Form(
+  val form: Form[LocalDate] = Form(
     "value" -> localDate(
       requiredKey = "error.required",
       allRequiredKey = "error.required.all",
@@ -47,7 +47,7 @@ class DateMappingsSpec
     )
   )
 
-  val validData = datesBetween(
+  val validData: Gen[LocalDate] = datesBetween(
     min = LocalDate.of(2000, 1, 1),
     max = LocalDate.of(3000, 1, 1)
   )

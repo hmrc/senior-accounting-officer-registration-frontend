@@ -29,6 +29,8 @@ import views.html.ContactHaveYouAddedAllView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import models.ContactHaveYouAddedAll
+import play.api.data.Form
 
 class ContactHaveYouAddedAllController @Inject() (
     override val messagesApi: MessagesApi,
@@ -45,7 +47,7 @@ class ContactHaveYouAddedAllController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[ContactHaveYouAddedAll] = formProvider()
 
   def onPageLoad(contactType: ContactType): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>

@@ -17,25 +17,26 @@
 package services
 
 import base.SpecBase
-import models.grs.retrieve.Registration.{Registered, RegistrationFailed, RegistrationNotCalled}
-import models.grs.retrieve.{CompanyProfile, CompanyDetails as GrsCompanyDetails}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import utils.IdentifierGenerator
-import GrsServiceSpec.*
 import config.FeatureToggleSupport
 import models.config.FeatureToggle.*
 import models.grs.create.*
+import models.grs.retrieve.Registration.{Registered, RegistrationFailed, RegistrationNotCalled}
+import models.grs.retrieve.{CompanyDetails as GrsCompanyDetails, CompanyProfile}
 import models.registration.CompanyDetails
 import org.scalatest.EitherValues
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.Request
 import play.api.test.FakeRequest
+import utils.IdentifierGenerator
+
+import GrsServiceSpec.*
 
 class GrsServiceSpec extends SpecBase with GuiceOneAppPerSuite with EitherValues with FeatureToggleSupport {
 
-  val SUT = app.injector.instanceOf[GrsService]
+  val SUT: GrsService = app.injector.instanceOf[GrsService]
 
   "GrsService.newRequest" - {
-    given Request[_] = FakeRequest()
+    given Request[?] = FakeRequest()
     "when GrsAllowRelativeUrl=true must return a request with absolute URLs" in {
       enable(GrsAllowRelativeUrl)
       val req = SUT.newRequest()

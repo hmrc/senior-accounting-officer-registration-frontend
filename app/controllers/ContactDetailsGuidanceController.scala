@@ -19,12 +19,12 @@ package controllers
 import controllers.actions.*
 import models.ContactType.First
 import models.NormalMode
-
-import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactDetailsGuidanceView
+
+import javax.inject.Inject
 
 class ContactDetailsGuidanceController @Inject() (
     override val messagesApi: MessagesApi,
