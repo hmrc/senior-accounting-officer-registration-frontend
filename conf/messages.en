@@ -51,10 +51,6 @@ registration.dashboard.p1 = Register the company responsible for submitting the 
 registration.dashboard.p2 = If your group has more than one SAO, you’ll need to complete a separate registration for each SAO.
 registration.dashboard.p3 = At the 'Review and submit' section of this registration, you can amend your answers and print or save them for your own records.
 
-registration.dashboard.heading1 = Company details
-registration.dashboard.heading2 = Contact details
-registration.dashboard.heading3 = Review and submit
-
 registration.dashboard.linkText1 = Company details
 registration.dashboard.linkText2 = Contact details
 registration.dashboard.linkText3 = Check your answers before submitting your registration

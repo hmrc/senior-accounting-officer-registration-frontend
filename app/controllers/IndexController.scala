@@ -29,6 +29,7 @@ class IndexController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
+    bradsService: BradsService,
     val controllerComponents: MessagesControllerComponents,
     view: DashboardView
 )(using ExecutionContext)
@@ -36,11 +37,27 @@ class IndexController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData) { implicit request =>
-    Ok(view())
+    Ok(view()) // we want to have the view generate this for each one. 
+    // IDM it being like an argument passed to the view
   }
 
   def continue: Action[AnyContent] = (identify andThen getData) { implicit request =>
     Redirect(routes.CheckYourAnswersController.onPageLoad())
   }
 
+}
+
+import models.UserAnswers
+import pages.ContactsPage
+
+class BradsService {
+  def getStatus(userAnswers: UserAnswers): Option[Map[String, Boolean]] = {
+    userAnswers.get(ContactsPage).collect({case contacts if contacts.nonEmpty =>
+      Map(
+        "companyDetails" -> true,
+        "contactDetails" -> false,
+        "checkYourAnswers" -> false
+    )})
+      
+  }
 }
