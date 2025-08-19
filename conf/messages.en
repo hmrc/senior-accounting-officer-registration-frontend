@@ -51,13 +51,13 @@ registration.dashboard.p1 = Register the company responsible for submitting the 
 registration.dashboard.p2 = If your group has more than one SAO, you’ll need to complete a separate registration for each SAO.
 registration.dashboard.p3 = At the 'Review and submit' section of this registration, you can amend your answers and print or save them for your own records.
 
-registration.dashboard.linkText1 = Company details
-registration.dashboard.linkText2 = Contact details
-registration.dashboard.linkText3 = Check your answers before submitting your registration
+registration.dashboard.row.label.company = Company details
+registration.dashboard.row.label.contacts = Contact details
+registration.dashboard.row.label.submit = Check your answers before submitting your registration
 
-registration.dashboard.labelText1 = Not started
-registration.dashboard.labelText2 = Cannot start yet
-registration.dashboard.labelText3 = Completed
+registration.dashboard.cannotStartYet = Cannot start yet
+registration.dashboard.notStarted = Not started
+registration.dashboard.completed = Completed
 
 registration.checkYourAnswers.title = checkYourAnswers
 registration.checkYourAnswers.heading = checkYourAnswers

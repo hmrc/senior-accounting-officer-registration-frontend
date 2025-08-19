@@ -15,64 +15,98 @@
  *@
 
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        formHelper: FormWithCSRF
+  layout: templates.Layout,
+  govukButton: GovukButton,
+  formHelper: FormWithCSRF
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(state: DashboardState)(implicit request: Request[_], messages: Messages)
+
+@rowStatus(progress: Int, rowIndex: Int): Int = @{
+  if (progress == 3) 2                    // all done -> every row completed
+  else if (rowIndex < progress) 2         // completed
+  else if (rowIndex == progress) 1        // in progress (clickable)
+  else 0                                  // cannot start yet
+}
+
+@isClickable(s: Int): Boolean = @{ s == 1 }
+
+@statusKey(s: Int): String = @{
+  s match {
+    case 0 => "registration.dashboard.cannotStartYet"
+    case 1 => "registration.dashboard.notStarted"
+    case 2 => "registration.dashboard.completed"
+    case _ => "registration.dashboard.completed"
+  }
+}
+
+@statusTagClass(s: Int): Option[String] = @{
+  s match {
+    case 1 => Some("govuk-tag govuk-tag--blue")
+    case 2 => Some("govuk-tag govuk-tag--green")
+    case _ => None
+  }
+}
+
+@statusId(rowIndex: Int) = @{ s"registration-details-$rowIndex-status" }
+
+@createRowLink(rowIndex: Int, progress: Int, rowLabel: String, linkHref: String) = {
+  @defining(rowStatus(progress, rowIndex)) { s =>
+  @defining(statusId(rowIndex)) { id =>
+    <li class="govuk-task-list__item @if(isClickable(s)) {govuk-task-list__item--with-link}">
+      <div class="govuk-task-list__name-and-hint">
+        @if(isClickable(s)) {
+          <a class="govuk-link govuk-task-list__link"
+             href="@linkHref"
+             aria-describedby="@id">
+            @rowLabel
+          </a>
+        } else {
+          @rowLabel
+        }
+      </div>
+
+      <div class="govuk-task-list__status" id="@id">
+        @statusTagClass(s).map { cls =>
+          <strong class="@cls">
+            @messages(statusKey(s))
+          </strong>
+        }.getOrElse {
+          @messages(statusKey(s))
+        }
+      </div>
+    </li>
+  }}
+}
 
 @layout(showBackLink = false, pageTitle = titleNoForm(messages("registration.dashboard.title"))) {
-
     <h1 class="govuk-heading-l">@messages("registration.dashboard.heading")</h1>
     <p class="govuk-body">@messages("registration.dashboard.p1")</p>
     <p class="govuk-body">@messages("registration.dashboard.p2")</p>
 
-    <ul class="govuk-task-list">
-        <!--Company Details-->
-        <li class="govuk-task-list__item govuk-task-list__item--with-link">
-            <div class="govuk-task-list__name-and-hint">
-                <a class="govuk-link govuk-task-list__link" href="@routes.GrsController.start()" aria-describedby="first-section-1-status">
-                    @messages("registration.dashboard.linkText1")
-                </a>
-            </div>
-            <div class="govuk-task-list__status" id="first-section-1-status">
-                <strong class="govuk-tag govuk-tag--green">
-                    @messages("registration.dashboard.labelText3")
-                </strong>
-            </div>
-        </li>
-        <!--Contact Details-->
-        <li class="govuk-task-list__item govuk-task-list__item--with-link">
-            <div class="govuk-task-list__name-and-hint">
-                <a class="govuk-link govuk-task-list__link" href="@routes.ContactDetailsGuidanceController.onPageLoad()" aria-describedby="third-section-1-status">
-                    @messages("registration.dashboard.linkText2")
-                </a>
-            </div>
-            <div class="govuk-task-list__status" id="third-section-1-status">
-                <strong class="govuk-tag govuk-tag--green">
-                    @messages("registration.dashboard.labelText3")
-                </strong>
-            </div>
-        </li>
-        <!--Review-->
-        <li class="govuk-task-list__item govuk-task-list__item--with-link">
-            <div class="govuk-task-list__name-and-hint">
-                <a class="govuk-link govuk-task-list__link"
-                   href="@routes.CheckYourAnswersController.onPageLoad()"
-                   aria-describedby="second-section-1-status">
-                    @messages("registration.dashboard.linkText3")
-                </a>
-            </div>
-            <div class="govuk-task-list__status" id="second-section-1-status">
-                <strong class="govuk-tag govuk-tag--green">
-                    @messages("registration.dashboard.labelText3")
-                </strong>
-            </div>
-        </li>
-    </ul>
+  <ul class="govuk-task-list">
+    @createRowLink(
+      rowIndex = 0,
+      progress = state.ordinal,
+      rowLabel = messages("registration.dashboard.row.label.company"),
+      linkHref = routes.GrsController.start().url
+    )
 
-    <p class="govuk-body">@messages("registration.dashboard.p3")</p>
+    @createRowLink(
+      rowIndex = 1,
+      progress = state.ordinal,
+      rowLabel = messages("registration.dashboard.row.label.contacts"),
+      linkHref = routes.ContactDetailsGuidanceController.onPageLoad().url
+    )
 
+    @createRowLink(
+      rowIndex = 2,
+      progress = state.ordinal,
+      rowLabel = messages("registration.dashboard.row.label.submit"),
+      linkHref = routes.CheckYourAnswersController.onPageLoad().url
+    )
+  </ul>
 
+  <p class="govuk-body">@messages("registration.dashboard.p3")</p>
 }
+
