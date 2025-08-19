@@ -30,7 +30,7 @@ import views.html.ContactNameView
 class ContactNameViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   val SUT: ContactNameView                  = app.injector.instanceOf[ContactNameView]
-  given request: Request[_]                 = FakeRequest()
+  given request: Request[?]                 = FakeRequest()
   given Messages                            = app.injector.instanceOf[MessagesApi].preferred(request)
   val formProvider: ContactNameFormProvider = app.injector.instanceOf[ContactNameFormProvider]
   val testValue                             = "test input value"

@@ -17,8 +17,8 @@
 package navigation
 
 import controllers.routes
-import models.*
 import models.ContactType.*
+import models.*
 import pages.*
 import play.api.mvc.Call
 
@@ -36,7 +36,7 @@ class Navigator @Inject() () {
     case ContactPhonePage(Third) => _ => routes.ContactCheckYourAnswersController.onPageLoad()
     case ContactHaveYouAddedAllPage(contactType @ (First | Second)) =>
       userAnswers =>
-        if (userAnswers.get(ContactHaveYouAddedAllPage(contactType)).contains(ContactHaveYouAddedAll.Yes)) {
+        if userAnswers.get(ContactHaveYouAddedAllPage(contactType)).contains(ContactHaveYouAddedAll.Yes) then {
           routes.ContactCheckYourAnswersController.onPageLoad()
         } else {
           routes.ContactNameController.onPageLoad(

@@ -18,8 +18,6 @@ package controllers
 
 import controllers.actions.*
 import forms.ContactPhoneFormProvider
-
-import javax.inject.Inject
 import models.{ContactType, Mode}
 import navigation.Navigator
 import pages.ContactPhonePage
@@ -29,7 +27,9 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactPhoneView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.data.Form
 
 class ContactPhoneController @Inject() (
     override val messagesApi: MessagesApi,
@@ -46,7 +46,7 @@ class ContactPhoneController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[String] = formProvider()
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>

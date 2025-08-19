@@ -43,7 +43,7 @@ class FeatureToggleControllerSpec
   "FeatureToggleController.get" - {
     "must return 200 with a valid view" in {
       val request      = FakeRequest(GET, controllers.testonly.routes.FeatureToggleController.get().url)
-      given Request[_] = request
+      given Request[?] = request
 
       val result = route(app, request).value
 
@@ -67,7 +67,7 @@ class FeatureToggleControllerSpec
           featureSubmission :+ ("csrfToken" -> "testToken")*
         )
 
-      given Request[_] = request
+      given Request[?] = request
 
       val result = route(app, request).value
 
@@ -87,7 +87,7 @@ class FeatureToggleControllerSpec
           "csrfToken" -> "testToken"
         )
 
-      given Request[_] = request
+      given Request[?] = request
 
       val result = route(app, request).value
 

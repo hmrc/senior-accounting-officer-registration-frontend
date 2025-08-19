@@ -25,8 +25,8 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.writeableOf_JsValue
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
+import uk.gov.hmrc.http.*
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, InternalServerException}
 import utils.FrontendHeaderCarrier
 
 import java.net.URI
@@ -42,8 +42,8 @@ class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(us
     given HeaderCarrier = FrontendHeaderCarrier(implicitly[RequestHeader])
 
     val url: String =
-      if (appConfig.stubGrs) {
-        s"${appConfig.grsStubsBaseUrl}${controllers.testonly.routes.GrsStubsController.startGrs()}"
+      if appConfig.stubGrs then {
+        s"${appConfig.grsStubsBaseUrl}${_root_.controllers.testonly.routes.GrsStubsController.startGrs()}"
       } else {
         s"${appConfig.grsBaseUrl}/incorporated-entity-identification/api/limited-company-journey"
       }
@@ -57,8 +57,8 @@ class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(us
   def retrieve(journeyId: String)(using RequestHeader): Future[Either[Option[Exception], CompanyDetails]] = {
     given HeaderCarrier = FrontendHeaderCarrier(implicitly[RequestHeader])
     val path            =
-      if (appConfig.stubGrs) {
-        s"${appConfig.grsStubsBaseUrl}${controllers.testonly.routes.GrsStubsController.getGrs(journeyId).url()}"
+      if appConfig.stubGrs then {
+        s"${appConfig.grsStubsBaseUrl}${_root_.controllers.testonly.routes.GrsStubsController.getGrs(journeyId).url()}"
       } else {
         s"${appConfig.grsBaseUrl}/incorporated-entity-identification/api/journey/$journeyId"
       }

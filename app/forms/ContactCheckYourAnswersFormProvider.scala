@@ -16,12 +16,12 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
-import play.api.data.Form
-import play.api.data.Forms.{mapping, list}
 import models.ContactInfo
+import play.api.data.Form
+import play.api.data.Forms.{list, mapping}
+
+import javax.inject.Inject
 
 class ContactCheckYourAnswersFormProvider @Inject() extends Mappings {
   def apply(): Form[List[ContactInfo]] =

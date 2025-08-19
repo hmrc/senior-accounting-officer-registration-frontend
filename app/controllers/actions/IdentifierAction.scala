@@ -20,8 +20,8 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.routes
 import models.requests.IdentifierRequest
-import play.api.mvc.*
 import play.api.mvc.Results.*
+import play.api.mvc.*
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
@@ -60,7 +60,7 @@ abstract class AuthenticatedIdentifierAction(
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
     given hc: HeaderCarrier =
-      if (isFrontend) {
+      if isFrontend then {
         HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       } else {
         HeaderCarrierConverter.fromRequest(request)

@@ -16,9 +16,10 @@
 
 package config
 
-import play.api.Configuration
-import FeatureToggleConstants.*
 import models.config.FeatureToggle
+import play.api.Configuration
+
+import FeatureToggleConstants.*
 
 object FeatureToggleConstants {
   val FEATURE_SWITCH_ON  = "true"
@@ -28,10 +29,10 @@ object FeatureToggleConstants {
 trait FeatureToggleSupport {
 
   def enable(featureSwitch: FeatureToggle): Unit =
-    sys.props += featureSwitch.toString -> FEATURE_SWITCH_ON
+    sys.props += featureSwitch.toString -> FEATURE_SWITCH_ON: Unit
 
   def disable(featureSwitch: FeatureToggle): Unit =
-    sys.props += featureSwitch.toString -> FEATURE_SWITCH_OFF
+    sys.props += featureSwitch.toString -> FEATURE_SWITCH_OFF: Unit
 
 }
 

@@ -16,14 +16,14 @@
 
 package services
 
-import models.*
-import pages.*
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import base.SpecBase
+import models.*
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import pages.*
 import services.ContactCheckYourAnswersServiceSpec.*
 
 class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSuite {
-  val SUT = app.injector.instanceOf[ContactCheckYourAnswersService]
+  val SUT: ContactCheckYourAnswersService = app.injector.instanceOf[ContactCheckYourAnswersService]
 
   "ContactCheckYourAnswersService.GetContactInfos" - {
     "given no user answers" - {

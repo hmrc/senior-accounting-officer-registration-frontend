@@ -17,21 +17,21 @@
 package views
 
 import base.SpecBase
+import models.ContactInfo
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import views.html.ContactCheckYourAnswersView
 
-import org.jsoup.nodes.Element
-import models.ContactInfo
 import ContactCheckYourAnswersViewSpec.*
 
 class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   val SUT: ContactCheckYourAnswersView = app.injector.instanceOf[ContactCheckYourAnswersView]
-  given request: Request[_]            = FakeRequest()
+  given request: Request[?]            = FakeRequest()
   given Messages                       = app.injector.instanceOf[MessagesApi].preferred(request)
 
   "ContactCheckYourAnswersView" - {
