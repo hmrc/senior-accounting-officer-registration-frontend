@@ -19,9 +19,33 @@ package generators
 import models.*
 import org.scalacheck.{Arbitrary, Gen}
 
+import java.time.*
+
 trait ModelGenerators
 
-implicit lazy val arbitraryContactHaveYouAddedAll: Arbitrary[ContactHaveYouAddedAll] =
+given arbitraryContactHaveYouAddedAll: Arbitrary[ContactHaveYouAddedAll] =
   Arbitrary {
     Gen.oneOf(ContactHaveYouAddedAll.values.toSeq)
   }
+
+val genLocalTime: Gen[LocalTime] =
+  Gen
+    .choose(
+      min = LocalTime.MIN.toSecondOfDay.toLong,
+      max = LocalTime.MAX.toSecondOfDay.toLong
+    )
+    .map(LocalTime.ofSecondOfDay)
+
+val genLocalDateTime: Gen[LocalDate] =
+  Gen
+    .choose(
+      min = LocalDate.of(0, 1, 1).toEpochDay,
+      max = LocalDate.of(9999, 12, 31).toEpochDay
+    )
+    .map(LocalDate.ofEpochDay)
+
+val genZonedDateTime: Gen[ZonedDateTime] =
+  for {
+    date <- genLocalDateTime
+    time <- genLocalTime
+  } yield ZonedDateTime.of(date, time, ZoneOffset.UTC)
