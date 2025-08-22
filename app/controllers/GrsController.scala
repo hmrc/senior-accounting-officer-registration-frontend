@@ -31,9 +31,10 @@ import services.GrsService
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import scala.util.Try
+
+import javax.inject.Inject
 
 class GrsController @Inject() (
     override val messagesApi: MessagesApi,

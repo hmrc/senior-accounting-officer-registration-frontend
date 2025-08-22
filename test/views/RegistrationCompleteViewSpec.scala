@@ -25,8 +25,9 @@ import play.api.mvc.Request
 import play.api.test.FakeRequest
 import views.html.RegistrationCompleteView
 
-import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 import scala.jdk.CollectionConverters.*
+
+import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 
 class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
 

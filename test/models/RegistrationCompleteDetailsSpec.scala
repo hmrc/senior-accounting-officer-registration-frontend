@@ -29,9 +29,10 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.*
 
+import scala.util.Random
+
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
-import scala.util.Random
 
 class RegistrationCompleteDetailsSpec
     extends AnyFreeSpec

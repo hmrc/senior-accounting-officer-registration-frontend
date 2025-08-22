@@ -29,10 +29,11 @@ import uk.gov.hmrc.http.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import utils.FrontendHeaderCarrier
 
-import java.net.URI
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
+
+import java.net.URI
+import javax.inject.Inject
 
 class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(using
     ExecutionContext

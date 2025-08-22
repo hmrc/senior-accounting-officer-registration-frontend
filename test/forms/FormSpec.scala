@@ -17,10 +17,10 @@
 package forms
 
 import org.scalatest.OptionValues
+import org.scalatest.compatible.Assertion
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.data.{Form, FormError}
-import org.scalatest.compatible.Assertion
 
 trait FormSpec extends AnyFreeSpec with Matchers with OptionValues {
 

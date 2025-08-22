@@ -21,15 +21,16 @@ import forms.ContactPhoneFormProvider
 import models.{ContactType, Mode}
 import navigation.Navigator
 import pages.ContactPhonePage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactPhoneView
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.data.Form
+
+import javax.inject.Inject
 
 class ContactPhoneController @Inject() (
     override val messagesApi: MessagesApi,
