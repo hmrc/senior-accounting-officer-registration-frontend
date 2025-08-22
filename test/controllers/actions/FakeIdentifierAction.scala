@@ -19,8 +19,9 @@ package controllers.actions
 import models.requests.IdentifierRequest
 import play.api.mvc.*
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+
+import javax.inject.Inject
 
 class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers)
     extends IdentifierAction

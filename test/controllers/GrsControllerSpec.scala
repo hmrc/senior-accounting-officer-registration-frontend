@@ -35,8 +35,9 @@ import repositories.SessionRepository
 import uk.gov.hmrc.http.{HttpResponse, InternalServerException}
 import utils.IdentifierGenerator
 
-import java.util.UUID
 import scala.concurrent.Future
+
+import java.util.UUID
 
 class GrsControllerSpec extends SpecBase with MockitoSugar {
 

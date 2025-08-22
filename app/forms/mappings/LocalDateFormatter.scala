@@ -20,8 +20,9 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import play.api.i18n.Messages
 
-import java.time.{LocalDate, Month}
 import scala.util.{Failure, Success, Try}
+
+import java.time.{LocalDate, Month}
 
 private[mappings] class LocalDateFormatter(
     invalidKey: String,

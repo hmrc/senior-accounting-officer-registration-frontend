@@ -24,9 +24,10 @@ import play.api.mvc.ActionFilter
 import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 
-import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+
+import javax.inject.Inject
 
 class BlockConfirmedContactsFilter @Inject() (
 )(override implicit val executionContext: ExecutionContext)

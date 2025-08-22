@@ -20,8 +20,9 @@ import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
 import repositories.SessionRepository
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+
+import javax.inject.Inject
 
 class DataRetrievalActionImpl @Inject() (
     val sessionRepository: SessionRepository

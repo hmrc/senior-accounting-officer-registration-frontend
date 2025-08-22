@@ -26,8 +26,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
 
-import java.net.URLEncoder
 import scala.concurrent.Future
+
+import java.net.URLEncoder
 
 class AuthControllerSpec extends SpecBase with MockitoSugar {
 

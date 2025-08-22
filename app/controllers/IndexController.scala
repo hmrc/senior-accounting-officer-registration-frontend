@@ -22,8 +22,9 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DashboardView
 
-import javax.inject.Inject
 import scala.concurrent.ExecutionContext
+
+import javax.inject.Inject
 
 class IndexController @Inject() (
     override val messagesApi: MessagesApi,

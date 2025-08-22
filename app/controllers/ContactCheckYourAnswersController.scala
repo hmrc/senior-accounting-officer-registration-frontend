@@ -20,6 +20,7 @@ import controllers.actions.*
 import forms.ContactCheckYourAnswersFormProvider
 import models.ContactInfo
 import pages.ContactsPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -28,9 +29,9 @@ import uk.gov.hmrc.http.BadRequestException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactCheckYourAnswersView
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.data.Form
+
+import javax.inject.Inject
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
