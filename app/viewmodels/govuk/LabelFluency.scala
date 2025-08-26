@@ -30,7 +30,7 @@ trait LabelFluency {
       Label(content = content)
   }
 
-  implicit class FluentLabel(label: Label) {
+  extension (label: Label) {
 
     def asPageHeading(size: LabelSize = LabelSize.ExtraLarge): Label =
       label
