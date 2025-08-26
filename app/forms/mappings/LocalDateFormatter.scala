@@ -30,7 +30,7 @@ private[mappings] class LocalDateFormatter(
     twoRequiredKey: String,
     requiredKey: String,
     args: Seq[String] = Seq.empty
-)(implicit messages: Messages)
+)(using messages: Messages)
     extends Formatter[LocalDate]
     with Formatters {
 

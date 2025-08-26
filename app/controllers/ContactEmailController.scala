@@ -43,7 +43,7 @@ class ContactEmailController @Inject() (
     formProvider: ContactEmailFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactEmailView
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 

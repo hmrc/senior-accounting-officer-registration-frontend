@@ -60,7 +60,7 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
       val view = app.injector.instanceOf[StubGrsView]
 
       status(result) mustEqual OK
-      contentAsString(result) mustBe view(testJourneyId)(request, messages(app)).toString
+      contentAsString(result) mustBe view(testJourneyId)(using request, messages(app)).toString
     }
   }
 

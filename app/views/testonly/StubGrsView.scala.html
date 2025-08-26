@@ -17,12 +17,12 @@
 @import controllers.testonly.routes
 
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        formHelper: FormWithCSRF
+    layout: templates.Layout,
+    govukButton: GovukButton,
+    formHelper: FormWithCSRF
 )
 
-@(journeyId: String)(implicit request: Request[_], messages: Messages)
+@(journeyId: String)(using request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm("GRS Stubs")) {
     <h1 class="govuk-heading-l">GRS Stubs</h1>

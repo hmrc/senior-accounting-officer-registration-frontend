@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class DataRetrievalActionImpl @Inject() (
     val sessionRepository: SessionRepository
-)(implicit val executionContext: ExecutionContext)
+)(override implicit val executionContext: ExecutionContext)
     extends DataRetrievalAction {
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {

@@ -30,7 +30,7 @@ object DateTimeFormats {
     "cy" -> dateTimeFormatter.withLocale(new Locale("cy"))
   )
 
-  def dateTimeFormat()(implicit lang: Lang): DateTimeFormatter = {
+  def dateTimeFormat()(using lang: Lang): DateTimeFormatter = {
     localisedDateTimeFormatters.getOrElse(lang.code, dateTimeFormatter)
   }
 
