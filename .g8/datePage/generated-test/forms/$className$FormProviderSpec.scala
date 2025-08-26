@@ -7,7 +7,7 @@ import play.api.test.Helpers.stubMessages
 
 class $className$FormProviderSpec extends DateBehaviours {
 
-  private implicit val messages: Messages = stubMessages()
+  private given messages: Messages = stubMessages()
   private val form = new $className$FormProvider()()
 
   ".value" - {
