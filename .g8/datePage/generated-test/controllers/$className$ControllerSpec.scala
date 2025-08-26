@@ -14,7 +14,7 @@ import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import views.html.$className$View
 
@@ -22,7 +22,7 @@ import scala.concurrent.Future
 
 class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
-  private implicit val messages: Messages = stubMessages()
+  private given messages: Messages = stubMessages()
 
   private val formProvider = new $className$FormProvider()
   private def form = formProvider()
@@ -58,7 +58,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[$className$View]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(getRequest(), messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(using getRequest(), messages(application)).toString
       }
     }
 
@@ -74,7 +74,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, getRequest()).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(getRequest(), messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(using getRequest(), messages(application)).toString
       }
     }
 
@@ -116,7 +116,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(using request, messages(application)).toString
       }
     }
 
