@@ -16,7 +16,7 @@
 
 package models
 
-import generators.genZonedDateTime
+import generators.Generators.*
 import models.RegistrationCompleteDetailsSpec.*
 import models.registration.RegistrationCompleteDetails
 import org.scalacheck.Gen

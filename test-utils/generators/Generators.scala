@@ -20,7 +20,7 @@ import org.scalacheck.Arbitrary.*
 import org.scalacheck.Gen.*
 import org.scalacheck.{Gen, Shrink}
 
-import java.time.{Instant, LocalDate, ZoneOffset}
+import java.time.*
 
 trait Generators extends ModelGenerators {
 
@@ -113,4 +113,20 @@ trait Generators extends ModelGenerators {
       Instant.ofEpochMilli(millis).atOffset(ZoneOffset.UTC).toLocalDate
     }
   }
+
+  def genLocalTime: Gen[LocalTime] =
+    Gen
+      .choose(
+        min = LocalTime.MIN.toSecondOfDay.toLong,
+        max = LocalTime.MAX.toSecondOfDay.toLong
+      )
+      .map(LocalTime.ofSecondOfDay)
+
+  def genZonedDateTime: Gen[ZonedDateTime] =
+    for {
+      date <- datesBetween(min = LocalDate.of(0, 1, 1), max = LocalDate.of(9999, 12, 31))
+      time <- genLocalTime
+    } yield ZonedDateTime.of(date, time, ZoneOffset.UTC)
 }
+
+object Generators extends Generators
