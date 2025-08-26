@@ -76,7 +76,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
             val result = route(application, request).value
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, contactType, NormalMode)(
+            contentAsString(result) mustEqual view(form, contactType, NormalMode)(using
               request,
               messages(application)
             ).toString
@@ -93,7 +93,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
             val result = route(application, request).value
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form.fill("answer"), contactType, NormalMode)(
+            contentAsString(result) mustEqual view(form.fill("answer"), contactType, NormalMode)(using
               request,
               messages(application)
             ).toString
@@ -134,7 +134,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
             val result = route(application, request).value
 
             status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, contactType, NormalMode)(
+            contentAsString(result) mustEqual view(boundForm, contactType, NormalMode)(using
               request,
               messages(application)
             ).toString

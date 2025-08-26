@@ -35,7 +35,7 @@
   breadcrumbs: Option[Html] = None,
   showSignOut: Boolean = true,
   showHmrcBanner: Boolean = false
-)(contentBlock: Html)(implicit rh: RequestHeader, messages: Messages)
+)(contentBlock: Html)(using rh: RequestHeader, messages: Messages)
 
 @head = {
 

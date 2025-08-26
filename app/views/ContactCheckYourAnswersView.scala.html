@@ -22,7 +22,7 @@
   govukSummaryList: GovukSummaryList
 )
 
-@(contacts: List[ContactInfo])(implicit request: Request[_], messages: Messages)
+@(contacts: List[ContactInfo])(using request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("contactCheckYourAnswers.title"))) {
 

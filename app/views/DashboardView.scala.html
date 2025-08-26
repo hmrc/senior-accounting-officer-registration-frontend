@@ -20,7 +20,7 @@
         formHelper: FormWithCSRF
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(using request: Request[_], messages: Messages)
 
 @layout(showBackLink = false, pageTitle = titleNoForm(messages("registration.dashboard.title"))) {
 

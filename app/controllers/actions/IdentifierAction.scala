@@ -81,7 +81,7 @@ abstract class AuthenticatedIdentifierAction(
 
 class SessionIdentifierAction @Inject() (
     val parser: BodyParsers.Default
-)(implicit val executionContext: ExecutionContext)
+)(override implicit val executionContext: ExecutionContext)
     extends IdentifierAction {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {

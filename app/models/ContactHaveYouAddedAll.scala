@@ -40,6 +40,6 @@ object ContactHaveYouAddedAll extends Enumerable.Implicits {
     )
   }
 
-  implicit val enumerable: Enumerable[ContactHaveYouAddedAll] =
+  given enumerable: Enumerable[ContactHaveYouAddedAll] =
     Enumerable(values.map(v => v.toString -> v)*)
 }
