@@ -20,7 +20,7 @@
   formHelper: FormWithCSRF
 )
 
-@(state: DashboardState)(implicit request: Request[_], messages: Messages)
+@(givenState: DashboardState)(implicit request: Request[_], messages: Messages)
 
 @rowStatus(progress: Int, rowIndex: Int): Int = @{
   if (progress == 3) 2                    // all done -> every row completed
@@ -29,10 +29,10 @@
   else 0                                  // cannot start yet
 }
 
-@isClickable(s: Int): Boolean = @{ s == 1 }
+@isClickable(state: Int): Boolean = @{ state == 1 }
 
-@statusKey(s: Int): String = @{
-  s match {
+@statusKey(state: Int): String = @{
+  state match {
     case 0 => "registration.dashboard.cannotStartYet"
     case 1 => "registration.dashboard.notStarted"
     case 2 => "registration.dashboard.completed"
@@ -40,8 +40,8 @@
   }
 }
 
-@statusTagClass(s: Int): Option[String] = @{
-  s match {
+@statusTagClass(state: Int): Option[String] = @{
+  state match {
     case 1 => Some("govuk-tag govuk-tag--blue")
     case 2 => Some("govuk-tag govuk-tag--green")
     case _ => None
@@ -51,11 +51,11 @@
 @statusId(rowIndex: Int) = @{ s"registration-details-$rowIndex-status" }
 
 @createRowLink(rowIndex: Int, progress: Int, rowLabel: String, linkHref: String) = {
-  @defining(rowStatus(progress, rowIndex)) { s =>
+  @defining(rowStatus(progress, rowIndex)) { state =>
   @defining(statusId(rowIndex)) { id =>
-    <li class="govuk-task-list__item @if(isClickable(s)) {govuk-task-list__item--with-link}">
+    <li class="govuk-task-list__item @if(isClickable(state)) {govuk-task-list__item--with-link}">
       <div class="govuk-task-list__name-and-hint">
-        @if(isClickable(s)) {
+        @if(isClickable(state)) {
           <a class="govuk-link govuk-task-list__link"
              href="@linkHref"
              aria-describedby="@id">
@@ -67,12 +67,12 @@
       </div>
 
       <div class="govuk-task-list__status" id="@id">
-        @statusTagClass(s).map { cls =>
+        @statusTagClass(state).map { cls =>
           <strong class="@cls">
-            @messages(statusKey(s))
+            @messages(statusKey(state))
           </strong>
         }.getOrElse {
-          @messages(statusKey(s))
+          @messages(statusKey(state))
         }
       </div>
     </li>
@@ -87,21 +87,21 @@
   <ul class="govuk-task-list">
     @createRowLink(
       rowIndex = 0,
-      progress = state.ordinal,
+      progress = givenState.ordinal,
       rowLabel = messages("registration.dashboard.row.label.company"),
       linkHref = routes.GrsController.start().url
     )
 
     @createRowLink(
       rowIndex = 1,
-      progress = state.ordinal,
+      progress = givenState.ordinal,
       rowLabel = messages("registration.dashboard.row.label.contacts"),
       linkHref = routes.ContactDetailsGuidanceController.onPageLoad().url
     )
 
     @createRowLink(
       rowIndex = 2,
-      progress = state.ordinal,
+      progress = givenState.ordinal,
       rowLabel = messages("registration.dashboard.row.label.submit"),
       linkHref = routes.CheckYourAnswersController.onPageLoad().url
     )

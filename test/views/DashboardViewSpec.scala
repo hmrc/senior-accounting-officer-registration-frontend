@@ -25,6 +25,7 @@ import play.api.test.FakeRequest
 import views.html.DashboardView
 
 import scala.jdk.CollectionConverters.*
+import controllers.DashboardState
 
 class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
@@ -34,7 +35,7 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
 
   "DashboardView" - {
     "must generate a view" - {
-      val doc = Jsoup.parse(SUT().toString)
+      val doc = Jsoup.parse(SUT(DashboardState.CompanyDetails).toString)
 
       "with the correct heading" in {
         val mainContent = doc.getElementById("main-content")

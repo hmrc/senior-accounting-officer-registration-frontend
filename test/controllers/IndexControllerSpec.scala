@@ -20,24 +20,99 @@ import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.DashboardView
+import pages.CompanyDetailsPage
+import models.registration.CompanyDetails
+import pages.ContactsPage
+import models.ContactInfo
+import pages.SubmitAnswersPage
+import org.apache.pekko.http.scaladsl.model.HttpCharsetRange.*
 
 class IndexControllerSpec extends SpecBase {
 
   "IndexController Controller" - {
+    "onPageLoad" - {
+      "must return OK and the correct view for a GET" - {
+        "given no user answers, must return companyDetails state" in {
+          val request     = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+          val application = applicationBuilder(userAnswers = None).build()
+          running(application) {
+            val view = application.injector.instanceOf[DashboardView]
 
-    "must return OK and the correct view for a GET" in {
+            val result = route(application, request).value
 
-      val application = applicationBuilder(userAnswers = None).build()
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(DashboardState.CompanyDetails)(
+              request,
+              messages(application)
+            ).toString
+          }
+        }
+        "given companyDetails is not empty, must return contactDetails state" in {
+          val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+          val answers = emptyUserAnswers
+            .set(CompanyDetailsPage, CompanyDetails("name", "number", "ctUtr", "businessPartnerId"))
+            .success
+            .value
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+          running(application) {
+            val view = application.injector.instanceOf[DashboardView]
 
-      running(application) {
-        val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+            val result = route(application, request).value
 
-        val result = route(application, request).value
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(DashboardState.ContactDetails)(
+              request,
+              messages(application)
+            ).toString
+          }
+        }
+        "given contactDetails is not empty, must return submitAnswers state" in {
+          val request        = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+          val companyAnswers = emptyUserAnswers
+            .set(CompanyDetailsPage, CompanyDetails("name", "number", "ctUtr", "businessPartnerId"))
+            .success
+            .value
+          val contactAnswers = companyAnswers
+            .set(ContactsPage, List(ContactInfo("name", "email", "phone", "address")))
+            .success
+            .value
+          val application = applicationBuilder(userAnswers = Some(contactAnswers)).build()
+          running(application) {
+            val view = application.injector.instanceOf[DashboardView]
 
-        val view = application.injector.instanceOf[DashboardView]
+            val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(DashboardState.ContactDetails)(
+              request,
+              messages(application)
+            ).toString
+          }
+        }
+        "given submitAnswersPage is not empty, must return AnswersSubmitted state" in {
+          val request        = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+          val companyAnswers = emptyUserAnswers
+            .set(CompanyDetailsPage, CompanyDetails("name", "number", "ctUtr", "businessPartnerId"))
+            .success
+            .value
+          val contactAnswers = companyAnswers
+            .set(ContactsPage, List(ContactInfo("name", "email", "phone", "address")))
+            .success
+            .value
+          val submitAnswers = contactAnswers.set(SubmitAnswersPage, true).success.value
+          val application   = applicationBuilder(userAnswers = Some(submitAnswers)).build()
+          running(application) {
+            val view = application.injector.instanceOf[DashboardView]
+
+            val result = route(application, request).value
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(DashboardState.ContactDetails)(
+              request,
+              messages(application)
+            ).toString
+          }
+        }
       }
     }
   }

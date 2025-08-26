@@ -24,12 +24,15 @@ import views.html.DashboardView
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
+import models.UserAnswers
+import pages.CompanyDetailsPage
+import pages.ContactsPage
+import pages.SubmitAnswersPage
 
 class IndexController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
-    bradsService: BradsService,
     val controllerComponents: MessagesControllerComponents,
     view: DashboardView
 )(using ExecutionContext)
@@ -37,27 +40,32 @@ class IndexController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData) { implicit request =>
-    Ok(view()) // we want to have the view generate this for each one. 
-    // IDM it being like an argument passed to the view
+    Ok(view(DashboardState.CompanyDetails)) // getDashboardState(request.userAnswers)
   }
 
   def continue: Action[AnyContent] = (identify andThen getData) { implicit request =>
     Redirect(routes.CheckYourAnswersController.onPageLoad())
   }
 
+  private def getDashboardState(userAnswers: Option[UserAnswers]): DashboardState =
+  {
+    userAnswers.fold(DashboardState.CompanyDetails) { userAnswer =>
+      checks.collectFirst { case (pred, state) if pred(userAnswer) => state }
+        .getOrElse(DashboardState.AnswersSubmitted)
+    }
+  }
+
+  private val checks: List[(UserAnswers => Boolean, DashboardState)] = List(
+  (_.get(CompanyDetailsPage).isEmpty,   DashboardState.CompanyDetails),
+  (_.get(ContactsPage).isEmpty,         DashboardState.ContactDetails),
+  (_.get(SubmitAnswersPage).isEmpty,    DashboardState.SubmitYourAnswers)
+)
+
 }
 
-import models.UserAnswers
-import pages.ContactsPage
-
-class BradsService {
-  def getStatus(userAnswers: UserAnswers): Option[Map[String, Boolean]] = {
-    userAnswers.get(ContactsPage).collect({case contacts if contacts.nonEmpty =>
-      Map(
-        "companyDetails" -> true,
-        "contactDetails" -> false,
-        "checkYourAnswers" -> false
-    )})
-      
-  }
+enum DashboardState {
+  case CompanyDetails,
+    ContactDetails,
+    SubmitYourAnswers,
+    AnswersSubmitted
 }
