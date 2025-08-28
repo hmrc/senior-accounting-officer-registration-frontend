@@ -43,7 +43,7 @@ class ContactPhoneController @Inject() (
     formProvider: ContactPhoneFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactPhoneView
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 

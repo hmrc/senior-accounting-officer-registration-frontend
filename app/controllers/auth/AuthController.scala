@@ -32,7 +32,7 @@ class AuthController @Inject() (
     config: FrontendAppConfig,
     sessionRepository: SessionRepository,
     identify: IdentifierAction
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 

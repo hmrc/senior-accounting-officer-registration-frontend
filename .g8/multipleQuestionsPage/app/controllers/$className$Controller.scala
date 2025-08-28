@@ -1,6 +1,6 @@
 package controllers
 
-import controllers.actions._
+import controllers.actions.*
 import forms.$className$FormProvider
 import javax.inject.Inject
 import models.Mode
@@ -24,7 +24,7 @@ class $className$Controller @Inject()(
                                       formProvider: $className$FormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: $className$View
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                     )(using ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
 

@@ -36,7 +36,7 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
   private val contactHost = configuration.get[String]("contact-frontend.host").removeTrailingPathSeparator
   val contactFormServiceIdentifier: String = configuration.get[String]("serviceId")
 
-  def feedbackUrl(implicit request: RequestHeader): String =
+  def feedbackUrl(using request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
   val loginUrl: String         = configuration.get[String]("urls.login").removeTrailingPathSeparator

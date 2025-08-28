@@ -37,7 +37,7 @@ class ErrorHandler @Inject() (
 
   private val logger = Logger(getClass)
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(using
       rh: RequestHeader
   ): Future[Html] =
     Future.successful(view(pageTitle, heading, message))

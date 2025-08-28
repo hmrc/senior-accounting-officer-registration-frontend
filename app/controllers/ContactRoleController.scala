@@ -43,7 +43,7 @@ class ContactRoleController @Inject() (
     formProvider: ContactRoleFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactRoleView
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 

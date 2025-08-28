@@ -43,7 +43,7 @@ class ContactNameController @Inject() (
     formProvider: ContactNameFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactNameView
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 

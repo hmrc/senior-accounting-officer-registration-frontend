@@ -57,7 +57,7 @@ class SessionRepositoryISpec
     mongoComponent = mongoComponent,
     appConfig = mockAppConfig,
     clock = stubClock
-  )(scala.concurrent.ExecutionContext.Implicits.global)
+  )(using scala.concurrent.ExecutionContext.Implicits.global)
 
   ".set" - {
 

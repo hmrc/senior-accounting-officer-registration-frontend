@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class $className$FormProvider @Inject() extends Mappings {
 
-  def apply()(implicit messages: Messages): Form[LocalDate] =
+  def apply()(using messages: Messages): Form[LocalDate] =
     Form(
       "value" -> localDate(
         invalidKey     = "$className;format="decap"$.error.invalid",

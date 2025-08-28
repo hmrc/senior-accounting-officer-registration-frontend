@@ -29,8 +29,7 @@ import scala.concurrent.Future
 
 import javax.inject.Inject
 
-class BlockConfirmedContactsFilter @Inject() (
-)(override implicit val executionContext: ExecutionContext)
+class BlockConfirmedContactsFilter @Inject() (override implicit val executionContext: ExecutionContext)
     extends ActionFilter[DataRequest] {
   override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] =
     Future.successful(

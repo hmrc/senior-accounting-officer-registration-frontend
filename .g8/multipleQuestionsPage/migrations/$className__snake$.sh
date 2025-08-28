@@ -30,7 +30,7 @@ echo "Adding to ModelGenerators"
 awk '/trait ModelGenerators/ {\
     print;\
     print "";\
-    print "  implicit lazy val arbitrary$className$: Arbitrary[$className$] =";\
+    print "  given arbitrary$className$: Arbitrary[$className$] =";\
     print "    Arbitrary {";\
     print "      for {";\
     print "        $field1Name$ <- arbitrary[String]";\
