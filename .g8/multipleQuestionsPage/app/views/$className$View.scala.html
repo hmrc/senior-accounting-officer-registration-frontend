@@ -23,7 +23,7 @@
         @govukInput(
             InputViewModel(
                 field = form("$field1Name$"),
-                label = LabelViewModel(messages("$className;format="decap"$.$field1Name$"))
+                label = LabelViewModel("$className;format="decap"$.$field1Name$".toText)
             )
             .withWidth(Full)
         )
@@ -31,13 +31,13 @@
         @govukInput(
             InputViewModel(
                 field = form("$field2Name$"),
-                label = LabelViewModel(messages("$className;format="decap"$.$field2Name$"))
+                label = LabelViewModel("$className;format="decap"$.$field2Name$".toText)
             )
             .withWidth(Full)
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.continue"))
+            ButtonViewModel("site.continue".toText)
         )
     }
 }

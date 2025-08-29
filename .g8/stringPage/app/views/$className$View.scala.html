@@ -21,13 +21,13 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("$className;format="decap"$.heading")).asPageHeading()
+                label = LabelViewModel("$className;format="decap"$.heading".toText).asPageHeading()
             )
             .withWidth(Full)
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.continue"))
+            ButtonViewModel("site.continue".toText)
         )
     }
 }
