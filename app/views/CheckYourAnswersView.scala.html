@@ -21,7 +21,7 @@
     formHelper: FormWithCSRF
 )
 
-@(list: SummaryList)(using request: Request[_], messages: Messages)
+@(list: SummaryList)(using request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 

@@ -20,7 +20,7 @@
     layout: templates.Layout
 )
 
-@(details: RegistrationCompleteDetails)(using request: Request[_], messages: Messages)
+@(details: RegistrationCompleteDetails)(using request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("registrationComplete.title"))) {
 

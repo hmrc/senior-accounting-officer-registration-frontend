@@ -19,7 +19,7 @@ object CodeCoverageSettings {
     "testOnlyDoNotUseInAppConf.*"
   )
 
-  val settings: Seq[Setting[_]] = Seq(
+  val settings: Seq[Setting[?]] = Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
     ScoverageKeys.coverageMinimumStmtTotal := 78,
     ScoverageKeys.coverageFailOnMinimum    := true,
