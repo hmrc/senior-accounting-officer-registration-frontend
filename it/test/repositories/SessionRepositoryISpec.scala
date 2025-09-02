@@ -155,7 +155,7 @@ class SessionRepositoryISpec
         ExecutionContext.fromExecutor(new MDCPropagatingExecutorService(Executors.newFixedThreadPool(2)))
 
       MDC.put("test", "foo")
-      while Option(MDC.get("test")).isEmpty do { Thread.sleep(10) }
+      while Option(MDC.get("test")).isEmpty do { Thread.sleep(1) }
 
       f.map { _ =>
         MDC.get("test") mustEqual "foo"
