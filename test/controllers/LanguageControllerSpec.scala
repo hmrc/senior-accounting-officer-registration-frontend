@@ -18,51 +18,69 @@ package controllers
 
 import base.SpecBase
 import config.FrontendAppConfig
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar.mock
-import play.api.Application
+import models.UserAnswers
 import play.api.i18n.Lang
-import play.api.mvc.{Cookie, Cookies, MessagesControllerComponents}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.{AnyContentAsEmpty, Cookies}
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.play.language.LanguageUtils
+import play.api.{Configuration, inject}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.Inject
+
 
 class LanguageControllerSpec extends SpecBase {
 
-  val app: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-    .configure("play.i18n.langs" -> List("en", "cy"))
-    .build()
+  val testReferrerUrl = "test/referrer/url"
+  def buildReguest(lang: String): FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest (GET, routes.LanguageSwitchController.switchToLanguage(lang).url) withHeaders("referer" -> testReferrerUrl)
+  
+  override def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+    super
+      .applicationBuilder(userAnswers)
+      .overrides(
+          bind[FrontendAppConfig].to[TestFrontendAppConfig]
+      ).configure("play.118n.langs" -> List("en", "cy"))
 
-  given cc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
-
-  val langUtils: LanguageUtils = app.injector.instanceOf[LanguageUtils]
-
-  val mockAppConfig: FrontendAppConfig   = mock[FrontendAppConfig]
-  val mockLanguageMap: Map[String, Lang] = Map("en" -> Lang("en"), "cy" -> Lang("cy"))
-  when(mockAppConfig.languageMap).thenReturn(mockLanguageMap)
-
-  object TestLanguageSwitchController extends LanguageSwitchController(mockAppConfig, langUtils, cc)
-
-  def testLanguageSelection(language: String, expectedCookieValue: String): Unit = {
-    val request                = FakeRequest()
-    val result                 = TestLanguageSwitchController.switchToLanguage(language)(request)
-    val resultCookies: Cookies = cookies(result)
-    resultCookies.size mustBe 1
-    val cookie: Cookie = resultCookies.head
-    cookie.name mustBe "PLAY_LANG"
-    cookie.value mustBe expectedCookieValue
+  "Language selection endpoint" - {
+    "must set the language to English in " +
+      "the session-cookie and redirect the user based on the referrer header, when English language is selected" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    
+      running(application) {
+        val request = buildReguest("en")
+        val result = route(application, request).value
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe testReferrerUrl
+        val resultCookies: Cookies = cookies(result)
+        val playLang = resultCookies.get("PLAY_LANG")
+        playLang.map(_.value).value mustBe "en"
+      }
+    }
   }
 
-  "Hitting language selection endpoint" - {
+  "must set the language to Welsh in " +
+    "the session-cookie and redirect the user based on the referrer header, when Welsh language is selected" in {
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-    "redirect to English translated start page if English language is selected" in {
-      testLanguageSelection("en", "en")
+    running(application) {
+      val request = buildReguest("cy")
+      val result = route(application, request).value
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).value mustBe testReferrerUrl
+
+      val resultCookies: Cookies = cookies(result)
+      val playLang = resultCookies.get("PLAY_LANG")
+      playLang.map(_.value).value mustBe "cy"
     }
-
-    "redirect to Welsh translated start page if Welsh language is selected" in {
-      testLanguageSelection("cy", "cy")
-    }
-
   }
-
 }
+
+
+  class TestFrontendAppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configuration)
+    extends FrontendAppConfig(servicesConfig, configuration) {
+    override def languageMap: Map[String, Lang] = Map("en" -> Lang("en"), "cy" -> Lang("cy"))
+  }
