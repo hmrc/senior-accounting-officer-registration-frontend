@@ -34,7 +34,7 @@ import javax.inject.Inject
 class LanguageControllerSpec extends SpecBase {
 
   val testReferrerUrl = "test/referrer/url"
-  def buildReguest(lang: String): FakeRequest[AnyContentAsEmpty.type] =
+  def buildRequest(lang: String): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest (GET, routes.LanguageSwitchController.switchToLanguage(lang).url) withHeaders("referer" -> testReferrerUrl)
   
   override def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
@@ -42,7 +42,7 @@ class LanguageControllerSpec extends SpecBase {
       .applicationBuilder(userAnswers)
       .overrides(
           bind[FrontendAppConfig].to[TestFrontendAppConfig]
-      ).configure("play.118n.langs" -> List("en", "cy"))
+      ).configure("play.i18n.langs" -> List("en", "cy"))
 
   "Language selection endpoint" - {
     "must set the language to English in " +
@@ -50,7 +50,7 @@ class LanguageControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
     
       running(application) {
-        val request = buildReguest("en")
+        val request = buildRequest("en")
         val result = route(application, request).value
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe testReferrerUrl
@@ -66,7 +66,7 @@ class LanguageControllerSpec extends SpecBase {
     val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
     running(application) {
-      val request = buildReguest("cy")
+      val request = buildRequest("cy")
       val result = route(application, request).value
 
       status(result) mustBe SEE_OTHER
