@@ -28,35 +28,18 @@
     <p class="govuk-body">@messages("registration.dashboard.p1")</p>
     <p class="govuk-body">@messages("registration.dashboard.p2")</p>
 
-
-    <!-- COMPANY DETAILS -->
     <ul class="govuk-task-list">
-        <li class="govuk-task-list__item govuk-task-list__item--with-link">
-            <div class="govuk-task-list__name-and-hint">
-                <a class="govuk-link govuk-task-list__link" href="@routes.GrsController.start()" aria-describedby="company-details-status">
-                    @messages("registration.dashboard.row.company")
-                </a>
-            </div>
-            <div class="govuk-task-list__status" id="company-details-status">
-                <strong class="govuk-tag govuk-tag--green">
-                    @messages("registration.dashboard.row.status.completed")
-                </strong>
-            </div>
-        </li>
+        @row(
+            linkText = "registration.dashboard.row.company",
+            href = routes.GrsController.start(),
+            statusName = "company-details"
+        )
 
-    <!-- CONTACT  DETAILS -->
-        <li class="govuk-task-list__item govuk-task-list__item--with-link">
-            <div class="govuk-task-list__name-and-hint">
-                <a class="govuk-link govuk-task-list__link" href="@routes.ContactDetailsGuidanceController.onPageLoad()" aria-describedby="contacts-details-status">
-                    @messages("registration.dashboard.row.contacts")
-                </a>
-            </div>
-            <div class="govuk-task-list__status" id="contacts-details-status">
-                <strong class="govuk-tag govuk-tag--green">
-                    @messages("registration.dashboard.row.status.completed")
-                </strong>
-            </div>
-        </li>
+        @row(
+            linkText = "registration.dashboard.row.contacts",
+            href = routes.ContactDetailsGuidanceController.onPageLoad(),
+            statusName = "contacts-details"
+        )
     </ul>
 
     <!-- REVIEW AND SUBMIT -->
@@ -66,4 +49,19 @@
         )
     }
 
+}
+
+@row(linkText: String, href: Call, statusName: String) = {
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            <a class="govuk-link govuk-task-list__link" href="@href" aria-describedby="@statusName-status">
+                @messages(linkText)
+            </a>
+        </div>
+        <div class="govuk-task-list__status" id="@statusName-status">
+            <strong class="govuk-tag govuk-tag--green">
+                @messages("registration.dashboard.row.status.completed")
+            </strong>
+        </div>
+    </li>
 }
