@@ -49,7 +49,7 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
         val mainContent = doc.getElementById("main-content")
 
         val paragraphs = mainContent.getElementsByTag("p")
-        paragraphs.size() mustBe 4
+        paragraphs.size() mustBe 3
         List.from(paragraphs.iterator().asScala).foreach(p => p.attr("class") mustBe "govuk-body")
 
         paragraphs
@@ -58,39 +58,24 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
         paragraphs
           .get(1)
           .text() mustBe "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
-        paragraphs
-          .get(2)
-          .text() mustBe "At the Review and submit section of this registration, you can amend your answers and print or save them for your own records."
-        paragraphs.get(3).text() mustBe "Is this page not working properly? (opens in new tab)"
-      }
 
-      "with the correct subheadings and content" in {
-        val mainContent = doc.getElementById("main-content")
-
-        val headings2 = mainContent.getElementsByTag("h2")
-        headings2.size() mustBe 3
-
-        headings2.asScala.foreach(h2 => h2.attr("class") mustBe "govuk-heading-m")
-        headings2.get(0).text() mustBe "Company details"
-        headings2.get(1).text() mustBe "Contact details"
-        headings2.get(2).text() mustBe "Review and submit"
+        paragraphs.get(2).text() mustBe "Is this page not working properly? (opens in new tab)"
       }
 
       "with the correct link texts" in {
         val mainContent = doc.getElementById("main-content")
 
         val links = mainContent.getElementsByClass("govuk-link govuk-task-list__link")
-        links.size() mustBe 3
-        links.get(0).text() mustBe "Company details"
-        links.get(1).text() mustBe "Contact details"
-        links.get(2).text() mustBe "Check your answers before submitting your registration"
+        links.size() mustBe 2
+        links.get(0).text() mustBe "Enter your company details"
+        links.get(1).text() mustBe "Enter your contact details"
       }
 
       "with the correct label texts" in {
         val mainContent = doc.getElementById("main-content")
         val statusTags  = mainContent.getElementsByClass("govuk-task-list__status")
 
-        statusTags.size() mustBe 3
+        statusTags.size() mustBe 2
 
         statusTags.asScala.foreach(tag =>
           tag.text() mustBe "Completed"
