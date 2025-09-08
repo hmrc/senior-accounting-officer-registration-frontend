@@ -15,12 +15,12 @@
  *@
 
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        formHelper: FormWithCSRF
+    layout: templates.Layout,
+    govukButton: GovukButton,
+    formHelper: FormWithCSRF
 )
 
-@()(using request: Request[?], messages: Messages)
+@(currentStage: DashboardStage)(using request: Request[?], messages: Messages)
 
 @layout(showBackLink = false, pageTitle = titleNoForm(messages("registration.dashboard.title"))) {
 
@@ -32,36 +32,55 @@
         @row(
             linkText = "registration.dashboard.row.company",
             href = routes.GrsController.start(),
-            statusName = "company-details"
+            statusIdName = "company-details",
+            status = currentStage.companyDetailsStatus
         )
 
         @row(
             linkText = "registration.dashboard.row.contacts",
             href = routes.ContactDetailsGuidanceController.onPageLoad(),
-            statusName = "contacts-details"
+            statusIdName = "contacts-details",
+            status = currentStage.contactsInfoStatus
         )
     </ul>
 
-    <!-- REVIEW AND SUBMIT -->
-    @formHelper(action = routes.IndexController.continue()) {
-        @govukButton(
-            ButtonViewModel(messages("registration.dashboard.submit")).withAttribute("id", "submit")
-        )
+    @if(currentStage.showSubmit) {
+        @formHelper(action = routes.IndexController.continue()) {
+            @govukButton(
+                ButtonViewModel(messages("registration.dashboard.submit")).withAttribute("id", "submit")
+            )
+        }
     }
 
 }
 
-@row(linkText: String, href: Call, statusName: String) = {
+@row(linkText: String, href: Call, statusIdName: String, status: DashboardStatus) = {
     <li class="govuk-task-list__item govuk-task-list__item--with-link">
         <div class="govuk-task-list__name-and-hint">
-            <a class="govuk-link govuk-task-list__link" href="@href" aria-describedby="@statusName-status">
+            @if(status == DashboardStatus.NotStarted) {
+                <a class="govuk-link govuk-task-list__link" href="@href" aria-describedby="@statusIdName-status">
+                    @messages(linkText)
+                </a>
+            } else {
                 @messages(linkText)
-            </a>
+            }
         </div>
-        <div class="govuk-task-list__status" id="@statusName-status">
-            <strong class="govuk-tag govuk-tag--green">
-                @messages("registration.dashboard.row.status.completed")
-            </strong>
+        <div class="govuk-task-list__status" id="@statusIdName-status">
+            @status match {
+                case DashboardStatus.CannotStartYet => {
+                    @messages("registration.dashboard.row.status.cannotStartYet")
+                }
+                case DashboardStatus.NotStarted => {
+                    <strong class="govuk-tag govuk-tag--blue">
+                        @messages("registration.dashboard.row.status.notStarted")
+                    </strong>
+                }
+                case DashboardStatus.Completed => {
+                    <strong class="govuk-tag govuk-tag--green">
+                        @messages("registration.dashboard.row.status.completed")
+                    </strong>
+                }
+            }
         </div>
     </li>
 }

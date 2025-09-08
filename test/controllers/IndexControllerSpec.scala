@@ -17,17 +17,41 @@
 package controllers
 
 import base.SpecBase
+import models.{DashboardStage, UserAnswers}
+import org.mockito.ArgumentMatchers.eq as meq
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import services.DashboardService
 import views.html.DashboardView
 
-class IndexControllerSpec extends SpecBase {
+class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+
+  val mockDashboardService: DashboardService = mock[DashboardService]
+
+  override def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+    super
+      .applicationBuilder(userAnswers)
+      .overrides(bind[DashboardService].toInstance(mockDashboardService))
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockDashboardService)
+  }
 
   "IndexController Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      val testUserAnswer     = Some(emptyUserAnswers)
+      val testDashboardStage = DashboardStage.Submission
+      when(mockDashboardService.deriveCurrentStage(meq(testUserAnswer))).thenReturn(testDashboardStage)
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = testUserAnswer).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
@@ -37,7 +61,10 @@ class IndexControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DashboardView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(using request, messages(application)).toString
+        contentAsString(result) mustEqual view(testDashboardStage)(using
+          request,
+          messages(application)
+        ).toString
       }
     }
 
