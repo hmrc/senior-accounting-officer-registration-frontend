@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
+@import viewmodels.InputWidth.*
 
 @this(
     layout: templates.Layout,
@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], contactType: ContactType, mode: Mode)(using request: Request[_], messages: Messages)
+@(form: Form[?], contactType: ContactType, mode: Mode)(using request: Request[?], messages: Messages)
 
 @layout(pageTitle = title(form, messages("contactEmail.title"))) {
 

@@ -42,7 +42,7 @@ class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherV
   )
 
   val SUT          = app.injector.instanceOf[GrsConnector]
-  given Request[_] = FakeRequest()
+  given Request[?] = FakeRequest()
 
   "GrsConnector.start must hit the correct endpoint" - {
     val testInput = NewJourneyRequest(
@@ -152,8 +152,8 @@ class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherV
 
       val response = SUT.retrieve(testJourneyId).futureValue
 
-      response mustBe a[Left[_, _]]
-      response.left.value mustBe a[Some[_]]
+      response mustBe a[Left[?, ?]]
+      response.left.value mustBe a[Some[?]]
       response.left.value.get mustBe a[Exception]
 
       verify(
@@ -168,8 +168,8 @@ class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherV
 
       val response = SUT.retrieve(testJourneyId).futureValue
 
-      response mustBe a[Left[_, _]]
-      response.left.value mustBe a[Some[_]]
+      response mustBe a[Left[?, ?]]
+      response.left.value mustBe a[Some[?]]
       response.left.value.get mustBe a[Exception]
 
       verify(
