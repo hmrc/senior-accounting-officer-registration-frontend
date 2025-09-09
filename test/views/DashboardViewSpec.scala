@@ -17,6 +17,8 @@
 package views
 
 import base.SpecBase
+import models.DashboardStage
+import models.DashboardStage.{CompanyDetails, ContactsInfo, Submission}
 import org.jsoup.Jsoup
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
@@ -33,82 +35,109 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
   given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
 
   "DashboardView" - {
-    "must generate a view" - {
-      val doc = Jsoup.parse(SUT().toString)
 
-      "with the correct heading" in {
-        val mainContent = doc.getElementById("main-content")
+    DashboardStage.values.foreach { stage =>
+      s"must generate a view for $stage stage" - {
+        val doc = Jsoup.parse(SUT(stage).toString)
 
-        val h1 = mainContent.getElementsByTag("h1")
-        h1.size() mustBe 1
+        "with the correct heading" in {
+          val mainContent = doc.getElementById("main-content")
 
-        h1.get(0).text() mustBe "Register your company"
-      }
+          val h1 = mainContent.getElementsByTag("h1")
+          h1.size() mustBe 1
 
-      "with the correct paragraphs" in {
-        val mainContent = doc.getElementById("main-content")
+          h1.get(0).text() mustBe "Register your company"
+        }
 
-        val paragraphs = mainContent.getElementsByTag("p")
-        paragraphs.size() mustBe 4
-        List.from(paragraphs.iterator().asScala).foreach(p => p.attr("class") mustBe "govuk-body")
+        "with the correct paragraphs" in {
+          val mainContent = doc.getElementById("main-content")
 
-        paragraphs
-          .get(0)
-          .text() mustBe "Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from."
-        paragraphs
-          .get(1)
-          .text() mustBe "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
-        paragraphs
-          .get(2)
-          .text() mustBe "At the Review and submit section of this registration, you can amend your answers and print or save them for your own records."
-        paragraphs.get(3).text() mustBe "Is this page not working properly? (opens in new tab)"
-      }
+          val paragraphs = mainContent.getElementsByTag("p")
+          paragraphs.size() mustBe 3
+          List.from(paragraphs.iterator().asScala).foreach(p => p.attr("class") mustBe "govuk-body")
 
-      "with the correct subheadings and content" in {
-        val mainContent = doc.getElementById("main-content")
+          paragraphs
+            .get(0)
+            .text() mustBe "Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from."
+          paragraphs
+            .get(1)
+            .text() mustBe "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
 
-        val headings2 = mainContent.getElementsByTag("h2")
-        headings2.size() mustBe 3
+          paragraphs.get(2).text() mustBe "Is this page not working properly? (opens in new tab)"
+        }
 
-        headings2.asScala.foreach(h2 => h2.attr("class") mustBe "govuk-heading-m")
-        headings2.get(0).text() mustBe "Company details"
-        headings2.get(1).text() mustBe "Contact details"
-        headings2.get(2).text() mustBe "Review and submit"
-      }
+        "with the correct link texts" in {
+          val mainContent = doc.getElementById("main-content")
 
-      "with the correct link texts" in {
-        val mainContent = doc.getElementById("main-content")
+          val links = mainContent.getElementsByClass("govuk-link govuk-task-list__link")
 
-        val links = mainContent.getElementsByClass("govuk-link govuk-task-list__link")
-        links.size() mustBe 3
-        links.get(0).text() mustBe "Company details"
-        links.get(1).text() mustBe "Contact details"
-        links.get(2).text() mustBe "Check your answers before submitting your registration"
-      }
+          stage match {
+            case CompanyDetails =>
+              links.size() mustBe 1
+              links.get(0).text() mustBe "Enter your company details"
+            case ContactsInfo =>
+              links.size() mustBe 1
+              links.get(0).text() mustBe "Enter your contact details"
+            case Submission =>
+              links.size() mustBe 0
+          }
+        }
 
-      "with the correct label texts" in {
-        val mainContent = doc.getElementById("main-content")
-        val statusTags  = mainContent.getElementsByClass("govuk-task-list__status")
+        "with the correct label texts" in {
+          val mainContent = doc.getElementById("main-content")
+          val statusTags  = mainContent.getElementsByClass("govuk-task-list__status")
 
-        statusTags.size() mustBe 3
+          statusTags.size() mustBe 2
 
-        statusTags.asScala.foreach(tag =>
-          tag.text() mustBe "Completed"
-          tag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--green"
-        )
-      }
+          val companyDetailsTag = statusTags.get(0)
+          val contactsInfoTag   = statusTags.get(1)
 
-      "must not show a back link" in {
-        val backLink = doc.getElementsByClass("govuk-back-link")
-        backLink.size() mustBe 0
-      }
+          stage match {
+            case CompanyDetails =>
+              companyDetailsTag.text() mustBe "Not started"
+              companyDetailsTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--blue"
+              contactsInfoTag.text() mustBe "Cannot start yet"
+              contactsInfoTag.getElementsByTag("strong").size() mustBe 0
+            case ContactsInfo =>
+              companyDetailsTag.text() mustBe "Completed"
+              companyDetailsTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--green"
+              contactsInfoTag.text() mustBe "Not started"
+              contactsInfoTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--blue"
+            case Submission =>
+              companyDetailsTag.text() mustBe "Completed"
+              companyDetailsTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--green"
+              contactsInfoTag.text() mustBe "Completed"
+              contactsInfoTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--green"
+          }
+        }
 
-      "must show help link" in {
-        val mainContent = doc.getElementById("main-content")
+        stage match {
+          case Submission =>
+            "must show a submit button" in {
+              val backLink = doc.getElementById("submit")
+              backLink.text() mustBe "Submit your registration"
+            }
+          case _ =>
+            "must not show a submit button" in {
+              val backLink = doc.getElementById("submit")
+              Option(backLink) mustBe None
+            }
+        }
 
-        val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
-        helpLink.size() mustBe 1
+        "must not show a back link" in {
+          val backLink = doc.getElementsByClass("govuk-back-link")
+          backLink.size() mustBe 0
+        }
+
+        "must show help link" in {
+          val mainContent = doc.getElementById("main-content")
+
+          val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
+          helpLink.size() mustBe 1
+        }
+
       }
     }
   }
+
 }

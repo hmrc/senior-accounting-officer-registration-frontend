@@ -19,6 +19,7 @@ package controllers
 import controllers.actions.*
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.DashboardService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DashboardView
 
@@ -31,13 +32,15 @@ class IndexController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
-    view: DashboardView
+    view: DashboardView,
+    dashboardService: DashboardService
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData) { implicit request =>
-    Ok(view())
+    val currentStage = dashboardService.deriveCurrentStage(request.userAnswers)
+    Ok(view(currentStage))
   }
 
   def continue: Action[AnyContent] = (identify andThen getData) { implicit request =>

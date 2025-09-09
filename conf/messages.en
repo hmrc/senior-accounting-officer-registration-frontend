@@ -49,19 +49,15 @@ registration.dashboard.heading = Register your company
 
 registration.dashboard.p1 = Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from.
 registration.dashboard.p2 = If your group has more than one SAO, you’ll need to complete a separate registration for each SAO.
-registration.dashboard.p3 = At the 'Review and submit' section of this registration, you can amend your answers and print or save them for your own records.
 
-registration.dashboard.heading1 = Company details
-registration.dashboard.heading2 = Contact details
-registration.dashboard.heading3 = Review and submit
+registration.dashboard.row.company = Enter your company details
+registration.dashboard.row.contacts = Enter your contact details
 
-registration.dashboard.linkText1 = Company details
-registration.dashboard.linkText2 = Contact details
-registration.dashboard.linkText3 = Check your answers before submitting your registration
+registration.dashboard.row.status.notStarted = Not started
+registration.dashboard.row.status.cannotStartYet = Cannot start yet
+registration.dashboard.row.status.completed = Completed
 
-registration.dashboard.labelText1 = Not started
-registration.dashboard.labelText2 = Cannot start yet
-registration.dashboard.labelText3 = Completed
+registration.dashboard.submit = Submit your registration
 
 registration.checkYourAnswers.title = checkYourAnswers
 registration.checkYourAnswers.heading = checkYourAnswers
