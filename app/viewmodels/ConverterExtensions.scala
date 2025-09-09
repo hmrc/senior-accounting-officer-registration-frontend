@@ -17,18 +17,28 @@
 package viewmodels
 
 import play.api.i18n.Messages
+import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
-import scala.language.implicitConversions
+object converters extends ConverterExtensions
 
-object implicits extends ImplicitConversions
+trait ConverterExtensions {
 
-trait ImplicitConversions {
+  extension (value: Int) {
+    def toText: Text = Text(value.toString)
+  }
 
-  implicit def stringToText(string: String)(implicit messages: Messages): Text =
-    Text(messages(string))
+  extension (string: String) {
+    def toText(implicit messages: Messages): Text =
+      Text(messages(string))
 
-  implicit def stringToKey(string: String)(implicit messages: Messages): Key =
-    Key(content = Text(messages(string)))
+    def toKey(using messages: Messages): Key =
+      Key(content = Text(messages(string)))
+  }
+
+  extension (html: Html) {
+    def toText(implicit messages: Messages): Text =
+      Text(messages(html.toString))
+  }
 }

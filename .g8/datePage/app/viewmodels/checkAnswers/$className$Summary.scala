@@ -7,7 +7,7 @@ import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import utils.DateTimeFormats.dateTimeFormat
 import viewmodels.govuk.summarylist.*
-import viewmodels.implicits.*
+import viewmodels.converters.*
 
 object $className$Summary  {
 
@@ -18,10 +18,10 @@ object $className$Summary  {
         given Lang = messages.lang
 
         SummaryListRowViewModel(
-          key     = "$className;format="decap"$.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.format(dateTimeFormat())),
+          key     = "$className;format="decap"$.checkYourAnswersLabel".toKey,
+          value   = ValueViewModel(answer.format(dateTimeFormat()).toText),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.$className$Controller.onPageLoad(CheckMode).url)
+            ActionItemViewModel("site.change".toText, routes.$className$Controller.onPageLoad(CheckMode).url)
               .withVisuallyHiddenText(messages("$className;format="decap"$.change.hidden"))
           )
         )

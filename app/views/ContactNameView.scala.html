@@ -38,14 +38,14 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("contactName.heading")).asPageHeading(LabelSize.Large)
+                label = LabelViewModel("contactName.heading".toText).asPageHeading(LabelSize.Large)
             )
-            .withHint(HintViewModel(messages("contactName.hint")))
+            .withHint(HintViewModel("contactName.hint".toText))
             .withWidth(Full)
         )
 
         @govukButton(
-            ButtonViewModel(messages("site.continue")).withAttribute("id", "submit")
+            ButtonViewModel("site.continue".toText).withAttribute("id", "submit")
         )
     }
 }

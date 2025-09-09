@@ -18,8 +18,6 @@ package config
 
 import play.api.{ConfigLoader, Configuration}
 
-import scala.language.implicitConversions
-
 final case class Service(host: String, port: String, protocol: String) {
 
   def baseUrl: String =
@@ -41,6 +39,5 @@ object Service {
     Service(host, port, protocol)
   }
 
-  implicit def convertToString(service: Service): String =
-    service.baseUrl
+  given Conversion[Service, String] = (service: Service) => service.baseUrl
 }

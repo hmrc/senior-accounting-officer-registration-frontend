@@ -28,7 +28,7 @@
     <h1 class="govuk-heading-l">GRS Stubs</h1>
     @formHelper(action = routes.GrsStubsController.postStubGrs(journeyId)) {
         @govukButton(
-            ButtonViewModel("Stub response").withAttribute("id", "submit")
+            ButtonViewModel("Stub response".toText).withAttribute("id", "submit")
         )
     }
 }

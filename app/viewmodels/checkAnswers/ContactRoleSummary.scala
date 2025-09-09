@@ -22,17 +22,17 @@ import models.ContactType
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.converters.*
 import viewmodels.govuk.summarylist.*
-import viewmodels.implicits.*
 
 object ContactRoleSummary {
 
-  def row(contactType: ContactType, role: String)(implicit messages: Messages): SummaryListRow =
+  def row(contactType: ContactType, role: String)(using messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
-      key = "contactRole.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlFormat.escape(role).toString),
+      key = "contactRole.checkYourAnswersLabel".toKey,
+      value = ValueViewModel(HtmlFormat.escape(role).toText),
       actions = Seq(
-        ActionItemViewModel("site.change", routes.ContactRoleController.onPageLoad(contactType, CheckMode).url)
+        ActionItemViewModel("site.change".toText, routes.ContactRoleController.onPageLoad(contactType, CheckMode).url)
           .withVisuallyHiddenText(messages(s"contactRole.change.${contactType.messageKey}.hidden"))
       )
     )
