@@ -21,7 +21,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel("$className;format="decap"$.heading".toText).asPageHeading()
+                label = LabelViewModel("$className;format="decap"$.heading".toText).asPageHeading(LabelSize.Large)
             )
             .withWidth(Full)
         )

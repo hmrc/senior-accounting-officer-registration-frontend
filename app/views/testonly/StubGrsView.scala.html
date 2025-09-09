@@ -22,7 +22,7 @@
     formHelper: FormWithCSRF
 )
 
-@(journeyId: String)(using request: Request[_], messages: Messages)
+@(journeyId: String)(using request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm("GRS Stubs")) {
     <h1 class="govuk-heading-l">GRS Stubs</h1>

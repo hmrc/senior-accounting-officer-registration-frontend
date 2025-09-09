@@ -19,7 +19,7 @@
     govukButton: GovukButton
 )
 
-@()(using request: Request[_], messages: Messages)
+@()(using request: Request[?], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("signedOut.title")),
