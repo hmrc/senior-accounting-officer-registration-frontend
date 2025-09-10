@@ -47,7 +47,7 @@
     @if(currentStage.showSubmit) {
         @formHelper(action = routes.IndexController.continue()) {
             @govukButton(
-                ButtonViewModel(messages("registration.dashboard.submit")).withAttribute("id", "submit")
+                ButtonViewModel("registration.dashboard.submit".toText).withAttribute("id", "submit")
             )
         }
     }
