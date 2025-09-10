@@ -30,7 +30,7 @@ trait ConverterExtensions {
   }
 
   extension (string: String) {
-    def toText(implicit messages: Messages): Text =
+    def toText(using messages: Messages): Text =
       Text(messages(string))
 
     def toKey(using messages: Messages): Key =
@@ -38,7 +38,7 @@ trait ConverterExtensions {
   }
 
   extension (html: Html) {
-    def toText(implicit messages: Messages): Text =
+    def toText(using messages: Messages): Text =
       Text(messages(html.toString))
   }
 }

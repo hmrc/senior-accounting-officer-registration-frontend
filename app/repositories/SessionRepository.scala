@@ -52,7 +52,7 @@ class SessionRepository @Inject() (
       )
     ) {
 
-  implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
+  given instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
 
   private def byId(id: String): Bson = Filters.equal("_id", id)
 

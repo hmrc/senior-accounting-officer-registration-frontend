@@ -212,7 +212,7 @@ class AuthActionSpec extends SpecBase {
 class FakeFailingAuthConnector @Inject() (exceptionToReturn: Throwable) extends AuthConnector {
   val serviceUrl: String = ""
 
-  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(using
       hc: HeaderCarrier,
       ec: ExecutionContext
   ): Future[A] =

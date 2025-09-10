@@ -40,7 +40,7 @@ abstract class ISpecBase
     with BeforeAndAfterAll
     with BeforeAndAfterEach {
 
-  protected implicit lazy val wireMockServer: WireMockServer = {
+  protected given wireMockServer: WireMockServer = {
     val server = new WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort())
     server.start()
     server
