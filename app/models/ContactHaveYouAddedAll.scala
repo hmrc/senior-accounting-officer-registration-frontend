@@ -32,7 +32,7 @@ object ContactHaveYouAddedAll extends Enumerable.Implicits {
     No
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
+  def options(using messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
     RadioItem(
       content = Text(messages(s"contactHaveYouAddedAll.${value.toString}")),
       value = Some(value.toString),

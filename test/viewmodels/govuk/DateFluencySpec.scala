@@ -31,7 +31,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
 
   ".apply" - {
 
-    implicit val messages: Messages = stubMessages()
+    given messages: Messages = stubMessages()
 
     val fieldset = FieldsetViewModel(LegendViewModel("foo".toText))
 

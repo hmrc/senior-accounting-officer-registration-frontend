@@ -36,7 +36,7 @@ class DateMappingsSpec
     with OptionValues
     with Mappings {
 
-  private implicit val messages: Messages = stubMessages()
+  private given messages: Messages = stubMessages()
 
   val form: Form[LocalDate] = Form(
     "value" -> localDate(

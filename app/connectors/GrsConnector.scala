@@ -39,8 +39,8 @@ class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(us
     ExecutionContext
 ) {
 
-  def start(value: NewJourneyRequest)(using RequestHeader): Future[HttpResponse] = {
-    given HeaderCarrier = FrontendHeaderCarrier(implicitly[RequestHeader])
+  def start(value: NewJourneyRequest)(using requestHeader: RequestHeader): Future[HttpResponse] = {
+    given HeaderCarrier = FrontendHeaderCarrier(requestHeader)
 
     val url: String =
       if appConfig.stubGrs then {
@@ -50,13 +50,15 @@ class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(us
       }
 
     http
-      .post(new URI(url).toURL)(implicitly[HeaderCarrier])
+      .post(new URI(url).toURL)
       .withBody(Json.toJson(value))
       .execute[HttpResponse]
   }
 
-  def retrieve(journeyId: String)(using RequestHeader): Future[Either[Option[Exception], CompanyDetails]] = {
-    given HeaderCarrier = FrontendHeaderCarrier(implicitly[RequestHeader])
+  def retrieve(
+      journeyId: String
+  )(using requestHeader: RequestHeader): Future[Either[Option[Exception], CompanyDetails]] = {
+    given HeaderCarrier = FrontendHeaderCarrier(requestHeader)
     val path            =
       if appConfig.stubGrs then {
         s"${appConfig.grsStubsBaseUrl}${_root_.controllers.testonly.routes.GrsStubsController.getGrs(journeyId).url()}"

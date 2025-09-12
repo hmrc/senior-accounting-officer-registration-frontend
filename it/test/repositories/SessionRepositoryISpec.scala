@@ -148,10 +148,10 @@ class SessionRepositoryISpec
     mustPreserveMdc(repository.keepAlive(userAnswers.id))
   }
 
-  private def mustPreserveMdc[A](f: => Future[A])(implicit pos: Position): Unit =
+  private def mustPreserveMdc[A](f: => Future[A])(using pos: Position): Unit =
     "must preserve MDC" in {
 
-      implicit lazy val ec: ExecutionContext =
+      given ec: ExecutionContext =
         ExecutionContext.fromExecutor(new MDCPropagatingExecutorService(Executors.newFixedThreadPool(2)))
 
       MDC.put("test", "foo")
