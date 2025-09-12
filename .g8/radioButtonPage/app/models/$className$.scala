@@ -4,26 +4,21 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait $className$
+enum $className$(override val toString: String) {
+  case $option1key;format="Camel"$ extends $className$("$option1key;format="decap"$")
+  case $option2key;format="Camel"$ extends $className$("$option2key;format="decap"$")
+}
 
-object $className$ extends Enumerable.Implicits {
+object $className$ extends Enumerable.Implicits[$className$] {
 
-  case object $option1key;format="Camel"$ extends WithName("$option1key;format="decap"$") with $className$
-  case object $option2key;format="Camel"$ extends WithName("$option2key;format="decap"$") with $className$
+  override def members: Array[$className$] = $className$.values
 
-  val values: Seq[$className$] = Seq(
-    $option1key;format="Camel"$, $option2key;format="Camel"$
-  )
-
-  def options(using messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"$className;format="decap"$.\${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_\$index")
-      )
+  def options(using messages: Messages): Seq[RadioItem] = values.map { value =>
+    RadioItem(
+      content = Text(messages(s"$className;format="decap"$.\${value.toString}")),
+      value   = Some(value.toString),
+      id      = Some(s"value_\${value.ordinal}")
+    )
   }
 
-  given Enumerable[$className$] =
-    Enumerable(values.map(v => v.toString -> v): _*)
 }

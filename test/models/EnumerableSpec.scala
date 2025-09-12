@@ -23,22 +23,27 @@ import play.api.libs.json.*
 
 object EnumerableSpec {
 
-  sealed trait Foo
-  case object Bar extends Foo
-  case object Baz extends Foo
+  enum Foo {
+    case Bar, Baz
+  }
 
   object Foo {
 
-    val values: Set[Foo] = Set(Bar, Baz)
-
-    implicit val fooEnumerable: Enumerable[Foo] =
+    given fooEnumerable: Enumerable[Foo] =
       Enumerable(values.toSeq.map(v => v.toString -> v)*)
   }
 }
 
-class EnumerableSpec extends AnyFreeSpec with Matchers with EitherValues with OptionValues with Enumerable.Implicits {
+class EnumerableSpec
+    extends AnyFreeSpec
+    with Matchers
+    with EitherValues
+    with OptionValues
+    with Enumerable.Implicits[EnumerableSpec.Foo] {
 
   import EnumerableSpec.*
+
+  override def members: Array[Foo] = Foo.values
 
   ".reads" - {
 

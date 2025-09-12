@@ -5,29 +5,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.checkbox.*
 
-sealed trait $className$
+enum $className$(override val toString: String) {
+  case $option1key;format="Camel"$ extends $className$("$option1key;format="decap"$")
+  case $option2key;format="Camel"$ extends $className$("$option2key;format="decap"$")
+}
 
-object $className$ extends Enumerable.Implicits {
+object $className$ extends Enumerable.Implicits[$className$] {
 
-  case object $option1key;format="Camel"$ extends WithName("$option1key;format="decap"$") with $className$
-  case object $option2key;format="Camel"$ extends WithName("$option2key;format="decap"$") with $className$
-
-  val values: Seq[$className$] = Seq(
-    $option1key;format="Camel"$,
-    $option2key;format="Camel"$
-  )
+  override def members: Array[$className$] = $className$.values
 
   def checkboxItems(using messages: Messages): Seq[CheckboxItem] =
-    values.zipWithIndex.map {
-      case (value, index) =>
+    values.map { value =>
         CheckboxItemViewModel(
           content = Text(messages(s"$className;format="decap"$.\${value.toString}")),
           fieldId = "value",
-          index   = index,
+          index   = value.ordinal,
           value   = value.toString
         )
     }
 
-  given enumerable: Enumerable[$className$] =
-    Enumerable(values.map(v => v.toString -> v): _*)
 }

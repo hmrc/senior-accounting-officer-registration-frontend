@@ -20,26 +20,21 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait ContactHaveYouAddedAll
+enum ContactHaveYouAddedAll(override val toString: String) {
+  case Yes extends ContactHaveYouAddedAll("yes")
+  case No  extends ContactHaveYouAddedAll("no")
+}
 
-object ContactHaveYouAddedAll extends Enumerable.Implicits {
+object ContactHaveYouAddedAll extends Enumerable.Implicits[ContactHaveYouAddedAll] {
 
-  case object Yes extends WithName("yes") with ContactHaveYouAddedAll
-  case object No  extends WithName("no") with ContactHaveYouAddedAll
+  override def members: Array[ContactHaveYouAddedAll] = ContactHaveYouAddedAll.values
 
-  val values: Seq[ContactHaveYouAddedAll] = Seq(
-    Yes,
-    No
-  )
-
-  def options(using messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
+  def options(using messages: Messages): Seq[RadioItem] = members.map { value =>
     RadioItem(
       content = Text(messages(s"contactHaveYouAddedAll.${value.toString}")),
       value = Some(value.toString),
-      id = Some(s"value_$index")
+      id = Some(s"value_${value.ordinal}")
     )
   }
 
-  given enumerable: Enumerable[ContactHaveYouAddedAll] =
-    Enumerable(values.map(v => v.toString -> v)*)
 }
