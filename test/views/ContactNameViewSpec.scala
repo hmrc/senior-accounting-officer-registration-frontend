@@ -34,7 +34,7 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
         val doc =
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
         testMustHaveCorrectPageHeading(doc, pageHeading)
-        testMustShowCorrectHintsWithCorrectContent(doc, 1, hintContent)
+        testMustShowCorrectHintsWithCorrectContent(doc, hintContent)
         testMustShowCorrectInputsWithCorrectDefaultValues(doc, totalInputCount, List(inputTestValue))
         testMustHaveSubmitButton(doc, submitButtonContent)
         testMustShowBackLink(doc)

@@ -19,6 +19,7 @@ package views
 import base.ViewSpecBase
 import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
+import views.RegistrationCompleteViewSpec.*
 import views.html.RegistrationCompleteView
 
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
@@ -36,7 +37,6 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
   "RegistrationCompleteView" - {
     "must generate a view" - {
       val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
-
       testMustHaveCorrectPageHeading(doc, "Registration Complete")
 
       "with the correct heading panel text" in {
@@ -60,23 +60,26 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
       testMustShowCorrectParagraphsWithCorrectContent(
         doc,
-        5,
-        List(
-          "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
-          "We have sent a confirmation email with your reference ID to al the contact you gave during registration.",
-          "If you need to keep a record of your registration"
-        )
+        paragrapsList
       )
-      mustShowParagraphsContainingContent(
+      testMustShowParagraphsContainingContent(
         doc,
         1,
         "You can now log into your Senior Accounting Officer notification and certificate service account to "
       )
-      testMustShowCorrectLinksAndCorrectContent(doc, 4, List("Print the page", "Download as PDF"))
+      testMustShowCorrectLinksAndCorrectContent(doc, linksContent)
       testMustShowBackLink(doc)
       testMustShowIsThisPageNotWorkingProperlyLink(doc)
     }
   }
 }
 
-object RegistrationCompleteViewSpec {}
+object RegistrationCompleteViewSpec {
+  val paragrapsList = List(
+    "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
+    "We have sent a confirmation email with your reference ID to al the contact you gave during registration.",
+    "If you need to keep a record of your registration"
+  )
+  val linksContent = List("Print the page", "Download as PDF", "submit a notification and certificate.")
+
+}

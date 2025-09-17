@@ -26,8 +26,8 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
   "ContactDetailsGuidanceView" - {
     val doc = Jsoup.parse(SUT().toString)
     testMustHaveCorrectPageHeading(doc, pageHeading)
-    testMustShowCorrectParagraphsWithCorrectContent(doc, totalParagraphsCount, paragraphsContent)
-    testMustShowCorrectBulletPointsWithCorrectContent(doc, totalBulletPointsCount, bulletPointsContent)
+    testMustShowCorrectParagraphsWithCorrectContent(doc, paragraphsContent)
+    testMustShowCorrectBulletPointsWithCorrectContent(doc, bulletPointsContent)
     testMustHaveSubmitButton(doc, submitButtonContent)
     testMustShowBackLink(doc)
     testMustShowIsThisPageNotWorkingProperlyLink(doc)
@@ -41,7 +41,6 @@ object ContactDetailsGuidanceViewSpec {
     "We’ll use these details to:",
     "You could also include the Senior Accounting Officer’s contact details so they can stay informed."
   )
-  val totalParagraphsCount              = 4
   val bulletPointsContent: List[String] = List(
     "contact the right person if we have questions about the company’s tax accounting arrangements",
     "send confirmation when the notification and certificate have been submitted"

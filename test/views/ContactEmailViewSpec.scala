@@ -38,7 +38,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
         testMustHaveSubmitButton(doc, submitButtonContent)
         testMustShowBackLink(doc)
         testMustShowIsThisPageNotWorkingProperlyLink(doc)
-        testMustShowCorrectHintsWithCorrectContent(doc, totalHintsCount, hintContent)
+        testMustShowCorrectHintsWithCorrectContent(doc, hintContent)
         testMustShowCorrectInputsWithCorrectDefaultValues(doc, totalInputCount, List(inputTestValue))
         contactType match {
           case First =>

@@ -24,7 +24,7 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
-
+import scala.jdk.CollectionConverters.*
 import scala.reflect.ClassTag
 
 class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlFormat.Appendable]]: ClassTag]
@@ -107,34 +107,34 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def testMustShowElements(document: Document, selectorString: String, expectedCount: Int, description: String)(using
-      pos: Position
-  ): Unit = {
-    s"must have the correct number of $description ($expectedCount)" in {
-      val elements = document.getMainContent.select(selectorString)
-      withClue(s"Expected $expectedCount $description but not found ${elements.size()}\n") {
+  def mustShowElementsWithContent(
+      document: Document,
+      selector: String,
+      selectorExclusion: String,
+      expectedCount: Int,
+      expectedContent: List[String],
+      elementType: String,
+      contentExtractor: Element => String = _.text()
+  )(using pos: Position): Unit = {
+    s"must have $expectedCount of $elementType" in {
+
+      val elements = document.getMainContent.select(selector + selectorExclusion)
+      withClue(s"Expected $expectedCount $elementType but found ${elements.size()}\n") {
         elements.size() mustBe expectedCount
+      }
+    }
+    for (textContent, index) <- expectedContent.zipWithIndex do {
+      s"must have a $elementType with content '$textContent' (check ${index + 1})" in {
+        val elements = document.getMainContent.select(s"$selector:containsOwn($textContent)")
+        withClue(s"$elementType with content '$textContent' not found\n") {
+          val matchingElements = elements.iterator().asScala.filter(el => contentExtractor(el) == textContent)
+          matchingElements.nonEmpty mustBe true
+        }
       }
     }
   }
 
-  def mustShowElementsWithContent(
-      document: Document,
-      selectorString: String,
-      expectedContent: List[String],
-      description: String
-  )(using pos: Position): Unit = {
-    for content <- expectedContent do
-      s"must have the $description with content '$expectedContent''" in {
-        val elements = document.getMainContent.select(s"$selectorString:containsOwn($content)")
-        withClue(s"Expected $description with content '$content' not found\n") {
-          elements.get(0).text() mustBe content
-          elements.size() mustBe 1
-        }
-      }
-  }
-
-  def mustShowParagraphsContainingContent(
+  def testMustShowParagraphsContainingContent(
       document: Document,
       paragraphsCount: Int,
       content: String
@@ -147,108 +147,41 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def testMustShowParagraphsWithContent(
-      document: Document,
-      expectedCount: Int,
-      content: List[String]
-  )(using
-      pos: Position
-  ): Unit = {
-
-    testMustShowElements(document, "p", expectedCount, "paragraphs")
-    mustShowElementsWithContent(document, "p", content, "paragraphs")
-  }
-
   def testMustShowCorrectParagraphsWithCorrectContent(
       document: Document,
-      paragraphsCount: Int,
       content: List[String]
   )(using
       pos: Position
   ): Unit = {
-    s"must have total $paragraphsCount paragraphs" in {
-      val p = document.getMainContent.getElementsByTag("p")
-      p.size() mustBe paragraphsCount
-    }
-    for paragraphContent <- content do
-      s"must have a paragraph with content: '$paragraphContent'" in {
-        val paragraph = document.getMainContent.select(s"p:containsOwn($paragraphContent)")
-        withClue(
-          s"paragraph with content '$paragraphContent' not found\n"
-        ) {
-          paragraph.size() mustBe 1
-          paragraph.get(0).text() mustBe paragraphContent
-        }
-      }
+    val exclusionSelector = ":not(:has(a.hmrc-report-technical-issue)):not(:has(a))"
+    mustShowElementsWithContent(document, "p", exclusionSelector, content.size, content, "paragraphs")
   }
 
   def testMustShowCorrectBulletPointsWithCorrectContent(
       document: Document,
-      bulletCount: Int,
       content: List[String]
   )(using
       pos: Position
   ): Unit = {
-    s"must have $bulletCount bulletPoints" in {
-      val p = document.getMainContent.getElementsByTag("li")
-      p.size() mustBe bulletCount
-    }
-    for bulletContent <- content do
-      s"must have bulletPoints at with content: '$bulletContent'and" in {
-
-        val bullet = document.getMainContent.select(s"li:containsOwn($bulletContent)")
-        withClue(
-          s"bulletPoint with content '$bulletContent' not found\n"
-        ) {
-          bullet.size() mustBe 1
-          bullet.get(0).text() mustBe bulletContent
-        }
-      }
+    mustShowElementsWithContent(document, "li", "", content.size, content, "bullets")
   }
 
   def testMustShowCorrectLinksAndCorrectContent(
       document: Document,
-      linkCount: Int,
       content: List[String]
   )(using
       pos: Position
   ): Unit = {
-    s"must have the correct number of bulletPoints " in {
-      val p = document.getMainContent.getElementsByTag("a")
-      p.size() mustBe linkCount
-    }
-    for linkContent <- content do
-      s"must have links with content: '$linkContent'" in {
-
-        val bullet = document.getMainContent.select(s"a:containsOwn($linkContent)")
-        withClue(
-          s"link with content '$linkContent' not found\n"
-        ) {
-          bullet.size() mustBe 1
-          bullet.get(0).text() mustBe linkContent
-        }
-      }
+    val selectExclude = ":not(a.hmrc-report-technical-issue)"
+    mustShowElementsWithContent(document, "a", selectExclude, content.size, content, "links")
   }
 
   def testMustShowCorrectHintsWithCorrectContent(
       document: Document,
-      hintCount: Int,
       content: List[String]
   )(using pos: Position): Unit = {
-    s"must have the correct number of hints " in {
-      val hints = document.getMainContent.select("div.govuk-hint")
-      hints.size() mustBe hintCount
-    }
-    for elementContent <- content do
-      s"must have hints with content: '$elementContent'and" in {
-        val elements = document.getMainContent.select(s"div.govuk-hint:containsOwn($elementContent)")
-        withClue(
-          s"Hints with content '$elementContent' not found\n"
-        ) {
-          elements.size() mustBe 1
-          elements.get(0).text() mustBe elementContent
-        }
-      }
+    val selectExclude = ""
+    mustShowElementsWithContent(document, "div.govuk-hint", selectExclude, content.size, content, "hints")
   }
 
   def testMustShowCorrectCaptionsWithCorrectContent(
@@ -256,42 +189,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       captionCount: Int,
       content: List[String]
   )(using pos: Position): Unit = {
-    s"must have the correct number of Captions" in {
-      val captions = document.getMainContent.select("span.govuk-caption-m")
-      captions.size() mustBe captionCount
-    }
-    for elementContent <- content do
-      s"must have Captions with content: '$elementContent' " in {
-        val elements = document.getMainContent.select(s"span.govuk-caption-m:containsOwn($elementContent)")
-        withClue(
-          s"Captions with content '$elementContent' not found\n"
-        ) {
-          elements.size() mustBe 1
-          elements.get(0).text() mustBe elementContent
-        }
-      }
-  }
-
-  def testMustShowCorrectTaskLinksWithCorrectContent(
-      document: Document,
-      linkCount: Int,
-      content: List[String]
-  )(using pos: Position): Unit = {
-    val classTag = "govuk-link govuk-task-list__link"
-    s"must have the correct number of Captions" in {
-      val links = document.getMainContent.getElementsByClass(classTag)
-      links.size() mustBe linkCount
-    }
-    for elementContent <- content do
-      s"must have task links with content: '$elementContent' " in {
-        val elements = document.getMainContent.getElementsByClass(classTag)
-        withClue(
-          s"tasklinks with content '$elementContent' not found\n"
-        ) {
-          elements.size() mustBe 1
-          elements.get(0).text() mustBe elementContent
-        }
-      }
+    val selectExclude = ""
+    mustShowElementsWithContent(document, "span.govuk-caption-m", selectExclude, content.size, content, "captions")
   }
 
   def testMustShowCorrectInputsWithCorrectDefaultValues(

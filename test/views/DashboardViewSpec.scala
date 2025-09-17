@@ -31,7 +31,7 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
       s"must generate a view for $stage stage" - {
         val doc = Jsoup.parse(SUT(stage).toString)
         testMustHaveCorrectPageHeading(doc, pageHeading)
-        testMustShowCorrectParagraphsWithCorrectContent(doc, paragraphs.size + 1, paragraphs)
+        testMustShowCorrectParagraphsWithCorrectContent(doc, paragraphs)
         testMustShowIsThisPageNotWorkingProperlyLink(doc)
 
         val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")
