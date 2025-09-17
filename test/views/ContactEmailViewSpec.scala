@@ -42,11 +42,11 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
         testMustShowCorrectInputsWithCorrectDefaultValues(doc, totalInputCount, List(inputTestValue))
         contactType match {
           case First =>
-            testMustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType1Caption)
+            testMustShowCorrectCaptionsWithCorrectContent(doc, contactType1Caption)
           case Second =>
-            testMustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType2Caption)
+            testMustShowCorrectCaptionsWithCorrectContent(doc, contactType2Caption)
           case Third =>
-            testMustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType3Caption)
+            testMustShowCorrectCaptionsWithCorrectContent(doc, contactType3Caption)
         }
       }
     }
@@ -62,7 +62,6 @@ object ContactEmailViewSpec {
   val contactType1Caption: List[String] = List("First contact details")
   val contactType2Caption: List[String] = List("Second contact details")
   val contactType3Caption: List[String] = List("Third contact details")
-  val captionCountPerPage               = 1
   val inputTestValue                    = "test Input Value"
   val totalInputCount                   = 1
   val submitButtonContent               = "Continue"

@@ -116,16 +116,18 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       elementType: String,
       contentExtractor: Element => String = _.text()
   )(using pos: Position): Unit = {
+
+    val combinedSelector = selector + selectorExclusion
     s"must have $expectedCount of $elementType" in {
 
-      val elements = document.getMainContent.select(selector + selectorExclusion)
+      val elements = document.getMainContent.select(combinedSelector)
       withClue(s"Expected $expectedCount $elementType but found ${elements.size()}\n") {
         elements.size() mustBe expectedCount
       }
     }
     for (textContent, index) <- expectedContent.zipWithIndex do {
       s"must have a $elementType with content '$textContent' (check ${index + 1})" in {
-        val elements = document.getMainContent.select(s"$selector:containsOwn($textContent)")
+        val elements = document.getMainContent.select(s"$combinedSelector:containsOwn($textContent)")
         withClue(s"$elementType with content '$textContent' not found\n") {
           val matchingElements = elements.iterator().asScala.filter(el => contentExtractor(el) == textContent)
           matchingElements.nonEmpty mustBe true
@@ -180,17 +182,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       document: Document,
       content: List[String]
   )(using pos: Position): Unit = {
-    val selectExclude = ""
-    mustShowElementsWithContent(document, "div.govuk-hint", selectExclude, content.size, content, "hints")
+    mustShowElementsWithContent(document, "div.govuk-hint", "", content.size, content, "hints")
   }
 
   def testMustShowCorrectCaptionsWithCorrectContent(
       document: Document,
-      captionCount: Int,
       content: List[String]
   )(using pos: Position): Unit = {
-    val selectExclude = ""
-    mustShowElementsWithContent(document, "span.govuk-caption-m", selectExclude, content.size, content, "captions")
+    mustShowElementsWithContent(document, "span.govuk-caption-m", "", content.size, content, "captions")
   }
 
   def testMustShowCorrectInputsWithCorrectDefaultValues(
