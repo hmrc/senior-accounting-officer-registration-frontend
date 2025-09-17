@@ -58,15 +58,8 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         link3.text() mustBe "submit a notification and certificate."
       }
 
-      testMustShowParagraphsWithContent(
-        doc,
-        paragrapsList
-      )
-      testMustShowParagraphsWithSubstring(
-        doc,
-        1,
-        "You can now log into your Senior Accounting Officer notification and certificate service account to "
-      )
+      testMustShowParagraphsWithContent(doc, paragrapsList)
+      testMustShowParagraphWithSubstring(doc, paragraphSubstring)
       testMustShowLinksAndContent(doc, linksContent)
       testMustShowBackLink(doc)
       testMustShowIsThisPageNotWorkingProperlyLink(doc)
@@ -80,6 +73,9 @@ object RegistrationCompleteViewSpec {
     "We have sent a confirmation email with your reference ID to al the contact you gave during registration.",
     "If you need to keep a record of your registration"
   )
+  val paragraphSubstring =
+    "You can now log into your Senior Accounting Officer notification and certificate service account to "
+
   val linksContent: List[String] = List("Print the page", "Download as PDF", "submit a notification and certificate.")
 
 }

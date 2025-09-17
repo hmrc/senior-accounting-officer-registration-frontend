@@ -140,7 +140,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def testMustShowParagraphsWithSubstring(
+  def testMustShowParagraphWithSubstring(
       document: Document,
       content: String
   )(using
@@ -148,7 +148,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
   ): Unit = {
     s"must have ${content.size} paragraphs which contain content: $content " in {
       val p = document.getMainContent.select(s"p:contains($content)")
-      p.size() mustBe content.size
+      p.size() mustBe 1
     }
   }
 
