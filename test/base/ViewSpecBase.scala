@@ -24,6 +24,7 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
+
 import scala.jdk.CollectionConverters.*
 import scala.reflect.ClassTag
 
@@ -49,7 +50,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
   def testMustHaveCorrectPageHeading(document: Document, h1: String)(using pos: Position): Unit =
     val actualH1 = document.getMainContent.getElementsByTag("h1")
-    s"must generate a view with the correct page heading $actualH1" in {
+    s"must generate a view with the correct page heading" in {
       withClue("the page must contain only a single <h1>\n") {
         actualH1.size() mustBe 1
       }
@@ -107,14 +108,16 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def mustShowElementsWithContent(
+  private def mustShowElementsWithContent(
       document: Document,
       selector: String,
       selectorExclusion: String,
       expectedCount: Int,
       expectedContent: List[String],
       elementType: String,
-      contentExtractor: Element => String = _.text()
+      contentExtractor: Element => String = _.text(),
+      contentsSelectorBuilder: (String, String) => String = (baseSelector, content) =>
+        s"$baseSelector:containsOwn($content)"
   )(using pos: Position): Unit = {
 
     val combinedSelector = selector + selectorExclusion
@@ -127,7 +130,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
     for (textContent, index) <- expectedContent.zipWithIndex do {
       s"must have a $elementType with content '$textContent' (check ${index + 1})" in {
-        val elements = document.getMainContent.select(s"$combinedSelector:containsOwn($textContent)")
+        val finalSelector = contentsSelectorBuilder(combinedSelector, textContent)
+        val elements      = document.getMainContent.select(finalSelector)
         withClue(s"$elementType with content '$textContent' not found\n") {
           val matchingElements = elements.iterator().asScala.filter(el => contentExtractor(el) == textContent)
           matchingElements.nonEmpty mustBe true
@@ -136,20 +140,19 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def testMustShowParagraphsContainingContent(
+  def testMustShowParagraphsWithSubstring(
       document: Document,
-      paragraphsCount: Int,
       content: String
   )(using
       pos: Position
   ): Unit = {
-    s"must have $paragraphsCount paragraphs which contain content: $content " in {
+    s"must have ${content.size} paragraphs which contain content: $content " in {
       val p = document.getMainContent.select(s"p:contains($content)")
-      p.size() mustBe paragraphsCount
+      p.size() mustBe content.size
     }
   }
 
-  def testMustShowCorrectParagraphsWithCorrectContent(
+  def testMustShowParagraphsWithContent(
       document: Document,
       content: List[String]
   )(using
@@ -159,7 +162,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     mustShowElementsWithContent(document, "p", exclusionSelector, content.size, content, "paragraphs")
   }
 
-  def testMustShowCorrectBulletPointsWithCorrectContent(
+  def testMustShowBulletPointsWithContent(
       document: Document,
       content: List[String]
   )(using
@@ -168,7 +171,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     mustShowElementsWithContent(document, "li", "", content.size, content, "bullets")
   }
 
-  def testMustShowCorrectLinksAndCorrectContent(
+  def testMustShowLinksAndContent(
       document: Document,
       content: List[String]
   )(using
@@ -178,39 +181,35 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     mustShowElementsWithContent(document, "a", selectExclude, content.size, content, "links")
   }
 
-  def testMustShowCorrectHintsWithCorrectContent(
+  def testMustShowHintsWithContent(
       document: Document,
       content: List[String]
   )(using pos: Position): Unit = {
     mustShowElementsWithContent(document, "div.govuk-hint", "", content.size, content, "hints")
   }
 
-  def testMustShowCorrectCaptionsWithCorrectContent(
+  def testMustShowCaptionsWithContent(
       document: Document,
       content: List[String]
   )(using pos: Position): Unit = {
     mustShowElementsWithContent(document, "span.govuk-caption-m", "", content.size, content, "captions")
   }
 
-  def testMustShowCorrectInputsWithCorrectDefaultValues(
+  def testMustShowtInputsWithDefaultValues(
       document: Document,
       elementCount: Int,
       content: List[String]
   )(using pos: Position): Unit = {
-    s"must have the correct number of inputs " in {
-      val elements = document.getMainContent.select("input")
-      elements.size() mustBe elementCount
-    }
-    for valueContent <- content do
-      s"must have input with value: '$valueContent' " in {
-        val inputs = document.getMainContent.select(s"input[value*=$valueContent]")
-        withClue(
-          s"Inputs with value '$valueContent' not found\n"
-        ) {
-          inputs.size() mustBe 1
-          inputs.get(0).`val`() mustBe valueContent
-        }
-      }
+    mustShowElementsWithContent(
+      document,
+      "input",
+      "",
+      content.size,
+      content,
+      "inputs",
+      _.`val`(),
+      contentsSelectorBuilder = (baseSelector, value) => s"$baseSelector[value='$value']"
+    )
   }
 
   def testMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {

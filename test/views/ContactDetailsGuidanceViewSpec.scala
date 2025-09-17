@@ -26,8 +26,8 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
   "ContactDetailsGuidanceView" - {
     val doc = Jsoup.parse(SUT().toString)
     testMustHaveCorrectPageHeading(doc, pageHeading)
-    testMustShowCorrectParagraphsWithCorrectContent(doc, paragraphsContent)
-    testMustShowCorrectBulletPointsWithCorrectContent(doc, bulletPointsContent)
+    testMustShowParagraphsWithContent(doc, paragraphsContent)
+    testMustShowBulletPointsWithContent(doc, bulletPointsContent)
     testMustHaveSubmitButton(doc, submitButtonContent)
     testMustShowBackLink(doc)
     testMustShowIsThisPageNotWorkingProperlyLink(doc)

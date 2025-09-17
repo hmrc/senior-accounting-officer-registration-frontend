@@ -36,18 +36,18 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
         val doc =
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
         testMustHaveCorrectPageHeading(doc, pageHeading)
-        testMustShowCorrectHintsWithCorrectContent(doc, List(hintContent))
-        testMustShowCorrectInputsWithCorrectDefaultValues(doc, totalInputCount, List(inputTestValue))
+        testMustShowHintsWithContent(doc, List(hintContent))
+        testMustShowtInputsWithDefaultValues(doc, totalInputCount, List(inputTestValue))
         testMustHaveSubmitButton(doc, submitButtonContent)
         testMustShowBackLink(doc)
         testMustShowIsThisPageNotWorkingProperlyLink(doc)
         contactType match {
           case First =>
-            testMustShowCorrectCaptionsWithCorrectContent(doc, contactType1Caption)
+            testMustShowCaptionsWithContent(doc, contactType1Caption)
           case Second =>
-            testMustShowCorrectCaptionsWithCorrectContent(doc, contactType2Caption)
+            testMustShowCaptionsWithContent(doc, contactType2Caption)
           case Third =>
-            testMustShowCorrectCaptionsWithCorrectContent(doc, contactType3Caption)
+            testMustShowCaptionsWithContent(doc, contactType3Caption)
         }
       }
     }
