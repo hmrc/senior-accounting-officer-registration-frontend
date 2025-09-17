@@ -19,6 +19,7 @@ package base
 import base.ViewSpecBase.*
 import org.jsoup.nodes.{Document, Element}
 import org.scalactic.source.Position
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.api.test.FakeRequest
@@ -27,7 +28,8 @@ import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
 import scala.reflect.ClassTag
 
 class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlFormat.Appendable]]: ClassTag]
-    extends SpecBase {
+    extends SpecBase
+    with GuiceOneAppPerSuite {
   def SUT: T = app.injector.instanceOf[T]
 
   given request: Request[?] = FakeRequest()
