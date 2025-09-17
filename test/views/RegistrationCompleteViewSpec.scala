@@ -58,35 +58,6 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         link3.text() mustBe "submit a notification and certificate."
       }
 
-//      "with the correct paragraphs" in {
-//
-//        val mainContent = doc.getElementById("main-content")
-//
-//        val paragraphs = mainContent.getElementsByTag("p")
-//        paragraphs.size() mustBe 5
-//        List.from(paragraphs.iterator().asScala).foreach(p => p.attr("class") mustBe "govuk-body")
-//
-//        paragraphs
-//          .get(0)
-//          .text() mustBe
-//          "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT)."
-//        paragraphs
-//          .get(1)
-//          .text() mustBe "We have sent a confirmation email with your reference ID to al the contact you gave during registration."
-//        paragraphs
-//          .get(2)
-//          .text() mustBe "If you need to keep a record of your registration"
-//        paragraphs
-//          .get(3)
-//          .text() must include(
-//          "You can now log into your Senior Accounting Officer notification and certificate service account to"
-//        )
-//        paragraphs
-//          .get(4)
-//          .text() mustBe "Is this page not working properly? (opens in new tab)"
-//
-//      }
-      println(doc.getMainContent)
       mustShowCorrectParagraphsWithCorrectContent(
         doc,
         5,

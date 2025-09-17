@@ -30,7 +30,6 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
     DashboardStage.values.foreach { stage =>
       s"must generate a view for $stage stage" - {
         val doc = Jsoup.parse(SUT(stage).toString)
-        // val mainContent = doc.getMainContent
         mustHaveCorrectPageHeading(doc, pageHeading)
         mustShowCorrectParagraphsWithCorrectContent(doc, paragraphs.size + 1, paragraphs)
         mustShowIsThisPageNotWorkingProperlyLink(doc)

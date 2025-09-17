@@ -38,7 +38,6 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
         val userAnswers = emptyUserAnswers
           .updateContact(ContactType.First, "name", "role", "email", "phone")
         val result = SUT.getContactInfos(userAnswers)
-        println(result)
         result mustBe List(ContactInfo("name", "role", "email", "phone"))
       }
     }
