@@ -37,7 +37,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
     "must generate a view" - {
       val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
-      mustHaveCorrectPageHeading(doc, "Registration Complete")
+      testMustHaveCorrectPageHeading(doc, "Registration Complete")
 
       "with the correct heading panel text" in {
         val mainContent = doc.getElementById("main-content")
@@ -58,7 +58,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         link3.text() mustBe "submit a notification and certificate."
       }
 
-      mustShowCorrectParagraphsWithCorrectContent(
+      testMustShowCorrectParagraphsWithCorrectContent(
         doc,
         5,
         List(
@@ -67,14 +67,14 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           "If you need to keep a record of your registration"
         )
       )
-      mustShowParagraphsWithContainedContent(
+      mustShowParagraphsContainingContent(
         doc,
         1,
         "You can now log into your Senior Accounting Officer notification and certificate service account to "
       )
-      mustShowCorrectLinksAndCorrectContent(doc, 4, List("Print the page", "Download as PDF"))
-      mustShowABackLink(doc)
-      mustShowIsThisPageNotWorkingProperlyLink(doc)
+      testMustShowCorrectLinksAndCorrectContent(doc, 4, List("Print the page", "Download as PDF"))
+      testMustShowBackLink(doc)
+      testMustShowIsThisPageNotWorkingProperlyLink(doc)
     }
   }
 }

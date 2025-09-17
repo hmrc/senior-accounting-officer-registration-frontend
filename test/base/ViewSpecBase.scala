@@ -33,30 +33,30 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
   def SUT: T = app.injector.instanceOf[T]
 
   given request: Request[?] = FakeRequest()
-
-  given Messages = app.injector.instanceOf[MessagesApi].preferred(request)
+  given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
 
   extension (doc: Document) {
     def getMainContent: Element = doc.getElementById("main-content")
   }
 
-  def mustHaveCorrectPageTitle(document: Document, title: String)(using
+  def testMustHaveCorrectPageTitle(document: Document, title: String)(using
       pos: Position
   ): Unit =
-    s"must generate a view with the correct title " in {
-      document.title mustBe s"$title - $expectedServiceName - site.govuk"
+    val expectedTitle = s"$title - $expectedServiceName - site.govuk"
+    s"must generate a view with the correct title: $expectedTitle" in {
+      document.title mustBe expectedTitle
     }
 
-  def mustHaveCorrectPageHeading(document: Document, h1: String)(using pos: Position): Unit =
-    s"must generate a view with the correct page heading " in {
-      val actualH1 = document.getMainContent.getElementsByTag("h1")
+  def testMustHaveCorrectPageHeading(document: Document, h1: String)(using pos: Position): Unit =
+    val actualH1 = document.getMainContent.getElementsByTag("h1")
+    s"must generate a view with the correct page heading $actualH1" in {
       withClue("the page must contain only a single <h1>\n") {
         actualH1.size() mustBe 1
       }
       actualH1.get(0).text() mustBe h1
     }
 
-  def mustShowIsThisPageNotWorkingProperlyLink(document: Document)(using
+  def testMustShowIsThisPageNotWorkingProperlyLink(document: Document)(using
       pos: Position
   ): Unit =
     s"must generate a view with 'Is this page not working properly? (opens in new tab)' " in {
@@ -64,14 +64,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       withClue(
         "help link not found, both contact-frontend.host and contact-frontend.serviceId must be set in the configs\n"
       ) {
-        helpLink.size() mustBe 1
         helpLink.text() mustBe "Is this page not working properly? (opens in new tab)"
+        helpLink.size() mustBe 1
       }
 
       java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
     }
 
-  def mustHaveSubmitButton(document: Document, btnContent: String)(using
+  def testMustHaveSubmitButton(document: Document, btnContent: String)(using
       pos: Position
   ): Unit =
     s"must have a button with text '$btnContent' " in {
@@ -79,12 +79,12 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       withClue(
         s"Submit Button with text $btnContent not found\n"
       ) {
-        button.size() mustBe 1
         button.text() mustBe btnContent
+        button.size() mustBe 1
       }
     }
 
-  def mustShowABackLink(document: Document)(using pos: Position): Unit =
+  def testMustShowBackLink(document: Document)(using pos: Position): Unit =
     s"must have a backlink " in {
       val backLink = document.getElementsByClass("govuk-back-link")
       withClue(
@@ -94,7 +94,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-  def mustShowHeading(document: Document, headerTag: "h2" | "h3", content: String)(using
+  def testMustShowHeading_h2_or_h3(document: Document, headerTag: "h2" | "h3", content: String)(using
       pos: Position
   ): Unit = {
     s"must have a heading of type $headerTag and with content: $content " in {
@@ -107,32 +107,71 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def mustShowParagraphsWithContainedContent(
+  def testMustShowElements(document: Document, selectorString: String, expectedCount: Int, description: String)(using
+      pos: Position
+  ): Unit = {
+    s"must have the correct number of $description ($expectedCount)" in {
+      val elements = document.getMainContent.select(selectorString)
+      withClue(s"Expected $expectedCount $description but not found ${elements.size()}\n") {
+        elements.size() mustBe expectedCount
+      }
+    }
+  }
+
+  def mustShowElementsWithContent(
+      document: Document,
+      selectorString: String,
+      expectedContent: List[String],
+      description: String
+  )(using pos: Position): Unit = {
+    for content <- expectedContent do
+      s"must have the $description with content '$expectedContent''" in {
+        val elements = document.getMainContent.select(s"$selectorString:containsOwn($content)")
+        withClue(s"Expected $description with content '$content' not found\n") {
+          elements.get(0).text() mustBe content
+          elements.size() mustBe 1
+        }
+      }
+  }
+
+  def mustShowParagraphsContainingContent(
       document: Document,
       paragraphsCount: Int,
       content: String
   )(using
       pos: Position
   ): Unit = {
-    s"must have the correct number of paragraphs which contain content: $content " in {
+    s"must have $paragraphsCount paragraphs which contain content: $content " in {
       val p = document.getMainContent.select(s"p:contains($content)")
       p.size() mustBe paragraphsCount
     }
   }
 
-  def mustShowCorrectParagraphsWithCorrectContent(
+  def testMustShowParagraphsWithContent(
+      document: Document,
+      expectedCount: Int,
+      content: List[String]
+  )(using
+      pos: Position
+  ): Unit = {
+
+    testMustShowElements(document, "p", expectedCount, "paragraphs")
+    mustShowElementsWithContent(document, "p", content, "paragraphs")
+  }
+
+  def testMustShowCorrectParagraphsWithCorrectContent(
       document: Document,
       paragraphsCount: Int,
       content: List[String]
   )(using
       pos: Position
   ): Unit = {
-    s"must have the correct number of paragraphs " in {
+    s"must have total $paragraphsCount paragraphs" in {
       val p = document.getMainContent.getElementsByTag("p")
       p.size() mustBe paragraphsCount
     }
     for paragraphContent <- content do
-      s"must have paragraph at with content: '$paragraphContent' " in {
+      s"must have a paragraph with content: '$paragraphContent'" in {
         val paragraph = document.getMainContent.select(s"p:containsOwn($paragraphContent)")
         withClue(
           s"paragraph with content '$paragraphContent' not found\n"
@@ -143,14 +182,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
   }
 
-  def mustShowCorrectBulletPointsWithCorrectContent(
+  def testMustShowCorrectBulletPointsWithCorrectContent(
       document: Document,
       bulletCount: Int,
       content: List[String]
   )(using
       pos: Position
   ): Unit = {
-    s"must have the correct number of bulletPoints " in {
+    s"must have $bulletCount bulletPoints" in {
       val p = document.getMainContent.getElementsByTag("li")
       p.size() mustBe bulletCount
     }
@@ -167,7 +206,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
   }
 
-  def mustShowCorrectLinksAndCorrectContent(
+  def testMustShowCorrectLinksAndCorrectContent(
       document: Document,
       linkCount: Int,
       content: List[String]
@@ -191,7 +230,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
   }
 
-  def mustShowCorrectHintsWithCorrectContent(
+  def testMustShowCorrectHintsWithCorrectContent(
       document: Document,
       hintCount: Int,
       content: List[String]
@@ -212,7 +251,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
   }
 
-  def mustShowCorrectCaptionsWithCorrectContent(
+  def testMustShowCorrectCaptionsWithCorrectContent(
       document: Document,
       captionCount: Int,
       content: List[String]
@@ -233,7 +272,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
   }
 
-  def mustShowCorrectTaskLinksWithCorrectContent(
+  def testMustShowCorrectTaskLinksWithCorrectContent(
       document: Document,
       linkCount: Int,
       content: List[String]
@@ -255,7 +294,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
   }
 
-  def mustShowCorrectInputsWithCorrectDefaultValues(
+  def testMustShowCorrectInputsWithCorrectDefaultValues(
       document: Document,
       elementCount: Int,
       content: List[String]
@@ -276,7 +315,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
   }
 
-  def mustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {
+  def testMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {
     s"must not show the element of class " in {
       val elements = document.getMainContent.getElementsByClass(classes)
       elements.size() mustBe 0

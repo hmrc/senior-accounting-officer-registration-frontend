@@ -34,10 +34,10 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         val doc = Jsoup.parse(SUT(contacts).toString)
 
         s"When $scenario must generate a view " - {
-          mustHaveCorrectPageHeading(doc, pageHeading)
-          mustHaveSubmitButton(doc, submitButtonContent)
-          mustShowABackLink(doc)
-          mustShowIsThisPageNotWorkingProperlyLink(doc)
+          testMustHaveCorrectPageHeading(doc, pageHeading)
+          testMustHaveSubmitButton(doc, submitButtonContent)
+          testMustShowBackLink(doc)
+          testMustShowIsThisPageNotWorkingProperlyLink(doc)
         }
       }
     )
@@ -47,7 +47,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val doc = Jsoup.parse(SUT(minContacts).toString)
 
       "must show the heading and " - {
-        mustShowHeading(doc, "h2", "First contact details")
+        testMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
       }
 
       "must have correct content in table" in {
@@ -125,9 +125,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val doc = Jsoup.parse(SUT(maxContacts).toString)
 
       "must show heading and " - {
-        mustShowHeading(doc, "h2", "First contact details")
-        mustShowHeading(doc, "h2", "Second contact details")
-        mustShowHeading(doc, "h2", "Third contact details")
+        testMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
+        testMustShowHeading_h2_or_h3(doc, "h2", "Second contact details")
+        testMustShowHeading_h2_or_h3(doc, "h2", "Third contact details")
       }
 
       "must have correct content in the tables" - {

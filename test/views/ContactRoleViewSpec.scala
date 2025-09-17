@@ -33,20 +33,20 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
       s"must generate a view for $contactType contact" - {
         val doc =
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
-        mustHaveCorrectPageHeading(doc, pageHeading)
-        mustShowCorrectHintsWithCorrectContent(doc, hintContent.size, hintContent)
-        mustShowCorrectInputsWithCorrectDefaultValues(doc, totalInputCount, List(inputTestValue))
+        testMustHaveCorrectPageHeading(doc, pageHeading)
+        testMustShowCorrectHintsWithCorrectContent(doc, hintContent.size, hintContent)
+        testMustShowCorrectInputsWithCorrectDefaultValues(doc, totalInputCount, List(inputTestValue))
         contactType match {
           case First =>
-            mustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType1Caption)
+            testMustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType1Caption)
           case Second =>
-            mustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType2Caption)
+            testMustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType2Caption)
           case Third =>
-            mustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType3Caption)
+            testMustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType3Caption)
         }
-        mustShowABackLink(doc)
-        mustShowIsThisPageNotWorkingProperlyLink(doc)
-        mustHaveSubmitButton(doc, submitButtonContent)
+        testMustShowBackLink(doc)
+        testMustShowIsThisPageNotWorkingProperlyLink(doc)
+        testMustHaveSubmitButton(doc, submitButtonContent)
       }
     }
   }
