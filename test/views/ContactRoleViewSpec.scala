@@ -21,10 +21,6 @@ import forms.ContactRoleFormProvider
 import models.ContactType.*
 import models.{ContactType, NormalMode}
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
-import play.api.test.FakeRequest
 import views.ContactRoleViewSpec.*
 import views.html.ContactRoleView
 
@@ -64,7 +60,7 @@ object ContactRoleViewSpec {
   val contactType2Caption: List[String] = List("Second contact details")
   val contactType3Caption: List[String] = List("Third contact details")
   val captionCountPerPage               = 1
-  val hintContent                       = List("For example, ‘Chief Financial Officer’.")
+  val hintContent: List[String]         = List("For example, ‘Chief Financial Officer’.")
   val submitButtonContent               = "Continue"
 
 }

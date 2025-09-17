@@ -19,13 +19,7 @@ package views
 import base.ViewSpecBase
 import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
-import play.api.test.FakeRequest
 import views.html.RegistrationCompleteView
-
-import scala.jdk.CollectionConverters.*
 
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 
