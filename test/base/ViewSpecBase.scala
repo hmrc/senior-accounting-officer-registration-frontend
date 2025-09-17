@@ -16,13 +16,18 @@
 
 package base
 
+import controllers.actions.*
 import base.ViewSpecBase.*
+import models.UserAnswers
 import org.jsoup.nodes.{Document, Element}
 import org.scalactic.source.Position
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import play.api.test.FakeRequest
+import play.api.inject.bind
 import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
 
 import scala.jdk.CollectionConverters.*
@@ -35,6 +40,16 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
   given request: Request[?] = FakeRequest()
   given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
+
+  protected def fakeApplication(userAnswers: Option[UserAnswers] = None): Application =
+    new GuiceApplicationBuilder()
+      .overrides(
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[ApiAuthenticatedIdentifierAction].to[FakeIdentifierAction],
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+      )
+      .build()
 
   extension (doc: Document) {
     def getMainContent: Element = doc.getElementById("main-content")

@@ -56,13 +56,4 @@ trait SpecBase
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
 
-  protected def fakeApplication(userAnswers: Option[UserAnswers] = None): Application =
-    new GuiceApplicationBuilder()
-      .overrides(
-        bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[ApiAuthenticatedIdentifierAction].to[FakeIdentifierAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
-      )
-      .build()
 }
