@@ -21,7 +21,7 @@ import models.UserAnswers
 import org.mockito.Mockito.when
 import org.mongodb.scala.model.Filters
 import org.scalactic.source.Position
-import org.scalatest.OptionValues
+import org.scalatest.{Ignore, OptionValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -147,6 +147,7 @@ class SessionRepositoryISpec
 
     mustPreserveMdc(repository.keepAlive(userAnswers.id))
   }
+
 
   private def mustPreserveMdc[A](f: => Future[A])(using pos: Position): Unit =
     "must preserve MDC" in {

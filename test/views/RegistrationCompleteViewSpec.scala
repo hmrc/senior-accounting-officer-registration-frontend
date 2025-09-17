@@ -16,7 +16,7 @@
 
 package views
 
-import base.SpecBase
+import base.ViewSpecBase
 import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -29,12 +29,9 @@ import scala.jdk.CollectionConverters.*
 
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 
-class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
+class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView] {
 
-  val SUT: RegistrationCompleteView = app.injector.instanceOf[RegistrationCompleteView]
-  given request: Request[?]         = FakeRequest()
-  given Messages                    = app.injector.instanceOf[MessagesApi].preferred(request)
-  private val testDateTime          = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
+  private val testDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
 
   private val registrationCompleteDetails = RegistrationCompleteDetails(
     companyName = "Test Corp Ltd",
@@ -46,12 +43,7 @@ class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
     "must generate a view" - {
       val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
-      "with the correct heading" in {
-        val mainContent = doc.getElementById("main-content")
-        val h1          = mainContent.getElementsByTag("h1")
-        h1.size() mustBe 1
-        h1.get(0).text() mustBe "Registration Complete"
-      }
+      mustHaveCorrectPageHeading(doc, "Registration Complete")
 
       "with the correct heading panel text" in {
         val mainContent = doc.getElementById("main-content")
@@ -72,61 +64,54 @@ class RegistrationCompleteViewSpec extends SpecBase with GuiceOneAppPerSuite {
         link3.text() mustBe "submit a notification and certificate."
       }
 
-      "with the correct paragraphs" in {
-
-        val mainContent = doc.getElementById("main-content")
-
-        val paragraphs = mainContent.getElementsByTag("p")
-        paragraphs.size() mustBe 5
-        List.from(paragraphs.iterator().asScala).foreach(p => p.attr("class") mustBe "govuk-body")
-
-        paragraphs
-          .get(0)
-          .text() mustBe
-          "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT)."
-        paragraphs
-          .get(1)
-          .text() mustBe "We have sent a confirmation email with your reference ID to al the contact you gave during registration."
-        paragraphs
-          .get(2)
-          .text() mustBe "If you need to keep a record of your registration"
-        paragraphs
-          .get(3)
-          .text() must include(
-          "You can now log into your Senior Accounting Officer notification and certificate service account to"
+//      "with the correct paragraphs" in {
+//
+//        val mainContent = doc.getElementById("main-content")
+//
+//        val paragraphs = mainContent.getElementsByTag("p")
+//        paragraphs.size() mustBe 5
+//        List.from(paragraphs.iterator().asScala).foreach(p => p.attr("class") mustBe "govuk-body")
+//
+//        paragraphs
+//          .get(0)
+//          .text() mustBe
+//          "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT)."
+//        paragraphs
+//          .get(1)
+//          .text() mustBe "We have sent a confirmation email with your reference ID to al the contact you gave during registration."
+//        paragraphs
+//          .get(2)
+//          .text() mustBe "If you need to keep a record of your registration"
+//        paragraphs
+//          .get(3)
+//          .text() must include(
+//          "You can now log into your Senior Accounting Officer notification and certificate service account to"
+//        )
+//        paragraphs
+//          .get(4)
+//          .text() mustBe "Is this page not working properly? (opens in new tab)"
+//
+//      }
+      println(doc.getMainContent)
+      mustShowCorrectParagraphsWithCorrectContent(
+        doc,
+        5,
+        List(
+          "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
+          "We have sent a confirmation email with your reference ID to al the contact you gave during registration.",
+          "If you need to keep a record of your registration"
         )
-        paragraphs
-          .get(4)
-          .text() mustBe "Is this page not working properly? (opens in new tab)"
-
-      }
-
-      "with the correct bullet points" in {
-        val mainContent = doc.getElementById("main-content")
-
-        val ul = mainContent.getElementsByTag("ul")
-        ul.size() mustBe 1
-        ul.attr("class") mustBe "govuk-list govuk-list--bullet"
-
-        val li = ul.get(0).getElementsByTag("li")
-        li.size() mustBe 2
-
-        li.get(0)
-          .text() mustBe "Print the page"
-        li.get(1).text() mustBe "Download as PDF"
-      }
-
-      "must show a back link" in {
-        val backLink = doc.getElementsByClass("govuk-back-link")
-        backLink.size() mustBe 1
-      }
-
-      "must show help link" in {
-        val mainContent = doc.getElementById("main-content")
-
-        val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
-        helpLink.size() mustBe 1
-      }
+      )
+      mustShowParagraphsWithContainedContent(
+        doc,
+        1,
+        "You can now log into your Senior Accounting Officer notification and certificate service account to "
+      )
+      mustShowCorrectLinksAndCorrectContent(doc, 4, List("Print the page", "Download as PDF"))
+      mustShowABackLink(doc)
+      mustShowIsThisPageNotWorkingProperlyLink(doc)
     }
   }
 }
+
+object RegistrationCompleteViewSpec {}

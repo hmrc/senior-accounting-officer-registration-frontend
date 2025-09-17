@@ -16,81 +16,31 @@
 
 package views
 
-import base.SpecBase
+import base.ViewSpecBase
 import models.DashboardStage
 import models.DashboardStage.{CompanyDetails, ContactsInfo, Submission}
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
-import play.api.test.FakeRequest
+import views.DashboardViewSpec.*
 import views.html.DashboardView
 
-import scala.jdk.CollectionConverters.*
-
-class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
-
-  val SUT: DashboardView    = app.injector.instanceOf[DashboardView]
-  given request: Request[?] = FakeRequest()
-  given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
+class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
   "DashboardView" - {
 
     DashboardStage.values.foreach { stage =>
       s"must generate a view for $stage stage" - {
         val doc = Jsoup.parse(SUT(stage).toString)
+        // val mainContent = doc.getMainContent
+        mustHaveCorrectPageHeading(doc, pageHeading)
+        mustShowCorrectParagraphsWithCorrectContent(doc, paragraphs.size + 1, paragraphs)
+        mustShowIsThisPageNotWorkingProperlyLink(doc)
 
-        "with the correct heading" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val h1 = mainContent.getElementsByTag("h1")
-          h1.size() mustBe 1
-
-          h1.get(0).text() mustBe "Register your company"
-        }
-
-        "with the correct paragraphs" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val paragraphs = mainContent.getElementsByTag("p")
-          paragraphs.size() mustBe 3
-          List.from(paragraphs.iterator().asScala).foreach(p => p.attr("class") mustBe "govuk-body")
-
-          paragraphs
-            .get(0)
-            .text() mustBe "Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from."
-          paragraphs
-            .get(1)
-            .text() mustBe "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
-
-          paragraphs.get(2).text() mustBe "Is this page not working properly? (opens in new tab)"
-        }
-
-        "with the correct link texts" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val links = mainContent.getElementsByClass("govuk-link govuk-task-list__link")
-
-          stage match {
-            case CompanyDetails =>
-              links.size() mustBe 1
-              links.get(0).text() mustBe "Enter your company details"
-            case ContactsInfo =>
-              links.size() mustBe 1
-              links.get(0).text() mustBe "Enter your contact details"
-            case Submission =>
-              links.size() mustBe 0
-          }
-        }
+        val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")
+        statusTags.size() mustBe 2
+        val companyDetailsTag = statusTags.get(0)
+        val contactsInfoTag   = statusTags.get(1)
 
         "with the correct label texts" in {
-          val mainContent = doc.getElementById("main-content")
-          val statusTags  = mainContent.getElementsByClass("govuk-task-list__status")
-
-          statusTags.size() mustBe 2
-
-          val companyDetailsTag = statusTags.get(0)
-          val contactsInfoTag   = statusTags.get(1)
 
           stage match {
             case CompanyDetails =>
@@ -112,32 +62,23 @@ class DashboardViewSpec extends SpecBase with GuiceOneAppPerSuite {
         }
 
         stage match {
+          case CompanyDetails =>
+            mustNotShowElement(doc, "govuk-button")
+          case ContactsInfo =>
+            mustNotShowElement(doc, "govuk-button")
           case Submission =>
-            "must show a submit button" in {
-              val backLink = doc.getElementById("submit")
-              backLink.text() mustBe "Submit your registration"
-            }
-          case _ =>
-            "must not show a submit button" in {
-              val backLink = doc.getElementById("submit")
-              Option(backLink) mustBe None
-            }
+            mustHaveSubmitButton(doc, "Submit your registration")
+
         }
-
-        "must not show a back link" in {
-          val backLink = doc.getElementsByClass("govuk-back-link")
-          backLink.size() mustBe 0
-        }
-
-        "must show help link" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
-          helpLink.size() mustBe 1
-        }
-
       }
     }
   }
+}
 
+object DashboardViewSpec {
+  val pageHeading              = "Register your company"
+  val paragraphs: List[String] = List(
+    "Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from.",
+    "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
+  )
 }

@@ -16,75 +16,42 @@
 
 package views
 
-import base.SpecBase
+import base.ViewSpecBase
 import models.ContactInfo
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
-import play.api.test.FakeRequest
+import views.ContactCheckYourAnswersViewSpec.*
 import views.html.ContactCheckYourAnswersView
 
-import ContactCheckYourAnswersViewSpec.*
-
-class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite {
-
-  val SUT: ContactCheckYourAnswersView = app.injector.instanceOf[ContactCheckYourAnswersView]
-  given request: Request[?]            = FakeRequest()
-  given Messages                       = app.injector.instanceOf[MessagesApi].preferred(request)
+class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswersView] {
 
   "ContactCheckYourAnswersView" - {
+
+    // TODO check for 1, 2, 3 contacts instead of min and max contacts
     Map("the view has minimum contacts" -> minContacts, "the view has maximum contacts" -> maxContacts).foreach(
-      (key, contacts) => {
-        s"When $key must generate a view" - {
+      (scenario, contacts) => {
 
-          val doc = Jsoup.parse(SUT(contacts).toString)
+        val doc = Jsoup.parse(SUT(contacts).toString)
 
-          "with the correct heading" in {
-            val mainContent = doc.getElementById("main-content")
-
-            val h1 = mainContent.getElementsByTag("h1")
-            h1.size() mustBe 1
-
-            h1.get(0).text() mustBe "Check your answers"
-          }
-
-          "must have a continue button" in {
-            val mainContent = doc.getElementById("main-content")
-
-            mainContent.getElementById("submit").text() mustBe "Save and Continue"
-          }
-
-          "must show a back link" in {
-            val backLink = doc.getElementsByClass("govuk-back-link")
-            backLink.size() mustBe 1
-          }
-
-          "must show help link" in {
-            val mainContent = doc.getElementById("main-content")
-
-            val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
-            helpLink.size() mustBe 1
-          }
+        s"When $scenario must generate a view " - {
+          mustHaveCorrectPageHeading(doc, pageHeading)
+          mustHaveSubmitButton(doc, submitButtonContent)
+          mustShowABackLink(doc)
+          mustShowIsThisPageNotWorkingProperlyLink(doc)
         }
       }
     )
+
     "when the view has minimum contacts" - {
-      val contacts = minContacts
-      val doc      = Jsoup.parse(SUT(contacts).toString)
 
-      "must show the h2" in {
-        val mainContent = doc.getElementById("main-content")
+      val doc = Jsoup.parse(SUT(minContacts).toString)
 
-        val h2 = mainContent.getElementsByTag("h2")
-        h2.size() mustBe 1
-
-        h2.get(0).text() mustBe "First contact details"
+      "must show the heading and " - {
+        mustShowHeading(doc, "h2", "First contact details")
       }
 
       "must have correct content in table" in {
-        val mainContent = doc.getElementById("main-content")
+        val mainContent = doc.getMainContent
         val dl          = mainContent.getElementsByTag("dl")
         dl.size() mustBe 1
         val rows = dl.get(0).select("div.govuk-summary-list__row")
@@ -154,22 +121,18 @@ class ContactCheckYourAnswersViewSpec extends SpecBase with GuiceOneAppPerSuite 
 
     }
     "when the view has maximum contacts" - {
-      val contacts = maxContacts
-      val doc      = Jsoup.parse(SUT(contacts).toString)
-      "must show the h2" in {
-        val mainContent = doc.getElementById("main-content")
 
-        val h2 = mainContent.getElementsByTag("h2")
-        h2.size() mustBe 3
+      val doc = Jsoup.parse(SUT(maxContacts).toString)
 
-        h2.get(0).text() mustBe "First contact details"
-        h2.get(1).text() mustBe "Second contact details"
-        h2.get(2).text() mustBe "Third contact details"
+      "must show heading and " - {
+        mustShowHeading(doc, "h2", "First contact details")
+        mustShowHeading(doc, "h2", "Second contact details")
+        mustShowHeading(doc, "h2", "Third contact details")
       }
 
       "must have correct content in the tables" - {
 
-        val mainContent = doc.getElementById("main-content")
+        val mainContent = doc.getMainContent
         val dl          = mainContent.getElementsByTag("dl")
         "must have 3 tables" in {
           dl.size() mustBe 3
@@ -325,5 +288,7 @@ object ContactCheckYourAnswersViewSpec {
     ContactInfo("name2", "role2", "email2", "phone2"),
     ContactInfo("name3", "role3", "email3", "phone3")
   )
+  val pageHeading         = "Check your answers"
+  val submitButtonContent = "Save and Continue"
 
 }

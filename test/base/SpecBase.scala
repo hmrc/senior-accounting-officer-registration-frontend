@@ -23,6 +23,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.ContactsPage
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
@@ -36,7 +37,8 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience {
+    with IntegrationPatience
+    with GuiceOneAppPerSuite {
 
   val userAnswersId: String                         = "id"
   def emptyUserAnswers: UserAnswers                 = UserAnswers(userAnswersId)
@@ -55,4 +57,14 @@ trait SpecBase
         bind[ApiAuthenticatedIdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
+
+  protected def fakeApplication(userAnswers: Option[UserAnswers] = None): Application =
+    new GuiceApplicationBuilder()
+      .overrides(
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[ApiAuthenticatedIdentifierAction].to[FakeIdentifierAction],
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+      )
+      .build()
 }

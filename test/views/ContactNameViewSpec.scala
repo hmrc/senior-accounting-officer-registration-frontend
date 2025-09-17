@@ -16,88 +16,52 @@
 
 package views
 
-import base.SpecBase
+import base.ViewSpecBase
 import forms.ContactNameFormProvider
 import models.ContactType.*
 import models.{ContactType, NormalMode}
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
-import play.api.test.FakeRequest
+import views.ContactNameViewSpec.*
 import views.html.ContactNameView
 
-class ContactNameViewSpec extends SpecBase with GuiceOneAppPerSuite {
+class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
-  val SUT: ContactNameView                  = app.injector.instanceOf[ContactNameView]
-  given request: Request[?]                 = FakeRequest()
-  given Messages                            = app.injector.instanceOf[MessagesApi].preferred(request)
   val formProvider: ContactNameFormProvider = app.injector.instanceOf[ContactNameFormProvider]
-  val testValue                             = "test input value"
 
   "ContactNameView" - {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
-        val doc = Jsoup.parse(SUT(formProvider().bind(Map("value" -> testValue)), contactType, NormalMode).toString)
-
-        "with the correct heading" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val h1 = mainContent.getElementsByTag("h1")
-          h1.size() mustBe 1
-
-          h1.get(0).text() mustBe "Enter full name"
-        }
-
-        "with the correct caption" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val caption = mainContent.select("span.govuk-caption-m")
-          caption.size() mustBe 1
-
-          caption.get(0).text() mustBe (contactType match {
-            case First  => "First contact details"
-            case Second => "Second contact details"
-            case Third  => "Third contact details"
-          })
-        }
-
-        "with the correct hint" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val hint = mainContent.select("div.govuk-hint")
-          hint.size() mustBe 1
-
-          hint.get(0).text() mustBe "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
-        }
-
-        "set the input value with what is in the form" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val input = mainContent.select("input")
-          input.size() mustBe 1
-
-          input.get(0).`val`() mustBe testValue
-        }
-
-        "must have a continue button" in {
-          val mainContent = doc.getElementById("main-content")
-
-          mainContent.getElementById("submit").text() mustBe "Continue"
-        }
-
-        "must show a back link" in {
-          val backLink = doc.getElementsByClass("govuk-back-link")
-          backLink.size() mustBe 1
-        }
-
-        "must show help link" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
-          helpLink.size() mustBe 1
+        val doc =
+          Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
+        mustHaveCorrectPageHeading(doc, pageHeading)
+        mustShowCorrectHintsWithCorrectContent(doc, 1, hintContent)
+        mustShowCorrectInputsWithCorrectDefaultValues(doc, totalInputCount, List(inputTestValue))
+        mustHaveSubmitButton(doc, submitButtonContent)
+        mustShowABackLink(doc)
+        mustShowIsThisPageNotWorkingProperlyLink(doc)
+        contactType match {
+          case First =>
+            mustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType1Caption)
+          case Second =>
+            mustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType2Caption)
+          case Third =>
+            mustShowCorrectCaptionsWithCorrectContent(doc, captionCountPerPage, contactType3Caption)
         }
       }
     }
   }
+}
+
+object ContactNameViewSpec {
+  val pageHeading                       = "Enter full name"
+  val inputTestValue                    = "test Input Value"
+  val totalInputCount                   = 1
+  val contactType1Caption: List[String] = List("First contact details")
+  val contactType2Caption: List[String] = List("Second contact details")
+  val contactType3Caption: List[String] = List("Third contact details")
+  val captionCountPerPage               = 1
+  val submitButtonContent               = "Continue"
+  val hintContent: List[String]         = List(
+    "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
+  )
 }
