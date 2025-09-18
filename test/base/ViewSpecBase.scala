@@ -76,7 +76,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       pos: Position
   ): Unit =
     s"must have a button with text '$btnContent' " in {
-      val button = document.getMainContent.select(s"button[type=submit], input[type=submit]")
+      val button = document.getMainContent.select("button[type=submit], input[type=submit]")
       withClue(
         s"Submit Button with text $btnContent not found\n"
       ) {
@@ -95,17 +95,13 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-  def createTestMustShowHeading_h2_or_h3(document: Document, headerTag: "h2" | "h3", content: String)(using
-      pos: Position
-  ): Unit = {
-    s"must have a heading of type $headerTag and with content: $content " in {
-      val heading = document.getMainContent.select(s"$headerTag:containsOwn($content)")
-      withClue(
-        s"heading with tag '$headerTag' and text '$content' not found\n"
-      ) {
-        heading.size() mustBe 1
-      }
-    }
+  def createTestMustShowHeading(
+      document: Document,
+      content: List[String],
+      selector: String,
+      description: String
+  )(using pos: Position): Unit = {
+    mustShowElementsWithContent(document, selector, content, description)
   }
 
   private def mustShowElementsWithContent(

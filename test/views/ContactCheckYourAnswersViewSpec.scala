@@ -49,7 +49,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       key match {
         case "the view has one contact" =>
-          createTestMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
+          createTestMustShowHeading(doc, List("First contact details"), "h2", "headings")
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 1
@@ -58,8 +58,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
           }
 
         case "the view has two contacts" =>
-          createTestMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
-          createTestMustShowHeading_h2_or_h3(doc, "h2", "Second contact details")
+          createTestMustShowHeading(doc, List("First contact details", "Second contact details"), "h2", "headings")
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 2
@@ -68,9 +67,12 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
             validateContactDetailsTable(dl, 1, "second", twoContacts.last)
           }
         case "the view has three contacts" =>
-          createTestMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
-          createTestMustShowHeading_h2_or_h3(doc, "h2", "Second contact details")
-          createTestMustShowHeading_h2_or_h3(doc, "h2", "Third contact details")
+          createTestMustShowHeading(
+            doc,
+            List("First contact details", "Second contact details", "Third contact details"),
+            "h2",
+            "headings"
+          )
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 3
