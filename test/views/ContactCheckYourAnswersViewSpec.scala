@@ -49,7 +49,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       key match {
         case "the view has one contact" =>
-          createTestMustShowHeading(doc, List("First contact details"), "h2", "headings")
+          createTestMustShowHeading(doc, headings.take(1), "h2", "headings")
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 1
@@ -58,7 +58,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
           }
 
         case "the view has two contacts" =>
-          createTestMustShowHeading(doc, List("First contact details", "Second contact details"), "h2", "headings")
+          createTestMustShowHeading(doc, headings.take(2), "h2", "headings")
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 2
@@ -69,7 +69,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         case "the view has three contacts" =>
           createTestMustShowHeading(
             doc,
-            List("First contact details", "Second contact details", "Third contact details"),
+            headings,
             "h2",
             "headings"
           )
@@ -174,6 +174,9 @@ object ContactCheckYourAnswersViewSpec {
   val twoContacts: List[ContactInfo]   = oneContact ++ List(ContactInfo("name2", "role2", "email2", "phone2"))
   val threeContacts: List[ContactInfo] = twoContacts ++ List(ContactInfo("name3", "role3", "email3", "phone3"))
 
+  val headings: List[String] = List("First contact details", "Second contact details", "Third contact details")
+
   val pageHeading         = "Check your answers"
   val submitButtonContent = "Save and Continue"
+
 }
