@@ -58,9 +58,9 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         link3.text() mustBe "submit a notification and certificate."
       }
 
-      createTestMustShowParagraphsWithContent(doc, paragrapsList)
+      createTestMustShowParagraphsWithContent(doc, paragrapsList, paragraphsSelector, paragraphsDescription)
       createTestMustShowParagraphWithSubstring(doc, paragraphSubstring)
-      createTestMustShowLinksAndContent(doc, linksContent)
+      createTestMustShowLinksAndContent(doc, linksContent, linksSelector, linksDescription)
       createTestMustShowBackLink(doc)
       createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
     }
@@ -77,5 +77,8 @@ object RegistrationCompleteViewSpec {
     "You can now log into your Senior Accounting Officer notification and certificate service account to "
 
   val linksContent: List[String] = List("Print the page", "Download as PDF", "submit a notification and certificate.")
-
+  val linksSelector              = "a:not(a.hmrc-report-technical-issue)"
+  val linksDescription           = "links"
+  val paragraphsSelector         = "p:not(:has(a.hmrc-report-technical-issue)):not(:has(a))"
+  val paragraphsDescription      = "paragraphs"
 }

@@ -39,16 +39,18 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
         createTestMustHaveSubmitButton(doc, submitButtonContent)
         createTestMustShowBackLink(doc)
         createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-        createTestMustShowHintsWithContent(doc, hintContent)
-        createTestMustShowtInputsWithDefaultValues(doc, List(inputTestValue))
-        contactType match {
-          case First =>
-            createTestMustShowCaptionsWithContent(doc, contactType1Caption)
-          case Second =>
-            createTestMustShowCaptionsWithContent(doc, contactType2Caption)
-          case Third =>
-            createTestMustShowCaptionsWithContent(doc, contactType3Caption)
-        }
+        createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
+        createTestMustShowtInputsWithDefaultValues(doc, List(inputTestValue), inputSelector, inputDescription)
+        createTestMustShowCaptionsWithContent(
+          doc,
+          contactType match {
+            case First  => contactTypeFirstCaption
+            case Second => contactTypeSecondCaption
+            case Third  => contactTypeThirdCaption
+          },
+          captionSelector,
+          captionDescription
+        )
       }
     }
   }
@@ -59,9 +61,15 @@ object ContactEmailViewSpec {
   val hintContent: List[String] = List(
     "We’ll only use this to contact you about the company’s tax accounting arrangements"
   )
-  val contactType1Caption: List[String] = List("First contact details")
-  val contactType2Caption: List[String] = List("Second contact details")
-  val contactType3Caption: List[String] = List("Third contact details")
-  val inputTestValue                    = "test Input Value"
-  val submitButtonContent               = "Continue"
+  val contactTypeFirstCaption: List[String]  = List("First contact details")
+  val contactTypeSecondCaption: List[String] = List("Second contact details")
+  val contactTypeThirdCaption: List[String]  = List("Third contact details")
+  val inputTestValue                         = "test Input Value"
+  val submitButtonContent                    = "Continue"
+  val hintsSelector                          = "div.govuk-hint"
+  val hintsDescription                       = "hints"
+  val captionSelector                        = "span.govuk-caption-m"
+  val captionDescription                     = "captions"
+  val inputSelector                          = "input"
+  val inputDescription                       = "inputs"
 }

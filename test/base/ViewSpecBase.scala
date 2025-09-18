@@ -17,15 +17,10 @@
 package base
 
 import base.ViewSpecBase.*
-import controllers.actions.*
-import models.UserAnswers
 import org.jsoup.nodes.{Document, Element}
 import org.scalactic.source.Position
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
@@ -41,35 +36,25 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
   given request: Request[?] = FakeRequest()
   given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
 
-  protected def fakeApplication(userAnswers: Option[UserAnswers] = None): Application =
-    new GuiceApplicationBuilder()
-      .overrides(
-        bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[ApiAuthenticatedIdentifierAction].to[FakeIdentifierAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
-      )
-      .build()
-
   extension (doc: Document) {
     def getMainContent: Element = doc.getElementById("main-content")
   }
 
-  def createTestMustHaveCorrectPageTitle(document: Document, title: String)(using
+  def createTestMustHaveCorrectPageTitle(document: Document, expectedTitleContent: String)(using
       pos: Position
   ): Unit =
-    val expectedTitle = s"$title - $expectedServiceName - site.govuk"
+    val expectedTitle = s"$expectedTitleContent - $expectedServiceName - site.govuk"
     s"must generate a view with the correct title: $expectedTitle" in {
       document.title mustBe expectedTitle
     }
 
-  def createTestMustHaveCorrectPageHeading(document: Document, h1: String)(using pos: Position): Unit =
+  def createTestMustHaveCorrectPageHeading(document: Document, headingContent: String)(using pos: Position): Unit =
     val actualH1 = document.getMainContent.getElementsByTag("h1")
     s"must generate a view with the correct page heading" in {
       withClue("the page must contain only a single <h1>\n") {
         actualH1.size() mustBe 1
       }
-      actualH1.get(0).text() mustBe h1
+      actualH1.get(0).text() mustBe headingContent
     }
 
   def createTestMustShowIsThisPageNotWorkingProperlyLink(document: Document)(using
@@ -126,28 +111,26 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
   private def mustShowElementsWithContent(
       document: Document,
       selector: String,
-      selectorExclusion: String,
-      expectedCount: Int,
       expectedContent: List[String],
-      elementType: String,
+      description: String,
       contentExtractor: Element => String = _.text(),
       contentsSelectorBuilder: (String, String) => String = (baseSelector, content) =>
         s"$baseSelector:containsOwn($content)"
   )(using pos: Position): Unit = {
 
-    val combinedSelector = selector + selectorExclusion
-    s"must have $expectedCount of $elementType" in {
+    val expectedCount = expectedContent.size
+    s"must have $expectedCount of $description" in {
 
-      val elements = document.getMainContent.select(combinedSelector)
-      withClue(s"Expected $expectedCount $elementType but found ${elements.size()}\n") {
+      val elements = document.getMainContent.select(selector)
+      withClue(s"Expected $expectedCount $description but found ${elements.size()}\n") {
         elements.size() mustBe expectedCount
       }
     }
     for (textContent, index) <- expectedContent.zipWithIndex do {
-      s"must have a $elementType with content '$textContent' (check ${index + 1})" in {
-        val finalSelector = contentsSelectorBuilder(combinedSelector, textContent)
+      s"must have a $description with content '$textContent' (check ${index + 1})" in {
+        val finalSelector = contentsSelectorBuilder(selector, textContent)
         val elements      = document.getMainContent.select(finalSelector)
-        withClue(s"$elementType with content '$textContent' not found\n") {
+        withClue(s"$description with content '$textContent' not found\n") {
           val matchingElements = elements.iterator().asScala.filter(el => contentExtractor(el) == textContent)
           matchingElements.nonEmpty mustBe true
         }
@@ -169,61 +152,70 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
   def createTestMustShowParagraphsWithContent(
       document: Document,
-      content: List[String]
+      content: List[String],
+      selector: String,
+      description: String
   )(using
       pos: Position
   ): Unit = {
-    val exclusionSelector = ":not(:has(a.hmrc-report-technical-issue)):not(:has(a))"
-    mustShowElementsWithContent(document, "p", exclusionSelector, content.size, content, "paragraphs")
+    mustShowElementsWithContent(document, selector, content, description)
   }
 
   def createTestMustShowBulletPointsWithContent(
       document: Document,
-      content: List[String]
+      content: List[String],
+      selector: String,
+      description: String
   )(using
       pos: Position
   ): Unit = {
-    mustShowElementsWithContent(document, "li", "", content.size, content, "bullets")
+    mustShowElementsWithContent(document, selector, content, description)
   }
 
   def createTestMustShowLinksAndContent(
       document: Document,
-      content: List[String]
+      content: List[String],
+      selector: String,
+      description: String
   )(using
       pos: Position
   ): Unit = {
-    val selectExclude = ":not(a.hmrc-report-technical-issue)"
-    mustShowElementsWithContent(document, "a", selectExclude, content.size, content, "links")
+    mustShowElementsWithContent(document, selector, content, description)
   }
 
   def createTestMustShowHintsWithContent(
       document: Document,
-      content: List[String]
+      content: List[String],
+      selector: String,
+      description: String
   )(using pos: Position): Unit = {
-    mustShowElementsWithContent(document, "div.govuk-hint", "", content.size, content, "hints")
+    mustShowElementsWithContent(document, selector, content, description)
   }
 
   def createTestMustShowCaptionsWithContent(
       document: Document,
-      content: List[String]
+      content: List[String],
+      selector: String,
+      description: String
   )(using pos: Position): Unit = {
-    mustShowElementsWithContent(document, "span.govuk-caption-m", "", content.size, content, "captions")
+    mustShowElementsWithContent(document, selector, content, description)
   }
 
   def createTestMustShowtInputsWithDefaultValues(
       document: Document,
-      content: List[String]
+      content: List[String],
+      selector: String,
+      description: String
   )(using pos: Position): Unit = {
     mustShowElementsWithContent(
       document,
-      "input",
-      "",
-      content.size,
+      selector,
       content,
-      "inputs",
+      description,
       _.`val`(),
       contentsSelectorBuilder = (baseSelector, value) => s"$baseSelector[value='$value']"
     )
+
   }
 
   def createTestMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {

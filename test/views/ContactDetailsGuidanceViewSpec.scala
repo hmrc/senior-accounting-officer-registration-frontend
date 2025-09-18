@@ -26,8 +26,8 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
   "ContactDetailsGuidanceView" - {
     val doc = Jsoup.parse(SUT().toString)
     createTestMustHaveCorrectPageHeading(doc, pageHeading)
-    createTestMustShowParagraphsWithContent(doc, paragraphsContent)
-    createTestMustShowBulletPointsWithContent(doc, bulletPointsContent)
+    createTestMustShowParagraphsWithContent(doc, paragraphsContent, paragraphsSelector, paragraphsDescription)
+    createTestMustShowBulletPointsWithContent(doc, bulletPointsContent, bulletsSelector, bulletsDescription)
     createTestMustHaveSubmitButton(doc, submitButtonContent)
     createTestMustShowBackLink(doc)
     createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
@@ -45,6 +45,9 @@ object ContactDetailsGuidanceViewSpec {
     "contact the right person if we have questions about the company’s tax accounting arrangements",
     "send confirmation when the notification and certificate have been submitted"
   )
-  val submitButtonContent = "Continue"
-
+  val submitButtonContent   = "Continue"
+  val bulletsSelector       = "li"
+  val bulletsDescription    = "bullets"
+  val paragraphsSelector    = "p:not(:has(a.hmrc-report-technical-issue)):not(:has(a))"
+  val paragraphsDescription = "paragraphs"
 }

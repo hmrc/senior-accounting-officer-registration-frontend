@@ -34,16 +34,18 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
         val doc =
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustShowHintsWithContent(doc, hintContent)
-        createTestMustShowtInputsWithDefaultValues(doc, List(inputTestValue))
-        contactType match {
-          case First =>
-            createTestMustShowCaptionsWithContent(doc, contactType1Caption)
-          case Second =>
-            createTestMustShowCaptionsWithContent(doc, contactType2Caption)
-          case Third =>
-            createTestMustShowCaptionsWithContent(doc, contactType3Caption)
-        }
+        createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
+        createTestMustShowtInputsWithDefaultValues(doc, List(inputTestValue), inputSelector, inputDescription)
+        createTestMustShowCaptionsWithContent(
+          doc,
+          contactType match {
+            case First  => contactTypeFirstCaption
+            case Second => contactTypeSecondCaption
+            case Third  => contactTypeThirdCaption
+          },
+          captionSelector,
+          captionDescription
+        )
         createTestMustShowBackLink(doc)
         createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
         createTestMustHaveSubmitButton(doc, submitButtonContent)
@@ -53,12 +55,18 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 }
 
 object ContactRoleViewSpec {
-  val pageHeading                       = "Enter role"
-  val inputTestValue                    = "test input value"
-  val contactType1Caption: List[String] = List("First contact details")
-  val contactType2Caption: List[String] = List("Second contact details")
-  val contactType3Caption: List[String] = List("Third contact details")
-  val hintContent: List[String]         = List("For example, ‘Chief Financial Officer’.")
-  val submitButtonContent               = "Continue"
+  val pageHeading                            = "Enter role"
+  val inputTestValue                         = "test input value"
+  val contactTypeFirstCaption: List[String]  = List("First contact details")
+  val contactTypeSecondCaption: List[String] = List("Second contact details")
+  val contactTypeThirdCaption: List[String]  = List("Third contact details")
+  val hintContent: List[String]              = List("For example, ‘Chief Financial Officer’.")
+  val submitButtonContent                    = "Continue"
+  val hintsSelector                          = "div.govuk-hint"
+  val hintsDescription                       = "hints"
+  val captionSelector                        = "span.govuk-caption-m"
+  val captionDescription                     = "captions"
+  val inputSelector                          = "input"
+  val inputDescription                       = "inputs"
 
 }

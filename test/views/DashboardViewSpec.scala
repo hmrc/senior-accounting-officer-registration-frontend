@@ -31,7 +31,7 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
       s"must generate a view for $stage stage" - {
         val doc = Jsoup.parse(SUT(stage).toString)
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustShowParagraphsWithContent(doc, paragraphs)
+        createTestMustShowParagraphsWithContent(doc, paragraphs, paragraphsSelector, paragraphsDescription)
         createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
 
         val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")
@@ -80,4 +80,6 @@ object DashboardViewSpec {
     "Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from.",
     "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
   )
+  val paragraphsSelector    = "p:not(:has(a.hmrc-report-technical-issue)):not(:has(a))"
+  val paragraphsDescription = "paragraphs"
 }
