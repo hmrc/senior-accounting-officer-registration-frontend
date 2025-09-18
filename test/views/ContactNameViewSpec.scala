@@ -56,7 +56,7 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
 object ContactNameViewSpec {
   val pageHeading                            = "Enter full name"
-  val inputTestValue                         = List("test Input Value")
+  val inputTestValue: List[String]           = List("test Input Value")
   val contactTypeFirstCaption: List[String]  = List("First contact details")
   val contactTypeSecondCaption: List[String] = List("Second contact details")
   val contactTypeThirdCaption: List[String]  = List("Third contact details")

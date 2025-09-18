@@ -18,7 +18,6 @@ package base
 
 import base.ViewSpecBase.*
 import org.jsoup.nodes.{Document, Element}
-import org.jsoup.select.Elements
 import org.scalactic.source.Position
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}

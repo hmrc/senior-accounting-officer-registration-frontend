@@ -59,11 +59,13 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
 
 object ContactPhoneViewSpec {
   val pageHeading                            = "Phone number"
-  val inputTestValue                         = List("test Input Value")
+  val inputTestValue: List[String]           = List("test Input Value")
   val contactTypeFirstCaption: List[String]  = List("First contact details")
   val contactTypeSecondCaption: List[String] = List("Second contact details")
   val contactTypeThirdCaption: List[String]  = List("Third contact details")
-  val hintContent         = List("We’ll only use this to contact you about the company’s tax accounting arrangements")
+  val hintContent: List[String]              = List(
+    "We’ll only use this to contact you about the company’s tax accounting arrangements"
+  )
   val submitButtonContent = "Continue"
   val hintsSelector       = "div.govuk-hint"
   val hintsDescription    = "hints"
