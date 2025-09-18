@@ -32,9 +32,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
         val doc =
-          Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
-
-        // createcreateTestMustHavePageHeading(doc, expected = pageHeading)
+          Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, NormalMode).toString)
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
         createTestMustHaveSubmitButton(doc, submitButtonContent)
         createTestMustShowBackLink(doc)

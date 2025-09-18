@@ -32,7 +32,7 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
         val doc =
-          Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue.head)), contactType, NormalMode).toString)
+          Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, NormalMode).toString)
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
         createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
         createTestMustShowtInputsWithDefaultValues(doc, inputTestValue, inputSelector, inputDescription)

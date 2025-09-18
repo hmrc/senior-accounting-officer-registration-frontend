@@ -32,7 +32,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
         val doc =
-          Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
+          Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test input value")), contactType, NormalMode).toString)
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
         createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
         createTestMustShowtInputsWithDefaultValues(doc, List(inputTestValue), inputSelector, inputDescription)

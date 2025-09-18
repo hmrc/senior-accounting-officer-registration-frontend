@@ -18,6 +18,7 @@ package base
 
 import base.ViewSpecBase.*
 import org.jsoup.nodes.{Document, Element}
+import org.jsoup.select.Elements
 import org.scalactic.source.Position
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
@@ -112,27 +113,47 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       document: Document,
       selector: String,
       expectedContent: List[String],
-      description: String,
-      contentExtractor: Element => String = _.text(),
-      contentsSelectorBuilder: (String, String) => String = (baseSelector, content) =>
-        s"$baseSelector:containsOwn($content)"
+      description: String
   )(using pos: Position): Unit = {
 
     val expectedCount = expectedContent.size
+    val elements      = document.getMainContent.select(selector).asScala
     s"must have $expectedCount of $description" in {
-
-      val elements = document.getMainContent.select(selector)
-      withClue(s"Expected $expectedCount $description but found ${elements.size()}\n") {
-        elements.size() mustBe expectedCount
+      withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
+        elements.size mustBe expectedCount
       }
     }
-    for (textContent, index) <- expectedContent.zipWithIndex do {
-      s"must have a $description with content '$textContent' (check ${index + 1})" in {
-        val finalSelector = contentsSelectorBuilder(selector, textContent)
-        val elements      = document.getMainContent.select(finalSelector)
-        withClue(s"$description with content '$textContent' not found\n") {
-          val matchingElements = elements.iterator().asScala.filter(el => contentExtractor(el) == textContent)
-          matchingElements.nonEmpty mustBe true
+    for (content, index) <- expectedContent.zipWithIndex do {
+      s"must have a $description with content '$content' (check ${index + 1})" in {
+        withClue(s"$description with content '$content' not found\n") {
+          elements.zip(expectedContent).foreach { case (element, expectedText) =>
+            element.text() mustEqual expectedText
+          }
+        }
+      }
+    }
+  }
+
+  private def mustShowInputsWithValue(
+      document: Document,
+      selector: String,
+      expectedContent: List[String],
+      description: String
+  )(using pos: Position): Unit = {
+
+    val expectedCount = expectedContent.size
+    val elements      = document.getMainContent.select(selector).asScala
+    s"must have $expectedCount of $description" in {
+      withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
+        elements.size mustBe expectedCount
+      }
+    }
+    for (content, index) <- expectedContent.zipWithIndex do {
+      s"must have a $description with content '$content' (check ${index + 1})" in {
+        withClue(s"$description with content '$content' not found\n") {
+          elements.zip(expectedContent).foreach { case (element, expectedText) =>
+            element.attr("value") mustEqual expectedText
+          }
         }
       }
     }
@@ -207,15 +228,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       selector: String,
       description: String
   )(using pos: Position): Unit = {
-    mustShowElementsWithContent(
-      document,
-      selector,
-      content,
-      description,
-      _.`val`(),
-      contentsSelectorBuilder = (baseSelector, value) => s"$baseSelector[value='$value']"
-    )
-
+    mustShowInputsWithValue(document, selector, content, description)
   }
 
   def createTestMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {
