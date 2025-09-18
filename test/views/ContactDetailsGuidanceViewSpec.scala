@@ -45,7 +45,6 @@ object ContactDetailsGuidanceViewSpec {
     "contact the right person if we have questions about the company’s tax accounting arrangements",
     "send confirmation when the notification and certificate have been submitted"
   )
-  val totalBulletPointsCount = 2
   val submitButtonContent    = "Continue"
 
 }

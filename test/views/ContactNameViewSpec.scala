@@ -35,7 +35,7 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
         testMustHaveCorrectPageHeading(doc, pageHeading)
         testMustShowHintsWithContent(doc, hintContent)
-        testMustShowtInputsWithDefaultValues(doc, totalInputCount, List(inputTestValue))
+        testMustShowtInputsWithDefaultValues(doc, List(inputTestValue))
         testMustHaveSubmitButton(doc, submitButtonContent)
         testMustShowBackLink(doc)
         testMustShowIsThisPageNotWorkingProperlyLink(doc)
@@ -55,7 +55,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 object ContactNameViewSpec {
   val pageHeading                       = "Enter full name"
   val inputTestValue                    = "test Input Value"
-  val totalInputCount                   = 1
   val contactType1Caption: List[String] = List("First contact details")
   val contactType2Caption: List[String] = List("Second contact details")
   val contactType3Caption: List[String] = List("Third contact details")

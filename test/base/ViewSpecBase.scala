@@ -212,7 +212,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
   def testMustShowtInputsWithDefaultValues(
       document: Document,
-      elementCount: Int,
       content: List[String]
   )(using pos: Position): Unit = {
     mustShowElementsWithContent(

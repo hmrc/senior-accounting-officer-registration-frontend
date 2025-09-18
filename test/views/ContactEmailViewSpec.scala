@@ -39,7 +39,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
         testMustShowBackLink(doc)
         testMustShowIsThisPageNotWorkingProperlyLink(doc)
         testMustShowHintsWithContent(doc, hintContent)
-        testMustShowtInputsWithDefaultValues(doc, totalInputCount, List(inputTestValue))
+        testMustShowtInputsWithDefaultValues(doc, List(inputTestValue))
         contactType match {
           case First =>
             testMustShowCaptionsWithContent(doc, contactType1Caption)
@@ -55,7 +55,6 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
 
 object ContactEmailViewSpec {
   val pageHeading               = "Enter email address"
-  val totalHintsCount           = 1
   val hintContent: List[String] = List(
     "We’ll only use this to contact you about the company’s tax accounting arrangements"
   )
@@ -63,6 +62,5 @@ object ContactEmailViewSpec {
   val contactType2Caption: List[String] = List("Second contact details")
   val contactType3Caption: List[String] = List("Third contact details")
   val inputTestValue                    = "test Input Value"
-  val totalInputCount                   = 1
   val submitButtonContent               = "Continue"
 }

@@ -35,7 +35,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
         testMustHaveCorrectPageHeading(doc, pageHeading)
         testMustShowHintsWithContent(doc, hintContent)
-        testMustShowtInputsWithDefaultValues(doc, totalInputCount, List(inputTestValue))
+        testMustShowtInputsWithDefaultValues(doc, List(inputTestValue))
         contactType match {
           case First =>
             testMustShowCaptionsWithContent(doc, contactType1Caption)
@@ -55,7 +55,6 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 object ContactRoleViewSpec {
   val pageHeading                       = "Enter role"
   val inputTestValue                    = "test input value"
-  val totalInputCount                   = 1
   val contactType1Caption: List[String] = List("First contact details")
   val contactType2Caption: List[String] = List("Second contact details")
   val contactType3Caption: List[String] = List("Third contact details")
