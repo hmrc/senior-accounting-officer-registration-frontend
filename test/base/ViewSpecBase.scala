@@ -55,7 +55,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     def getMainContent: Element = doc.getElementById("main-content")
   }
 
-  def testMustHaveCorrectPageTitle(document: Document, title: String)(using
+  def createTestMustHaveCorrectPageTitle(document: Document, title: String)(using
       pos: Position
   ): Unit =
     val expectedTitle = s"$title - $expectedServiceName - site.govuk"
@@ -63,7 +63,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       document.title mustBe expectedTitle
     }
 
-  def testMustHaveCorrectPageHeading(document: Document, h1: String)(using pos: Position): Unit =
+  def createTestMustHaveCorrectPageHeading(document: Document, h1: String)(using pos: Position): Unit =
     val actualH1 = document.getMainContent.getElementsByTag("h1")
     s"must generate a view with the correct page heading" in {
       withClue("the page must contain only a single <h1>\n") {
@@ -72,7 +72,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       actualH1.get(0).text() mustBe h1
     }
 
-  def testMustShowIsThisPageNotWorkingProperlyLink(document: Document)(using
+  def createTestMustShowIsThisPageNotWorkingProperlyLink(document: Document)(using
       pos: Position
   ): Unit =
     s"must generate a view with 'Is this page not working properly? (opens in new tab)' " in {
@@ -87,7 +87,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
     }
 
-  def testMustHaveSubmitButton(document: Document, btnContent: String)(using
+  def createTestMustHaveSubmitButton(document: Document, btnContent: String)(using
       pos: Position
   ): Unit =
     s"must have a button with text '$btnContent' " in {
@@ -100,7 +100,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-  def testMustShowBackLink(document: Document)(using pos: Position): Unit =
+  def createTestMustShowBackLink(document: Document)(using pos: Position): Unit =
     s"must have a backlink " in {
       val backLink = document.getElementsByClass("govuk-back-link")
       withClue(
@@ -110,7 +110,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-  def testMustShowHeading_h2_or_h3(document: Document, headerTag: "h2" | "h3", content: String)(using
+  def createTestMustShowHeading_h2_or_h3(document: Document, headerTag: "h2" | "h3", content: String)(using
       pos: Position
   ): Unit = {
     s"must have a heading of type $headerTag and with content: $content " in {
@@ -155,7 +155,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def testMustShowParagraphWithSubstring(
+  def createTestMustShowParagraphWithSubstring(
       document: Document,
       content: String
   )(using
@@ -167,7 +167,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def testMustShowParagraphsWithContent(
+  def createTestMustShowParagraphsWithContent(
       document: Document,
       content: List[String]
   )(using
@@ -177,7 +177,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     mustShowElementsWithContent(document, "p", exclusionSelector, content.size, content, "paragraphs")
   }
 
-  def testMustShowBulletPointsWithContent(
+  def createTestMustShowBulletPointsWithContent(
       document: Document,
       content: List[String]
   )(using
@@ -186,7 +186,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     mustShowElementsWithContent(document, "li", "", content.size, content, "bullets")
   }
 
-  def testMustShowLinksAndContent(
+  def createTestMustShowLinksAndContent(
       document: Document,
       content: List[String]
   )(using
@@ -196,21 +196,21 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     mustShowElementsWithContent(document, "a", selectExclude, content.size, content, "links")
   }
 
-  def testMustShowHintsWithContent(
+  def createTestMustShowHintsWithContent(
       document: Document,
       content: List[String]
   )(using pos: Position): Unit = {
     mustShowElementsWithContent(document, "div.govuk-hint", "", content.size, content, "hints")
   }
 
-  def testMustShowCaptionsWithContent(
+  def createTestMustShowCaptionsWithContent(
       document: Document,
       content: List[String]
   )(using pos: Position): Unit = {
     mustShowElementsWithContent(document, "span.govuk-caption-m", "", content.size, content, "captions")
   }
 
-  def testMustShowtInputsWithDefaultValues(
+  def createTestMustShowtInputsWithDefaultValues(
       document: Document,
       content: List[String]
   )(using pos: Position): Unit = {
@@ -226,7 +226,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     )
   }
 
-  def testMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {
+  def createTestMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {
     s"must not show the element of class " in {
       val elements = document.getMainContent.getElementsByClass(classes)
       elements.size() mustBe 0

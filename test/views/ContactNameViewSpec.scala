@@ -33,33 +33,33 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
       s"must generate a view for $contactType contact" - {
         val doc =
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> inputTestValue)), contactType, NormalMode).toString)
-        testMustHaveCorrectPageHeading(doc, pageHeading)
-        testMustShowHintsWithContent(doc, hintContent)
-        testMustShowtInputsWithDefaultValues(doc, List(inputTestValue))
-        testMustHaveSubmitButton(doc, submitButtonContent)
-        testMustShowBackLink(doc)
-        testMustShowIsThisPageNotWorkingProperlyLink(doc)
-        contactType match {
-          case First =>
-            testMustShowCaptionsWithContent(doc, contactType1Caption)
-          case Second =>
-            testMustShowCaptionsWithContent(doc, contactType2Caption)
-          case Third =>
-            testMustShowCaptionsWithContent(doc, contactType3Caption)
-        }
+        createTestMustHaveCorrectPageHeading(doc, pageHeading)
+        createTestMustShowHintsWithContent(doc, hintContent)
+        createTestMustShowtInputsWithDefaultValues(doc, List(inputTestValue))
+        createTestMustHaveSubmitButton(doc, submitButtonContent)
+        createTestMustShowBackLink(doc)
+        createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+        createTestMustShowCaptionsWithContent(
+          doc,
+          contactType match {
+            case First  => contactTypeFirstCaption
+            case Second => contactTypeSecondCaption
+            case Third  => contactTypeThirdCaption
+          }
+        )
       }
     }
   }
 }
 
 object ContactNameViewSpec {
-  val pageHeading                       = "Enter full name"
-  val inputTestValue                    = "test Input Value"
-  val contactType1Caption: List[String] = List("First contact details")
-  val contactType2Caption: List[String] = List("Second contact details")
-  val contactType3Caption: List[String] = List("Third contact details")
-  val submitButtonContent               = "Continue"
-  val hintContent: List[String]         = List(
+  val pageHeading                            = "Enter full name"
+  val inputTestValue                         = "test Input Value"
+  val contactTypeFirstCaption: List[String]  = List("First contact details")
+  val contactTypeSecondCaption: List[String] = List("Second contact details")
+  val contactTypeThirdCaption: List[String]  = List("Third contact details")
+  val submitButtonContent                    = "Continue"
+  val hintContent: List[String]              = List(
     "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
   )
 }

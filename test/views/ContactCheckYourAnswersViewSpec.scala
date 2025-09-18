@@ -37,10 +37,10 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       .foreach((scenario, contacts) =>
         val doc: Document = Jsoup.parse(SUT(contacts).toString)
         s"When $scenario must generate a view" - {
-          testMustHaveCorrectPageHeading(doc, pageHeading)
-          testMustHaveSubmitButton(doc, submitButtonContent)
-          testMustShowBackLink(doc)
-          testMustShowIsThisPageNotWorkingProperlyLink(doc)
+          createTestMustHaveCorrectPageHeading(doc, pageHeading)
+          createTestMustHaveSubmitButton(doc, submitButtonContent)
+          createTestMustShowBackLink(doc)
+          createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
           performTests(doc, scenario)
         }
       )
@@ -49,7 +49,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       key match {
         case "the view has one contact" =>
-          testMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
+          createTestMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 1
@@ -58,8 +58,8 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
           }
 
         case "the view has two contacts" =>
-          testMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
-          testMustShowHeading_h2_or_h3(doc, "h2", "Second contact details")
+          createTestMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
+          createTestMustShowHeading_h2_or_h3(doc, "h2", "Second contact details")
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 2
@@ -68,9 +68,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
             validateContactDetailsTable(dl, 1, "second", twoContacts.last)
           }
         case "the view has three contacts" =>
-          testMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
-          testMustShowHeading_h2_or_h3(doc, "h2", "Second contact details")
-          testMustShowHeading_h2_or_h3(doc, "h2", "Third contact details")
+          createTestMustShowHeading_h2_or_h3(doc, "h2", "First contact details")
+          createTestMustShowHeading_h2_or_h3(doc, "h2", "Second contact details")
+          createTestMustShowHeading_h2_or_h3(doc, "h2", "Third contact details")
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 3

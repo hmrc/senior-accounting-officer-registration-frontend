@@ -30,9 +30,9 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
     DashboardStage.values.foreach { stage =>
       s"must generate a view for $stage stage" - {
         val doc = Jsoup.parse(SUT(stage).toString)
-        testMustHaveCorrectPageHeading(doc, pageHeading)
-        testMustShowParagraphsWithContent(doc, paragraphs)
-        testMustShowIsThisPageNotWorkingProperlyLink(doc)
+        createTestMustHaveCorrectPageHeading(doc, pageHeading)
+        createTestMustShowParagraphsWithContent(doc, paragraphs)
+        createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
 
         val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")
         statusTags.size() mustBe 2
@@ -62,11 +62,11 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
         stage match {
           case CompanyDetails =>
-            testMustNotShowElement(doc, "govuk-button")
+            createTestMustNotShowElement(doc, "govuk-button")
           case ContactsInfo =>
-            testMustNotShowElement(doc, "govuk-button")
+            createTestMustNotShowElement(doc, "govuk-button")
           case Submission =>
-            testMustHaveSubmitButton(doc, "Submit your registration")
+            createTestMustHaveSubmitButton(doc, "Submit your registration")
 
         }
       }
