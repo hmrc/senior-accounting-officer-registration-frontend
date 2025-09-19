@@ -152,18 +152,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def createTestMustShowParagraphWithSubstring(
-      document: Document,
-      expectedContent: String
-  )(using
-      pos: Position
-  ): Unit = {
-    s"must have 1 paragraphs which contains content: $expectedContent " in {
-      val p = document.getMainContent.select(s"p:contains($expectedContent)")
-      p.size() mustBe 1
-    }
-  }
-
   def createTestMustShowParagraphsWithContent(
       document: Document,
       expectedParagraphs: List[String],
@@ -191,19 +179,30 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       description = "bullets"
     )
 
-  def createTestMustShowLinksAndContent(
+  def createTestMustShowLinksAndContentAndUrls(
       document: Document,
-      expectedContent: List[String],
+      expectedLinkContentWithUrls: List[(String, String)], // (linkContent, linkUrl)
       includeHelpLink: Boolean = false
   )(using
       pos: Position
   ): Unit =
-    mustShowElementsWithContent(
-      document = document,
-      selector = if includeHelpLink then "a" else excludeHelpLinkLinkSelector,
-      expectedContent = expectedContent,
-      description = "links"
-    )
+    s"must have expected link with correct content and correct urls" in {
+
+      val selector         = if includeHelpLink then "a[href]" else excludeHelpLinkLinkSelector
+      val allLinksWithHref = document.getMainContent.select(selector).asScala
+
+      val actualContentAndUrls: List[(String, String)] = allLinksWithHref.map { element =>
+        (element.text(), element.attr("href"))
+      }.toList
+
+      withClue("The total number of links found was incorrect") {
+        actualContentAndUrls.size mustBe expectedLinkContentWithUrls.size
+      }
+
+      withClue("The links found did not match the expected list in content, URL, or order.") {
+        actualContentAndUrls mustBe expectedLinkContentWithUrls
+      }
+    }
 
   def createTestMustShowHintsWithContent(
       document: Document,
@@ -219,15 +218,13 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
   def createTestMustShowCaptionsWithContent(
       document: Document,
       expectedContent: List[String]
-  )(using pos: Position): Unit = {
+  )(using pos: Position): Unit =
     mustShowElementsWithContent(
       document = document,
       selector = "span.govuk-caption-m",
       expectedContent = expectedContent,
       description = "captions"
     )
-
-  }
 
   def createTestMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {
     "must not show the element of class " in {
@@ -240,6 +237,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 object ViewSpecBase {
   val expectedServiceName               = "Senior Accounting Officer notification and certificate"
   val expectedServiceId                 = "senior-accounting-officer-registration-frontend"
-  val excludeHelpLinkParagraphsSelector = "p:not(:has(a.hmrc-report-technical-issue)):not(:has(a))"
-  val excludeHelpLinkLinkSelector       = "a:not(a.hmrc-report-technical-issue)"
+  val excludeHelpLinkParagraphsSelector = "p:not(:has(a.hmrc-report-technical-issue))"
+  val excludeHelpLinkLinkSelector       = "a[href]:not(a.hmrc-report-technical-issue)"
 }

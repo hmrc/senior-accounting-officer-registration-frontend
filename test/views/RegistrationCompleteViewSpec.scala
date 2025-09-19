@@ -57,10 +57,8 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         val link3 = doc.getElementById("main-content").getElementsByClass("govuk-body").get(3).getElementsByTag("a")
         link3.text() mustBe "submit a notification and certificate."
       }
-
       createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragrapsList)
-      createTestMustShowParagraphWithSubstring(doc, paragraphSubstring)
-      createTestMustShowLinksAndContent(doc, expectedContent = linksContent)
+      createTestMustShowLinksAndContentAndUrls(doc, expectedLinkContentWithUrls = expectedLinkContentWithUrls)
       createTestMustShowBackLink(doc)
       createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
     }
@@ -71,10 +69,16 @@ object RegistrationCompleteViewSpec {
   val paragrapsList: List[String] = List(
     "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
     "We have sent a confirmation email with your reference ID to al the contact you gave during registration.",
-    "If you need to keep a record of your registration"
+    "If you need to keep a record of your registration",
+    "You can now log into your Senior Accounting Officer notification and certificate service account to submit a notification and certificate."
   )
   val paragraphSubstring =
     "You can now log into your Senior Accounting Officer notification and certificate service account to "
 
-  val linksContent: List[String] = List("Print the page", "Download as PDF", "submit a notification and certificate.")
+  val expectedLinkContentWithUrls: List[(String, String)] = List(
+    ("Print the page", "#"),
+    ("Download as PDF", "#"),
+    ("submit a notification and certificate.", "/beta/beta-sao-digitalisation-dashboard.html")
+  )
+
 }
