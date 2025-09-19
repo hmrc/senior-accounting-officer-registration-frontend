@@ -35,7 +35,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test input value")), contactType, NormalMode).toString)
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
         createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
-        createTestMustShowtInputsWithDefaultValues(doc, List(inputTestValue), inputSelector, inputDescription)
+        createTestMustShowInputsWithValues(doc, inputSelector, List(inputTestValue), inputDescription)
         createTestMustShowCaptionsWithContent(
           doc,
           contactType match {

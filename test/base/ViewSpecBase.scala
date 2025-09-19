@@ -129,7 +129,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  private def mustShowInputsWithValue(
+  def createTestMustShowInputsWithValues(
       document: Document,
       selector: String,
       expectedContent: List[String],
@@ -215,15 +215,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       description: String
   )(using pos: Position): Unit = {
     mustShowElementsWithContent(document, selector, content, description)
-  }
-
-  def createTestMustShowtInputsWithDefaultValues(
-      document: Document,
-      content: List[String],
-      selector: String,
-      description: String
-  )(using pos: Position): Unit = {
-    mustShowInputsWithValue(document, selector, content, description)
   }
 
   def createTestMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {

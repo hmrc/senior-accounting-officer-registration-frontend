@@ -38,7 +38,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
         createTestMustShowBackLink(doc)
         createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
         createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
-        createTestMustShowtInputsWithDefaultValues(doc, List(inputTestValue), inputSelector, inputDescription)
+        createTestMustShowInputsWithValues(doc, inputSelector, List(inputTestValue), inputDescription)
         createTestMustShowCaptionsWithContent(
           doc,
           contactType match {
