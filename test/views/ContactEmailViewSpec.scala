@@ -37,17 +37,15 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
         createTestMustHaveSubmitButton(doc, submitButtonContent)
         createTestMustShowBackLink(doc)
         createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-        createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
-        createTestMustShowInputsWithValues(doc, inputSelector, List(inputTestValue), inputDescription)
+        createTestMustShowHintsWithContent(doc, expectedContent = hintContent)
+        createTestMustShowInputsWithValues(doc, expectedValues = List(inputTestValue))
         createTestMustShowCaptionsWithContent(
           doc,
-          contactType match {
+          expectedContent = contactType match {
             case First  => contactTypeFirstCaption
             case Second => contactTypeSecondCaption
             case Third  => contactTypeThirdCaption
-          },
-          captionSelector,
-          captionDescription
+          }
         )
       }
     }
@@ -64,10 +62,4 @@ object ContactEmailViewSpec {
   val contactTypeThirdCaption: List[String]  = List("Third contact details")
   val inputTestValue                         = "test Input Value"
   val submitButtonContent                    = "Continue"
-  val hintsSelector                          = "div.govuk-hint"
-  val hintsDescription                       = "hints"
-  val captionSelector                        = "span.govuk-caption-m"
-  val captionDescription                     = "captions"
-  val inputSelector                          = "input"
-  val inputDescription                       = "inputs"
 }

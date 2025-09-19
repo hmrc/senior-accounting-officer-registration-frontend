@@ -34,20 +34,18 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
         val doc =
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, NormalMode).toString)
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
-        createTestMustShowInputsWithValues(doc, inputSelector, inputTestValue, inputDescription)
+        createTestMustShowHintsWithContent(doc, expectedContent = hintContent)
+        createTestMustShowInputsWithValues(doc, expectedValues = inputTestValue)
         createTestMustHaveSubmitButton(doc, submitButtonContent)
         createTestMustShowBackLink(doc)
         createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
         createTestMustShowCaptionsWithContent(
           doc,
-          contactType match {
+          expectedContent = contactType match {
             case First  => contactTypeFirstCaption
             case Second => contactTypeSecondCaption
             case Third  => contactTypeThirdCaption
-          },
-          captionSelector,
-          captionDescription
+          }
         )
       }
     }
@@ -64,10 +62,4 @@ object ContactNameViewSpec {
   val hintContent: List[String]              = List(
     "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
   )
-  val hintsSelector      = "div.govuk-hint"
-  val hintsDescription   = "hints"
-  val captionSelector    = "span.govuk-caption-m"
-  val captionDescription = "captions"
-  val inputSelector      = "input"
-  val inputDescription   = "inputs"
 }

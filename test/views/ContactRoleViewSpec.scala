@@ -34,17 +34,15 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
         val doc =
           Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test input value")), contactType, NormalMode).toString)
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustShowHintsWithContent(doc, hintContent, hintsSelector, hintsDescription)
-        createTestMustShowInputsWithValues(doc, inputSelector, List(inputTestValue), inputDescription)
+        createTestMustShowHintsWithContent(doc, expectedContent = hintContent)
+        createTestMustShowInputsWithValues(doc, expectedValues = List(inputTestValue))
         createTestMustShowCaptionsWithContent(
           doc,
-          contactType match {
+          expectedContent = contactType match {
             case First  => contactTypeFirstCaption
             case Second => contactTypeSecondCaption
             case Third  => contactTypeThirdCaption
-          },
-          captionSelector,
-          captionDescription
+          }
         )
         createTestMustShowBackLink(doc)
         createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
@@ -62,11 +60,4 @@ object ContactRoleViewSpec {
   val contactTypeThirdCaption: List[String]  = List("Third contact details")
   val hintContent: List[String]              = List("For example, ‘Chief Financial Officer’.")
   val submitButtonContent                    = "Continue"
-  val hintsSelector                          = "div.govuk-hint"
-  val hintsDescription                       = "hints"
-  val captionSelector                        = "span.govuk-caption-m"
-  val captionDescription                     = "captions"
-  val inputSelector                          = "input"
-  val inputDescription                       = "inputs"
-
 }

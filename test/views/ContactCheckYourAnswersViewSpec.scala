@@ -49,34 +49,32 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       key match {
         case "the view has one contact" =>
-          createTestMustShowHeading(doc, headings.take(1), "h2", "headings")
+          createTestMustShowHeadingH2(doc, expectedContent = headings.take(1))
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 1
-          s"must test value for one contact " in {
+          "must test value for one contact " in {
             validateContactDetailsTable(dl, 0, "first", oneContact.head)
           }
 
         case "the view has two contacts" =>
-          createTestMustShowHeading(doc, headings.take(2), "h2", "headings")
+          createTestMustShowHeadingH2(doc, expectedContent = headings.take(2))
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 2
-          s"must test values for 2 contacts " in {
+          "must test values for 2 contacts " in {
             validateContactDetailsTable(dl, 0, "first", oneContact.head)
             validateContactDetailsTable(dl, 1, "second", twoContacts.last)
           }
         case "the view has three contacts" =>
-          createTestMustShowHeading(
+          createTestMustShowHeadingH2(
             doc,
-            headings,
-            "h2",
-            "headings"
+            expectedContent = headings
           )
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
           dl.size() mustBe 3
-          s"must test values for 3 contacts " in {
+          "must test values for 3 contacts " in {
             validateContactDetailsTable(dl, 0, "first", oneContact.head)
             validateContactDetailsTable(dl, 1, "second", twoContacts.last)
             validateContactDetailsTable(dl, 2, "third", threeContacts.last)
@@ -173,10 +171,7 @@ object ContactCheckYourAnswersViewSpec {
   val oneContact: List[ContactInfo]    = List(ContactInfo("name1", "role1", "email1", "phone1"))
   val twoContacts: List[ContactInfo]   = oneContact ++ List(ContactInfo("name2", "role2", "email2", "phone2"))
   val threeContacts: List[ContactInfo] = twoContacts ++ List(ContactInfo("name3", "role3", "email3", "phone3"))
-
   val headings: List[String] = List("First contact details", "Second contact details", "Third contact details")
-
-  val pageHeading         = "Check your answers"
-  val submitButtonContent = "Save and Continue"
-
+  val pageHeading            = "Check your answers"
+  val submitButtonContent    = "Save and Continue"
 }

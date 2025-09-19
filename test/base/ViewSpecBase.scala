@@ -48,19 +48,21 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       document.title mustBe expectedTitle
     }
 
-  def createTestMustHaveCorrectPageHeading(document: Document, headingContent: String)(using pos: Position): Unit =
+  def createTestMustHaveCorrectPageHeading(document: Document, expectedHeadingContent: String)(using
+      pos: Position
+  ): Unit =
     val actualH1 = document.getMainContent.getElementsByTag("h1")
-    s"must generate a view with the correct page heading" in {
+    "must generate a view with the correct page heading" in {
       withClue("the page must contain only a single <h1>\n") {
         actualH1.size() mustBe 1
       }
-      actualH1.get(0).text() mustBe headingContent
+      actualH1.get(0).text() mustBe expectedHeadingContent
     }
 
   def createTestMustShowIsThisPageNotWorkingProperlyLink(document: Document)(using
       pos: Position
   ): Unit =
-    s"must generate a view with 'Is this page not working properly? (opens in new tab)' " in {
+    "must generate a view with 'Is this page not working properly? (opens in new tab)' " in {
       val helpLink = document.getMainContent.select("a.govuk-link.hmrc-report-technical-issue")
       withClue(
         "help link not found, both contact-frontend.host and contact-frontend.serviceId must be set in the configs\n"
@@ -86,23 +88,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
 
   def createTestMustShowBackLink(document: Document)(using pos: Position): Unit =
-    s"must have a backlink " in {
+    "must have a backlink " in {
       val backLink = document.getElementsByClass("govuk-back-link")
       withClue(
-        s"backlink not found\n"
+        "backlink not found\n"
       ) {
         backLink.size() mustBe 1
       }
     }
-
-  def createTestMustShowHeading(
-      document: Document,
-      content: List[String],
-      selector: String,
-      description: String
-  )(using pos: Position): Unit = {
-    mustShowElementsWithContent(document, selector, content, description)
-  }
 
   private def mustShowElementsWithContent(
       document: Document,
@@ -129,25 +122,30 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
+  def createTestMustShowHeadingH2(
+      document: Document,
+      expectedContent: List[String]
+  )(using pos: Position): Unit = {
+    mustShowElementsWithContent(document = document, selector = "h2", expectedContent = expectedContent, "headings")
+  }
+
   def createTestMustShowInputsWithValues(
       document: Document,
-      selector: String,
-      expectedContent: List[String],
-      description: String
+      expectedValues: List[String]
   )(using pos: Position): Unit = {
 
-    val expectedCount = expectedContent.size
-    val elements      = document.getMainContent.select(selector).asScala
-    s"must have $expectedCount of $description" in {
-      withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
+    val expectedCount = expectedValues.size
+    val elements      = document.getMainContent.select("input").asScala
+    s"must have $expectedCount of inputs" in {
+      withClue(s"Expected $expectedCount inputs but found ${elements.size}\n") {
         elements.size mustBe expectedCount
       }
     }
-    for (content, index) <- expectedContent.zipWithIndex do {
-      s"must have a $description with content '$content' (check ${index + 1})" in {
-        withClue(s"$description with content '$content' not found\n") {
-          elements.zip(expectedContent).foreach { case (element, expectedText) =>
-            element.attr("value") mustEqual expectedText
+    for (value, index) <- expectedValues.zipWithIndex do {
+      s"must have a inputs with values '$value' (check ${index + 1})" in {
+        withClue(s"input with value '$value' not found\n") {
+          elements.zip(expectedValues).foreach { case (element, expectedValueText) =>
+            element.attr("value") mustEqual expectedValueText
           }
         }
       }
@@ -156,69 +154,83 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
   def createTestMustShowParagraphWithSubstring(
       document: Document,
-      content: String
+      expectedContent: String
   )(using
       pos: Position
   ): Unit = {
-    s"must have ${content.size} paragraphs which contain content: $content " in {
-      val p = document.getMainContent.select(s"p:contains($content)")
+    s"must have 1 paragraphs which contains content: $expectedContent " in {
+      val p = document.getMainContent.select(s"p:contains($expectedContent)")
       p.size() mustBe 1
     }
   }
 
   def createTestMustShowParagraphsWithContent(
       document: Document,
-      content: List[String],
-      selector: String,
-      description: String
+      expectedParagraphs: List[String],
+      includeHelpLink: Boolean = false
   )(using
       pos: Position
-  ): Unit = {
-    mustShowElementsWithContent(document, selector, content, description)
-  }
+  ): Unit =
+    mustShowElementsWithContent(
+      document = document,
+      selector = if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector,
+      expectedContent = expectedParagraphs,
+      description = "paragraphs"
+    )
 
   def createTestMustShowBulletPointsWithContent(
       document: Document,
-      content: List[String],
-      selector: String,
-      description: String
+      expectedContentList: List[String]
   )(using
       pos: Position
-  ): Unit = {
-    mustShowElementsWithContent(document, selector, content, description)
-  }
+  ): Unit =
+    mustShowElementsWithContent(
+      document = document,
+      selector = "li",
+      expectedContent = expectedContentList,
+      description = "bullets"
+    )
 
   def createTestMustShowLinksAndContent(
       document: Document,
-      content: List[String],
-      selector: String,
-      description: String
+      expectedContent: List[String],
+      includeHelpLink: Boolean = false
   )(using
       pos: Position
-  ): Unit = {
-    mustShowElementsWithContent(document, selector, content, description)
-  }
+  ): Unit =
+    mustShowElementsWithContent(
+      document = document,
+      selector = if includeHelpLink then "a" else excludeHelpLinkLinkSelector,
+      expectedContent = expectedContent,
+      description = "links"
+    )
 
   def createTestMustShowHintsWithContent(
       document: Document,
-      content: List[String],
-      selector: String,
-      description: String
-  )(using pos: Position): Unit = {
-    mustShowElementsWithContent(document, selector, content, description)
-  }
+      expectedContent: List[String]
+  )(using pos: Position): Unit =
+    mustShowElementsWithContent(
+      document = document,
+      selector = "div.govuk-hint",
+      expectedContent = expectedContent,
+      description = "hints"
+    )
 
   def createTestMustShowCaptionsWithContent(
       document: Document,
-      content: List[String],
-      selector: String,
-      description: String
+      expectedContent: List[String]
   )(using pos: Position): Unit = {
-    mustShowElementsWithContent(document, selector, content, description)
+    mustShowElementsWithContent(
+      document = document,
+      selector = "span.govuk-caption-m",
+      expectedContent = expectedContent,
+      description = "captions"
+    )
+
   }
 
   def createTestMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {
-    s"must not show the element of class " in {
+    "must not show the element of class " in {
       val elements = document.getMainContent.getElementsByClass(classes)
       elements.size() mustBe 0
     }
@@ -226,6 +238,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 }
 
 object ViewSpecBase {
-  val expectedServiceName = "Senior Accounting Officer notification and certificate"
-  val expectedServiceId   = "senior-accounting-officer-registration-frontend"
+  val expectedServiceName               = "Senior Accounting Officer notification and certificate"
+  val expectedServiceId                 = "senior-accounting-officer-registration-frontend"
+  val excludeHelpLinkParagraphsSelector = "p:not(:has(a.hmrc-report-technical-issue)):not(:has(a))"
+  val excludeHelpLinkLinkSelector       = "a:not(a.hmrc-report-technical-issue)"
 }
