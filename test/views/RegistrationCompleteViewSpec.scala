@@ -37,26 +37,9 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
   "RegistrationCompleteView" - {
     "must generate a view" - {
       val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
-      createTestMustHaveCorrectPageHeading(doc, "Registration Complete")
-
-      "with the correct heading panel text" in {
-        val mainContent = doc.getElementById("main-content")
-        val panel       = mainContent.getElementsByClass("govuk-panel__body")
-        panel.get(0).text() mustBe "Your reference number REG12345"
-      }
-
-      "with the correct links and texts" in {
-        val bullets = doc
-          .getElementById("main-content")
-          .getElementsByClass("govuk-list govuk-list--bullet")
-          .get(0)
-          .getElementsByTag("li")
-        bullets.get(0).getElementsByClass("govuk-link").text() mustBe "Print the page"
-        bullets.get(1).getElementsByClass("govuk-link").text() mustBe "Download as PDF"
-
-        val link3 = doc.getElementById("main-content").getElementsByClass("govuk-body").get(3).getElementsByTag("a")
-        link3.text() mustBe "submit a notification and certificate."
-      }
+      createTestMustHaveCorrectPageHeading(doc, pageHeading)
+      createTestMustShowPanelHeadingsWithContent(doc, expectedPanelHeadings = panelHeadingContent)
+      createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletsContentList)
       createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragrapsList)
       createTestMustShowLinksAndContentAndUrls(doc, expectedLinkContentWithUrls = expectedLinkContentWithUrls)
       createTestMustShowBackLink(doc)
@@ -80,5 +63,7 @@ object RegistrationCompleteViewSpec {
     ("Download as PDF", "#"),
     ("submit a notification and certificate.", "/beta/beta-sao-digitalisation-dashboard.html")
   )
-
+  val bulletsContentList: List[String]  = List("Print the page", "Download as PDF")
+  val panelHeadingContent: List[String] = List("Your reference number REG12345")
+  val pageHeading                       = "Registration Complete"
 }

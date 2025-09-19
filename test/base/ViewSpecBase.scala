@@ -166,6 +166,19 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       description = "paragraphs"
     )
 
+  def createTestMustShowPanelHeadingsWithContent(
+      document: Document,
+      expectedPanelHeadings: List[String]
+  )(using
+      pos: Position
+  ): Unit =
+    mustShowElementsWithContent(
+      document = document,
+      selector = "div.govuk-panel__body",
+      expectedContent = expectedPanelHeadings,
+      description = "panel headings"
+    )
+
   def createTestMustShowBulletPointsWithContent(
       document: Document,
       expectedContentList: List[String]
