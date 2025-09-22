@@ -17,10 +17,10 @@ object $className$Summary  {
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "$className;format="decap"$.checkYourAnswersLabel".toKey,
-          value   = ValueViewModel(value.toText),
+          key     = messages("$className;format="decap"$.checkYourAnswersLabel").toKey,
+          value   = ValueViewModel(messages(value).toText),
           actions = Seq(
-            ActionItemViewModel("site.change".toText, routes.$className$Controller.onPageLoad(CheckMode).url)
+            ActionItemViewModel(messages("site.change").toText, routes.$className$Controller.onPageLoad(CheckMode).url)
               .withVisuallyHiddenText(messages("$className;format="decap"$.change.hidden"))
           )
         )

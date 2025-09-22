@@ -19,13 +19,13 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel("$className;format="decap"$.heading".toText).asPageHeading(LegendSize.Large)
+                legend = LegendViewModel(messages("$className;format="decap"$.heading").toText).asPageHeading(LegendSize.Large)
             )
-            .withHint(HintViewModel("$className;format="decap"$.hint".toText))
+            .withHint(HintViewModel(messages("$className;format="decap"$.hint").toText))
         )
 
         @govukButton(
-            ButtonViewModel("site.continue".toText)
+            ButtonViewModel(messages("site.continue").toText)
         )
     }
 }
