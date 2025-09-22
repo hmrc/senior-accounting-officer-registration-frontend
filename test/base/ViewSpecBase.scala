@@ -122,11 +122,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
   }
 
-  def createTestMustShowHeadingH2(
+  def createTestMustShowHeadingH2s(
       document: Document,
-      expectedContent: List[String]
+      expectedHeadings: List[String]
   )(using pos: Position): Unit = {
-    mustShowElementsWithContent(document = document, selector = "h2", expectedContent = expectedContent, "headings")
+    mustShowElementsWithContent(document = document, selector = "h2", expectedContent = expectedHeadings, "headings")
   }
 
   def createTestMustShowInputsWithValues(
