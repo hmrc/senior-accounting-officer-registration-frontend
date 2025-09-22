@@ -40,23 +40,15 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     def getMainContent: Element = doc.getElementById("main-content")
   }
 
-  def createTestMustHaveCorrectPageTitle(document: Document, expectedTitleContent: String)(using
-      pos: Position
-  ): Unit =
-    val expectedTitle = s"$expectedTitleContent - $expectedServiceName - site.govuk"
-    s"must generate a view with the correct title: $expectedTitle" in {
-      document.title mustBe expectedTitle
-    }
-
   def createTestMustHaveCorrectPageHeading(document: Document, expectedHeadingContent: String)(using
       pos: Position
   ): Unit =
-    val actualH1 = document.getMainContent.getElementsByTag("h1")
     "must generate a view with the correct page heading" in {
-      withClue("the page must contain only a single <h1>\n") {
+      val actualH1 = document.getMainContent.getElementsByTag("h1")
+      withClue(s"the page must contain only a single <h1> with content '$expectedHeadingContent'\n") {
+        actualH1.get(0).text() mustBe expectedHeadingContent
         actualH1.size() mustBe 1
       }
-      actualH1.get(0).text() mustBe expectedHeadingContent
     }
 
   def createTestMustShowIsThisPageNotWorkingProperlyLink(document: Document)(using
@@ -102,8 +94,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       selector: String,
       expectedContent: List[String],
       description: String
-  )(using pos: Position): Unit = {
-
+  )(using pos: Position): Unit =
     val expectedCount = expectedContent.size
     val elements      = document.getMainContent.select(selector).asScala
     s"must have $expectedCount of $description" in {
@@ -120,20 +111,17 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
       }
     }
-  }
 
   def createTestMustShowHeadingH2s(
       document: Document,
       expectedHeadings: List[String]
-  )(using pos: Position): Unit = {
+  )(using pos: Position): Unit =
     mustShowElementsWithContent(document = document, selector = "h2", expectedContent = expectedHeadings, "headings")
-  }
 
   def createTestMustShowInputsWithValues(
       document: Document,
       expectedValues: List[String]
-  )(using pos: Position): Unit = {
-
+  )(using pos: Position): Unit =
     val expectedCount = expectedValues.size
     val elements      = document.getMainContent.select("input").asScala
     s"must have $expectedCount of inputs" in {
@@ -150,7 +138,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
       }
     }
-  }
 
   def createTestMustShowParagraphsWithContent(
       document: Document,
@@ -209,10 +196,10 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
         links.head
       }
-      withClue(s"links content was not as expected. Got ${link.text()}, expected '$expectedContent''") {
+      withClue(s"links content was not as expected. Got ${link.text()}, expected '$expectedContent'\n") {
         link.text mustBe expectedContent
       }
-      withClue(s"links href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl''") {
+      withClue(s"links href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl'\n") {
         link.attr("href") mustBe expectedUrl
       }
     }
@@ -248,8 +235,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 }
 
 object ViewSpecBase {
-  val expectedServiceName               = "Senior Accounting Officer notification and certificate"
   val expectedServiceId                 = "senior-accounting-officer-registration-frontend"
   val excludeHelpLinkParagraphsSelector = "p:not(:has(a.hmrc-report-technical-issue))"
-  val excludeHelpLinkLinkSelector       = "a[href]:not(a.hmrc-report-technical-issue)"
 }

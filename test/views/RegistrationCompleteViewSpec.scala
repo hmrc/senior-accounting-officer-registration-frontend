@@ -40,7 +40,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
       createTestMustHaveCorrectPageHeading(doc, pageHeading)
       createTestMustShowPanelHeadingsWithContent(doc, expectedPanelHeadings = panelHeadingContent)
       createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletsContentList)
-      createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragrapsList)
+      createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphsList)
       createTestMustShowBackLink(doc)
       createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
       "First bullet point" - {
@@ -69,19 +69,11 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 }
 
 object RegistrationCompleteViewSpec {
-  val paragrapsList: List[String] = List(
+  val paragraphsList: List[String] = List(
     "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
     "We have sent a confirmation email with your reference ID to al the contact you gave during registration.",
     "If you need to keep a record of your registration",
     "You can now log into your Senior Accounting Officer notification and certificate service account to submit a notification and certificate."
-  )
-  val paragraphSubstring =
-    "You can now log into your Senior Accounting Officer notification and certificate service account to "
-
-  val expectedLinkContentWithUrls: List[(String, String)] = List(
-    ("Print the page", "#"),
-    ("Download as PDF", "#"),
-    ("submit a notification and certificate.", "/beta/beta-sao-digitalisation-dashboard.html")
   )
   val bulletsContentList: List[String]  = List("Print the page", "Download as PDF")
   val panelHeadingContent: List[String] = List("Your reference number REG12345")

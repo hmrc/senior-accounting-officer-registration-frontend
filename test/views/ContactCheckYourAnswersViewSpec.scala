@@ -52,19 +52,19 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
           createTestMustShowHeadingH2s(doc, expectedHeadings = headings.take(1))
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
-          dl.size() mustBe 1
           "must test value for one contact " in {
             validateContactDetailsTable(dl, 0, "first", oneContact.head)
+            dl.size() mustBe 1
           }
 
         case "the view has two contacts" =>
           createTestMustShowHeadingH2s(doc, expectedHeadings = headings.take(2))
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
-          dl.size() mustBe 2
           "must test values for 2 contacts " in {
             validateContactDetailsTable(dl, 0, "first", oneContact.head)
             validateContactDetailsTable(dl, 1, "second", twoContacts.last)
+            dl.size() mustBe 2
           }
         case "the view has three contacts" =>
           createTestMustShowHeadingH2s(
@@ -73,11 +73,11 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
           )
           val mainContent = doc.getMainContent
           val dl          = mainContent.getElementsByTag("dl")
-          dl.size() mustBe 3
           "must test values for 3 contacts " in {
             validateContactDetailsTable(dl, 0, "first", oneContact.head)
             validateContactDetailsTable(dl, 1, "second", twoContacts.last)
             validateContactDetailsTable(dl, 2, "third", threeContacts.last)
+            dl.size() mustBe 3
           }
       }
     }
