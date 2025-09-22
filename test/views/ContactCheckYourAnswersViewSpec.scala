@@ -29,149 +29,178 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
   "ContactCheckYourAnswersView" - {
 
-    Map(
-      "the view has one contact"    -> oneContact,
-      "the view has two contacts"   -> twoContacts,
-      "the view has three contacts" -> threeContacts
+    s"When exactly one contact, must generate a view" - {
+      val contacts      = List(firstContact)
+      val doc: Document = Jsoup.parse(SUT(contacts).toString)
+
+      createTestMustHaveCorrectPageHeading(doc, pageHeading)
+      createTestMustHaveSubmitButton(doc, submitButtonContent)
+      createTestMustShowBackLink(doc)
+      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
+      val dl = doc.getMainContent.getElementsByTag("dl")
+      createTestMustShowHeadingH2s(doc, expectedHeadings = List(firstContactheading))
+
+      "must test value for one contact " in {
+        validateContactDetailsTable(dl, 0, "first", contacts.head)
+
+      }
+
+      "must show 1 contact table" in {
+        dl.size() mustBe 1
+      }
+    }
+
+    s"When exactly two contacts, must generate a view" - {
+      val contacts      = List(firstContact, secondContact)
+      val doc: Document = Jsoup.parse(SUT(contacts).toString)
+
+      createTestMustHaveCorrectPageHeading(doc, pageHeading)
+      createTestMustHaveSubmitButton(doc, submitButtonContent)
+      createTestMustShowBackLink(doc)
+      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
+      val dl = doc.getMainContent.getElementsByTag("dl")
+      createTestMustShowHeadingH2s(doc, expectedHeadings = List(firstContactheading, secondContactHeading))
+
+      "must test values for first contact " in {
+        validateContactDetailsTable(dl, 0, "first", contacts.head)
+      }
+
+      "must test value for second contact " in {
+        validateContactDetailsTable(dl, 1, "second", contacts.last)
+      }
+
+      "must show 2 contact tables" in {
+        dl.size() mustBe 2
+      }
+
+    }
+
+    s"When exactly three contacts, must generate a view" - {
+      val contacts      = List(firstContact, secondContact, thirdContact)
+      val doc: Document = Jsoup.parse(SUT(contacts).toString)
+
+      createTestMustHaveCorrectPageHeading(doc, pageHeading)
+      createTestMustHaveSubmitButton(doc, submitButtonContent)
+      createTestMustShowBackLink(doc)
+      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
+      val dl = doc.getMainContent.getElementsByTag("dl")
+      createTestMustShowHeadingH2s(
+        doc,
+        expectedHeadings = List(firstContactheading, secondContactHeading, thirdContactHeading)
+      )
+
+      "must test values for first contact " in {
+        validateContactDetailsTable(dl, 0, "first", contacts.head)
+      }
+
+      "must test value for second contact " in {
+        validateContactDetailsTable(dl, 1, "second", contacts(1))
+      }
+
+      "must test value for third contact " in {
+        validateContactDetailsTable(dl, 2, "third", contacts.last)
+      }
+
+      "must show 3 contact tables" in {
+        dl.size() mustBe 3
+      }
+    }
+  }
+
+  def validateContactDetailsTable(
+      dl: Elements,
+      tableIndex: Int,
+      contactNumber: String,
+      contactInfo: ContactInfo
+  ): Assertion = {
+    val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
+    rows.size() mustBe 4
+    validateRow(
+      row = rows.get(0),
+      keyText = "Full name",
+      valueText = contactInfo.name,
+      actionText = "Change",
+      actionHiddenText = "change the full name",
+      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-name"
     )
-      .foreach((scenario, contacts) =>
-        val doc: Document = Jsoup.parse(SUT(contacts).toString)
-        s"When $scenario must generate a view" - {
-          createTestMustHaveCorrectPageHeading(doc, pageHeading)
-          createTestMustHaveSubmitButton(doc, submitButtonContent)
-          createTestMustShowBackLink(doc)
-          createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-          performTests(doc, scenario)
-        }
-      )
 
-    def performTests(doc: Document, key: String): Unit = {
+    validateRow(
+      row = rows.get(1),
+      keyText = "Role",
+      valueText = contactInfo.role,
+      actionText = "Change",
+      actionHiddenText = "change the role",
+      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-role"
+    )
 
-      key match {
-        case "the view has one contact" =>
-          createTestMustShowHeadingH2s(doc, expectedHeadings = headings.take(1))
-          val mainContent = doc.getMainContent
-          val dl          = mainContent.getElementsByTag("dl")
-          "must test value for one contact " in {
-            validateContactDetailsTable(dl, 0, "first", oneContact.head)
-            dl.size() mustBe 1
-          }
+    validateRow(
+      row = rows.get(2),
+      keyText = "Email address",
+      valueText = contactInfo.email,
+      actionText = "Change",
+      actionHiddenText = "change the email address",
+      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
+    )
 
-        case "the view has two contacts" =>
-          createTestMustShowHeadingH2s(doc, expectedHeadings = headings.take(2))
-          val mainContent = doc.getMainContent
-          val dl          = mainContent.getElementsByTag("dl")
-          "must test values for 2 contacts " in {
-            validateContactDetailsTable(dl, 0, "first", oneContact.head)
-            validateContactDetailsTable(dl, 1, "second", twoContacts.last)
-            dl.size() mustBe 2
-          }
-        case "the view has three contacts" =>
-          createTestMustShowHeadingH2s(
-            doc,
-            expectedHeadings = headings
-          )
-          val mainContent = doc.getMainContent
-          val dl          = mainContent.getElementsByTag("dl")
-          "must test values for 3 contacts " in {
-            validateContactDetailsTable(dl, 0, "first", oneContact.head)
-            validateContactDetailsTable(dl, 1, "second", twoContacts.last)
-            validateContactDetailsTable(dl, 2, "third", threeContacts.last)
-            dl.size() mustBe 3
-          }
-      }
+    validateRow(
+      row = rows.get(3),
+      keyText = "Phone number",
+      valueText = contactInfo.phone,
+      actionText = "Change",
+      actionHiddenText = "change the phone number",
+      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-phone-number"
+    )
+
+  }
+
+  def validateRow(
+      row: Element,
+      keyText: String,
+      valueText: String,
+      actionText: String,
+      actionHiddenText: String,
+      actionHref: String
+  ): Assertion = {
+    val key = row.select("dt.govuk-summary-list__key")
+    key.size() mustBe 1
+    withClue("row keyText mismatch:\n") {
+      key.get(0).text() mustBe keyText
     }
 
-    def validateContactDetailsTable(
-        dl: Elements,
-        tableIndex: Int,
-        contactNumber: String,
-        contactInfo: ContactInfo
-    ): Assertion = {
-      val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
-      rows.size() mustBe 4
-      validateRow(
-        row = rows.get(0),
-        keyText = "Full name",
-        valueText = contactInfo.name,
-        actionText = "Change",
-        actionHiddenText = "change the full name",
-        actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-name"
-      )
-
-      validateRow(
-        row = rows.get(1),
-        keyText = "Role",
-        valueText = contactInfo.role,
-        actionText = "Change",
-        actionHiddenText = "change the role",
-        actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-role"
-      )
-
-      validateRow(
-        row = rows.get(2),
-        keyText = "Email address",
-        valueText = contactInfo.email,
-        actionText = "Change",
-        actionHiddenText = "change the email address",
-        actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
-      )
-
-      validateRow(
-        row = rows.get(3),
-        keyText = "Phone number",
-        valueText = contactInfo.phone,
-        actionText = "Change",
-        actionHiddenText = "change the phone number",
-        actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-phone-number"
-      )
-
+    val value = row.select("dd.govuk-summary-list__value")
+    value.size() mustBe 1
+    withClue("row valueText mismatch:\n") {
+      value.get(0).text() mustBe valueText
     }
 
-    def validateRow(
-        row: Element,
-        keyText: String,
-        valueText: String,
-        actionText: String,
-        actionHiddenText: String,
-        actionHref: String
-    ): Assertion = {
-      val key = row.select("dt.govuk-summary-list__key")
-      key.size() mustBe 1
-      withClue("row keyText mismatch:\n") {
-        key.get(0).text() mustBe keyText
-      }
+    val action = row.select("dd.govuk-summary-list__actions")
+    action.size() mustBe 1
 
-      val value = row.select("dd.govuk-summary-list__value")
-      value.size() mustBe 1
-      withClue("row valueText mismatch:\n") {
-        value.get(0).text() mustBe valueText
-      }
-
-      val action = row.select("dd.govuk-summary-list__actions")
-      action.size() mustBe 1
-
-      val linkText = action.get(0).select("a")
-      linkText.size() mustBe 1
-      withClue("row actionHref mismatch:\n") {
-        linkText.get(0).attr("href") mustBe actionHref
-      }
-      withClue("row actionHiddenText mismatch:\n") {
-        linkText.get(0).select("span.govuk-visually-hidden").text() mustBe actionHiddenText
-      }
-      linkText.get(0).select("span.govuk-visually-hidden").remove()
-      withClue("row actionText mismatch:\n") {
-        linkText.get(0).text() mustBe actionText
-      }
+    val linkText = action.get(0).select("a")
+    linkText.size() mustBe 1
+    withClue("row actionHref mismatch:\n") {
+      linkText.get(0).attr("href") mustBe actionHref
+    }
+    withClue("row actionHiddenText mismatch:\n") {
+      linkText.get(0).select("span.govuk-visually-hidden").text() mustBe actionHiddenText
+    }
+    linkText.get(0).select("span.govuk-visually-hidden").remove()
+    withClue("row actionText mismatch:\n") {
+      linkText.get(0).text() mustBe actionText
     }
   }
 }
 
 object ContactCheckYourAnswersViewSpec {
-  val oneContact: List[ContactInfo]    = List(ContactInfo("name1", "role1", "email1", "phone1"))
-  val twoContacts: List[ContactInfo]   = oneContact ++ List(ContactInfo("name2", "role2", "email2", "phone2"))
-  val threeContacts: List[ContactInfo] = twoContacts ++ List(ContactInfo("name3", "role3", "email3", "phone3"))
-  val headings: List[String] = List("First contact details", "Second contact details", "Third contact details")
-  val pageHeading            = "Check your answers"
-  val submitButtonContent    = "Save and Continue"
+  val firstContact: ContactInfo  = ContactInfo("name1", "role1", "email1", "phone1")
+  val secondContact: ContactInfo = ContactInfo("name2", "role2", "email2", "phone2")
+  val thirdContact: ContactInfo  = ContactInfo("name3", "role3", "email3", "phone3")
+  val firstContactheading        = "First contact details"
+  val secondContactHeading       = "Second contact details"
+  val thirdContactHeading        = "Third contact details"
+  val pageHeading                = "Check your answers"
+  val submitButtonContent        = "Save and Continue"
 }
