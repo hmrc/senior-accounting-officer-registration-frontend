@@ -29,7 +29,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
   "ContactCheckYourAnswersView" - {
 
-    s"When exactly one contact, must generate a view" - {
+    "When exactly one contact, must generate a view" - {
       val contacts      = List(firstContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
@@ -51,7 +51,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       }
     }
 
-    s"When exactly two contacts, must generate a view" - {
+    "When exactly two contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
@@ -77,7 +77,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
     }
 
-    s"When exactly three contacts, must generate a view" - {
+    "When exactly three contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact, thirdContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
