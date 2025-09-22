@@ -29,10 +29,13 @@ object ContactPhoneSummary {
 
   def row(contactType: ContactType, phone: String)(using messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
-      key = "contactPhone.checkYourAnswersLabel".toKey,
+      key = messages("contactPhone.checkYourAnswersLabel").toKey,
       value = ValueViewModel(HtmlFormat.escape(phone).toText),
       actions = Seq(
-        ActionItemViewModel("site.change".toText, routes.ContactPhoneController.onPageLoad(contactType, CheckMode).url)
+        ActionItemViewModel(
+          messages("site.change").toText,
+          routes.ContactPhoneController.onPageLoad(contactType, CheckMode).url
+        )
           .withVisuallyHiddenText(messages(s"contactPhone.change.${contactType.messageKey}.hidden"))
       )
     )

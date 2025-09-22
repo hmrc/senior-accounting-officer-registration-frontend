@@ -39,7 +39,7 @@
 
   @formHelper(action = routes.ContactDetailsGuidanceController.continue()) {
     @govukButton(
-      ButtonViewModel("site.continue".toText).withAttribute("id", "submit")
+      ButtonViewModel(messages("site.continue").toText).withAttribute("id", "submit")
     )
   }
 }
