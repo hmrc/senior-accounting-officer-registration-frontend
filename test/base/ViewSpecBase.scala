@@ -192,28 +192,28 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       description = "bullets"
     )
 
-  def createTestMustShowLinksAndContentAndUrls(
-      document: Document,
-      expectedLinkContentWithUrls: List[(String, String)], // (linkContent, linkUrl)
-      includeHelpLink: Boolean = false
+  def createTestMustShowLink(
+      element: => Element,
+      expectedContent: String,
+      expectedUrl: String
   )(using
       pos: Position
   ): Unit =
-    s"must have expected link with correct content and correct urls" in {
-
-      val selector         = if includeHelpLink then "a[href]" else excludeHelpLinkLinkSelector
-      val allLinksWithHref = document.getMainContent.select(selector).asScala
-
-      val actualContentAndUrls: List[(String, String)] = allLinksWithHref.map { element =>
-        (element.text(), element.attr("href"))
-      }.toList
-
-      withClue("The total number of links found was incorrect") {
-        actualContentAndUrls.size mustBe expectedLinkContentWithUrls.size
+    s"must have expected link with correct content: $expectedContent and correct url $expectedUrl withing provided element" in {
+      val link: Element = if element.tagName() == "a" then {
+        element
+      } else {
+        val links = element.select("a").asScala
+        withClue(s"Expected to find exactly one link in the element but found ${links.size}\n") {
+          links.size mustBe 1
+        }
+        links.head
       }
-
-      withClue("The links found did not match the expected list in content, URL, or order.") {
-        actualContentAndUrls mustBe expectedLinkContentWithUrls
+      withClue(s"links content was not as expected. Got ${link.text()}, expected '$expectedContent''") {
+        link.text mustBe expectedContent
+      }
+      withClue(s"links href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl''") {
+        link.attr("href") mustBe expectedUrl
       }
     }
 

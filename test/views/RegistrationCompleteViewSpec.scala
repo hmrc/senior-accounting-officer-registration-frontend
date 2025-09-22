@@ -41,9 +41,29 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
       createTestMustShowPanelHeadingsWithContent(doc, expectedPanelHeadings = panelHeadingContent)
       createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletsContentList)
       createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragrapsList)
-      createTestMustShowLinksAndContentAndUrls(doc, expectedLinkContentWithUrls = expectedLinkContentWithUrls)
       createTestMustShowBackLink(doc)
       createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+      "First bullet point" - {
+        createTestMustShowLink(
+          doc.getMainContent.select("li").get(0),
+          expectedContent = bulletsContentList.head,
+          expectedUrl = "#"
+        )
+      }
+      "Second bullet point" - {
+        createTestMustShowLink(
+          doc.getMainContent.select("li").get(1),
+          expectedContent = bulletsContentList.last,
+          expectedUrl = "#"
+        )
+      }
+      "The final paragraph" - {
+        createTestMustShowLink(
+          doc.getMainContent.select("p").get(3),
+          expectedContent = "submit a notification and certificate.",
+          expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
+        )
+      }
     }
   }
 }
