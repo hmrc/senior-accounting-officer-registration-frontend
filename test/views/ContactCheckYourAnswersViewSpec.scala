@@ -39,11 +39,16 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
-      createTestMustShowHeadingH2s(doc, expectedHeadings = List(firstContactheading))
 
-      "must test value for one contact " in {
+      "must show correct heading for first contact table" in {
+        val actualHeading = dl.get(0).previousElementSibling().text()
+        withClue(s"expected heading '$firstContactHeading' but found '$actualHeading'\n") {
+          actualHeading mustBe firstContactHeading
+        }
+      }
+
+      "must test value for one contact table" in {
         validateContactDetailsTable(dl, 0, "first", contacts.head)
-
       }
 
       "must show 1 contact table" in {
@@ -54,20 +59,32 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
     "When exactly two contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
-
       createTestMustHaveCorrectPageHeading(doc, pageHeading)
       createTestMustHaveSubmitButton(doc, submitButtonContent)
       createTestMustShowBackLink(doc)
       createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
-      createTestMustShowHeadingH2s(doc, expectedHeadings = List(firstContactheading, secondContactHeading))
 
-      "must test values for first contact " in {
+      "must show correct heading for first contact table" in {
+        val actualHeading = dl.get(0).previousElementSibling().text()
+        withClue(s"expected heading '$firstContactHeading' but found '$actualHeading'\n") {
+          actualHeading mustBe firstContactHeading
+        }
+      }
+
+      "must test values for first contact table" in {
         validateContactDetailsTable(dl, 0, "first", contacts.head)
       }
 
-      "must test value for second contact " in {
+      "must show correct heading for second contact table" in {
+        val actualHeading = dl.get(1).previousElementSibling().text()
+        withClue(s"expected heading '$secondContactHeading' but found '$actualHeading'\n") {
+          actualHeading mustBe secondContactHeading
+        }
+      }
+
+      "must test values for second contact table" in {
         validateContactDetailsTable(dl, 1, "second", contacts.last)
       }
 
@@ -87,20 +104,37 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
-      createTestMustShowHeadingH2s(
-        doc,
-        expectedHeadings = List(firstContactheading, secondContactHeading, thirdContactHeading)
-      )
 
-      "must test values for first contact " in {
+      "must show correct heading for first contact table" in {
+        val actualHeading = dl.get(0).previousElementSibling().text()
+        withClue(s"expected heading '$firstContactHeading' but found '$actualHeading'\n") {
+          actualHeading mustBe firstContactHeading
+        }
+      }
+
+      "must test values for first contact table" in {
         validateContactDetailsTable(dl, 0, "first", contacts.head)
       }
 
-      "must test value for second contact " in {
+      "must show correct heading for second contact table " in {
+        val actualHeading = dl.get(1).previousElementSibling().text()
+        withClue(s"expected heading '$secondContactHeading' but found '$actualHeading'\n") {
+          actualHeading mustBe secondContactHeading
+        }
+      }
+
+      "must test values for second contact table" in {
         validateContactDetailsTable(dl, 1, "second", contacts(1))
       }
 
-      "must test value for third contact " in {
+      "must show correct heading for third contact table" in {
+        val actualHeading = dl.get(2).previousElementSibling().text()
+        withClue(s"expected heading '$thirdContactHeading' but found '$actualHeading'\n") {
+          actualHeading mustBe thirdContactHeading
+        }
+      }
+
+      "must test values for third contact table" in {
         validateContactDetailsTable(dl, 2, "third", contacts.last)
       }
 
@@ -198,7 +232,7 @@ object ContactCheckYourAnswersViewSpec {
   val firstContact: ContactInfo  = ContactInfo("name1", "role1", "email1", "phone1")
   val secondContact: ContactInfo = ContactInfo("name2", "role2", "email2", "phone2")
   val thirdContact: ContactInfo  = ContactInfo("name3", "role3", "email3", "phone3")
-  val firstContactheading        = "First contact details"
+  val firstContactHeading        = "First contact details"
   val secondContactHeading       = "Second contact details"
   val thirdContactHeading        = "Third contact details"
   val pageHeading                = "Check your answers"
