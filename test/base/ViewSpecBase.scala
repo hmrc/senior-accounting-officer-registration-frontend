@@ -21,7 +21,7 @@ import org.jsoup.nodes.{Document, Element}
 import org.scalactic.source.Position
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
+import play.api.mvc.{Call, Request}
 import play.api.test.FakeRequest
 import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
 
@@ -40,13 +40,20 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     def getMainContent: Element = doc.getElementById("main-content")
   }
 
-  def createTestMustHaveCorrectPageHeading(document: Document, expectedHeadingContent: String)(using
+  extension (target: Document | Element) {
+    def resolve: Element = target match {
+      case doc: Document => doc.getMainContent
+      case _             => target
+    }
+  }
+
+  def createTestMustHaveCorrectPageHeading(document: Document, expectedHeading: String)(using
       pos: Position
   ): Unit =
     "must generate a view with the correct page heading" in {
       val actualH1 = document.getMainContent.getElementsByTag("h1")
-      withClue(s"the page must contain only a single <h1> with content '$expectedHeadingContent'\n") {
-        actualH1.get(0).text() mustBe expectedHeadingContent
+      withClue(s"the page must contain only a single <h1> with content '$expectedHeading'\n") {
+        actualH1.get(0).text() mustBe expectedHeading
         actualH1.size() mustBe 1
       }
     }
@@ -66,15 +73,40 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
     }
 
-  def createTestMustHaveSubmitButton(document: Document, btnContent: String)(using
+  def createTestMustHaveASubmissionButtonWhichSubmitsTo(
+      document: Document,
+      expectedAction: Call,
+      expectedSubmitButtonText: String
+  )(using
       pos: Position
-  ): Unit =
-    s"must have a button with text '$btnContent' " in {
+  ): Unit = {
+    s"must have a form which submits to '${expectedAction.method} ${expectedAction.url}'" in {
+      val form = document.getMainContent.select("form")
+      form.attr("method") mustBe expectedAction.method
+      form.attr("action") mustBe expectedAction.url
+      form.size() mustBe 1
+    }
+
+    s"must have a submit button with text '$expectedSubmitButtonText'" in {
       val button = document.getMainContent.select("button[type=submit], input[type=submit]")
       withClue(
-        s"Submit Button with text $btnContent not found\n"
+        s"Submit Button with text $expectedSubmitButtonText not found\n"
       ) {
-        button.text() mustBe btnContent
+        button.text() mustBe expectedSubmitButtonText
+        button.size() mustBe 1
+      }
+    }
+  }
+
+  def createTestMustHaveSubmitButton(document: Document, expectedText: String)(using
+      pos: Position
+  ): Unit =
+    s"must have a button with text '$expectedText'" in {
+      val button = document.getMainContent.select("button[type=submit], input[type=submit]")
+      withClue(
+        s"Submit Button with text $expectedText not found\n"
+      ) {
+        button.text() mustBe expectedText
         button.size() mustBe 1
       }
     }
@@ -138,6 +170,72 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
       }
     }
+
+  def createTestMustShowASingleInput(
+      target: => Document | Element,
+      expectedLabel: String,
+      expectedValue: String,
+      expectedHint: Option[String] = None
+  )(using pos: Position): Unit = {
+
+    def elements = target.resolve.select("input").asScala
+
+    "must have a single of input" in {
+      withClue(s"Expected a single input but found ${elements.size}\n") {
+        elements.size mustBe 1
+      }
+    }
+
+    s"must have an input with the value of '$expectedValue'" in {
+      val element = elements.head
+      withClue(s"input with value '$expectedValue' not found\n") {
+        element.attr("value") mustEqual expectedValue
+      }
+    }
+
+    s"must have a label for the input of '$expectedLabel'" in {
+      val element = elements.head
+      val inputId = element.attr("id")
+
+      withClue(s"a label with '$expectedLabel' for the input is not found\n") {
+        target.resolve.select(s"""label[for="$inputId"]""").text mustEqual expectedLabel
+      }
+    }
+
+    expectedHint
+      .map { expectedHintText =>
+        s"must have a hint with values '$expectedHint'" in {
+          val element = elements.head
+
+          val hintId = element.attr("aria-describedby")
+
+          withClue("a hint for the input is not found\n") {
+            hintId must not be ""
+          }
+
+          val hints = target.resolve.select(s".govuk-hint#$hintId")
+          withClue("multiple hint with the same id was found on the page\n") {
+            hints.size() mustBe 1
+          }
+
+          val hint = target.resolve.select(s".govuk-hint#$hintId").get(0)
+
+          withClue(s"hint with value '$expectedHintText' not found\n") {
+            hint.text mustEqual expectedHintText
+          }
+        }
+      }
+      .getOrElse {
+        "must not have an associated hint" in {
+          val element = elements.head
+
+          withClue("a hint for the input was found\n") {
+            element.attr("aria-describedby") mustBe ""
+          }
+        }
+      }
+
+  }
 
   def createTestMustShowParagraphsWithContent(
       document: Document,
@@ -204,25 +302,25 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-  def createTestMustShowHintsWithContent(
+  def createTestMustShowHints(
       document: Document,
-      expectedContent: List[String]
+      expectedHints: List[String]
   )(using pos: Position): Unit =
     mustShowElementsWithContent(
       document = document,
       selector = "div.govuk-hint",
-      expectedContent = expectedContent,
+      expectedContent = expectedHints,
       description = "hints"
     )
 
   def createTestMustShowCaptionsWithContent(
       document: Document,
-      expectedContent: List[String]
+      expectedCaptions: List[String]
   )(using pos: Position): Unit =
     mustShowElementsWithContent(
       document = document,
       selector = "span.govuk-caption-m",
-      expectedContent = expectedContent,
+      expectedContent = expectedCaptions,
       description = "captions"
     )
 

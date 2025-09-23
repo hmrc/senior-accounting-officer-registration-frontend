@@ -32,16 +32,17 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
         val doc =
-          Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, NormalMode).toString)
+          Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, NormalMode).toString)
+
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
         createTestMustHaveSubmitButton(doc, submitButtonContent)
         createTestMustShowBackLink(doc)
         createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-        createTestMustShowHintsWithContent(doc, expectedContent = hintContent)
-        createTestMustShowInputsWithValues(doc, expectedValues = List(inputTestValue))
+        createTestMustShowHints(doc, expectedHints = expectedHints)
+        createTestMustShowInputsWithValues(doc, expectedValues = List(testInputValue))
         createTestMustShowCaptionsWithContent(
           doc,
-          expectedContent = contactType match {
+          expectedCaptions = contactType match {
             case First  => contactTypeFirstCaption
             case Second => contactTypeSecondCaption
             case Third  => contactTypeThirdCaption
@@ -53,13 +54,13 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
 }
 
 object ContactEmailViewSpec {
-  val pageHeading               = "Enter email address"
-  val hintContent: List[String] = List(
+  val pageHeading                 = "Enter email address"
+  val expectedHints: List[String] = List(
     "We’ll only use this to contact you about the company’s tax accounting arrangements"
   )
   val contactTypeFirstCaption: List[String]  = List("First contact details")
   val contactTypeSecondCaption: List[String] = List("Second contact details")
   val contactTypeThirdCaption: List[String]  = List("Third contact details")
-  val inputTestValue                         = "test Input Value"
+  val testInputValue                         = "test Input Value"
   val submitButtonContent                    = "Continue"
 }

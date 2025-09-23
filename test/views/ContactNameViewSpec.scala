@@ -19,7 +19,7 @@ package views
 import base.ViewSpecBase
 import forms.ContactNameFormProvider
 import models.ContactType.*
-import models.{ContactType, NormalMode}
+import models.{ContactType, Mode}
 import org.jsoup.Jsoup
 import views.ContactNameViewSpec.*
 import views.html.ContactNameView
@@ -31,22 +31,67 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
   "ContactNameView" - {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
-        val doc =
-          Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, NormalMode).toString)
-        createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustShowHintsWithContent(doc, expectedContent = hintContent)
-        createTestMustShowInputsWithValues(doc, expectedValues = inputTestValue)
-        createTestMustHaveSubmitButton(doc, submitButtonContent)
-        createTestMustShowBackLink(doc)
-        createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-        createTestMustShowCaptionsWithContent(
-          doc,
-          expectedContent = contactType match {
-            case First  => contactTypeFirstCaption
-            case Second => contactTypeSecondCaption
-            case Third  => contactTypeThirdCaption
+        Mode.values.foreach { mode =>
+          s"must generate a view for $contactType contact in $mode" - {
+            "when there are no prior data for the page" - {
+              val doc =
+                Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
+
+              createTestMustHaveCorrectPageHeading(doc, pageHeading)
+              createTestMustShowASingleInput(
+                doc,
+                expectedLabel = pageHeading,
+                expectedValue = "",
+                expectedHint = Some(hintContent)
+              )
+
+              createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                doc,
+                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonContent
+              )
+              createTestMustShowBackLink(doc)
+              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+              createTestMustShowCaptionsWithContent(
+                doc,
+                expectedCaptions = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                  case Third  => contactTypeThirdCaption
+                }
+              )
+            }
+
+            "when there exists prior data for the page" - {
+              val doc =
+                Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
+
+              createTestMustHaveCorrectPageHeading(doc, pageHeading)
+              createTestMustShowASingleInput(
+                doc,
+                expectedLabel = pageHeading,
+                expectedValue = testInputValue,
+                expectedHint = Some(hintContent)
+              )
+
+              createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                doc,
+                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonContent
+              )
+              createTestMustShowBackLink(doc)
+              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+              createTestMustShowCaptionsWithContent(
+                doc,
+                expectedCaptions = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                  case Third  => contactTypeThirdCaption
+                }
+              )
+            }
           }
-        )
+        }
       }
     }
   }
@@ -54,12 +99,12 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
 object ContactNameViewSpec {
   val pageHeading                            = "Enter full name"
-  val inputTestValue: List[String]           = List("test Input Value")
+  val testInputValue: String                 = "test Input Value"
   val contactTypeFirstCaption: List[String]  = List("First contact details")
   val contactTypeSecondCaption: List[String] = List("Second contact details")
   val contactTypeThirdCaption: List[String]  = List("Third contact details")
   val submitButtonContent                    = "Continue"
-  val hintContent: List[String]              = List(
+  val hintContent: String                    =
     "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
-  )
+
 }

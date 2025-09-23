@@ -31,4 +31,6 @@ object Mode {
       case CheckMode  => "CheckMode"
     }
   }
+
+  val values: List[Mode] = List(CheckMode, NormalMode)
 }
