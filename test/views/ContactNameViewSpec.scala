@@ -38,15 +38,14 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
               createTestMustHaveCorrectPageHeading(doc, pageHeading)
-              createTestMustShowASingleInput(
-                doc,
+
+              doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
                 expectedValue = "",
                 expectedHint = Some(hintContent)
               )
 
-              createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                doc,
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
                 expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
                 expectedSubmitButtonText = submitButtonContent
               )
@@ -67,15 +66,14 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
               createTestMustHaveCorrectPageHeading(doc, pageHeading)
-              createTestMustShowASingleInput(
-                doc,
+
+              doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
                 expectedValue = testInputValue,
                 expectedHint = Some(hintContent)
               )
 
-              createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                doc,
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
                 expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
                 expectedSubmitButtonText = submitButtonContent
               )
