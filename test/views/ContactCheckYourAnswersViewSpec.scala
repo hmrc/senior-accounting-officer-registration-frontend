@@ -41,16 +41,16 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val dl = doc.getMainContent.getElementsByTag("dl")
 
       "must show correct heading for first contact table" in {
-        val previousElement    = dl.get(0).previousElementSibling()
-        val actualHeading      = previousElement.text()
-        val previousElementTag = previousElement.tag().toString
+        val previousElement     = dl.get(0).previousElementSibling()
+        val previousElementText = previousElement.text()
+        val previousElementTag  = previousElement.tag().toString
 
         withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
           previousElementTag mustBe "h2"
         }
 
-        withClue(s"expected heading '$firstContactHeading' but found '$actualHeading'\n") {
-          actualHeading mustBe firstContactHeading
+        withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
+          previousElementText mustBe firstContactHeading
         }
       }
 
@@ -66,6 +66,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
     "When exactly two contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
+
       createTestMustHaveCorrectPageHeading(doc, pageHeading)
       createTestMustHaveSubmitButton(doc, submitButtonContent)
       createTestMustShowBackLink(doc)
@@ -74,14 +75,16 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val dl = doc.getMainContent.getElementsByTag("dl")
 
       "must show correct heading for first contact table" in {
-        val previousElement    = dl.get(0).previousElementSibling()
-        val actualHeading      = previousElement.text()
-        val previousElementTag = previousElement.tag().toString
+        val previousElement     = dl.get(0).previousElementSibling()
+        val previousElementText = previousElement.text()
+        val previousElementTag  = previousElement.tag().toString
+
         withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
           previousElementTag mustBe "h2"
         }
-        withClue(s"expected heading '$firstContactHeading' but found '$actualHeading'\n") {
-          actualHeading mustBe firstContactHeading
+
+        withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
+          previousElementText mustBe firstContactHeading
         }
       }
 
@@ -90,16 +93,16 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       }
 
       "must show correct heading for second contact table" in {
-        val previousElement    = dl.get(1).previousElementSibling()
-        val actualHeading      = previousElement.text()
-        val previousElementTag = previousElement.tag().toString
+        val previousElement     = dl.get(1).previousElementSibling()
+        val previousElementText = previousElement.text()
+        val previousElementTag  = previousElement.tag().toString
 
         withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
           previousElementTag mustBe "h2"
         }
 
-        withClue(s"expected heading '$secondContactHeading' but found '$actualHeading'\n") {
-          actualHeading mustBe secondContactHeading
+        withClue(s"expected heading '$secondContactHeading' but found '$previousElementText'\n") {
+          previousElementText mustBe secondContactHeading
         }
       }
 
@@ -125,16 +128,16 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val dl = doc.getMainContent.getElementsByTag("dl")
 
       "must show correct heading for first contact table" in {
-        val previousElement    = dl.get(0).previousElementSibling()
-        val actualHeading      = previousElement.text()
-        val previousElementTag = previousElement.tag().toString
+        val previousElement     = dl.get(0).previousElementSibling()
+        val previousElementText = previousElement.text()
+        val previousElementTag  = previousElement.tag().toString
 
         withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
           previousElementTag mustBe "h2"
         }
 
-        withClue(s"expected heading '$firstContactHeading' but found '$actualHeading'\n") {
-          actualHeading mustBe firstContactHeading
+        withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
+          previousElementText mustBe firstContactHeading
         }
       }
 
@@ -143,16 +146,16 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       }
 
       "must show correct heading for second contact table " in {
-        val previousElement    = dl.get(1).previousElementSibling()
-        val actualHeading      = previousElement.text()
-        val previousElementTag = previousElement.tag().toString
+        val previousElement     = dl.get(1).previousElementSibling()
+        val previousElementText = previousElement.text()
+        val previousElementTag  = previousElement.tag().toString
 
         withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
           previousElementTag mustBe "h2"
         }
 
-        withClue(s"expected heading '$secondContactHeading' but found '$actualHeading'\n") {
-          actualHeading mustBe secondContactHeading
+        withClue(s"expected heading '$secondContactHeading' but found '$previousElementText'\n") {
+          previousElementText mustBe secondContactHeading
         }
       }
 
@@ -161,16 +164,16 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       }
 
       "must show correct heading for third contact table" in {
-        val previousElement    = dl.get(2).previousElementSibling()
-        val actualHeading      = previousElement.text()
-        val previousElementTag = previousElement.tag().toString
+        val previousElement     = dl.get(2).previousElementSibling()
+        val previousElementText = previousElement.text()
+        val previousElementTag  = previousElement.tag().toString
 
         withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
           previousElementTag mustBe "h2"
         }
 
-        withClue(s"expected heading '$thirdContactHeading' but found '$actualHeading'\n") {
-          actualHeading mustBe thirdContactHeading
+        withClue(s"expected heading '$thirdContactHeading' but found '$previousElementText'\n") {
+          previousElementText mustBe thirdContactHeading
         }
       }
 
