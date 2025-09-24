@@ -33,6 +33,8 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val contacts      = List(firstContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
+      doc.mustHaveCorrectPageTitle(pageHeading)
+
       createTestMustShowBackLink(doc)
 
       createTestMustHaveCorrectPageHeading(doc, pageHeading)
@@ -73,6 +75,8 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
     "When exactly two contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
+
+      doc.mustHaveCorrectPageTitle(pageHeading)
 
       createTestMustShowBackLink(doc)
 
@@ -131,6 +135,8 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
     "When exactly three contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact, thirdContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
+
+      doc.mustHaveCorrectPageTitle(pageHeading)
 
       createTestMustShowBackLink(doc)
 

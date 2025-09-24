@@ -26,7 +26,14 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
   "ContactDetailsGuidanceView" - {
     val doc = Jsoup.parse(SUT().toString)
 
+    doc.mustHaveCorrectPageTitle(caption)
+
     createTestMustShowBackLink(doc)
+
+    createTestMustShowCaptionsWithContent(
+      doc,
+      expectedCaptions = List(caption)
+    )
 
     createTestMustHaveCorrectPageHeading(doc, expectedHeading = pageHeading)
 
@@ -45,6 +52,8 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 
 object ContactDetailsGuidanceViewSpec {
   val pageHeading = "We need contact details for this [company/group]"
+
+  val caption = "Contact details"
 
   val paragraphsContent: List[String] = List(
     "Provide HMRC with contact details for the person or team responsible for this company or group.",

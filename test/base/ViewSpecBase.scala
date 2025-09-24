@@ -38,6 +38,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
   extension (doc: Document) {
     def getMainContent: Element = doc.getElementById("main-content")
+
+    def mustHaveCorrectPageTitle(title: String)(using pos: Position): Unit =
+      "must generate a view with the correct title" in {
+        doc.title mustBe s"$title - $expectedServiceName - GOV.UK"
+      }
   }
 
   extension (target: => Document | Element) {
@@ -331,6 +336,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 }
 
 object ViewSpecBase {
+  val expectedServiceName               = "Senior Accounting Officer notification and certificate"
   val expectedServiceId                 = "senior-accounting-officer-registration-frontend"
   val excludeHelpLinkParagraphsSelector = "p:not(:has(a.hmrc-report-technical-issue))"
 }

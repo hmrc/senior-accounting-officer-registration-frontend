@@ -40,6 +40,8 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                   SUT(formProvider(), contactType, mode).toString
                 )
 
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
               createTestMustShowBackLink(doc)
 
               createTestMustShowCaptionsWithContent(
@@ -72,6 +74,8 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                 Jsoup.parse(
                   SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, mode).toString
                 )
+
+              doc.mustHaveCorrectPageTitle(pageHeading)
 
               createTestMustShowBackLink(doc)
 

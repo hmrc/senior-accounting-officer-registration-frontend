@@ -37,6 +37,8 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               val doc =
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
               createTestMustShowBackLink(doc)
 
               createTestMustShowCaptionsWithContent(
@@ -67,6 +69,8 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
             "when there exists prior data for the page" - {
               val doc =
                 Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
+
+              doc.mustHaveCorrectPageTitle(pageHeading)
 
               createTestMustShowBackLink(doc)
 

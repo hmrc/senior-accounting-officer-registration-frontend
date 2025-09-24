@@ -38,6 +38,8 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
     "must generate a view" - {
       val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
+      doc.mustHaveCorrectPageTitle(pageHeading)
+
       // todo to be removed
       createTestMustShowBackLink(doc)
 

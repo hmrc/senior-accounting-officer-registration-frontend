@@ -31,6 +31,8 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
       s"must generate a view for $stage stage" - {
         val doc = Jsoup.parse(SUT(stage).toString)
 
+        doc.mustHaveCorrectPageTitle(pageHeading)
+
         createTestMustHaveCorrectPageHeading(doc, pageHeading)
 
         createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphs)

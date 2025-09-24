@@ -39,6 +39,8 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                   SUT(formProvider(), contactType, mode).toString
                 )
 
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
               createTestMustShowBackLink(doc)
 
               createTestMustShowCaptionsWithContent(
@@ -70,6 +72,8 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
               val doc = Jsoup.parse(
                 SUT(formProvider().bind(Map("value" -> "test input value")), contactType, mode).toString
               )
+
+              doc.mustHaveCorrectPageTitle(pageHeading)
 
               createTestMustShowBackLink(doc)
 
