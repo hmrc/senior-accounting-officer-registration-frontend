@@ -37,20 +37,8 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               val doc =
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
-              createTestMustHaveCorrectPageHeading(doc, pageHeading)
-
-              doc.createTestMustShowASingleInput(
-                expectedLabel = pageHeading,
-                expectedValue = "",
-                expectedHint = Some(hintContent)
-              )
-
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonContent
-              )
               createTestMustShowBackLink(doc)
-              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
               createTestMustShowCaptionsWithContent(
                 doc,
                 expectedCaptions = contactType match {
@@ -59,26 +47,29 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                   case Third  => contactTypeThirdCaption
                 }
               )
+
+              createTestMustHaveCorrectPageHeading(doc, pageHeading)
+
+              doc.createTestMustShowASingleInput(
+                expectedLabel = pageHeading,
+                expectedValue = "",
+                expectedHint = Some(expectedHints)
+              )
+
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonText
+              )
+
+              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
             }
 
             "when there exists prior data for the page" - {
               val doc =
                 Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
-              createTestMustHaveCorrectPageHeading(doc, pageHeading)
-
-              doc.createTestMustShowASingleInput(
-                expectedLabel = pageHeading,
-                expectedValue = testInputValue,
-                expectedHint = Some(hintContent)
-              )
-
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonContent
-              )
               createTestMustShowBackLink(doc)
-              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
               createTestMustShowCaptionsWithContent(
                 doc,
                 expectedCaptions = contactType match {
@@ -87,6 +78,21 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                   case Third  => contactTypeThirdCaption
                 }
               )
+
+              createTestMustHaveCorrectPageHeading(doc, pageHeading)
+
+              doc.createTestMustShowASingleInput(
+                expectedLabel = pageHeading,
+                expectedValue = testInputValue,
+                expectedHint = Some(expectedHints)
+              )
+
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonText
+              )
+
+              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
             }
           }
         }
@@ -96,13 +102,16 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 }
 
 object ContactNameViewSpec {
-  val pageHeading                            = "Enter full name"
-  val testInputValue: String                 = "test Input Value"
+  val pageHeading = "Enter full name"
+
   val contactTypeFirstCaption: List[String]  = List("First contact details")
   val contactTypeSecondCaption: List[String] = List("Second contact details")
   val contactTypeThirdCaption: List[String]  = List("Third contact details")
-  val submitButtonContent                    = "Continue"
-  val hintContent: String                    =
+
+  val testInputValue: String = "test Input Value"
+  val expectedHints: String  =
     "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
+
+  val submitButtonText = "Continue"
 
 }

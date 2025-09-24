@@ -33,10 +33,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val contacts      = List(firstContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
-      createTestMustHaveCorrectPageHeading(doc, pageHeading)
-      createTestMustHaveSubmitButton(doc, submitButtonContent)
       createTestMustShowBackLink(doc)
-      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
+      createTestMustHaveCorrectPageHeading(doc, pageHeading)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -61,16 +60,23 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       "must show 1 contact table" in {
         dl.size() mustBe 1
       }
+
+      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
+        expectedSubmitButtonText = submitButtonText
+      )
+
+      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
     }
 
     "When exactly two contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
-      createTestMustHaveCorrectPageHeading(doc, pageHeading)
-      createTestMustHaveSubmitButton(doc, submitButtonContent)
       createTestMustShowBackLink(doc)
-      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
+      createTestMustHaveCorrectPageHeading(doc, pageHeading)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -114,16 +120,21 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         dl.size() mustBe 2
       }
 
+      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
+        expectedSubmitButtonText = submitButtonText
+      )
+
+      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
     }
 
     "When exactly three contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact, thirdContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
-      createTestMustHaveCorrectPageHeading(doc, pageHeading)
-      createTestMustHaveSubmitButton(doc, submitButtonContent)
       createTestMustShowBackLink(doc)
-      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
+      createTestMustHaveCorrectPageHeading(doc, pageHeading)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -184,6 +195,13 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       "must show 3 contact tables" in {
         dl.size() mustBe 3
       }
+
+      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
+        expectedSubmitButtonText = submitButtonText
+      )
+
+      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
     }
   }
 
@@ -272,12 +290,15 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 }
 
 object ContactCheckYourAnswersViewSpec {
+  val pageHeading = "Check your answers"
+
+  val firstContactHeading  = "First contact details"
+  val secondContactHeading = "Second contact details"
+  val thirdContactHeading  = "Third contact details"
+
   val firstContact: ContactInfo  = ContactInfo("name1", "role1", "email1", "phone1")
   val secondContact: ContactInfo = ContactInfo("name2", "role2", "email2", "phone2")
   val thirdContact: ContactInfo  = ContactInfo("name3", "role3", "email3", "phone3")
-  val firstContactHeading        = "First contact details"
-  val secondContactHeading       = "Second contact details"
-  val thirdContactHeading        = "Third contact details"
-  val pageHeading                = "Check your answers"
-  val submitButtonContent        = "Save and Continue"
+
+  val submitButtonText = "Save and Continue"
 }

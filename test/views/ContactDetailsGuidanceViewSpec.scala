@@ -26,25 +26,36 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
   "ContactDetailsGuidanceView" - {
     val doc = Jsoup.parse(SUT().toString)
 
-    createTestMustHaveCorrectPageHeading(doc, expectedHeading = pageHeading)
-    createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphsContent)
-    createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletPointsContent)
-    createTestMustHaveSubmitButton(doc, expectedText = submitButtonText)
     createTestMustShowBackLink(doc)
+
+    createTestMustHaveCorrectPageHeading(doc, expectedHeading = pageHeading)
+
+    createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphsContent)
+
+    createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletPointsContent)
+
+    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+      expectedAction = controllers.routes.ContactDetailsGuidanceController.continue(),
+      expectedSubmitButtonText = submitButtonText
+    )
+
     createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
   }
 }
 
 object ContactDetailsGuidanceViewSpec {
-  val pageHeading                     = "We need contact details for this [company/group]"
+  val pageHeading = "We need contact details for this [company/group]"
+
   val paragraphsContent: List[String] = List(
     "Provide HMRC with contact details for the person or team responsible for this company or group.",
     "We’ll use these details to:",
     "You could also include the Senior Accounting Officer’s contact details so they can stay informed."
   )
+
   val bulletPointsContent: List[String] = List(
     "contact the right person if we have questions about the company’s tax accounting arrangements",
     "send confirmation when the notification and certificate have been submitted"
   )
+
   val submitButtonText = "Continue"
 }
