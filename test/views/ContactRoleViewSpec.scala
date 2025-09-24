@@ -41,7 +41,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 
               doc.mustHaveCorrectPageTitle(pageHeading)
 
-              doc.createTestMustShowBackLink
+              doc.createTestForBackLink(show = true)
 
               doc.createTestMustShowCaptionsWithContent(
                 expectedCaptions = contactType match {
@@ -74,7 +74,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 
               doc.mustHaveCorrectPageTitle(pageHeading)
 
-              doc.createTestMustShowBackLink
+              doc.createTestForBackLink(show = true)
 
               doc.createTestMustShowCaptionsWithContent(
                 expectedCaptions = contactType match {

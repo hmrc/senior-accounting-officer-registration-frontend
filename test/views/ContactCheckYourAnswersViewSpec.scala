@@ -35,7 +35,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       doc.mustHaveCorrectPageTitle(pageHeading)
 
-      doc.createTestMustShowBackLink
+      doc.createTestForBackLink(show = true)
 
       doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
@@ -78,7 +78,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       doc.mustHaveCorrectPageTitle(pageHeading)
 
-      doc.createTestMustShowBackLink
+      doc.createTestForBackLink(show = true)
 
       doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
@@ -138,7 +138,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       doc.mustHaveCorrectPageTitle(pageHeading)
 
-      doc.createTestMustShowBackLink
+      doc.createTestForBackLink(show = true)
 
       doc.createTestMustHaveCorrectPageHeading(pageHeading)
 

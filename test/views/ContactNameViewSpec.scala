@@ -39,7 +39,7 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
               doc.mustHaveCorrectPageTitle(pageHeading)
 
-              doc.createTestMustShowBackLink
+              doc.createTestForBackLink(show = true)
 
               doc.createTestMustShowCaptionsWithContent(
                 expectedCaptions = contactType match {
@@ -71,7 +71,7 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
               doc.mustHaveCorrectPageTitle(pageHeading)
 
-              doc.createTestMustShowBackLink
+              doc.createTestForBackLink(show = true)
 
               doc.createTestMustShowCaptionsWithContent(
                 expectedCaptions = contactType match {

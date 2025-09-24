@@ -28,7 +28,7 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 
     doc.mustHaveCorrectPageTitle(caption)
 
-    doc.createTestMustShowBackLink
+    doc.createTestForBackLink(show = true)
 
     doc.createTestMustShowCaptionsWithContent(
       expectedCaptions = List(caption)
@@ -36,9 +36,9 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 
     doc.createTestMustHaveCorrectPageHeading(expectedHeading = pageHeading)
 
-    doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphsContent)
+    doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphTexts)
 
-    doc.createTestMustShowBulletPointsWithContent(expectedContentList = bulletPointsContent)
+    doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
 
     doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
       expectedAction = controllers.routes.ContactDetailsGuidanceController.continue(),
@@ -54,13 +54,13 @@ object ContactDetailsGuidanceViewSpec {
 
   val caption = "Contact details"
 
-  val paragraphsContent: List[String] = List(
+  val paragraphTexts: List[String] = List(
     "Provide HMRC with contact details for the person or team responsible for this company or group.",
     "We’ll use these details to:",
     "You could also include the Senior Accounting Officer’s contact details so they can stay informed."
   )
 
-  val bulletPointsContent: List[String] = List(
+  val bulletPointTexts: List[String] = List(
     "contact the right person if we have questions about the company’s tax accounting arrangements",
     "send confirmation when the notification and certificate have been submitted"
   )

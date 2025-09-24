@@ -40,33 +40,40 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
       doc.mustHaveCorrectPageTitle(pageHeading)
 
-      // todo to be removed
-      doc.createTestMustShowBackLink
+      doc.createTestForBackLink(show = false)
 
       doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
-      doc.createTestMustShowPanelHeadingsWithContent(expectedPanelHeadings = panelHeadingContent)
+      "with a confirmation panel that" - {
+        "must have the correct title" - {
+          doc.getConfirmationPanel.getPanelTitle.createTestMustShowText(expectedText = panelTitle)
+        }
+
+        "must have the correct body" - {
+          doc.getConfirmationPanel.getPanelBody.createTestMustShowText(expectedText = panelBody)
+        }
+      }
 
       doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphsList)
 
       "The final paragraph" - {
         doc.getMainContent
-          .select("p")
-          .get(3)
+          .getParagraphs()
+          .last
           .createTestMustShowLink(
-            expectedContent = "submit a notification and certificate.",
+            expectedText = "submit a notification and certificate.",
             expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
           )
       }
 
-      doc.createTestMustShowBulletPointsWithContent(expectedContentList = bulletsContentList)
+      doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
 
       "First bullet point" - {
         doc.getMainContent
           .select("li")
           .get(0)
           .createTestMustShowLink(
-            expectedContent = bulletsContentList.head,
+            expectedText = bulletPointTexts.head,
             expectedUrl = "#"
           )
       }
@@ -76,7 +83,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           .select("li")
           .get(1)
           .createTestMustShowLink(
-            expectedContent = bulletsContentList.last,
+            expectedText = bulletPointTexts.last,
             expectedUrl = "#"
           )
       }
@@ -89,7 +96,9 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 object RegistrationCompleteViewSpec {
   val pageHeading = "Registration Complete"
 
-  val panelHeadingContent: List[String] = List("Your reference number REG12345")
+  val panelTitle: String = "Registration Complete"
+
+  val panelBody: String = "Your reference number REG12345"
 
   val paragraphsList: List[String] = List(
     "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
@@ -98,6 +107,6 @@ object RegistrationCompleteViewSpec {
     "You can now log into your Senior Accounting Officer notification and certificate service account to submit a notification and certificate."
   )
 
-  val bulletsContentList: List[String] = List("Print the page", "Download as PDF")
+  val bulletPointTexts: List[String] = List("Print the page", "Download as PDF")
 
 }

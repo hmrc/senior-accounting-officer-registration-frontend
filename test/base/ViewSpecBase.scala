@@ -39,6 +39,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
   extension (doc: Document) {
     def getMainContent: Element = doc.getElementById("main-content")
 
+    def getConfirmationPanel: Element =
+      util
+        .Try(doc.select(".govuk-panel.govuk-panel--confirmation").get(0))
+        .getOrElse(throw RuntimeException("No Confirmation Panel found"))
+
     def mustHaveCorrectPageTitle(title: String)(using pos: Position): Unit =
       "must generate a view with the correct title" in {
         doc.title mustBe s"$title - $expectedServiceName - GOV.UK"
@@ -55,15 +60,25 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
       }
 
-    def createTestMustShowBackLink(using pos: Position): Unit =
-      "must have a backlink " in {
-        val backLink = doc.getElementsByClass("govuk-back-link")
-        withClue(
-          "backlink not found\n"
-        ) {
-          backLink.size() mustBe 1
+    def createTestForBackLink(show: Boolean)(using pos: Position): Unit =
+      if show then
+        "must show a backlink " in {
+          val backLink = doc.getElementsByClass("govuk-back-link")
+          withClue(
+            "backlink is not found\n"
+          ) {
+            backLink.size() mustBe 1
+          }
         }
-      }
+      else
+        "must not show a backlink" in {
+          val elements = doc.getElementsByClass("govuk-back-link")
+          withClue(
+            "a backlink was found\n"
+          ) {
+            elements.size() mustBe 0
+          }
+        }
 
     def createTestMustShowIsThisPageNotWorkingProperlyLink(using
         pos: Position
@@ -87,6 +102,19 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       case doc: Document => doc.getMainContent
       case _             => target
     }
+
+    def getParagraphs(includeHelpLink: Boolean = false): Iterable[Element] =
+      target.resolve.select(if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector).asScala
+
+    def getPanelTitle: Element =
+      util
+        .Try(target.resolve.select(".govuk-panel__title").get(0))
+        .getOrElse(throw RuntimeException("No panel title found"))
+
+    def getPanelBody: Element =
+      util
+        .Try(target.resolve.select(".govuk-panel__body").get(0))
+        .getOrElse(throw RuntimeException("No panel body found"))
 
     def createTestMustShowASingleInput(
         expectedLabel: String,
@@ -190,27 +218,32 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
 
     def createTestMustNotShowElement(classes: String)(using pos: Position): Unit =
-      "must not show the element of class " in {
+      s"must not show the element of class $classes" in {
         val elements = target.resolve.getElementsByClass(classes)
         elements.size() mustBe 0
       }
 
+    def createTestMustShowText(expectedText: String)(using pos: Position): Unit =
+      s"must have text '$expectedText'" in {
+        target.resolve.text() mustBe expectedText
+      }
+
     private def mustShowElementsWithContent(
         selector: String,
-        expectedContent: List[String],
+        expectedTexts: List[String],
         description: String
     )(using pos: Position): Unit = {
-      val expectedCount = expectedContent.size
+      val expectedCount = expectedTexts.size
       val elements      = target.resolve.select(selector).asScala
       s"must have $expectedCount of $description" in {
         withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
           elements.size mustBe expectedCount
         }
       }
-      for (content, index) <- expectedContent.zipWithIndex do {
+      for (content, index) <- expectedTexts.zipWithIndex do {
         s"must have a $description with content '$content' (check ${index + 1})" in {
           withClue(s"$description with content '$content' not found\n") {
-            elements.zip(expectedContent).foreach { case (element, expectedText) =>
+            elements.zip(expectedTexts).foreach { case (element, expectedText) =>
               element.text() mustEqual expectedText
             }
           }
@@ -221,39 +254,40 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     def createTestMustShowHeadingH2s(
         expectedHeadings: List[String]
     )(using pos: Position): Unit =
-      mustShowElementsWithContent(selector = "h2", expectedContent = expectedHeadings, description = "headings")
+      mustShowElementsWithContent(selector = "h2", expectedTexts = expectedHeadings, description = "headings")
 
     def createTestMustShowParagraphsWithContent(
         expectedParagraphs: List[String],
         includeHelpLink: Boolean = false
     )(using
         pos: Position
-    ): Unit =
+    ): Unit = {
       mustShowElementsWithContent(
         selector = if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector,
-        expectedContent = expectedParagraphs,
+        expectedTexts = expectedParagraphs,
         description = "paragraphs"
       )
 
-    def createTestMustShowPanelHeadingsWithContent(
-        expectedPanelHeadings: List[String]
-    )(using
-        pos: Position
-    ): Unit =
-      mustShowElementsWithContent(
-        selector = "div.govuk-panel__body",
-        expectedContent = expectedPanelHeadings,
-        description = "panel headings"
-      )
+      "all paragraphs must have the expected CSS class" in {
+        def paragraphs =
+          target.resolve.select(if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector).asScala
+
+        paragraphs.foreach(paragraph =>
+          withClue(s"$paragraph did not have the expected CSS class\n") {
+            paragraph.className() must include("govuk-body")
+          }
+        )
+      }
+    }
 
     def createTestMustShowBulletPointsWithContent(
-        expectedContentList: List[String]
+        expectedTexts: List[String]
     )(using
         pos: Position
     ): Unit =
       mustShowElementsWithContent(
         selector = "li",
-        expectedContent = expectedContentList,
+        expectedTexts = expectedTexts,
         description = "bullets"
       )
 
@@ -262,17 +296,17 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     )(using pos: Position): Unit =
       mustShowElementsWithContent(
         selector = "span.govuk-caption-m",
-        expectedContent = expectedCaptions,
+        expectedTexts = expectedCaptions,
         description = "captions"
       )
 
     def createTestMustShowLink(
-        expectedContent: String,
+        expectedText: String,
         expectedUrl: String
     )(using
         pos: Position
     ): Unit =
-      s"must have expected link with correct content: $expectedContent and correct url $expectedUrl withing provided element" in {
+      s"must have expected link with correct text: $expectedText and correct url $expectedUrl withing provided element" in {
         val element       = target.resolve
         val link: Element = if element.tagName() == "a" then {
           element
@@ -283,11 +317,15 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
           links.head
         }
-        withClue(s"links content was not as expected. Got ${link.text()}, expected '$expectedContent'\n") {
-          link.text mustBe expectedContent
+        withClue(s"link text was not as expected. Got ${link.text()}, expected '$expectedText'\n") {
+          link.text mustBe expectedText
         }
-        withClue(s"links href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl'\n") {
+        withClue(s"link href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl'\n") {
           link.attr("href") mustBe expectedUrl
+        }
+
+        withClue(s"link must have expected CSS class\n") {
+          link.className() must include("govuk-link")
         }
       }
 
