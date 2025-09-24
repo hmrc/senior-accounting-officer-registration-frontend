@@ -41,10 +41,9 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 
               doc.mustHaveCorrectPageTitle(pageHeading)
 
-              createTestMustShowBackLink(doc)
+              doc.createTestMustShowBackLink
 
-              createTestMustShowCaptionsWithContent(
-                doc,
+              doc.createTestMustShowCaptionsWithContent(
                 expectedCaptions = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
@@ -52,7 +51,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 }
               )
 
-              createTestMustHaveCorrectPageHeading(doc, pageHeading)
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
@@ -65,7 +64,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 expectedSubmitButtonText = submitButtonText
               )
 
-              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
             }
 
             "when there exists prior data for the page" - {
@@ -75,10 +74,9 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 
               doc.mustHaveCorrectPageTitle(pageHeading)
 
-              createTestMustShowBackLink(doc)
+              doc.createTestMustShowBackLink
 
-              createTestMustShowCaptionsWithContent(
-                doc,
+              doc.createTestMustShowCaptionsWithContent(
                 expectedCaptions = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
@@ -86,7 +84,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 }
               )
 
-              createTestMustHaveCorrectPageHeading(doc, pageHeading)
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
@@ -99,7 +97,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 expectedSubmitButtonText = submitButtonText
               )
 
-              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
             }
           }
         }

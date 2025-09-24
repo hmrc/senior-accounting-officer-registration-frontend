@@ -35,9 +35,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       doc.mustHaveCorrectPageTitle(pageHeading)
 
-      createTestMustShowBackLink(doc)
+      doc.createTestMustShowBackLink
 
-      createTestMustHaveCorrectPageHeading(doc, pageHeading)
+      doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -68,7 +68,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         expectedSubmitButtonText = submitButtonText
       )
 
-      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
 
     }
 
@@ -78,9 +78,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       doc.mustHaveCorrectPageTitle(pageHeading)
 
-      createTestMustShowBackLink(doc)
+      doc.createTestMustShowBackLink
 
-      createTestMustHaveCorrectPageHeading(doc, pageHeading)
+      doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -129,7 +129,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         expectedSubmitButtonText = submitButtonText
       )
 
-      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
 
     "When exactly three contacts, must generate a view" - {
@@ -138,9 +138,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       doc.mustHaveCorrectPageTitle(pageHeading)
 
-      createTestMustShowBackLink(doc)
+      doc.createTestMustShowBackLink
 
-      createTestMustHaveCorrectPageHeading(doc, pageHeading)
+      doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -207,7 +207,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         expectedSubmitButtonText = submitButtonText
       )
 
-      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 

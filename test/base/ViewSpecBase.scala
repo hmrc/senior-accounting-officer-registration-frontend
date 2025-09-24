@@ -43,6 +43,43 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       "must generate a view with the correct title" in {
         doc.title mustBe s"$title - $expectedServiceName - GOV.UK"
       }
+
+    def createTestMustHaveCorrectPageHeading(expectedHeading: String)(using
+        pos: Position
+    ): Unit =
+      "must generate a view with the correct page heading" in {
+        val actualH1 = doc.getMainContent.getElementsByTag("h1")
+        withClue(s"the page must contain only a single <h1> with content '$expectedHeading'\n") {
+          actualH1.get(0).text() mustBe expectedHeading
+          actualH1.size() mustBe 1
+        }
+      }
+
+    def createTestMustShowBackLink(using pos: Position): Unit =
+      "must have a backlink " in {
+        val backLink = doc.getElementsByClass("govuk-back-link")
+        withClue(
+          "backlink not found\n"
+        ) {
+          backLink.size() mustBe 1
+        }
+      }
+
+    def createTestMustShowIsThisPageNotWorkingProperlyLink(using
+        pos: Position
+    ): Unit =
+      "must generate a view with 'Is this page not working properly? (opens in new tab)' " in {
+        val helpLink = doc.getMainContent.select("a.govuk-link.hmrc-report-technical-issue")
+        withClue(
+          "help link not found, both contact-frontend.host and contact-frontend.serviceId must be set in the configs\n"
+        ) {
+          helpLink.text() mustBe "Is this page not working properly? (opens in new tab)"
+          helpLink.size() mustBe 1
+        }
+
+        java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
+      }
+
   }
 
   extension (target: => Document | Element) {
@@ -139,200 +176,123 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-  }
-
-  def createTestMustHaveCorrectPageHeading(document: Document, expectedHeading: String)(using
-      pos: Position
-  ): Unit =
-    "must generate a view with the correct page heading" in {
-      val actualH1 = document.getMainContent.getElementsByTag("h1")
-      withClue(s"the page must contain only a single <h1> with content '$expectedHeading'\n") {
-        actualH1.get(0).text() mustBe expectedHeading
-        actualH1.size() mustBe 1
-      }
-    }
-
-  def createTestMustShowIsThisPageNotWorkingProperlyLink(document: Document)(using
-      pos: Position
-  ): Unit =
-    "must generate a view with 'Is this page not working properly? (opens in new tab)' " in {
-      val helpLink = document.getMainContent.select("a.govuk-link.hmrc-report-technical-issue")
-      withClue(
-        "help link not found, both contact-frontend.host and contact-frontend.serviceId must be set in the configs\n"
-      ) {
-        helpLink.text() mustBe "Is this page not working properly? (opens in new tab)"
-        helpLink.size() mustBe 1
+    def createTestMustHaveSubmitButton(expectedText: String)(using
+        pos: Position
+    ): Unit =
+      s"must have a button with text '$expectedText'" in {
+        val button = target.resolve.select("button[type=submit], input[type=submit]")
+        withClue(
+          s"Submit Button with text $expectedText not found\n"
+        ) {
+          button.text() mustBe expectedText
+          button.size() mustBe 1
+        }
       }
 
-      java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
-    }
-
-  def createTestMustHaveSubmitButton(document: Document, expectedText: String)(using
-      pos: Position
-  ): Unit =
-    s"must have a button with text '$expectedText'" in {
-      val button = document.getMainContent.select("button[type=submit], input[type=submit]")
-      withClue(
-        s"Submit Button with text $expectedText not found\n"
-      ) {
-        button.text() mustBe expectedText
-        button.size() mustBe 1
+    def createTestMustNotShowElement(classes: String)(using pos: Position): Unit =
+      "must not show the element of class " in {
+        val elements = target.resolve.getElementsByClass(classes)
+        elements.size() mustBe 0
       }
-    }
 
-  def createTestMustShowBackLink(document: Document)(using pos: Position): Unit =
-    "must have a backlink " in {
-      val backLink = document.getElementsByClass("govuk-back-link")
-      withClue(
-        "backlink not found\n"
-      ) {
-        backLink.size() mustBe 1
+    private def mustShowElementsWithContent(
+        selector: String,
+        expectedContent: List[String],
+        description: String
+    )(using pos: Position): Unit = {
+      val expectedCount = expectedContent.size
+      val elements      = target.resolve.select(selector).asScala
+      s"must have $expectedCount of $description" in {
+        withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
+          elements.size mustBe expectedCount
+        }
       }
-    }
-
-  private def mustShowElementsWithContent(
-      document: Document,
-      selector: String,
-      expectedContent: List[String],
-      description: String
-  )(using pos: Position): Unit =
-    val expectedCount = expectedContent.size
-    val elements      = document.getMainContent.select(selector).asScala
-    s"must have $expectedCount of $description" in {
-      withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
-        elements.size mustBe expectedCount
-      }
-    }
-    for (content, index) <- expectedContent.zipWithIndex do {
-      s"must have a $description with content '$content' (check ${index + 1})" in {
-        withClue(s"$description with content '$content' not found\n") {
-          elements.zip(expectedContent).foreach { case (element, expectedText) =>
-            element.text() mustEqual expectedText
+      for (content, index) <- expectedContent.zipWithIndex do {
+        s"must have a $description with content '$content' (check ${index + 1})" in {
+          withClue(s"$description with content '$content' not found\n") {
+            elements.zip(expectedContent).foreach { case (element, expectedText) =>
+              element.text() mustEqual expectedText
+            }
           }
         }
       }
     }
 
-  def createTestMustShowHeadingH2s(
-      document: Document,
-      expectedHeadings: List[String]
-  )(using pos: Position): Unit =
-    mustShowElementsWithContent(document = document, selector = "h2", expectedContent = expectedHeadings, "headings")
+    def createTestMustShowHeadingH2s(
+        expectedHeadings: List[String]
+    )(using pos: Position): Unit =
+      mustShowElementsWithContent(selector = "h2", expectedContent = expectedHeadings, description = "headings")
 
-  def createTestMustShowInputsWithValues(
-      document: Document,
-      expectedValues: List[String]
-  )(using pos: Position): Unit =
-    val expectedCount = expectedValues.size
-    val elements      = document.getMainContent.select("input").asScala
-    s"must have $expectedCount of inputs" in {
-      withClue(s"Expected $expectedCount inputs but found ${elements.size}\n") {
-        elements.size mustBe expectedCount
-      }
-    }
-    for (value, index) <- expectedValues.zipWithIndex do {
-      s"must have a inputs with values '$value' (check ${index + 1})" in {
-        withClue(s"input with value '$value' not found\n") {
-          elements.zip(expectedValues).foreach { case (element, expectedValueText) =>
-            element.attr("value") mustEqual expectedValueText
+    def createTestMustShowParagraphsWithContent(
+        expectedParagraphs: List[String],
+        includeHelpLink: Boolean = false
+    )(using
+        pos: Position
+    ): Unit =
+      mustShowElementsWithContent(
+        selector = if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector,
+        expectedContent = expectedParagraphs,
+        description = "paragraphs"
+      )
+
+    def createTestMustShowPanelHeadingsWithContent(
+        expectedPanelHeadings: List[String]
+    )(using
+        pos: Position
+    ): Unit =
+      mustShowElementsWithContent(
+        selector = "div.govuk-panel__body",
+        expectedContent = expectedPanelHeadings,
+        description = "panel headings"
+      )
+
+    def createTestMustShowBulletPointsWithContent(
+        expectedContentList: List[String]
+    )(using
+        pos: Position
+    ): Unit =
+      mustShowElementsWithContent(
+        selector = "li",
+        expectedContent = expectedContentList,
+        description = "bullets"
+      )
+
+    def createTestMustShowCaptionsWithContent(
+        expectedCaptions: List[String]
+    )(using pos: Position): Unit =
+      mustShowElementsWithContent(
+        selector = "span.govuk-caption-m",
+        expectedContent = expectedCaptions,
+        description = "captions"
+      )
+
+    def createTestMustShowLink(
+        expectedContent: String,
+        expectedUrl: String
+    )(using
+        pos: Position
+    ): Unit =
+      s"must have expected link with correct content: $expectedContent and correct url $expectedUrl withing provided element" in {
+        val element       = target.resolve
+        val link: Element = if element.tagName() == "a" then {
+          element
+        } else {
+          val links = element.select("a").asScala
+          withClue(s"Expected to find exactly one link in the element but found ${links.size}\n") {
+            links.size mustBe 1
           }
+          links.head
+        }
+        withClue(s"links content was not as expected. Got ${link.text()}, expected '$expectedContent'\n") {
+          link.text mustBe expectedContent
+        }
+        withClue(s"links href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl'\n") {
+          link.attr("href") mustBe expectedUrl
         }
       }
-    }
 
-  def createTestMustShowParagraphsWithContent(
-      document: Document,
-      expectedParagraphs: List[String],
-      includeHelpLink: Boolean = false
-  )(using
-      pos: Position
-  ): Unit =
-    mustShowElementsWithContent(
-      document = document,
-      selector = if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector,
-      expectedContent = expectedParagraphs,
-      description = "paragraphs"
-    )
-
-  def createTestMustShowPanelHeadingsWithContent(
-      document: Document,
-      expectedPanelHeadings: List[String]
-  )(using
-      pos: Position
-  ): Unit =
-    mustShowElementsWithContent(
-      document = document,
-      selector = "div.govuk-panel__body",
-      expectedContent = expectedPanelHeadings,
-      description = "panel headings"
-    )
-
-  def createTestMustShowBulletPointsWithContent(
-      document: Document,
-      expectedContentList: List[String]
-  )(using
-      pos: Position
-  ): Unit =
-    mustShowElementsWithContent(
-      document = document,
-      selector = "li",
-      expectedContent = expectedContentList,
-      description = "bullets"
-    )
-
-  def createTestMustShowLink(
-      element: => Element,
-      expectedContent: String,
-      expectedUrl: String
-  )(using
-      pos: Position
-  ): Unit =
-    s"must have expected link with correct content: $expectedContent and correct url $expectedUrl withing provided element" in {
-      val link: Element = if element.tagName() == "a" then {
-        element
-      } else {
-        val links = element.select("a").asScala
-        withClue(s"Expected to find exactly one link in the element but found ${links.size}\n") {
-          links.size mustBe 1
-        }
-        links.head
-      }
-      withClue(s"links content was not as expected. Got ${link.text()}, expected '$expectedContent'\n") {
-        link.text mustBe expectedContent
-      }
-      withClue(s"links href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl'\n") {
-        link.attr("href") mustBe expectedUrl
-      }
-    }
-
-  def createTestMustShowHints(
-      document: Document,
-      expectedHints: List[String]
-  )(using pos: Position): Unit =
-    mustShowElementsWithContent(
-      document = document,
-      selector = "div.govuk-hint",
-      expectedContent = expectedHints,
-      description = "hints"
-    )
-
-  def createTestMustShowCaptionsWithContent(
-      document: Document,
-      expectedCaptions: List[String]
-  )(using pos: Position): Unit =
-    mustShowElementsWithContent(
-      document = document,
-      selector = "span.govuk-caption-m",
-      expectedContent = expectedCaptions,
-      description = "captions"
-    )
-
-  def createTestMustNotShowElement(document: Document, classes: String)(using pos: Position): Unit = {
-    "must not show the element of class " in {
-      val elements = document.getMainContent.getElementsByClass(classes)
-      elements.size() mustBe 0
-    }
   }
+
 }
 
 object ViewSpecBase {

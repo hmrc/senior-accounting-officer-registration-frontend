@@ -28,25 +28,24 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 
     doc.mustHaveCorrectPageTitle(caption)
 
-    createTestMustShowBackLink(doc)
+    doc.createTestMustShowBackLink
 
-    createTestMustShowCaptionsWithContent(
-      doc,
+    doc.createTestMustShowCaptionsWithContent(
       expectedCaptions = List(caption)
     )
 
-    createTestMustHaveCorrectPageHeading(doc, expectedHeading = pageHeading)
+    doc.createTestMustHaveCorrectPageHeading(expectedHeading = pageHeading)
 
-    createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphsContent)
+    doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphsContent)
 
-    createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletPointsContent)
+    doc.createTestMustShowBulletPointsWithContent(expectedContentList = bulletPointsContent)
 
     doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
       expectedAction = controllers.routes.ContactDetailsGuidanceController.continue(),
       expectedSubmitButtonText = submitButtonText
     )
 
-    createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
   }
 }
 

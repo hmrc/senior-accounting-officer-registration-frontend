@@ -33,9 +33,9 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
         doc.mustHaveCorrectPageTitle(pageHeading)
 
-        createTestMustHaveCorrectPageHeading(doc, pageHeading)
+        doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
-        createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphs)
+        doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphs)
 
         "must show the correct statuses" in {
           val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")
@@ -65,9 +65,9 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
         stage match {
           case CompanyDetails =>
-            createTestMustNotShowElement(doc, "govuk-button")
+            doc.createTestMustNotShowElement("govuk-button")
           case ContactsInfo =>
-            createTestMustNotShowElement(doc, "govuk-button")
+            doc.createTestMustNotShowElement("govuk-button")
           case Submission =>
             doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
               expectedAction = controllers.routes.IndexController.continue(),
@@ -75,7 +75,7 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
             )
         }
 
-        createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+        doc.createTestMustShowIsThisPageNotWorkingProperlyLink
       }
     }
   }

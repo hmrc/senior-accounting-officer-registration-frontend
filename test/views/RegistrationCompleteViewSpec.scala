@@ -41,41 +41,47 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
       doc.mustHaveCorrectPageTitle(pageHeading)
 
       // todo to be removed
-      createTestMustShowBackLink(doc)
+      doc.createTestMustShowBackLink
 
-      createTestMustHaveCorrectPageHeading(doc, pageHeading)
+      doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
-      createTestMustShowPanelHeadingsWithContent(doc, expectedPanelHeadings = panelHeadingContent)
+      doc.createTestMustShowPanelHeadingsWithContent(expectedPanelHeadings = panelHeadingContent)
 
-      createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphsList)
+      doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphsList)
 
       "The final paragraph" - {
-        createTestMustShowLink(
-          doc.getMainContent.select("p").get(3),
-          expectedContent = "submit a notification and certificate.",
-          expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
-        )
+        doc.getMainContent
+          .select("p")
+          .get(3)
+          .createTestMustShowLink(
+            expectedContent = "submit a notification and certificate.",
+            expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
+          )
       }
 
-      createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletsContentList)
+      doc.createTestMustShowBulletPointsWithContent(expectedContentList = bulletsContentList)
 
       "First bullet point" - {
-        createTestMustShowLink(
-          doc.getMainContent.select("li").get(0),
-          expectedContent = bulletsContentList.head,
-          expectedUrl = "#"
-        )
+        doc.getMainContent
+          .select("li")
+          .get(0)
+          .createTestMustShowLink(
+            expectedContent = bulletsContentList.head,
+            expectedUrl = "#"
+          )
       }
 
       "Second bullet point" - {
-        createTestMustShowLink(
-          doc.getMainContent.select("li").get(1),
-          expectedContent = bulletsContentList.last,
-          expectedUrl = "#"
-        )
+        doc.getMainContent
+          .select("li")
+          .get(1)
+          .createTestMustShowLink(
+            expectedContent = bulletsContentList.last,
+            expectedUrl = "#"
+          )
       }
 
-      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 }

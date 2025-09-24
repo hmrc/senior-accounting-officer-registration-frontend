@@ -42,10 +42,9 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
 
               doc.mustHaveCorrectPageTitle(pageHeading)
 
-              createTestMustShowBackLink(doc)
+              doc.createTestMustShowBackLink
 
-              createTestMustShowCaptionsWithContent(
-                doc,
+              doc.createTestMustShowCaptionsWithContent(
                 expectedCaptions = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
@@ -53,7 +52,7 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                 }
               )
 
-              createTestMustHaveCorrectPageHeading(doc, pageHeading)
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
@@ -66,7 +65,7 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                 expectedSubmitButtonText = submitButtonText
               )
 
-              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
             }
 
             "when there exists prior data for the page" - {
@@ -77,10 +76,9 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
 
               doc.mustHaveCorrectPageTitle(pageHeading)
 
-              createTestMustShowBackLink(doc)
+              doc.createTestMustShowBackLink
 
-              createTestMustShowCaptionsWithContent(
-                doc,
+              doc.createTestMustShowCaptionsWithContent(
                 expectedCaptions = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
@@ -88,7 +86,7 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                 }
               )
 
-              createTestMustHaveCorrectPageHeading(doc, pageHeading)
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
@@ -101,7 +99,7 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                 expectedSubmitButtonText = submitButtonText
               )
 
-              createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
             }
           }
         }
