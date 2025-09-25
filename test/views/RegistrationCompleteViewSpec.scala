@@ -94,7 +94,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 }
 
 object RegistrationCompleteViewSpec {
-  val pageHeading = "Registration Complete"
+  val pageHeading: String = "Registration Complete"
 
   val panelTitle: String = "Registration Complete"
 

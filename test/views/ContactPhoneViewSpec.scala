@@ -44,8 +44,8 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
 
               doc.createTestForBackLink(show = true)
 
-              doc.createTestMustShowCaptionsWithContent(
-                expectedCaptions = contactType match {
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
@@ -78,8 +78,8 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
 
               doc.createTestForBackLink(show = true)
 
-              doc.createTestMustShowCaptionsWithContent(
-                expectedCaptions = contactType match {
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
@@ -109,15 +109,15 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
 }
 
 object ContactPhoneViewSpec {
-  val pageHeading = "Phone number"
+  val pageHeading: String = "Phone number"
 
-  val contactTypeFirstCaption: List[String]  = List("First contact details")
-  val contactTypeSecondCaption: List[String] = List("Second contact details")
-  val contactTypeThirdCaption: List[String]  = List("Third contact details")
+  val contactTypeFirstCaption: String  = "First contact details"
+  val contactTypeSecondCaption: String = "Second contact details"
+  val contactTypeThirdCaption: String  = "Third contact details"
 
   val expectedHints: String =
     "We’ll only use this to contact you about the company’s tax accounting arrangements"
   val testInputValue: String = "test Input Value"
 
-  val submitButtonText = "Continue"
+  val submitButtonText: String = "Continue"
 }

@@ -82,13 +82,13 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 }
 
 object DashboardViewSpec {
-  val pageHeading = "Register your company"
+  val pageHeading: String = "Register your company"
 
   val paragraphs: List[String] = List(
     "Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from.",
     "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
   )
 
-  val submitButtonText = "Submit your registration"
+  val submitButtonText: String = "Submit your registration"
 
 }

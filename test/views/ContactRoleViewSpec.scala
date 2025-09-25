@@ -43,8 +43,8 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 
               doc.createTestForBackLink(show = true)
 
-              doc.createTestMustShowCaptionsWithContent(
-                expectedCaptions = contactType match {
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
@@ -76,8 +76,8 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 
               doc.createTestForBackLink(show = true)
 
-              doc.createTestMustShowCaptionsWithContent(
-                expectedCaptions = contactType match {
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
@@ -107,14 +107,14 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
 }
 
 object ContactRoleViewSpec {
-  val pageHeading = "Enter role"
+  val pageHeading: String = "Enter role"
 
-  val contactTypeFirstCaption: List[String]  = List("First contact details")
-  val contactTypeSecondCaption: List[String] = List("Second contact details")
-  val contactTypeThirdCaption: List[String]  = List("Third contact details")
+  val contactTypeFirstCaption: String  = "First contact details"
+  val contactTypeSecondCaption: String = "Second contact details"
+  val contactTypeThirdCaption: String  = "Third contact details"
 
-  val expectedHints: String = "For example, ‘Chief Financial Officer’."
-  val testInputValue        = "test input value"
+  val expectedHints: String  = "For example, ‘Chief Financial Officer’."
+  val testInputValue: String = "test input value"
 
-  val submitButtonText = "Continue"
+  val submitButtonText: String = "Continue"
 }

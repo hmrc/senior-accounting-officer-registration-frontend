@@ -30,8 +30,8 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 
     doc.createTestForBackLink(show = true)
 
-    doc.createTestMustShowCaptionsWithContent(
-      expectedCaptions = List(caption)
+    doc.createTestMustShowCaptionWithContent(
+      expectedCaption = caption
     )
 
     doc.createTestMustHaveCorrectPageHeading(expectedHeading = pageHeading)
@@ -50,9 +50,9 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 }
 
 object ContactDetailsGuidanceViewSpec {
-  val pageHeading = "We need contact details for this [company/group]"
+  val pageHeading: String = "We need contact details for this [company/group]"
 
-  val caption = "Contact details"
+  val caption: String = "Contact details"
 
   val paragraphTexts: List[String] = List(
     "Provide HMRC with contact details for the person or team responsible for this company or group.",
@@ -65,5 +65,5 @@ object ContactDetailsGuidanceViewSpec {
     "send confirmation when the notification and certificate have been submitted"
   )
 
-  val submitButtonText = "Continue"
+  val submitButtonText: String = "Continue"
 }

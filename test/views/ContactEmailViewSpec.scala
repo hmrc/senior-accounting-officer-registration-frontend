@@ -41,8 +41,8 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
 
               doc.createTestForBackLink(show = true)
 
-              doc.createTestMustShowCaptionsWithContent(
-                expectedCaptions = contactType match {
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
@@ -73,8 +73,8 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
 
               doc.createTestForBackLink(show = true)
 
-              doc.createTestMustShowCaptionsWithContent(
-                expectedCaptions = contactType match {
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
@@ -104,14 +104,14 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
 }
 
 object ContactEmailViewSpec {
-  val pageHeading = "Enter email address"
+  val pageHeading: String = "Enter email address"
 
-  val contactTypeFirstCaption: List[String]  = List("First contact details")
-  val contactTypeSecondCaption: List[String] = List("Second contact details")
-  val contactTypeThirdCaption: List[String]  = List("Third contact details")
+  val contactTypeFirstCaption: String  = "First contact details"
+  val contactTypeSecondCaption: String = "Second contact details"
+  val contactTypeThirdCaption: String  = "Third contact details"
 
-  val expectedHints: String = "We’ll only use this to contact you about the company’s tax accounting arrangements"
-  val testInputValue        = "test Input Value"
+  val expectedHints: String  = "We’ll only use this to contact you about the company’s tax accounting arrangements"
+  val testInputValue: String = "test Input Value"
 
-  val submitButtonText = "Continue"
+  val submitButtonText: String = "Continue"
 }

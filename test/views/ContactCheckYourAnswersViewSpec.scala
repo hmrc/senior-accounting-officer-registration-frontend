@@ -296,15 +296,15 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 }
 
 object ContactCheckYourAnswersViewSpec {
-  val pageHeading = "Check your answers"
+  val pageHeading: String = "Check your answers"
 
-  val firstContactHeading  = "First contact details"
-  val secondContactHeading = "Second contact details"
-  val thirdContactHeading  = "Third contact details"
+  val firstContactHeading: String  = "First contact details"
+  val secondContactHeading: String = "Second contact details"
+  val thirdContactHeading: String  = "Third contact details"
 
   val firstContact: ContactInfo  = ContactInfo("name1", "role1", "email1", "phone1")
   val secondContact: ContactInfo = ContactInfo("name2", "role2", "email2", "phone2")
   val thirdContact: ContactInfo  = ContactInfo("name3", "role3", "email3", "phone3")
 
-  val submitButtonText = "Save and Continue"
+  val submitButtonText: String = "Save and Continue"
 }
