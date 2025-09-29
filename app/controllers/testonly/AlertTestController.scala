@@ -47,7 +47,7 @@ class AlertTestController @Inject() (
         ServiceUnavailable("Simulated service failure")
       case "500" =>
         logger.error("Test alert: Simulated 500 error")
-        throw new RuntimeException("Sumulated internal server error")
+        throw new RuntimeException("Simulated internal server error")
       case "404" =>
         NotFound("Test alert: Simulated 404 error")
       case "timeout" =>
