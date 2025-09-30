@@ -58,6 +58,9 @@ class AlertTestController @Inject() (
       case "187" =>
         logger.warn(s"Test alert: simulated container kill")
         sys.exit(187)
+      case "log-error" =>
+        logger.error(s"Test alert: simulated error")
+        Future.successful(Ok("Test alert: Simulated error log"))
       case _ =>
         Future.successful(BadRequest(s"Unknown error type: $errorType"))
     }
