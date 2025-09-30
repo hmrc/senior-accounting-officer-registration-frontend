@@ -39,14 +39,11 @@ class AlertTestController @Inject() (
 
   def simulateError(errorType: String): Action[AnyContent] = identify.async {
     errorType match {
-      case "503" =>
-        logger.warn(s"Test alert: simulated server error (503)")
-        Future.successful(ServiceUnavailable("Simulated service failure"))
       case "500" =>
         logger.warn(s"Test alert: simulated Internal server error (500)")
         Future.successful(InternalServerError("Simulated service failure"))
-      case "timeout" =>
-        logger.warn(s"Test alert: simulated timeout")
+      case "exception" =>
+        logger.warn(s"Test alert: simulated runtime exception")
         throw new RuntimeException("Simulated timeout exception")
       case "slow-response" =>
         logger.warn("TEST ALERT: slow response initiated")
