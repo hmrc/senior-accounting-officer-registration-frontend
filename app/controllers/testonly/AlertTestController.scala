@@ -18,24 +18,24 @@ package controllers.testonly
 
 import controllers.actions.IdentifierAction
 import play.api.Logging
-import play.api.i18n.MessagesApi
+import play.api.libs.concurrent.Futures
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.duration.*
+import scala.concurrent.{ExecutionContext, Future}
 
-import java.util.{Timer, TimerTask}
 import javax.inject.Inject
 
 class AlertTestController @Inject() (
-    override val messagesApi: MessagesApi,
     identify: IdentifierAction,
-    val controllerComponents: MessagesControllerComponents
+    val controllerComponents: MessagesControllerComponents,
+    futures: Futures
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with Logging {
 
-  val delayInSeconds = 4*60
+  val delayInSeconds: Int = 4 * 60
 
   def simulateError(errorType: String): Action[AnyContent] = identify.async {
     errorType match {
@@ -46,12 +46,10 @@ class AlertTestController @Inject() (
         logger.warn(s"Test alert: simulated runtime exception")
         throw new RuntimeException("Simulated runtime exception")
       case "slow-response" =>
-        logger.warn("TEST ALERT: slow response initiated")
-        slowOperation((delayInSeconds))
-          .map { result =>
-            logger.warn("TEST ALERT: slow response completed")
-            Ok(s"Slow response: $result")
-          }
+        futures.delay(20.seconds).map { _ =>
+          logger.warn(s"Test alert: slow response completed after 20s")
+          Ok("Response completed after 20 seconds")
+        }
       case "187" =>
         logger.warn(s"Test alert: simulated container kill")
         sys.exit(187)
@@ -61,21 +59,5 @@ class AlertTestController @Inject() (
       case _ =>
         Future.successful(BadRequest(s"Unknown error type: $errorType"))
     }
-  }
-
-  // simulated slow operation
-  private def slowOperation(seconds: Int): Future[Result] = {
-    val promise = Promise[Result]()
-    val timer   = new Timer()
-    timer.schedule(
-      new TimerTask {
-        override def run(): Unit = {
-          promise.success(Ok(s"Response completed after $seconds seconds"))
-          timer.cancel()
-        }
-      },
-      seconds * 1000L
-    )
-    promise.future
   }
 }
