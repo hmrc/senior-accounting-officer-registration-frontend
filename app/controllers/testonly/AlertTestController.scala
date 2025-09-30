@@ -44,7 +44,7 @@ class AlertTestController @Inject() (
         Future.successful(InternalServerError("Simulated service failure"))
       case "exception" =>
         logger.warn(s"Test alert: simulated runtime exception")
-        throw new RuntimeException("Simulated timeout exception")
+        throw new RuntimeException("Simulated runtime exception")
       case "slow-response" =>
         logger.warn("TEST ALERT: slow response initiated")
         slowOperation((delayInSeconds))
