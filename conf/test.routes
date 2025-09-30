@@ -7,3 +7,5 @@ GET        /grs-stub/:journeyid               controllers.testonly.GrsStubsContr
 + nocsrf
 POST       /grs-stub/:journeyid               controllers.testonly.GrsStubsController.postStubGrs(journeyid)
 GET        /grs-stub/journey/:journeyid       controllers.testonly.GrsStubsController.getGrs(journeyid)
+
+GET         /simulate-error/:errorType          controllers.testonly.AlertTestController.simulateError(errorType: String)
