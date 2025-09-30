@@ -35,8 +35,6 @@ class AlertTestController @Inject() (
     extends FrontendBaseController
     with Logging {
 
-  val delayInSeconds: Int = 4 * 60
-
   def simulateError(errorType: String): Action[AnyContent] = identify.async {
     errorType match {
       case "500" =>
@@ -46,7 +44,7 @@ class AlertTestController @Inject() (
         logger.warn(s"Test alert: simulated runtime exception")
         throw new RuntimeException("Simulated runtime exception")
       case "slow-response" =>
-        futures.delay(delayInSeconds.seconds).map { _ =>
+        futures.delay(4.minutes).map { _ =>
           logger.warn(s"Test alert: slow response completed after 20s")
           Ok("Response completed after 20 seconds")
         }
