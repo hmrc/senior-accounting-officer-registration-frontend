@@ -40,17 +40,14 @@ class AlertTestController @Inject() (
   def simulateError(errorType: String): Action[AnyContent] = identify.async {
     errorType match {
       case "503" =>
-        logger.error(s"Test alert: simulated server error (503)")
+        logger.warn(s"Test alert: simulated server error (503)")
         Future.successful(ServiceUnavailable("Simulated service failure"))
       case "500" =>
         logger.warn(s"Test alert: simulated Internal server error (500)")
         Future.successful(InternalServerError("Simulated service failure"))
-      case "404" =>
-        logger.warn(s"Test alert: simulated not found")
-        Future.successful(NotFound("Test alert: Simulated 404 error"))
       case "timeout" =>
-        logger.error(s"Test alert: simulated timeout")
-        throw new scala.concurrent.TimeoutException("Simulated timeout exception")
+        logger.warn(s"Test alert: simulated timeout")
+        throw new RuntimeException("Simulated timeout exception")
       case "slow-response" =>
         logger.warn("TEST ALERT: slow response initiated")
         slowOperation((delayInSeconds))
@@ -59,7 +56,7 @@ class AlertTestController @Inject() (
             Ok(s"Slow response: $result")
           }
       case "187" =>
-        logger.error(s"Test alert: simulated container kill")
+        logger.warn(s"Test alert: simulated container kill")
         sys.exit(187)
       case _ =>
         Future.successful(BadRequest(s"Unknown error type: $errorType"))
