@@ -46,7 +46,7 @@ class AlertTestController @Inject() (
         logger.warn(s"Test alert: simulated runtime exception")
         throw new RuntimeException("Simulated runtime exception")
       case "slow-response" =>
-        futures.delay(20.seconds).map { _ =>
+        futures.delay(delayInSeconds.seconds).map { _ =>
           logger.warn(s"Test alert: slow response completed after 20s")
           Ok("Response completed after 20 seconds")
         }
