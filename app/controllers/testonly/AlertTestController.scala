@@ -17,76 +17,68 @@
 package controllers.testonly
 
 import controllers.actions.IdentifierAction
-import org.apache.pekko
-import org.apache.pekko.actor.ActorSystem
 import play.api.Logging
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.duration.*
 import scala.concurrent.{ExecutionContext, Future, Promise}
 
+import java.util.{Timer, TimerTask}
 import javax.inject.Inject
 
 class AlertTestController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
-    val controllerComponents: MessagesControllerComponents,
-    actorSystem: ActorSystem
+    val controllerComponents: MessagesControllerComponents
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with Logging {
 
-  val delay = 310000
+  val delayInSeconds = 4*60
 
   def simulateError(errorType: String): Action[AnyContent] = identify.async {
     errorType match {
-      case "500" =>
-        logger.warn(s"Test alert: simulated Internal server error (500)")
-        Future.successful(InternalServerError("Simulated service failure"))
       case "503" =>
         logger.error(s"Test alert: simulated server error (503)")
         Future.successful(ServiceUnavailable("Simulated service failure"))
+      case "500" =>
+        logger.warn(s"Test alert: simulated Internal server error (500)")
+        Future.successful(InternalServerError("Simulated service failure"))
       case "404" =>
+        logger.warn(s"Test alert: simulated not found")
         Future.successful(NotFound("Test alert: Simulated 404 error"))
-      case "timeout-long" =>
-        raceWithTimeout(slowOperation(35.seconds), 30.seconds)
-          .map { result =>
-            Ok(s"Got result: $result")
-          }
-          .recover { case e: scala.concurrent.TimeoutException =>
-            logger.error("TEST ALERT: Request timed out after 30 seconds")
-            GatewayTimeout("simulated upstream timeout")
-          }
+      case "timeout" =>
+        logger.error(s"Test alert: simulated timeout")
+        throw new scala.concurrent.TimeoutException("Simulated timeout exception")
       case "slow-response" =>
         logger.warn("TEST ALERT: slow response initiated")
-        slowOperation(5.seconds)
+        slowOperation((delayInSeconds))
           .map { result =>
             logger.warn("TEST ALERT: slow response completed")
             Ok(s"Slow response: $result")
           }
-
+      case "187" =>
+        logger.error(s"Test alert: simulated container kill")
+        sys.exit(187)
       case _ =>
         Future.successful(BadRequest(s"Unknown error type: $errorType"))
     }
   }
 
   // simulated slow operation
-  private def slowOperation(duration: FiniteDuration): Future[String] = {
-    val promise = Promise[String]()
-    actorSystem.scheduler.scheduleOnce(duration) {
-      promise.success(s"Operation successfully completed after ${duration.toSeconds}s")
-    }
+  private def slowOperation(seconds: Int): Future[Result] = {
+    val promise = Promise[Result]()
+    val timer   = new Timer()
+    timer.schedule(
+      new TimerTask {
+        override def run(): Unit = {
+          promise.success(Ok(s"Response completed after $seconds seconds"))
+          timer.cancel()
+        }
+      },
+      seconds * 1000L
+    )
     promise.future
   }
-
-  // create a race condition between two futures
-  private def raceWithTimeout[T](aFuture: Future[T], timeoutDuration: FiniteDuration): Future[T] = {
-    val timeoutFuture = pekko.pattern.after(timeoutDuration, actorSystem.scheduler) {
-      Future.failed(new scala.concurrent.TimeoutException(s"Operation timed out after $timeoutDuration"))
-    }
-    Future.firstCompletedOf(Seq(aFuture, timeoutFuture))
-  }
-
 }
