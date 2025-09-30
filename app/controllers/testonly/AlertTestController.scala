@@ -46,7 +46,7 @@ class AlertTestController @Inject() (
       case "slow-response" =>
         futures.delay(4.minutes).map { _ =>
           logger.warn(s"Test alert: slow response completed after 20s")
-          Ok("Response completed after 20 seconds")
+          Ok("Response completed after 4 minutes")
         }
       case "187" =>
         logger.warn(s"Test alert: simulated container kill")
