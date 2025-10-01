@@ -30,7 +30,7 @@ import repositories.SessionRepository
 import services.GrsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 import javax.inject.Inject
@@ -69,16 +69,26 @@ class GrsController @Inject() (
   }
 
   def callBack(journeyId: String): Action[AnyContent] = (identify andThen getData) async { implicit request =>
-    (for {
+    val flow: EitherT[Future, Result, Result] = for {
       grsCompanyDetails <- EitherT(grsConnector.retrieve(journeyId))
-      companyDetails    <- EitherT.fromEither(grsMappingService.map(grsCompanyDetails))
-      updatedAnswer = request.userAnswers
-        .getOrElse(UserAnswers(request.userId))
-        .set(CompanyDetailsPage, companyDetails)
-        .get
-      _ <- EitherT.right(sessionRepository.set(updatedAnswer))
-    } yield Redirect(routes.IndexController.onPageLoad()))
-      .valueOr(_ => InternalServerError("Invalid response from GRS"))
+        .leftMap(_ => InternalServerError("Failure response from GRS"))
+      companyDetails <- EitherT
+        .fromEither[Future](grsMappingService.map(grsCompanyDetails))
+        .leftMap(_ => InternalServerError("Invalid data from GRS"))
+      updatedAnswer <- EitherT
+        .fromEither[Future](
+          request.userAnswers
+            .getOrElse(UserAnswers(request.userId))
+            .set(CompanyDetailsPage, companyDetails)
+            .toEither
+        )
+        .leftMap(_ => InternalServerError("Failed to set Session data"))
+      _ <- EitherT
+        .right(sessionRepository.set(updatedAnswer))
+        .leftMap(_ => InternalServerError("Failed to update Session repository"))
+    } yield Redirect(routes.IndexController.onPageLoad())
+
+    flow.merge
   }
 
 }

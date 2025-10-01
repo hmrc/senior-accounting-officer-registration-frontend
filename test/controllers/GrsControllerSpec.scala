@@ -236,7 +236,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
           val grsConnector = application.injector.instanceOf[GrsConnector]
 
           when(grsConnector.retrieve(any())(using any())).thenReturn(
-            Future.successful(Left(new Exception("")))
+            Future.successful(Left(Some(new Exception(""))))
           )
 
           val request = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
