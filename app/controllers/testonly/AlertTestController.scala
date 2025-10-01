@@ -16,7 +16,6 @@
 
 package controllers.testonly
 
-import controllers.actions.IdentifierAction
 import play.api.Logging
 import play.api.libs.concurrent.Futures
 import play.api.mvc.*
@@ -28,14 +27,13 @@ import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.Inject
 
 class AlertTestController @Inject() (
-    identify: IdentifierAction,
     val controllerComponents: MessagesControllerComponents,
     futures: Futures
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with Logging {
 
-  def simulateError(errorType: String): Action[AnyContent] = identify.async {
+  def simulateError(errorType: String): Action[AnyContent] = Action.async {
     errorType match {
       case "500" =>
         logger.warn(s"Test alert: simulated Internal server error (500)")
