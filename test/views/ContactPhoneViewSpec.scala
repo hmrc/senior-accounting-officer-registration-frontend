@@ -19,7 +19,7 @@ package views
 import base.ViewSpecBase
 import forms.ContactPhoneFormProvider
 import models.ContactType.*
-import models.{ContactType, NormalMode}
+import models.{ContactType, Mode}
 import org.jsoup.Jsoup
 import views.ContactPhoneViewSpec.*
 import views.html.ContactPhoneView
@@ -32,37 +32,92 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
   "ContactPhoneView" - {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
+        Mode.values.foreach { mode =>
+          s"must generate a view for $contactType contact in $mode" - {
+            "when there are no prior data for the page" - {
+              val doc =
+                Jsoup.parse(
+                  SUT(formProvider(), contactType, mode).toString
+                )
 
-        val doc =
-          Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, NormalMode).toString)
-        createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustShowHintsWithContent(doc, expectedContent = hintContent)
-        createTestMustShowInputsWithValues(doc, expectedValues = inputTestValue)
-        createTestMustHaveSubmitButton(doc, submitButtonContent)
-        createTestMustShowBackLink(doc)
-        createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-        createTestMustShowCaptionsWithContent(
-          doc,
-          expectedContent = contactType match {
-            case First  => contactTypeFirstCaption
-            case Second => contactTypeSecondCaption
-            case Third  => contactTypeThirdCaption
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
+              doc.createTestForBackLink(show = true)
+
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                  case Third  => contactTypeThirdCaption
+                }
+              )
+
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
+
+              doc.createTestMustShowASingleInput(
+                expectedLabel = pageHeading,
+                expectedValue = "",
+                expectedHint = Some(expectedHints)
+              )
+
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                expectedAction = controllers.routes.ContactPhoneController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonText
+              )
+
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+            }
+
+            "when there exists prior data for the page" - {
+              val doc =
+                Jsoup.parse(
+                  SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, mode).toString
+                )
+
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
+              doc.createTestForBackLink(show = true)
+
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                  case Third  => contactTypeThirdCaption
+                }
+              )
+
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
+
+              doc.createTestMustShowASingleInput(
+                expectedLabel = pageHeading,
+                expectedValue = testInputValue,
+                expectedHint = Some(expectedHints)
+              )
+
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                expectedAction = controllers.routes.ContactPhoneController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonText
+              )
+
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+            }
           }
-        )
-
+        }
       }
     }
   }
 }
 
 object ContactPhoneViewSpec {
-  val pageHeading                            = "Phone number"
-  val inputTestValue: List[String]           = List("test Input Value")
-  val contactTypeFirstCaption: List[String]  = List("First contact details")
-  val contactTypeSecondCaption: List[String] = List("Second contact details")
-  val contactTypeThirdCaption: List[String]  = List("Third contact details")
-  val hintContent: List[String]              = List(
+  val pageHeading: String = "Phone number"
+
+  val contactTypeFirstCaption: String  = "First contact details"
+  val contactTypeSecondCaption: String = "Second contact details"
+  val contactTypeThirdCaption: String  = "Third contact details"
+
+  val expectedHints: String =
     "We’ll only use this to contact you about the company’s tax accounting arrangements"
-  )
-  val submitButtonContent = "Continue"
+  val testInputValue: String = "test Input Value"
+
+  val submitButtonText: String = "Continue"
 }

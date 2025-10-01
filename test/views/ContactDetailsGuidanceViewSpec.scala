@@ -25,25 +25,45 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 
   "ContactDetailsGuidanceView" - {
     val doc = Jsoup.parse(SUT().toString)
-    createTestMustHaveCorrectPageHeading(doc, pageHeading)
-    createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphsContent)
-    createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletPointsContent)
-    createTestMustHaveSubmitButton(doc, submitButtonContent)
-    createTestMustShowBackLink(doc)
-    createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
+
+    doc.mustHaveCorrectPageTitle(caption)
+
+    doc.createTestForBackLink(show = true)
+
+    doc.createTestMustShowCaptionWithContent(
+      expectedCaption = caption
+    )
+
+    doc.createTestMustHaveCorrectPageHeading(expectedHeading = pageHeading)
+
+    doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphTexts)
+
+    doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
+
+    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+      expectedAction = controllers.routes.ContactDetailsGuidanceController.continue(),
+      expectedSubmitButtonText = submitButtonText
+    )
+
+    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
   }
 }
 
 object ContactDetailsGuidanceViewSpec {
-  val pageHeading                     = "We need contact details for this [company/group]"
-  val paragraphsContent: List[String] = List(
+  val pageHeading: String = "We need contact details for this [company/group]"
+
+  val caption: String = "Contact details"
+
+  val paragraphTexts: List[String] = List(
     "Provide HMRC with contact details for the person or team responsible for this company or group.",
     "We’ll use these details to:",
     "You could also include the Senior Accounting Officer’s contact details so they can stay informed."
   )
-  val bulletPointsContent: List[String] = List(
+
+  val bulletPointTexts: List[String] = List(
     "contact the right person if we have questions about the company’s tax accounting arrangements",
     "send confirmation when the notification and certificate have been submitted"
   )
-  val submitButtonContent = "Continue"
+
+  val submitButtonText: String = "Continue"
 }

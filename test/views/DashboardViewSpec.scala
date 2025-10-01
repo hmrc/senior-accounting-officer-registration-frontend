@@ -30,16 +30,19 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
     DashboardStage.values.foreach { stage =>
       s"must generate a view for $stage stage" - {
         val doc = Jsoup.parse(SUT(stage).toString)
-        createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphs)
-        createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
 
-        val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")
-        statusTags.size() mustBe 2
-        val companyDetailsTag = statusTags.get(0)
-        val contactsInfoTag   = statusTags.get(1)
+        doc.mustHaveCorrectPageTitle(pageHeading)
 
-        "with the correct label texts" in {
+        doc.createTestMustHaveCorrectPageHeading(pageHeading)
+
+        doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphs)
+
+        "must show the correct statuses" in {
+          val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")
+          statusTags.size() mustBe 2
+
+          val companyDetailsTag = statusTags.get(0)
+          val contactsInfoTag   = statusTags.get(1)
 
           stage match {
             case CompanyDetails =>
@@ -62,22 +65,30 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
         stage match {
           case CompanyDetails =>
-            createTestMustNotShowElement(doc, "govuk-button")
+            doc.createTestMustNotShowElement("govuk-button")
           case ContactsInfo =>
-            createTestMustNotShowElement(doc, "govuk-button")
+            doc.createTestMustNotShowElement("govuk-button")
           case Submission =>
-            createTestMustHaveSubmitButton(doc, "Submit your registration")
-
+            doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+              expectedAction = controllers.routes.IndexController.continue(),
+              expectedSubmitButtonText = submitButtonText
+            )
         }
+
+        doc.createTestMustShowIsThisPageNotWorkingProperlyLink
       }
     }
   }
 }
 
 object DashboardViewSpec {
-  val pageHeading              = "Register your company"
+  val pageHeading: String = "Register your company"
+
   val paragraphs: List[String] = List(
     "Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from.",
     "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
   )
+
+  val submitButtonText: String = "Submit your registration"
+
 }

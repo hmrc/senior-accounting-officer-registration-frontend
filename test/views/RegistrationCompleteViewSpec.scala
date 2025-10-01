@@ -37,45 +37,76 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
   "RegistrationCompleteView" - {
     "must generate a view" - {
       val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
-      createTestMustHaveCorrectPageHeading(doc, pageHeading)
-      createTestMustShowPanelHeadingsWithContent(doc, expectedPanelHeadings = panelHeadingContent)
-      createTestMustShowBulletPointsWithContent(doc, expectedContentList = bulletsContentList)
-      createTestMustShowParagraphsWithContent(doc, expectedParagraphs = paragraphsList)
-      createTestMustShowBackLink(doc)
-      createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-      "First bullet point" - {
-        createTestMustShowLink(
-          doc.getMainContent.select("li").get(0),
-          expectedContent = bulletsContentList.head,
-          expectedUrl = "#"
-        )
+
+      doc.mustHaveCorrectPageTitle(pageHeading)
+
+      doc.createTestForBackLink(show = false)
+
+      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+
+      "with a confirmation panel that" - {
+        "must have the correct title" - {
+          doc.getConfirmationPanel.getPanelTitle.createTestMustShowText(expectedText = panelTitle)
+        }
+
+        "must have the correct body" - {
+          doc.getConfirmationPanel.getPanelBody.createTestMustShowText(expectedText = panelBody)
+        }
       }
-      "Second bullet point" - {
-        createTestMustShowLink(
-          doc.getMainContent.select("li").get(1),
-          expectedContent = bulletsContentList.last,
-          expectedUrl = "#"
-        )
-      }
+
+      doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphsList)
+
       "The final paragraph" - {
-        createTestMustShowLink(
-          doc.getMainContent.select("p").get(3),
-          expectedContent = "submit a notification and certificate.",
-          expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
-        )
+        doc.getMainContent
+          .getParagraphs()
+          .last
+          .createTestMustShowLink(
+            expectedText = "submit a notification and certificate.",
+            expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
+          )
       }
+
+      doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
+
+      "First bullet point" - {
+        doc.getMainContent
+          .select("li")
+          .get(0)
+          .createTestMustShowLink(
+            expectedText = bulletPointTexts.head,
+            expectedUrl = "#"
+          )
+      }
+
+      "Second bullet point" - {
+        doc.getMainContent
+          .select("li")
+          .get(1)
+          .createTestMustShowLink(
+            expectedText = bulletPointTexts.last,
+            expectedUrl = "#"
+          )
+      }
+
+      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 }
 
 object RegistrationCompleteViewSpec {
+  val pageHeading: String = "Registration Complete"
+
+  val panelTitle: String = "Registration Complete"
+
+  val panelBody: String = "Your reference number REG12345"
+
   val paragraphsList: List[String] = List(
     "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
     "We have sent a confirmation email with your reference ID to al the contact you gave during registration.",
     "If you need to keep a record of your registration",
     "You can now log into your Senior Accounting Officer notification and certificate service account to submit a notification and certificate."
   )
-  val bulletsContentList: List[String]  = List("Print the page", "Download as PDF")
-  val panelHeadingContent: List[String] = List("Your reference number REG12345")
-  val pageHeading                       = "Registration Complete"
+
+  val bulletPointTexts: List[String] = List("Print the page", "Download as PDF")
+
 }

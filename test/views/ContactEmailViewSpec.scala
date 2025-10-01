@@ -19,7 +19,7 @@ package views
 import base.ViewSpecBase
 import forms.ContactEmailFormProvider
 import models.ContactType.*
-import models.{ContactType, NormalMode}
+import models.{ContactType, Mode}
 import org.jsoup.Jsoup
 import views.ContactEmailViewSpec.*
 import views.html.ContactEmailView
@@ -31,35 +31,87 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
   "ContactEmailView" - {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
-        val doc =
-          Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, NormalMode).toString)
-        createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustHaveSubmitButton(doc, submitButtonContent)
-        createTestMustShowBackLink(doc)
-        createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-        createTestMustShowHintsWithContent(doc, expectedContent = hintContent)
-        createTestMustShowInputsWithValues(doc, expectedValues = List(inputTestValue))
-        createTestMustShowCaptionsWithContent(
-          doc,
-          expectedContent = contactType match {
-            case First  => contactTypeFirstCaption
-            case Second => contactTypeSecondCaption
-            case Third  => contactTypeThirdCaption
+        Mode.values.foreach { mode =>
+          s"must generate a view for $contactType contact in $mode" - {
+            "when there are no prior data for the page" - {
+              val doc =
+                Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
+
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
+              doc.createTestForBackLink(show = true)
+
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                  case Third  => contactTypeThirdCaption
+                }
+              )
+
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
+
+              doc.createTestMustShowASingleInput(
+                expectedLabel = pageHeading,
+                expectedValue = "",
+                expectedHint = Some(expectedHints)
+              )
+
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                expectedAction = controllers.routes.ContactEmailController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonText
+              )
+
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+            }
+
+            "when there exists prior data for the page" - {
+              val doc =
+                Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
+
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
+              doc.createTestForBackLink(show = true)
+
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                  case Third  => contactTypeThirdCaption
+                }
+              )
+
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
+
+              doc.createTestMustShowASingleInput(
+                expectedLabel = pageHeading,
+                expectedValue = testInputValue,
+                expectedHint = Some(expectedHints)
+              )
+
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                expectedAction = controllers.routes.ContactEmailController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonText
+              )
+
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+            }
           }
-        )
+        }
       }
     }
   }
 }
 
 object ContactEmailViewSpec {
-  val pageHeading               = "Enter email address"
-  val hintContent: List[String] = List(
-    "We’ll only use this to contact you about the company’s tax accounting arrangements"
-  )
-  val contactTypeFirstCaption: List[String]  = List("First contact details")
-  val contactTypeSecondCaption: List[String] = List("Second contact details")
-  val contactTypeThirdCaption: List[String]  = List("Third contact details")
-  val inputTestValue                         = "test Input Value"
-  val submitButtonContent                    = "Continue"
+  val pageHeading: String = "Enter email address"
+
+  val contactTypeFirstCaption: String  = "First contact details"
+  val contactTypeSecondCaption: String = "Second contact details"
+  val contactTypeThirdCaption: String  = "Third contact details"
+
+  val expectedHints: String  = "We’ll only use this to contact you about the company’s tax accounting arrangements"
+  val testInputValue: String = "test Input Value"
+
+  val submitButtonText: String = "Continue"
 }

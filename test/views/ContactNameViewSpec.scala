@@ -19,7 +19,7 @@ package views
 import base.ViewSpecBase
 import forms.ContactNameFormProvider
 import models.ContactType.*
-import models.{ContactType, NormalMode}
+import models.{ContactType, Mode}
 import org.jsoup.Jsoup
 import views.ContactNameViewSpec.*
 import views.html.ContactNameView
@@ -31,35 +31,89 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
   "ContactNameView" - {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
-        val doc =
-          Jsoup.parse(SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, NormalMode).toString)
-        createTestMustHaveCorrectPageHeading(doc, pageHeading)
-        createTestMustShowHintsWithContent(doc, expectedContent = hintContent)
-        createTestMustShowInputsWithValues(doc, expectedValues = inputTestValue)
-        createTestMustHaveSubmitButton(doc, submitButtonContent)
-        createTestMustShowBackLink(doc)
-        createTestMustShowIsThisPageNotWorkingProperlyLink(doc)
-        createTestMustShowCaptionsWithContent(
-          doc,
-          expectedContent = contactType match {
-            case First  => contactTypeFirstCaption
-            case Second => contactTypeSecondCaption
-            case Third  => contactTypeThirdCaption
+        Mode.values.foreach { mode =>
+          s"must generate a view for $contactType contact in $mode" - {
+            "when there are no prior data for the page" - {
+              val doc =
+                Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
+
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
+              doc.createTestForBackLink(show = true)
+
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                  case Third  => contactTypeThirdCaption
+                }
+              )
+
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
+
+              doc.createTestMustShowASingleInput(
+                expectedLabel = pageHeading,
+                expectedValue = "",
+                expectedHint = Some(expectedHints)
+              )
+
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonText
+              )
+
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+            }
+
+            "when there exists prior data for the page" - {
+              val doc =
+                Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
+
+              doc.mustHaveCorrectPageTitle(pageHeading)
+
+              doc.createTestForBackLink(show = true)
+
+              doc.createTestMustShowCaptionWithContent(
+                expectedCaption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                  case Third  => contactTypeThirdCaption
+                }
+              )
+
+              doc.createTestMustHaveCorrectPageHeading(pageHeading)
+
+              doc.createTestMustShowASingleInput(
+                expectedLabel = pageHeading,
+                expectedValue = testInputValue,
+                expectedHint = Some(expectedHints)
+              )
+
+              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                expectedSubmitButtonText = submitButtonText
+              )
+
+              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+            }
           }
-        )
+        }
       }
     }
   }
 }
 
 object ContactNameViewSpec {
-  val pageHeading                            = "Enter full name"
-  val inputTestValue: List[String]           = List("test Input Value")
-  val contactTypeFirstCaption: List[String]  = List("First contact details")
-  val contactTypeSecondCaption: List[String] = List("Second contact details")
-  val contactTypeThirdCaption: List[String]  = List("Third contact details")
-  val submitButtonContent                    = "Continue"
-  val hintContent: List[String]              = List(
+  val pageHeading: String = "Enter full name"
+
+  val contactTypeFirstCaption: String  = "First contact details"
+  val contactTypeSecondCaption: String = "Second contact details"
+  val contactTypeThirdCaption: String  = "Third contact details"
+
+  val testInputValue: String = "test Input Value"
+  val expectedHints: String  =
     "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
-  )
+
+  val submitButtonText: String = "Continue"
+
 }
