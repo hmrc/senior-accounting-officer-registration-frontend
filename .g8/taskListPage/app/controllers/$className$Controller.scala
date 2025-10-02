@@ -1,0 +1,21 @@
+package controllers
+
+import controllers.actions.*
+import javax.inject.Inject
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.$className$View
+
+class $className$Controller @Inject()(
+                                       override val messagesApi: MessagesApi,
+                                       identify: IdentifierAction,
+                                       val controllerComponents: MessagesControllerComponents,
+                                       view: $className$View
+                                     ) extends FrontendBaseController with I18nSupport {
+
+  def onPageLoad: Action[AnyContent] = identify {
+    implicit request =>
+      Ok(view(models.TaskStatus.values))
+  }
+}

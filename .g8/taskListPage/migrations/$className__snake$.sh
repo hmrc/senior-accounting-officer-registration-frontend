@@ -14,10 +14,10 @@ echo "$className;format="decap"$.heading = $className;format="decap"$" >> ../con
 
 
 i=1
-while [ $$i -le $numberOfTasks$ ]
+while [ \$i -le $numberOfTasks$ ]
 do
-  echo "$className;format="decap"$.task.$$i.text = Task $$i" >> ../conf/messages.en
-  i=$$((i+1))
+  echo "$className;format="decap"$.task.\$i.text = Task \$i" >> ../conf/messages.en
+  i=\$((i+1))
 done
 
 echo ""

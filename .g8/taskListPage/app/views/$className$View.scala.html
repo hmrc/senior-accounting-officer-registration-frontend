@@ -1,4 +1,7 @@
 
+@import models.TaskStatus
+
+
 @this(
         layout: templates.Layout,
         govukButton: GovukButton
@@ -6,7 +9,37 @@
 
 @(statuses: Seq[TaskStatus])(using request: Request[?], messages: Messages)
 
-@()(using request: Request[?], messages: Messages)
+@row(linkText: String, href: String, statusIdName: String, status: TaskStatus) = {
+    <li class="govuk-task-list__item govuk-task-list__item--with-link">
+        <div class="govuk-task-list__name-and-hint">
+            @if(status == TaskStatus.NotStarted) {
+            <a class="govuk-link govuk-task-list__link" href="@href" aria-describedby="@statusIdName">
+                @messages(linkText)
+            </a>
+            } else {
+            @messages(linkText)
+            }
+        </div>
+        <div class="govuk-task-list__status" id="@statusIdName">
+            @status match {
+            case TaskStatus.CannotStartYet => {
+            @messages("taskListPage.status.cannotStartYet")
+            }
+            case TaskStatus.NotStarted => {
+            <strong class="govuk-tag govuk-tag--blue">
+                @messages("taskListPage.status.notStarted")
+            </strong>
+            }
+            case TaskStatus.Completed => {
+            <strong class="govuk-tag govuk-tag--green">
+                @messages("taskListPage.status.completed")
+            </strong>
+            }
+            }
+        </div>
+    </li>
+}
+
 
 @layout(
     showBackLink = false,
@@ -17,43 +50,13 @@
     <ul class="govuk-task-list">
         @for((status, index) <- statuses.zipWithIndex) {
             @row(
-                linkTest = s"$className;format="decap"$.task.@{index + 1}.text",
+                linkText = s"$className;format="decap"$.task.@{index + 1}.text",
                 href = "#", @* Placeholder link *@
                 statusIdName = s"task-@{index + 1}-status",
                 status = status
             )
         }
     </ul>
-    @row(linkText: String, href: string, statusIdName: String, status: TaskStatus) = {
-        <li class="govuk-task-list__item govuk-task-list__item--with-link">
-            <div class="govuk-task-list__name-and-hint">
-                @if(status == TaskStatus.NotStarted) {
-                    <a class="govuk-link govuk-task-list__link" href="@href" aria-describedby="@statusIdName">
-                        @messages(linkText)
-                    </a>
-                } else {
-                    @messages(linkText)
-                }
-            </div>
-            <div class="govuk-task-list__status" id="@statusIdName">
-                @status match {
-                    case TaskStatus.CannotStartYet => {
-                        @messages("taskListPage.status.cannotStartYet")
-                    }
-                    case TaskStatus.NotStarted => {
-                        <strong class="govuk-tag govuk-tag--blue">
-                            @messages("taskListPage.status.notStarted")
-                        </strong>
-                    }
-                    case TaskStatus.Completed => {
-                        <strong class="govuk-tag govuk-tag--green">
-                            @messages("taskListPage.status.completed")
-                        </strong>
-                    }
-                }
-            </div>
-        </li>
 
-    }
 
 }
