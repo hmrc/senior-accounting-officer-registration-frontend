@@ -51,7 +51,7 @@
         @for((status, index) <- statuses.zipWithIndex) {
             @row(
                 linkText = s"$className;format="decap"$.task.@{index + 1}.text",
-                href = "#", @* Placeholder link *@
+                href = "#",
                 statusIdName = s"task-@{index + 1}-status",
                 status = status
             )
