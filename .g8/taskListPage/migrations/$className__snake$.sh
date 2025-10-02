@@ -13,9 +13,11 @@ echo "$className;format="decap"$.title = $className;format="decap"$" >> ../conf/
 echo "$className;format="decap"$.heading = $className;format="decap"$" >> ../conf/messages.en
 
 
-
-for i in $(seq 1 $numberOfTasks$); do
-  echo "$className;format="decap"$.task.$i.text = Task $i" >> ../conf/messages.en
+i=1
+while [ $$i -le $numberOfTasks$ ]
+do
+  echo "$className;format="decap"$.task.$$i.text = Task $$i" >> ../conf/messages.en
+  i=$$((i+1))
 done
 
 echo ""
