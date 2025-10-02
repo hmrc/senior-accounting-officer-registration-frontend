@@ -23,5 +23,5 @@ object TaskStatus {
   case object NotStarted extends TaskStatus
   case object Completed extends TaskStatus
 
-  val values: Seq[TaskStatus] = Seq(CannotStartYet, NotStarted, Completed)
+  val values: Seq[TaskStatus] = Seq(Completed, NotStarted, CannotStartYet)
 }

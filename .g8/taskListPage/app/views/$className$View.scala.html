@@ -22,19 +22,19 @@
         </div>
         <div class="govuk-task-list__status" id="@statusIdName">
             @status match {
-            case TaskStatus.CannotStartYet => {
-            @messages("taskListPage.status.cannotStartYet")
-            }
-            case TaskStatus.NotStarted => {
-            <strong class="govuk-tag govuk-tag--blue">
-                @messages("taskListPage.status.notStarted")
-            </strong>
-            }
-            case TaskStatus.Completed => {
-            <strong class="govuk-tag govuk-tag--green">
-                @messages("taskListPage.status.completed")
-            </strong>
-            }
+                case TaskStatus.CannotStartYet => {
+                    @messages("$className;format="decap"$.task.status.cannotStartYet")
+                }
+                case TaskStatus.NotStarted => {
+                    <strong class="govuk-tag govuk-tag--blue">
+                        @messages("$className;format="decap"$.task.status.notStarted")
+                    </strong>
+                }
+                case TaskStatus.Completed => {
+                    <strong class="govuk-tag govuk-tag--green">
+                        @messages("$className;format="decap"$.task.status.completed")
+                    </strong>
+                }
             }
         </div>
     </li>

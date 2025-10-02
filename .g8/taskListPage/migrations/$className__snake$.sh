@@ -20,5 +20,10 @@ do
   i=\$((i+1))
 done
 
+echo "$className;format="decap"$.task.status.cannotStartYet = Cannot start yet" >> ../conf/messages.en
+echo "$className;format="decap"$.task.status.completed = Completed" >> ../conf/messages.en
+echo "$className;format="decap"$.task.status.notStarted = NotStarted" >> ../conf/messages.en
+
+
 echo ""
 echo "Migration $className;format="snake"$ completed"
