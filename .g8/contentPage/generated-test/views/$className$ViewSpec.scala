@@ -15,8 +15,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     "must generate a view" - {
       val doc = Jsoup.parse(SUT().toString)
       doc.mustHaveCorrectPageTitle(pageHeading)
-      doc.createTestMustHaveCorrectPageHeading(pageTitle)
       doc.createTestForBackLink(show = true)
+      doc.createTestMustHaveCorrectPageHeading(pageTitle)
     }
   }
 }
