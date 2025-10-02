@@ -50,9 +50,9 @@
     <ul class="govuk-task-list">
         @for((status, index) <- statuses.zipWithIndex) {
             @row(
-                linkText = s"$className;format="decap"$.task.@{index + 1}.text",
+                linkText = s"$className;format="decap"$.task.\${index + 1}.text",
                 href = "#",
-                statusIdName = s"task-@{index + 1}-status",
+                statusIdName = s"task-\${index + 1}-status",
                 status = status
             )
         }
