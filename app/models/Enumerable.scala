@@ -26,14 +26,16 @@ trait Enumerable[A] {
 object Enumerable {
 
   def apply[A](entries: (String, A)*): Enumerable[A] =
-    new Enumerable[A] {
-      override def withName(str: String): Option[A] =
-        entries.toMap.get(str)
-    }
+    (str: String) => entries.toMap.get(str)
 
-  trait Implicits {
+  trait Implicits[A] {
 
-    implicit def reads[A](using ev: Enumerable[A]): Reads[A] = {
+    def members: Array[A]
+
+    given enumerable: Enumerable[A] =
+      Enumerable(members.map(v => v.toString -> v)*)
+
+    given reads(using ev: Enumerable[A]): Reads[A] =
       Reads {
         case JsString(str) =>
           ev.withName(str)
@@ -44,10 +46,8 @@ object Enumerable {
         case _ =>
           JsError("error.invalid")
       }
-    }
 
-    implicit def writes[A: Enumerable]: Writes[A] = {
+    given writes[E: Enumerable]: Writes[E] =
       Writes(value => JsString(value.toString))
-    }
   }
 }
