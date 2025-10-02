@@ -5,13 +5,10 @@ import base.ViewSpecBase
 import org.jsoup.Jsoup
 import play.api.i18n.Messages
 import views.html.$className$View
+import views.$className$ViewSpec.*
 
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
-  private val messageKeyPrefix = "$className;format="decap"$"
-  private val messageProvider: Messages = messages(app)
-  private val pageHeading: String = messageProvider(messageKeyPrefix + ".heading")
-  private val pageTitle: String = messageProvider(messageKeyPrefix + ".title")
 
   "$className$View" - {
 
@@ -21,6 +18,10 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       doc.createTestMustHaveCorrectPageHeading(pageTitle)
       doc.createTestForBackLink(show = true)
     }
-
   }
+}
+
+object $className$ViewSpec {
+  val pageHeading = "$className;format="decap"$"
+  val pageTitle = "$className;format="decap"$"
 }
