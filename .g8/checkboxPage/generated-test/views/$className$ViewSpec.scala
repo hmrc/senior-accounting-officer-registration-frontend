@@ -31,6 +31,13 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       doc.mustHaveCorrectPageTitle(pageHeading)
       doc.createTestForBackLink(show = true)
       doc.createTestMustHaveCorrectPageHeading(pageTitle)
+
+
+      "must display the correct checkbox lables" in {
+        doc.select("label[for=value_0]").text() mustBe option1Label
+        doc.select("label[for=value_1]").text() mustBe option2Label
+      }
+
     }
   }
 }
@@ -38,4 +45,6 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 object $className$ViewSpec {
   val pageHeading = "$className;format="decap"$"
   val pageTitle = "$className;format="decap"$"
+  val option1Label = "$option1msg$"
+  val option2Label = "$option2msg$"
 }
