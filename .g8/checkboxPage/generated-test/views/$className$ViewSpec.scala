@@ -17,7 +17,7 @@ import views.$className$ViewSpec.*
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
   private val formProvider = new $className$FormProvider()
-  lazy val form: Form[Set[$className$]]
+  lazy val form: Form[Set[$className$]] = formProvider()
   //private val messageKeyPrefix = "$className;format="decap"$"
 
   private def generateView(form: Form[Set[$className$]]): Document = {
