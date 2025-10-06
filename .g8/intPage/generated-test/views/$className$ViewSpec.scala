@@ -39,4 +39,6 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
 
 object $className$ViewSpec {
-  val pageHeading = "$classN}
+  val pageHeading = "$className$"
+  val pageTitle = "$className$"
+}
