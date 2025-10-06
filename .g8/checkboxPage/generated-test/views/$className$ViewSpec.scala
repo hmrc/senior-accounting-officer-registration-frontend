@@ -31,7 +31,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       doc.createTestForBackLink(show = true)
       doc.createTestMustHaveCorrectPageHeading(pageTitle)
 
-      "must display the correct checkbox lables" in {
+      "must display the correct checkbox labels" in {
         doc.select("label[for=value_0]").text() mustBe option1Label
         doc.select("label[for=value_1]").text() mustBe option2Label
       }
