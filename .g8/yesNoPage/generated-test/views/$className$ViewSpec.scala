@@ -30,7 +30,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       doc.createTestForBackLink(show = true)
       doc.createTestMustHaveCorrectPageHeading(pageTitle)
 
-      "must display the correct radio buttons" in {
+      "must display the correct Yes or No labels" in {
         doc.select("label[for=value]").text() mustBe yesLabel
         doc.select("label[for=value-no]").text() mustBe noLabel
       }
