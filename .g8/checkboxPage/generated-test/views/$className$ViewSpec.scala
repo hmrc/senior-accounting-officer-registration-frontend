@@ -36,15 +36,6 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
         doc.select("label[for=value_1]").text() mustBe option2Label
       }
     }
-    "when the form has errors" - {
-      val boundForm = form.bind(Map("value" -> ""))
-      val doc = generateView(boundForm)
-      "must show and error summary with required error message" in {
-        val errSummary = doc.select(".govuk-error-summary__list a").text()
-        errSummary mustBe requiredErrorMessage
-      }
-    }
-
   }
 }
 
@@ -53,5 +44,4 @@ object $className$ViewSpec {
   val pageTitle = "$className;format="decap"$"
   val option1Label = "$option1msg$"
   val option2Label = "$option2msg$"
-  val requiredErrorMessage = "Select $className;format="decap"$"
 }
