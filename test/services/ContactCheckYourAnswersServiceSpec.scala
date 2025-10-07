@@ -87,7 +87,6 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
             .updateContact(ContactType.First, "name", "role", "email", "phone")
             .updateContact(ContactType.First, haveYouAddedAllContacts = false)
             .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
-            .updateContact(ContactType.Third, "name3", "role3", "email3", "phone3")
 
           val result = SUT.getContactInfos(userAnswers)
           result mustBe List(
@@ -104,13 +103,11 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
           .updateContact(ContactType.First, haveYouAddedAllContacts = false)
           .updateContact(ContactType.Second, "name2", "role2", "email2", "phone2")
           .updateContact(ContactType.Second, haveYouAddedAllContacts = false)
-          .updateContact(ContactType.Third, "name3", "role3", "email3", "phone3")
 
         val result = SUT.getContactInfos(userAnswers)
         result mustBe List(
           ContactInfo("name", "role", "email", "phone"),
-          ContactInfo("name2", "role2", "email2", "phone2"),
-          ContactInfo("name3", "role3", "email3", "phone3")
+          ContactInfo("name2", "role2", "email2", "phone2")
         )
       }
     }
