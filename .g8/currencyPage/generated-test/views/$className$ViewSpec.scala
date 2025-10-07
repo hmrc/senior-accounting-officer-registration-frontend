@@ -5,6 +5,7 @@ import base.ViewSpecBase
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.Form
+import play.api.inject.Injector
 import models.NormalMode
 import pages.$className$Page
 import forms.$className$FormProvider
@@ -14,7 +15,7 @@ import views.$className$ViewSpec.*
 
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
-  private val formProvider = new $className$FormProvider()
+  private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[BigDecimal] = formProvider()
 
   private def generateView(form: Form[BigDecimal]): Document = {
