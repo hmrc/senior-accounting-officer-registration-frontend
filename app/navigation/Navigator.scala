@@ -31,18 +31,16 @@ class Navigator @Inject() () {
     case ContactNamePage(contactType)  => _ => routes.ContactRoleController.onPageLoad(contactType, NormalMode)
     case ContactRolePage(contactType)  => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
     case ContactEmailPage(contactType) => _ => routes.ContactPhoneController.onPageLoad(contactType, NormalMode)
-    case ContactPhonePage(contactType @ (First)) =>
-      _ => routes.ContactHaveYouAddedAllController.onPageLoad(contactType)
+    case ContactPhonePage(First) =>
+      _ => routes.ContactHaveYouAddedAllController.onPageLoad(First)
     case ContactPhonePage(Second) => _ => routes.ContactCheckYourAnswersController.onPageLoad()
-    case ContactHaveYouAddedAllPage(contactType @ (First | Second)) =>
+    case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
-        if userAnswers.get(ContactHaveYouAddedAllPage(contactType)).contains(ContactHaveYouAddedAll.Yes) then {
+        if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
           routes.ContactCheckYourAnswersController.onPageLoad()
         } else {
           routes.ContactNameController.onPageLoad(
-            contactType match {
-              case First  => Second
-            },
+            Second,
             NormalMode
           )
         }

@@ -107,15 +107,6 @@ class NavigatorSpec extends SpecBase {
             .onPageLoad(Second, NormalMode)
         }
 
-        "must go from contact phone to add another" in {
-          navigator.nextPage(
-            ContactPhonePage(Second),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactHaveYouAddedAllController
-            .onPageLoad(Second)
-        }
-
         "must go from contact phone to review page" in {
           navigator.nextPage(
             ContactPhonePage(Second),
