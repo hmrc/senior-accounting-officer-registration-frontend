@@ -16,7 +16,7 @@ import java.time.LocalDate
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
   private val formProvider = new $className$FormProvider()
-  lazy val form: Form[LocalDate] = formProvider()
+  private val form: Form[LocalDate] = formProvider()
 
   private def generateView(form: Form[LocalDate]): Document = {
     val view = SUT(form, NormalMode)
