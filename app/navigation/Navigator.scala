@@ -16,13 +16,13 @@
 
 package navigation
 
-import controllers.routes
 import models.ContactType.*
 import models.*
 import pages.*
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
+import controllers.routes
 
 @Singleton
 class Navigator @Inject() () {
@@ -31,9 +31,9 @@ class Navigator @Inject() () {
     case ContactNamePage(contactType)  => _ => routes.ContactRoleController.onPageLoad(contactType, NormalMode)
     case ContactRolePage(contactType)  => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
     case ContactEmailPage(contactType) => _ => routes.ContactPhoneController.onPageLoad(contactType, NormalMode)
-    case ContactPhonePage(contactType @ (First | Second)) =>
+    case ContactPhonePage(contactType @ (First)) =>
       _ => routes.ContactHaveYouAddedAllController.onPageLoad(contactType)
-    case ContactPhonePage(Third) => _ => routes.ContactCheckYourAnswersController.onPageLoad()
+    case ContactPhonePage(Second) => _ => routes.ContactCheckYourAnswersController.onPageLoad()
     case ContactHaveYouAddedAllPage(contactType @ (First | Second)) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(contactType)).contains(ContactHaveYouAddedAll.Yes) then {
@@ -42,7 +42,6 @@ class Navigator @Inject() () {
           routes.ContactNameController.onPageLoad(
             contactType match {
               case First  => Second
-              case Second => Third
             },
             NormalMode
           )

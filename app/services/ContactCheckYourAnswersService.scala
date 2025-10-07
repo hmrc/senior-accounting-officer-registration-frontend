@@ -32,7 +32,6 @@ class ContactCheckYourAnswersService {
     ContactType.values.flatMap { contactType =>
       contactType match {
         case ContactType.Second if isFirstContactFinal                        => None
-        case ContactType.Third if isFirstContactFinal || isSecondContactFinal => None
         case _ => getContactInfo(userAnswers, contactType)
       }
     }.toList

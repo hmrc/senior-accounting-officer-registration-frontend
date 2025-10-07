@@ -133,7 +133,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
     }
 
     "When exactly three contacts, must generate a view" - {
-      val contacts      = List(firstContact, secondContact, thirdContact)
+      val contacts      = List(firstContact, secondContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
       doc.mustHaveCorrectPageTitle(pageHeading)
@@ -178,28 +178,6 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       "must test values for second contact table" in {
         validateContactDetailsTable(dl, 1, "second", contacts(1))
-      }
-
-      "must show correct heading for third contact table" in {
-        val previousElement     = dl.get(2).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
-
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
-        }
-
-        withClue(s"expected heading '$thirdContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe thirdContactHeading
-        }
-      }
-
-      "must test values for third contact table" in {
-        validateContactDetailsTable(dl, 2, "third", contacts.last)
-      }
-
-      "must show 3 contact tables" in {
-        dl.size() mustBe 3
       }
 
       doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
@@ -300,11 +278,9 @@ object ContactCheckYourAnswersViewSpec {
 
   val firstContactHeading: String  = "First contact details"
   val secondContactHeading: String = "Second contact details"
-  val thirdContactHeading: String  = "Third contact details"
 
   val firstContact: ContactInfo  = ContactInfo("name1", "role1", "email1", "phone1")
   val secondContact: ContactInfo = ContactInfo("name2", "role2", "email2", "phone2")
-  val thirdContact: ContactInfo  = ContactInfo("name3", "role3", "email3", "phone3")
 
   val submitButtonText: String = "Save and Continue"
 }

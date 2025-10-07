@@ -45,7 +45,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
-                  case Third  => contactTypeThirdCaption
                 }
               )
 
@@ -77,7 +76,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
-                  case Third  => contactTypeThirdCaption
                 }
               )
 
