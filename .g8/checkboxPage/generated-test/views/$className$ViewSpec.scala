@@ -4,7 +4,7 @@ package views
 import base.ViewSpecBase
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.Messages
+import play.api.inject.Injector
 import play.api.data.Form
 import forms.$className$FormProvider
 import models.$className$
@@ -16,7 +16,7 @@ import views.$className$ViewSpec.*
 
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
-  private val formProvider = new $className$FormProvider()
+  private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[Set[$className$]] = formProvider()
 
   private def generateView(form: Form[Set[$className$]]): Document = {
