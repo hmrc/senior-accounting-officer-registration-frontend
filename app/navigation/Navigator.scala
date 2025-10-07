@@ -28,8 +28,11 @@ import controllers.routes
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ContactNamePage(contactType)  => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(contactType) => _ => routes.ContactPhoneController.onPageLoad(contactType, NormalMode)
+    case ContactNamePage(contactType) => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
+    case ContactEmailPage(First)      =>
+      _ => routes.ContactHaveYouAddedAllController.onPageLoad(First)
+    case ContactEmailPage(Second) =>
+      _ => routes.ContactCheckYourAnswersController.onPageLoad()
     case ContactPhonePage(First) =>
       _ => routes.ContactHaveYouAddedAllController.onPageLoad(First)
     case ContactPhonePage(Second) => _ => routes.ContactCheckYourAnswersController.onPageLoad()
