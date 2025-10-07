@@ -48,7 +48,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     "onPageLoad endpoint:" - {
       "must return OK and the correct view for a GET" in {
         val request          = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
-        val testContactInfos = List(ContactInfo("", "", "", ""))
+        val testContactInfos = List(ContactInfo("", "", ""))
         val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
         val view             = application.injector.instanceOf[ContactCheckYourAnswersView]
         val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
@@ -103,7 +103,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
             "contacts[0].email" -> "email",
             "contacts[0].phone" -> "phone"
           )
-        val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
+        val testContactInfos = List(ContactInfo("name", "email", "phone"))
         val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
         running(application) {
           val mockedSessionRepository = application.injector.instanceOf[SessionRepository]
@@ -123,7 +123,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must throw BadRequestException when service contactInfo and form are misaligned" in {
-      val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
+      val testContactInfos = List(ContactInfo("name", "email", "phone"))
       val request          = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
         .withFormUrlEncodedBody(
           "contacts[0].name"  -> "differentName",
@@ -152,7 +152,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
           "contacts[0].email" -> "",
           "contacts[0].phone" -> ""
         )
-      val testContactInfos = List(ContactInfo("", "", "", ""))
+      val testContactInfos = List(ContactInfo("", "", ""))
       val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
       running(application) {
         val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]

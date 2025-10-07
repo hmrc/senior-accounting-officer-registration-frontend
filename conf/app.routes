@@ -40,16 +40,6 @@ POST        /contact-details/second/name                       controllers.Conta
 GET         /contact-details/second/change-name                controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 POST        /contact-details/second/change-name                controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 
-GET         /contact-details/first/role                        controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
-POST        /contact-details/first/role                        controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
-GET         /contact-details/first/change-role                 controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
-POST        /contact-details/first/change-role                 controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
-
-GET         /contact-details/second/role                       controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
-POST        /contact-details/second/role                       controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
-GET         /contact-details/second/change-role                controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-POST        /contact-details/second/change-role                controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-
 GET         /contact-details/first/email                       controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
 POST        /contact-details/first/email                       controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
 GET         /contact-details/first/change-email                controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
