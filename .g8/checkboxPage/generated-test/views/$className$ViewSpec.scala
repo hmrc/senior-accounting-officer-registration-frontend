@@ -17,7 +17,7 @@ import views.$className$ViewSpec.*
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
   private val formProvider = new $className$FormProvider()
-  lazy val form: Form[Set[$className$]] = formProvider()
+  private val form: Form[Set[$className$]] = formProvider()
 
   private def generateView(form: Form[Set[$className$]]): Document = {
     val view = SUT(form, NormalMode)
