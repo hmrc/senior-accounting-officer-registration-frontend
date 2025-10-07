@@ -41,11 +41,6 @@ class NavigatorSpec extends SpecBase {
             .onPageLoad(First, NormalMode)
         }
 
-        "must go from contact role to contact email" in {
-          navigator.nextPage(ContactRolePage(First), NormalMode, UserAnswers("id")) mustBe routes.ContactEmailController
-            .onPageLoad(First, NormalMode)
-        }
-
         "must go from contact email to contact phone" in {
           navigator.nextPage(
             ContactEmailPage(First),
@@ -86,15 +81,6 @@ class NavigatorSpec extends SpecBase {
       "when the user is in the add second contact details journey" - {
         "must go from contact name to contact email" in {
           navigator.nextPage(ContactNamePage(Second), NormalMode, UserAnswers("id")) mustBe routes.ContactEmailController
-            .onPageLoad(Second, NormalMode)
-        }
-
-        "must go from contact role to contact email" in {
-          navigator.nextPage(
-            ContactRolePage(Second),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactEmailController
             .onPageLoad(Second, NormalMode)
         }
 

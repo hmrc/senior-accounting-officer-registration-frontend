@@ -40,8 +40,7 @@ class ContactCheckYourAnswersService {
   private[services] def getContactInfo(userAnswers: UserAnswers, contactType: ContactType): Option[ContactInfo] =
     for {
       name  <- userAnswers.get(ContactNamePage(contactType))
-      role  <- userAnswers.get(ContactRolePage(contactType))
       email <- userAnswers.get(ContactEmailPage(contactType))
       phone <- userAnswers.get(ContactPhonePage(contactType))
-    } yield ContactInfo(name, role, email, phone)
+    } yield ContactInfo(name, email, phone)
 }

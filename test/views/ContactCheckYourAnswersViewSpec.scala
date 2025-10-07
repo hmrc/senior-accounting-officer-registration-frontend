@@ -196,7 +196,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       contactInfo: ContactInfo
   ): Assertion = {
     val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
-    rows.size() mustBe 4
+    rows.size() mustBe 3
     validateRow(
       row = rows.get(0),
       keyText = "Full name",
@@ -208,15 +208,6 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
     validateRow(
       row = rows.get(1),
-      keyText = "Role",
-      valueText = contactInfo.role,
-      actionText = "Change",
-      actionHiddenText = "change the role",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-role"
-    )
-
-    validateRow(
-      row = rows.get(2),
       keyText = "Email address",
       valueText = contactInfo.email,
       actionText = "Change",
@@ -225,7 +216,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
     )
 
     validateRow(
-      row = rows.get(3),
+      row = rows.get(2),
       keyText = "Phone number",
       valueText = contactInfo.phone,
       actionText = "Change",
@@ -279,8 +270,8 @@ object ContactCheckYourAnswersViewSpec {
   val firstContactHeading: String  = "First contact details"
   val secondContactHeading: String = "Second contact details"
 
-  val firstContact: ContactInfo  = ContactInfo("name1", "role1", "email1", "phone1")
-  val secondContact: ContactInfo = ContactInfo("name2", "role2", "email2", "phone2")
+  val firstContact: ContactInfo  = ContactInfo("name1", "email1", "phone1")
+  val secondContact: ContactInfo = ContactInfo("name2", "email2", "phone2")
 
   val submitButtonText: String = "Save and Continue"
 }
