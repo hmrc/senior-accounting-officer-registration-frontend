@@ -15,7 +15,7 @@ import views.$className$ViewSpec.*
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
   private val formProvider = new $className$FormProvider()
-  lazy val form: Form[BigDecimal] = formProvider()
+  private val form: Form[BigDecimal] = formProvider()
 
   private def generateView(form: Form[BigDecimal]): Document = {
     val view = SUT(form, NormalMode)
