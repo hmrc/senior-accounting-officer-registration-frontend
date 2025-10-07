@@ -4,7 +4,7 @@ package views
 import base.ViewSpecBase
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.Messages
+import play.api.inject.Injector
 import play.api.data.Form
 import forms.$className$FormProvider
 import models.NormalMode
