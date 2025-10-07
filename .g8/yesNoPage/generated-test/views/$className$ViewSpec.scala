@@ -15,7 +15,7 @@ import views.$className$ViewSpec.*
 
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
-  private val formProvider = new $className$FormProvider()
+  private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[Boolean] = formProvider()
 
   private def generateView(form: Form[Boolean]): Document = {
