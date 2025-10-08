@@ -29,10 +29,10 @@ class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case ContactNamePage(contactType) => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(First)      =>
-      _ => routes.ContactHaveYouAddedAllController.onPageLoad(First)
-    case ContactEmailPage(Second) =>
-      _ => routes.ContactCheckYourAnswersController.onPageLoad()
+    case ContactEmailPage(contactType) => _ => contactType match {
+      case First => routes.ContactHaveYouAddedAllController.onPageLoad(First)
+      case Second => routes.ContactCheckYourAnswersController.onPageLoad()
+    }
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
