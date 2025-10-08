@@ -31,15 +31,11 @@
         @for((contact, index) <- contacts.zipWithIndex) {
             <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
             @govukSummaryList(SummaryListViewModel(rows = Seq(
-                ContactNameSummary.row(contactType(index), contact.name), 
-                ContactRoleSummary.row(contactType(index), contact.role),
+                ContactNameSummary.row(contactType(index), contact.name),
                 ContactEmailSummary.row(contactType(index), contact.email),
-                ContactPhoneSummary.row(contactType(index), contact.phone)
             )))
             <input type="hidden" name="contacts[@index].name" value="@contact.name"/>
-            <input type="hidden" name="contacts[@index].role" value="@contact.role"/>
             <input type="hidden" name="contacts[@index].email" value="@contact.email"/>
-            <input type="hidden" name="contacts[@index].phone" value="@contact.phone"/>
         }
 
         @govukButton(
@@ -51,7 +47,6 @@
 @contactType(index: Int) = @{
     index match {
         case 0 => ContactType.First
-        case 1 => ContactType.Second
-        case _ => ContactType.Third
+        case _ => ContactType.Second
     }
 }

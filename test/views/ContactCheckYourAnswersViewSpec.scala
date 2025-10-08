@@ -131,84 +131,6 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
-
-    "When exactly three contacts, must generate a view" - {
-      val contacts      = List(firstContact, secondContact, thirdContact)
-      val doc: Document = Jsoup.parse(SUT(contacts).toString)
-
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = true)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
-
-      val dl = doc.getMainContent.getElementsByTag("dl")
-
-      "must show correct heading for first contact table" in {
-        val previousElement     = dl.get(0).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
-
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
-        }
-
-        withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe firstContactHeading
-        }
-      }
-
-      "must test values for first contact table" in {
-        validateContactDetailsTable(dl, 0, "first", contacts.head)
-      }
-
-      "must show correct heading for second contact table " in {
-        val previousElement     = dl.get(1).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
-
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
-        }
-
-        withClue(s"expected heading '$secondContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe secondContactHeading
-        }
-      }
-
-      "must test values for second contact table" in {
-        validateContactDetailsTable(dl, 1, "second", contacts(1))
-      }
-
-      "must show correct heading for third contact table" in {
-        val previousElement     = dl.get(2).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
-
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
-        }
-
-        withClue(s"expected heading '$thirdContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe thirdContactHeading
-        }
-      }
-
-      "must test values for third contact table" in {
-        validateContactDetailsTable(dl, 2, "third", contacts.last)
-      }
-
-      "must show 3 contact tables" in {
-        dl.size() mustBe 3
-      }
-
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        expectedSubmitButtonText = submitButtonText
-      )
-
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-    }
   }
 
   def validateContactDetailsTable(
@@ -218,7 +140,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       contactInfo: ContactInfo
   ): Assertion = {
     val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
-    rows.size() mustBe 4
+    rows.size() mustBe 2
     validateRow(
       row = rows.get(0),
       keyText = "Full name",
@@ -230,29 +152,11 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
     validateRow(
       row = rows.get(1),
-      keyText = "Role",
-      valueText = contactInfo.role,
-      actionText = "Change",
-      actionHiddenText = "change the role",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-role"
-    )
-
-    validateRow(
-      row = rows.get(2),
       keyText = "Email address",
       valueText = contactInfo.email,
       actionText = "Change",
       actionHiddenText = "change the email address",
       actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
-    )
-
-    validateRow(
-      row = rows.get(3),
-      keyText = "Phone number",
-      valueText = contactInfo.phone,
-      actionText = "Change",
-      actionHiddenText = "change the phone number",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-phone-number"
     )
 
   }
@@ -300,11 +204,9 @@ object ContactCheckYourAnswersViewSpec {
 
   val firstContactHeading: String  = "First contact details"
   val secondContactHeading: String = "Second contact details"
-  val thirdContactHeading: String  = "Third contact details"
 
-  val firstContact: ContactInfo  = ContactInfo("name1", "role1", "email1", "phone1")
-  val secondContact: ContactInfo = ContactInfo("name2", "role2", "email2", "phone2")
-  val thirdContact: ContactInfo  = ContactInfo("name3", "role3", "email3", "phone3")
+  val firstContact: ContactInfo  = ContactInfo("name1", "email1")
+  val secondContact: ContactInfo = ContactInfo("name2", "email2")
 
   val submitButtonText: String = "Save and Continue"
 }

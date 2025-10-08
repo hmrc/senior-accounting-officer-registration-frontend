@@ -48,7 +48,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     "onPageLoad endpoint:" - {
       "must return OK and the correct view for a GET" in {
         val request          = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
-        val testContactInfos = List(ContactInfo("", "", "", ""))
+        val testContactInfos = List(ContactInfo("", ""))
         val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
         val view             = application.injector.instanceOf[ContactCheckYourAnswersView]
         val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
@@ -99,11 +99,9 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
           .withFormUrlEncodedBody(
             "contacts[0].name"  -> "name",
-            "contacts[0].role"  -> "role",
-            "contacts[0].email" -> "email",
-            "contacts[0].phone" -> "phone"
+            "contacts[0].email" -> "email"
           )
-        val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
+        val testContactInfos = List(ContactInfo("name", "email"))
         val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
         running(application) {
           val mockedSessionRepository = application.injector.instanceOf[SessionRepository]
@@ -123,13 +121,11 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must throw BadRequestException when service contactInfo and form are misaligned" in {
-      val testContactInfos = List(ContactInfo("name", "role", "email", "phone"))
+      val testContactInfos = List(ContactInfo("name", "email"))
       val request          = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
         .withFormUrlEncodedBody(
           "contacts[0].name"  -> "differentName",
-          "contacts[0].role"  -> "anotherRole",
-          "contacts[0].email" -> "stolenEmail",
-          "contacts[0].phone" -> "newPhone"
+          "contacts[0].email" -> "stolenEmail"
         )
       val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
       running(application) {
@@ -148,11 +144,9 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
         .withFormUrlEncodedBody(
           "contacts[0].name"  -> "",
-          "contacts[0].role"  -> "",
-          "contacts[0].email" -> "",
-          "contacts[0].phone" -> ""
+          "contacts[0].email" -> ""
         )
-      val testContactInfos = List(ContactInfo("", "", "", ""))
+      val testContactInfos = List(ContactInfo("", ""))
       val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
       running(application) {
         val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
