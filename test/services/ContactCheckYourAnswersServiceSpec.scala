@@ -169,7 +169,7 @@ object ContactCheckYourAnswersServiceSpec {
     def updateContact(
         contactType: ContactType,
         name: Option[String],
-        email: Option[String],
+        email: Option[String]
     ): UserAnswers = {
       List(name, email).zipWithIndex
         .foldLeft(userAnswers)((accumulator, configs) => {
