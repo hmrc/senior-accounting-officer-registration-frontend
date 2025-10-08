@@ -33,9 +33,6 @@ class Navigator @Inject() () {
       _ => routes.ContactHaveYouAddedAllController.onPageLoad(First)
     case ContactEmailPage(Second) =>
       _ => routes.ContactCheckYourAnswersController.onPageLoad()
-    case ContactPhonePage(First) =>
-      _ => routes.ContactHaveYouAddedAllController.onPageLoad(First)
-    case ContactPhonePage(Second) => _ => routes.ContactCheckYourAnswersController.onPageLoad()
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {

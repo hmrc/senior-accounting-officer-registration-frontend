@@ -215,15 +215,6 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
     )
 
-    validateRow(
-      row = rows.get(2),
-      keyText = "Phone number",
-      valueText = contactInfo.phone,
-      actionText = "Change",
-      actionHiddenText = "change the phone number",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-phone-number"
-    )
-
   }
 
   def validateRow(
@@ -270,8 +261,8 @@ object ContactCheckYourAnswersViewSpec {
   val firstContactHeading: String  = "First contact details"
   val secondContactHeading: String = "Second contact details"
 
-  val firstContact: ContactInfo  = ContactInfo("name1", "email1", "phone1")
-  val secondContact: ContactInfo = ContactInfo("name2", "email2", "phone2")
+  val firstContact: ContactInfo  = ContactInfo("name1", "email1")
+  val secondContact: ContactInfo = ContactInfo("name2", "email2")
 
   val submitButtonText: String = "Save and Continue"
 }

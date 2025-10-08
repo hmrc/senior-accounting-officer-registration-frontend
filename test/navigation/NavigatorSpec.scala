@@ -50,15 +50,6 @@ class NavigatorSpec extends SpecBase {
             .onPageLoad(First)
         }
 
-        "must go from contact phone to add another" in {
-          navigator.nextPage(
-            ContactPhonePage(First),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactHaveYouAddedAllController
-            .onPageLoad(First)
-        }
-
         "on add another page" - {
           "when the user answers Yes must go to contact check your answers" in {
             navigator.nextPage(
@@ -91,15 +82,6 @@ class NavigatorSpec extends SpecBase {
         "must go from contact email to review page" in {
           navigator.nextPage(
             ContactEmailPage(Second),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactCheckYourAnswersController
-            .onPageLoad()
-        }
-
-        "must go from contact phone to review page" in {
-          navigator.nextPage(
-            ContactPhonePage(Second),
             NormalMode,
             UserAnswers("id")
           ) mustBe routes.ContactCheckYourAnswersController
