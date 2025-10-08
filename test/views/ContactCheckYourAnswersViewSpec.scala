@@ -131,62 +131,6 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
       doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
-
-    "When exactly three contacts, must generate a view" - {
-      val contacts      = List(firstContact, secondContact)
-      val doc: Document = Jsoup.parse(SUT(contacts).toString)
-
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = true)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
-
-      val dl = doc.getMainContent.getElementsByTag("dl")
-
-      "must show correct heading for first contact table" in {
-        val previousElement     = dl.get(0).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
-
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
-        }
-
-        withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe firstContactHeading
-        }
-      }
-
-      "must test values for first contact table" in {
-        validateContactDetailsTable(dl, 0, "first", contacts.head)
-      }
-
-      "must show correct heading for second contact table " in {
-        val previousElement     = dl.get(1).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
-
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
-        }
-
-        withClue(s"expected heading '$secondContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe secondContactHeading
-        }
-      }
-
-      "must test values for second contact table" in {
-        validateContactDetailsTable(dl, 1, "second", contacts(1))
-      }
-
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        expectedSubmitButtonText = submitButtonText
-      )
-
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-    }
   }
 
   def validateContactDetailsTable(
@@ -196,7 +140,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       contactInfo: ContactInfo
   ): Assertion = {
     val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
-    rows.size() mustBe 3
+    rows.size() mustBe 2
     validateRow(
       row = rows.get(0),
       keyText = "Full name",
