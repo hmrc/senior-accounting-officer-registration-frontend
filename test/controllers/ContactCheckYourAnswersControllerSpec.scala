@@ -99,9 +99,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
           .withFormUrlEncodedBody(
             "contacts[0].name"  -> "name",
-            "contacts[0].role"  -> "role",
             "contacts[0].email" -> "email",
-            "contacts[0].phone" -> "phone"
           )
         val testContactInfos = List(ContactInfo("name", "email"))
         val application      = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
@@ -127,9 +125,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       val request          = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
         .withFormUrlEncodedBody(
           "contacts[0].name"  -> "differentName",
-          "contacts[0].role"  -> "anotherRole",
           "contacts[0].email" -> "stolenEmail",
-          "contacts[0].phone" -> "newPhone"
         )
       val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
       running(application) {
@@ -148,7 +144,6 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
         .withFormUrlEncodedBody(
           "contacts[0].name"  -> "",
-          "contacts[0].role"  -> "",
           "contacts[0].email" -> ""
         )
       val testContactInfos = List(ContactInfo("", ""))
