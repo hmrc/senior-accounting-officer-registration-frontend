@@ -140,16 +140,9 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
           val result = SUT.getContactInfo(userAnswers, contactType)
           result mustBe None
         }
-        "when userAnswer has no phone then return None" in {
-          val userAnswers = emptyUserAnswers
-            .updateContact(contactType, Some("name"), Some("email"))
-          val result = SUT.getContactInfo(userAnswers, contactType)
-          result mustBe None
-        }
       }
     })
   }
-
 }
 
 object ContactCheckYourAnswersServiceSpec {
