@@ -33,11 +33,9 @@
             @govukSummaryList(SummaryListViewModel(rows = Seq(
                 ContactNameSummary.row(contactType(index), contact.name),
                 ContactEmailSummary.row(contactType(index), contact.email),
-                ContactPhoneSummary.row(contactType(index), contact.phone)
             )))
             <input type="hidden" name="contacts[@index].name" value="@contact.name"/>
             <input type="hidden" name="contacts[@index].email" value="@contact.email"/>
-            <input type="hidden" name="contacts[@index].phone" value="@contact.phone"/>
         }
 
         @govukButton(

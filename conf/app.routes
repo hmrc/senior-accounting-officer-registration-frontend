@@ -50,16 +50,6 @@ POST        /contact-details/second/email                      controllers.Conta
 GET         /contact-details/second/change-email               controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 POST        /contact-details/second/change-email               controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 
-GET         /contact-details/first/phone-number                controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
-POST        /contact-details/first/phone-number                controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
-GET         /contact-details/first/change-phone-number         controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
-POST        /contact-details/first/change-phone-number         controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
-
-GET         /contact-details/second/phone-number               controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
-POST        /contact-details/second/phone-number               controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
-GET         /contact-details/second/change-phone-number        controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-POST        /contact-details/second/change-phone-number        controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-
 GET         /contact-details/first/add-another                 controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.First)
 POST        /contact-details/first/add-another                 controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.First)
 
