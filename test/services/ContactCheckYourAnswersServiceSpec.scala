@@ -82,7 +82,7 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
         }
       }
       "when the user answer for `haveYouAnsweredAllContact(Second)` is empty" - {
-        "then return a list with only the first contact info" in {
+        "then return a list with the first & second contact info" in {
           val userAnswers = emptyUserAnswers
             .updateContact(ContactType.First, "name", "email")
             .updateContact(ContactType.First, haveYouAddedAllContacts = false)
@@ -94,21 +94,6 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
             ContactInfo("name2", "email2")
           )
         }
-      }
-    }
-    "given userAnswers has a complete set of first, second & third contact info" - {
-      "then return a list with first, second & third contact info" in {
-        val userAnswers = emptyUserAnswers
-          .updateContact(ContactType.First, "name", "email")
-          .updateContact(ContactType.First, haveYouAddedAllContacts = false)
-          .updateContact(ContactType.Second, "name2", "email2")
-          .updateContact(ContactType.Second, haveYouAddedAllContacts = false)
-
-        val result = SUT.getContactInfos(userAnswers)
-        result mustBe List(
-          ContactInfo("name", "email"),
-          ContactInfo("name2", "email2")
-        )
       }
     }
   }
