@@ -50,14 +50,14 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 }
 
 object ContactDetailsGuidanceViewSpec {
-  val pageHeading: String = "We need contact details for this [company/group]"
+  val pageHeading: String = "Provide contact details for the company"
 
   val caption: String = "Contact details"
 
   val paragraphTexts: List[String] = List(
-    "Provide HMRC with contact details for the person or team responsible for this company or group.",
+    "You need to give us the contact details of the person or team responsible for submitting the company’s notification and certificate.",
     "We’ll use these details to:",
-    "You could also include the Senior Accounting Officer’s contact details so they can stay informed."
+    "You can provide details for up to 2 contacts. For each contact, you’ll need to enter their full name and email address."
   )
 
   val bulletPointTexts: List[String] = List(
