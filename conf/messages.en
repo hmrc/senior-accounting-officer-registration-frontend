@@ -86,7 +86,6 @@ contactDetailsGuidance.p3 = You can provide details for up to 2 contacts. For ea
 
 contact.first.caption = First contact details
 contact.second.caption = Second contact details
-contact.third.caption = Third contact details
 
 contactName.title.first  = First contact details
 contactName.title.second = Second contact details
@@ -98,17 +97,6 @@ contactName.error.required = Enter contactName
 contactName.error.length = ContactName must be 100 characters or less
 contactName.change.first.hidden = change the full name
 contactName.change.second.hidden = change the full name
-contactName.change.third.hidden = change the full name
-
-contactRole.title = Enter role
-contactRole.heading = Enter role
-contactRole.hint = For example, ‘Chief Financial Officer’.
-contactRole.checkYourAnswersLabel = Role
-contactRole.error.required = Enter contactRole
-contactRole.error.length = contactRole must be 100 characters or less
-contactRole.change.first.hidden = change the role
-contactRole.change.second.hidden = change the role
-contactRole.change.third.hidden = change the role
 
 contactEmail.title.first  = First contact details
 contactEmail.title.second = Second contact details
@@ -120,17 +108,6 @@ contactEmail.error.required = Enter contactEmail
 contactEmail.error.length = ContactEmail must be 100 characters or less
 contactEmail.change.first.hidden = change the email address
 contactEmail.change.second.hidden = change the email address
-contactEmail.change.third.hidden = change the email address
-
-contactPhone.title = Phone number
-contactPhone.heading = Phone number
-contactPhone.hint = We’ll only use this to contact you about the company’s tax accounting arrangements
-contactPhone.checkYourAnswersLabel = Phone number
-contactPhone.error.required = Enter contactPhone
-contactPhone.error.length = ContactPhone must be 100 characters or less
-contactPhone.change.first.hidden = change the phone number
-contactPhone.change.second.hidden = change the phone number
-contactPhone.change.third.hidden = change the phone number
 
 contactHaveYouAddedAll.title = First contact details
 contactHaveYouAddedAll.heading = Have you added all the contacts you need?
