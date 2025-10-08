@@ -25,10 +25,6 @@ class ContactCheckYourAnswersService {
       .get(ContactHaveYouAddedAllPage(ContactType.First))
       .forall(_ == ContactHaveYouAddedAll.Yes)
 
-    userAnswers
-      .get(ContactHaveYouAddedAllPage(ContactType.Second))
-      .forall(_ == ContactHaveYouAddedAll.Yes)
-
     ContactType.values.flatMap { contactType =>
       contactType match {
         case ContactType.Second if isFirstContactFinal => None
