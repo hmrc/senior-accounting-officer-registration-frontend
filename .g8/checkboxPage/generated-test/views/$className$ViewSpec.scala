@@ -37,10 +37,15 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
         doc.getMainContent.select("label[for=value_0]").text() mustBe option1Label
         doc.getMainContent.select("label[for=value_1]").text() mustBe option2Label
       }
+
+      "must have form which submits to correct action in NormalMode" in {
+        val form = doc.select("form")
+        form.attr("action") mustBe controllers.routes.$className$Controller.onSubmit(NormalMode).url
+      }
     }
     "when using CheckMode" - {
       val doc = generateView(form, CheckMode)
-      "must have form which submits to correct action" in {
+      "must have form which submits to correct action in CheckMode" in {
         val form = doc.select("form")
         form.attr("action") mustBe controllers.routes.$className$Controller.onSubmit(CheckMode).url
       }
