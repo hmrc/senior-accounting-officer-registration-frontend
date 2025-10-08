@@ -16,23 +16,25 @@
 
 package navigation
 
+import controllers.routes
 import models.ContactType.*
 import models.*
 import pages.*
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
-import controllers.routes
 
 @Singleton
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ContactNamePage(contactType) => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(contactType) => _ => contactType match {
-      case First => routes.ContactHaveYouAddedAllController.onPageLoad(First)
-      case Second => routes.ContactCheckYourAnswersController.onPageLoad()
-    }
+    case ContactNamePage(contactType)  => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
+    case ContactEmailPage(contactType) =>
+      _ =>
+        contactType match {
+          case First  => routes.ContactHaveYouAddedAllController.onPageLoad(First)
+          case Second => routes.ContactCheckYourAnswersController.onPageLoad()
+        }
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
