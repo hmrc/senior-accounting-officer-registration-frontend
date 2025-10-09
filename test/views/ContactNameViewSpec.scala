@@ -43,7 +43,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                   case Second => pageTitleSecond
                   case Third  => pageTitleThird
               })
-              // doc.mustHaveCorrectPageTitle(pageHeadingNew)
 
               doc.createTestForBackLink(show = true)
 
@@ -56,7 +55,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               )
 
               doc.createTestMustHaveCorrectPageHeading(pageHeading)
-
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
                 expectedValue = "",
@@ -115,7 +113,7 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 }
 
 object ContactNameViewSpec {
-  val pageHeading: String = "Enter full name"
+  val pageHeading: String = "Enter the name of the person or team to keep on record"
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
