@@ -77,12 +77,12 @@ registration-complete.dateTime = {0} at {1} ({2}).
 
 contactDetailsGuidance.title = Contact details
 contactDetailsGuidance.caption = Contact details
-contactDetailsGuidance.heading = We need contact details for this [company/group]
-contactDetailsGuidance.p1 = Provide HMRC with contact details for the person or team responsible for this company or group.
+contactDetailsGuidance.heading = Provide contact details for the company
+contactDetailsGuidance.p1 = You need to give us the contact details of the person or team responsible for submitting the company’s notification and certificate.
 contactDetailsGuidance.p2 = We’ll use these details to:
 contactDetailsGuidance.b1 = contact the right person if we have questions about the company’s tax accounting arrangements
 contactDetailsGuidance.b2 = send confirmation when the notification and certificate have been submitted
-contactDetailsGuidance.p3 = You could also include the Senior Accounting Officer’s contact details so they can stay informed.
+contactDetailsGuidance.p3 = You can provide details for up to 2 contacts. For each contact, you’ll need to enter their full name and email address.
 
 contact.first.caption = First contact details
 contact.second.caption = Second contact details
