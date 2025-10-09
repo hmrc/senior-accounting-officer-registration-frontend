@@ -26,8 +26,6 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
-
-
   private def doInputChecks(doc: Document, mode: Mode, boundValue: Boolean): Unit = {
     doc.createTestMustShowASingleInput(
       expectedLabel = pageHeading,
