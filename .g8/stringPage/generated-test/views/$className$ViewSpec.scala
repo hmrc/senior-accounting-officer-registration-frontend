@@ -18,20 +18,9 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[String] = formProvider()
 
-  private def generateView(form: Form[String], mode: Mode, bound: Boolean): Document = {
-    val view = bound match {
-      case true => SUT(form.bind(Map("value" -> testInputValue)), mode)
-      case _ => SUT(form, mode)
-    }
+  private def generateView(form: Form[String], mode: Mode): Document = {
+    val view = SUT(form, mode)
     Jsoup.parse(view.toString)
-  }
-
-  private def doInputChecks(doc: Document, mode: Mode, boundValue: Boolean): Unit = {
-    doc.createTestMustShowASingleInput(
-      expectedLabel = pageHeading,
-      expectedValue = if(boundValue == true) testInputValue else "",
-      expectedHint = None
-    )
   }
 
   private def doChecks(doc: Document, mode: Mode): Unit = {
@@ -47,17 +36,48 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   }
 
   "$className$View" - {
-    "when using NormalMode, with bound form" - {
-      val doc = generateView(form, NormalMode, false)
+    "when using NormalMode" - {
+      val doc = generateView(form, NormalMode)
       doChecks(doc, NormalMode)
-      val docWithBoundFormValue = generateView(form, NormalMode, true)
-      doInputChecks(docWithBoundFormValue, NormalMode, true)
+
+      "when using unBound form" - {
+        doc.createTestMustShowASingleInput(
+          expectedLabel = pageHeading,
+          expectedValue = "",
+          expectedHint = None
+        )
+      }
+      val docWithBoundForm = generateView(form.bind(Map("value" -> testInputValue)), NormalMode)
+      "when using bound form" - {
+        docWithBoundForm.createTestMustShowASingleInput(
+          expectedLabel = pageHeading,
+          expectedValue = testInputValue,
+          expectedHint = None
+        )
+      }
     }
+
     "when using CheckMode" - {
-      val doc = generateView(form, CheckMode, false)
-      doChecks(generateView(form, CheckMode, false), CheckMode)
-      val docWithBoundFormValue = generateView(form, CheckMode, true)
-      doInputChecks(docWithBoundFormValue, CheckMode, true)
+
+      val doc = generateView(form, CheckMode)
+      doChecks(doc, CheckMode)
+
+      "when using unBound form" - {
+        doc.createTestMustShowASingleInput(
+          expectedLabel = pageHeading,
+          expectedValue = "",
+          expectedHint = None
+        )
+      }
+
+      val docWithBoundForm = generateView(form.bind(Map("value" -> testInputValue)), CheckMode)
+      "when using bound form" - {
+        docWithBoundForm.createTestMustShowASingleInput(
+          expectedLabel = pageHeading,
+          expectedValue = testInputValue,
+          expectedHint = None
+        )
+      }
     }
   }
 }
