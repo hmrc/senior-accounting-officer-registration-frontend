@@ -124,8 +124,7 @@ object ContactNameViewSpec {
   val pageTitleThird: String  = "Third contact details"
 
   val testInputValue: String = "test Input Value"
-  val expectedHints: String  =
-    "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
+  val expectedHints: String  = "For example, ‘Ashley Smith or Tax team’."
 
   val submitButtonText: String = "Continue"
 
