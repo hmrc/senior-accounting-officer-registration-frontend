@@ -88,7 +88,9 @@ contact.first.caption = First contact details
 contact.second.caption = Second contact details
 contact.third.caption = Third contact details
 
-contactName.title = Enter full name
+contactName.title.first  = First contact details
+contactName.title.second = Second contact details
+contactName.title.third  = Third contact details
 contactName.heading = Enter full name
 contactName.hint = Add the full name, role and contact details of the person or team that is able to deal with enquiries about the company's account and management of tax accounting arrangements.
 contactName.checkYourAnswersLabel = Full name
