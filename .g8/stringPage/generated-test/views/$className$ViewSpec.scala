@@ -18,35 +18,35 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[String] = formProvider()
 
-  private def generateView(form: Form[String], mode: Mode = NormalMode): Document = {
+  private def generateView(form: Form[String], mode: Mode): Document = {
     val view = SUT(form, mode)
     Jsoup.parse(view.toString)
   }
 
+  private def doChecks(doc: Document, mode: Mode): Unit = {
+    doc.mustHaveCorrectPageTitle(pageHeading)
+    doc.createTestForBackLink(show = true)
+    doc.createTestMustHaveCorrectPageHeading(pageTitle)
+    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+
+    "must display the correct label for string page" in {
+      doc.getMainContent.select("label[for=value]").text() mustBe pageTitle
+    }
+
+    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+      controllers.routes.$className$Controller.onSubmit(mode),
+      "Continue"
+    )
+  }
+
   "$className$View" - {
-    "when the form is empty (no errors), NormalMode" - {
-      val doc = generateView(form)
-      doc.mustHaveCorrectPageTitle(pageHeading)
-      doc.createTestForBackLink(show = true)
-      doc.createTestMustHaveCorrectPageHeading(pageTitle)
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-      "must display the correct label" in {
-        doc.select("label[for=value]").text() mustBe pageTitle
-      }
-
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        controllers.routes.$className$Controller.onSubmit(NormalMode),
-        "Continue"
-      )
+    "when using NormalMode, the form is empty (no errors)" - {
+      val doc = generateView(form, NormalMode)
+      doChecks(doc, NormalMode)
     }
     "when using CheckMode" - {
       val doc = generateView(form, CheckMode)
-
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        controllers.routes.$className$Controller.onSubmit(CheckMode),
-        "Continue"
-      )
+      doChecks(doc, CheckMode)
     }
   }
 }
@@ -55,4 +55,3 @@ object $className$ViewSpec {
   val pageHeading = "$className;format="decap"$"
   val pageTitle = "$className;format="decap"$"
 }
-
