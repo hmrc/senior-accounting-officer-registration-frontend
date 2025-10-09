@@ -132,8 +132,9 @@ contactPhone.change.first.hidden = change the phone number
 contactPhone.change.second.hidden = change the phone number
 contactPhone.change.third.hidden = change the phone number
 
-contactHaveYouAddedAll.title = Have you added all the contacts you need?
+contactHaveYouAddedAll.title = First contact details
 contactHaveYouAddedAll.heading = Have you added all the contacts you need?
+contactHaveYouAddedAll.hint = Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details.
 contactHaveYouAddedAll.yes = Yes
 contactHaveYouAddedAll.no = No, add another contact
 contactHaveYouAddedAll.checkYourAnswersLabel = Have you added all the contacts you need?

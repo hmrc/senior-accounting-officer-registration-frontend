@@ -180,6 +180,21 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
     }
 
+    def createTestMustShowHint(expectedHint: String)(using pos: Position): Unit = {
+      s"must have a hint with values '$expectedHint'" in {
+        val hintElement = target.resolve.getElementsByClass("govuk-hint").asScala.headOption
+        hintElement match {
+          case Some(hint) => hint.text mustEqual expectedHint
+          case None => fail(s"no hint element found\n")
+        }
+      }
+    }
+
+    def createTestMustShowTwoRadioButtons(
+        expectedLabel: String,
+        expectedValue: String
+    )(using pos: Position): Unit = ???
+
     def createTestMustHaveASubmissionButtonWhichSubmitsTo(
         expectedAction: Call,
         expectedSubmitButtonText: String
