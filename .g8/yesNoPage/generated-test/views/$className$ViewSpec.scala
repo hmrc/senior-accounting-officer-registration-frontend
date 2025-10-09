@@ -18,36 +18,37 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[Boolean] = formProvider()
 
-  private def generateView(form: Form[Boolean], mode: Mode = NormalMode): Document = {
+  private def generateView(form: Form[Boolean], mode: Mode): Document = {
     val view = SUT(form, mode)
     Jsoup.parse(view.toString)
   }
 
+
+  private def doChecks(doc: Document, mode: Mode): Unit = {
+    doc.mustHaveCorrectPageTitle(pageHeading)
+    doc.createTestForBackLink(show = true)
+    doc.createTestMustHaveCorrectPageHeading(pageTitle)
+    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+
+    "must display the correct Yes or No labels" in {
+      doc.getMainContent.select("label[for=value]").text() mustBe yesLabel
+      doc.getMainContent.select("label[for=value-no]").text() mustBe noLabel
+    }
+
+    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+      controllers.routes.$className$Controller.onSubmit(mode),
+      "Continue"
+    )
+  }
+
   "$className$View" - {
-    "when the form is empty (no errors), NormalMode" - {
-      val doc = generateView(form)
-      doc.mustHaveCorrectPageTitle(pageHeading)
-      doc.createTestForBackLink(show = true)
-      doc.createTestMustHaveCorrectPageHeading(pageTitle)
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-      "must display the correct Yes or No labels" in {
-        doc.select("label[for=value]").text() mustBe yesLabel
-        doc.select("label[for=value-no]").text() mustBe noLabel
-      }
-
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        controllers.routes.$className$Controller.onSubmit(NormalMode),
-        "Continue"
-      )
+    "when in NormalMode when the form is empty (no errors)" - {
+      val doc = generateView(form, NormalMode)
+      doChecks(doc, NormalMode)
     }
     "when using CheckMode" - {
       val doc = generateView(form, CheckMode)
-
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        controllers.routes.$className$Controller.onSubmit(CheckMode),
-        "Continue"
-      )
+      doChecks(doc, CheckMode)
     }
   }
 }
