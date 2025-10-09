@@ -24,31 +24,32 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
+
+  private def doChecks(doc:Document, mode:Mode): Unit = {
+    doc.mustHaveCorrectPageTitle(pageHeading)
+    doc.createTestForBackLink(show = true)
+    doc.createTestMustHaveCorrectPageHeading(pageTitle)
+    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+
+    "must display the correct radio button lables" in {
+      doc.getMainContent.select("label[for=value_0]").text() mustBe option1Label
+      doc.getMainContent.select("label[for=value_1]").text() mustBe option2Label
+    }
+
+    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+      controllers.routes.$className$Controller.onSubmit(mode),
+      "Continue"
+    )
+  }
+
   "$className$View" - {
-    "when the form is empty (no errors), NormalMode" - {
+    "when using NormalMode, the form is empty (no errors)" - {
       val doc = generateView(form)
-      doc.mustHaveCorrectPageTitle(pageHeading)
-      doc.createTestForBackLink(show = true)
-      doc.createTestMustHaveCorrectPageHeading(pageTitle)
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-      "must display the correct radio button lables" in {
-        doc.select("label[for=value_0]").text() mustBe option1Label
-        doc.select("label[for=value_1]").text() mustBe option2Label
-      }
-
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        controllers.routes.$className$Controller.onSubmit(NormalMode),
-        "Continue"
-      )
+      doChecks(doc,NormalMode)
     }
     "when using CheckMode" - {
       val doc = generateView(form, CheckMode)
-
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        controllers.routes.$className$Controller.onSubmit(CheckMode),
-        "Continue"
-      )
+      doChecks(doc,CheckMode)
     }
   }
 }
