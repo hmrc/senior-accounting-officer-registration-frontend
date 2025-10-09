@@ -18,9 +18,20 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[String] = formProvider()
 
-  private def generateView(form: Form[String], mode: Mode): Document = {
-    val view = SUT(form, mode)
+  private def generateView(form: Form[String], mode: Mode, bound: Boolean): Document = {
+    val view = bound match {
+      case true => SUT(form.bind(Map("value" -> testInputValue)), mode)
+      case _ => SUT(form, mode)
+    }
     Jsoup.parse(view.toString)
+  }
+
+  private def doInputChecks(doc: Document, mode: Mode, boundValue: Boolean): Unit = {
+    doc.createTestMustShowASingleInput(
+      expectedLabel = pageHeading,
+      expectedValue = if(boundValue == true) testInputValue else "",
+      expectedHint = None
+    )
   }
 
   private def doChecks(doc: Document, mode: Mode): Unit = {
@@ -29,12 +40,6 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     doc.createTestMustHaveCorrectPageHeading(pageTitle)
     doc.createTestMustShowIsThisPageNotWorkingProperlyLink
 
-    doc.createTestMustShowASingleInput(
-      expectedLabel = pageHeading,
-      expectedValue = "",
-      expectedHint = None
-    )
-
     doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
       controllers.routes.$className$Controller.onSubmit(mode),
       "Continue"
@@ -42,13 +47,17 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   }
 
   "$className$View" - {
-    "when using NormalMode, the form is empty (no errors)" - {
-      val doc = generateView(form, NormalMode)
+    "when using NormalMode, with bound form" - {
+      val doc = generateView(form, NormalMode, false)
       doChecks(doc, NormalMode)
+      val docWithBoundFormValue = generateView(form, NormalMode, true)
+      doInputChecks(docWithBoundFormValue, NormalMode, true)
     }
     "when using CheckMode" - {
-      val doc = generateView(form, CheckMode)
-      doChecks(doc, CheckMode)
+      val doc = generateView(form, CheckMode, false)
+      doChecks(generateView(form, CheckMode, false), CheckMode)
+      val docWithBoundFormValue = generateView(form, CheckMode, true)
+      doInputChecks(docWithBoundFormValue, CheckMode, true)
     }
   }
 }
@@ -56,4 +65,5 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 object $className$ViewSpec {
   val pageHeading = "$className;format="decap"$"
   val pageTitle = "$className;format="decap"$"
+  val testInputValue = "myTestInputValue"
 }
