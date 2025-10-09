@@ -36,18 +36,21 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   }
 
   "$className$View" - {
-    "when using NormalMode" - {
-      val doc = generateView(form, NormalMode)
-      doChecks(doc, NormalMode)
 
+    val docWithUnBoundForm = generateView(form, NormalMode)
+    val docWithBoundForm = generateView(form.bind(Map("value" -> testInputValue)), NormalMode)
+
+    doChecks(docWithUnBoundForm, NormalMode)
+
+    "when using NormalMode" - {
       "when using unBound form" - {
-        doc.createTestMustShowASingleInput(
+        docWithUnBoundForm.createTestMustShowASingleInput(
           expectedLabel = pageHeading,
           expectedValue = "",
           expectedHint = None
         )
       }
-      val docWithBoundForm = generateView(form.bind(Map("value" -> testInputValue)), NormalMode)
+
       "when using bound form" - {
         docWithBoundForm.createTestMustShowASingleInput(
           expectedLabel = pageHeading,
@@ -59,18 +62,18 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
     "when using CheckMode" - {
 
-      val doc = generateView(form, CheckMode)
-      doChecks(doc, CheckMode)
+      val docWithUnBoundForm = generateView(form, CheckMode)
+      val docWithBoundForm = generateView(form.bind(Map("value" -> testInputValue)), CheckMode)
+      doChecks(docWithUnBoundForm, CheckMode)
 
       "when using unBound form" - {
-        doc.createTestMustShowASingleInput(
+        docWithUnBoundForm.createTestMustShowASingleInput(
           expectedLabel = pageHeading,
           expectedValue = "",
           expectedHint = None
         )
       }
 
-      val docWithBoundForm = generateView(form.bind(Map("value" -> testInputValue)), CheckMode)
       "when using bound form" - {
         docWithBoundForm.createTestMustShowASingleInput(
           expectedLabel = pageHeading,
