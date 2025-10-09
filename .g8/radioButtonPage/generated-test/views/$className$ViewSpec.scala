@@ -19,13 +19,13 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[$className$] = formProvider()
 
-  private def generateView(form: Form[$className$], mode: Mode = NormalMode): Document = {
+  private def generateView(form: Form[$className$], mode: Mode): Document = {
     val view = SUT(form, mode)
     Jsoup.parse(view.toString)
   }
 
 
-  private def doChecks(doc:Document, mode:Mode): Unit = {
+  private def doChecks(doc: Document, mode: Mode): Unit = {
     doc.mustHaveCorrectPageTitle(pageHeading)
     doc.createTestForBackLink(show = true)
     doc.createTestMustHaveCorrectPageHeading(pageTitle)
@@ -44,12 +44,12 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
   "$className$View" - {
     "when using NormalMode, the form is empty (no errors)" - {
-      val doc = generateView(form)
-      doChecks(doc,NormalMode)
+      val doc = generateView(form, NormalMode)
+      doChecks(doc, NormalMode)
     }
     "when using CheckMode" - {
       val doc = generateView(form, CheckMode)
-      doChecks(doc,CheckMode)
+      doChecks(doc, CheckMode)
     }
   }
 }
