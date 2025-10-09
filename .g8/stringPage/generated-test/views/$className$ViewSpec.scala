@@ -29,9 +29,11 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     doc.createTestMustHaveCorrectPageHeading(pageTitle)
     doc.createTestMustShowIsThisPageNotWorkingProperlyLink
 
-    "must display the correct label for string page" in {
-      doc.getMainContent.select("label[for=value]").text() mustBe pageTitle
-    }
+    doc.createTestMustShowASingleInput(
+      expectedLabel = pageHeading,
+      expectedValue = "",
+      expectedHint = None
+    )
 
     doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
       controllers.routes.$className$Controller.onSubmit(mode),
