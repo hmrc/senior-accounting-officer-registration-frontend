@@ -227,22 +227,30 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         target.resolve.text() mustBe text
       }
 
-    private def mustShowElementsWithContent(
+    private def createTestWithCountOfElement(
         selector: String,
-        expectedTexts: List[String],
+        count: Int,
         description: String
-    )(using pos: Position): Unit = {
-      val expectedCount = expectedTexts.size
-      val elements      = target.resolve.select(selector).asScala
-      s"must have $expectedCount of $description" in {
-        withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
-          elements.size mustBe expectedCount
+    )(using pos: Position): Unit =
+      s"must have $count of $description" in {
+        val elements = target.resolve.select(selector).asScala
+        withClue(s"Expected $count $description but found ${elements.size}\n") {
+          elements.size mustBe count
         }
       }
-      for (content, index) <- expectedTexts.zipWithIndex do {
+
+    private def createTestsWithOrderOfElements(
+        selector: String,
+        texts: List[String],
+        description: String
+    )(using pos: Position): Unit = {
+      val expectedCount = texts.size
+      val elements      = target.resolve.select(selector).asScala
+
+      for (content, index) <- texts.zipWithIndex do {
         s"must have a $description with content '$content' (check ${index + 1})" in {
           withClue(s"$description with content '$content' not found\n") {
-            elements.zip(expectedTexts).foreach { case (element, expectedText) =>
+            elements.zip(texts).foreach { case (element, expectedText) =>
               element.text() mustEqual expectedText
             }
           }
@@ -255,9 +263,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     )(using
         pos: Position
     ): Unit = {
-      mustShowElementsWithContent(
+      createTestWithCountOfElement(
         selector = excludeHelpLinkParagraphsSelector,
-        expectedTexts = paragraphs,
+        count = paragraphs.size,
+        description = "paragraphs"
+      )
+      createTestsWithOrderOfElements(
+        selector = excludeHelpLinkParagraphsSelector,
+        texts = paragraphs,
         description = "paragraphs"
       )
 
@@ -277,21 +290,33 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         bullets: List[String]
     )(using
         pos: Position
-    ): Unit =
-      mustShowElementsWithContent(
+    ): Unit = {
+      createTestWithCountOfElement(
         selector = "li",
-        expectedTexts = bullets,
+        count = bullets.size,
         description = "bullets"
       )
+      createTestsWithOrderOfElements(
+        selector = "li",
+        texts = bullets,
+        description = "bullets"
+      )
+    }
 
     def createTestsWithCaption(
         caption: String
-    )(using pos: Position): Unit =
-      mustShowElementsWithContent(
+    )(using pos: Position): Unit = {
+      createTestWithCountOfElement(
         selector = "span.govuk-caption-m",
-        expectedTexts = List(caption),
+        count = 1,
         description = "captions"
       )
+      createTestsWithOrderOfElements(
+        selector = "span.govuk-caption-m",
+        texts = List(caption),
+        description = "captions"
+      )
+    }
 
     def createTestWithLink(
         linkText: String,
