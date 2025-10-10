@@ -128,10 +128,10 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .Try(target.resolve.select(".govuk-panel__body").get(0))
         .getOrElse(throw RuntimeException("No panel body found"))
 
-    def createTestMustShowASingleInput(
-        expectedLabel: String,
-        expectedValue: String,
-        expectedHint: Option[String] = None
+    def createTestsWithASingleTextInput(
+        label: String,
+        value: String,
+        hint: Option[String] = None
     )(using pos: Position): Unit = {
 
       def elements = target.resolve.select("input").asScala
@@ -142,25 +142,25 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
       }
 
-      s"must have an input with the value of '$expectedValue'" in {
+      s"must have an input with the value of '$value'" in {
         val element = elements.head
-        withClue(s"input with value '$expectedValue' not found\n") {
-          element.attr("value") mustEqual expectedValue
+        withClue(s"input with value '$value' not found\n") {
+          element.attr("value") mustEqual value
         }
       }
 
-      s"must have a label for the input of '$expectedLabel'" in {
+      s"must have a label for the input of '$label'" in {
         val element = elements.head
         val inputId = element.attr("id")
 
-        withClue(s"a label with '$expectedLabel' for the input is not found\n") {
-          target.resolve.select(s"""label[for="$inputId"]""").text mustEqual expectedLabel
+        withClue(s"a label with '$label' for the input is not found\n") {
+          target.resolve.select(s"""label[for="$inputId"]""").text mustEqual label
         }
       }
 
-      expectedHint
+      hint
         .map { expectedHintText =>
-          s"must have a hint with values '$expectedHint'" in {
+          s"must have a hint with values '$hint'" in {
             val element = elements.head
 
             val hintId = element.attr("aria-describedby")

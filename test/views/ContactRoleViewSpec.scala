@@ -55,10 +55,10 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 }
               )
 
-              doc.createTestMustShowASingleInput(
-                expectedLabel = pageHeading,
-                expectedValue = "",
-                expectedHint = Some(expectedHints)
+              doc.createTestsWithASingleTextInput(
+                label = pageHeading,
+                value = "",
+                hint = Some(expectedHints)
               )
 
               doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
@@ -88,10 +88,10 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 }
               )
 
-              doc.createTestMustShowASingleInput(
-                expectedLabel = pageHeading,
-                expectedValue = testInputValue,
-                expectedHint = Some(expectedHints)
+              doc.createTestsWithASingleTextInput(
+                label = pageHeading,
+                value = testInputValue,
+                hint = Some(expectedHints)
               )
 
               doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
