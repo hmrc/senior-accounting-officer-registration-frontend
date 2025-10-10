@@ -222,9 +222,9 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         elements.size() mustBe 0
       }
 
-    def createTestMustShowText(expectedText: String)(using pos: Position): Unit =
-      s"must have text '$expectedText'" in {
-        target.resolve.text() mustBe expectedText
+    def createTestWithText(text: String)(using pos: Position): Unit =
+      s"must have text '$text'" in {
+        target.resolve.text() mustBe text
       }
 
     private def mustShowElementsWithContent(

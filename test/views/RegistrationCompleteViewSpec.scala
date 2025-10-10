@@ -48,11 +48,11 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
       "with a confirmation panel that" - {
         "must have the correct title" - {
-          doc.getConfirmationPanel.getPanelTitle.createTestMustShowText(expectedText = panelTitle)
+          doc.getConfirmationPanel.getPanelTitle.createTestWithText(text = panelTitle)
         }
 
         "must have the correct body" - {
-          doc.getConfirmationPanel.getPanelBody.createTestMustShowText(expectedText = panelBody)
+          doc.getConfirmationPanel.getPanelBody.createTestWithText(text = panelBody)
         }
       }
 
