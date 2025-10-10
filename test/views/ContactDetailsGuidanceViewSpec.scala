@@ -38,7 +38,7 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
       caption = caption
     )
 
-    doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphTexts)
+    doc.createTestsWithParagraphs(paragraphs = paragraphTexts)
 
     doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
 

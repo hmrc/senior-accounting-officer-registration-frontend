@@ -39,7 +39,7 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
           showIsThisPageNotWorkingProperlyLink = true
         )
 
-        doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphs)
+        doc.createTestsWithParagraphs(paragraphs = paragraphs)
 
         "must show the correct statuses" in {
           val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")

@@ -56,7 +56,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         }
       }
 
-      doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphsList)
+      doc.createTestsWithParagraphs(paragraphs = paragraphsList)
 
       "The final paragraph" - {
         doc.getMainContent

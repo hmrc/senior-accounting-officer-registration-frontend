@@ -255,21 +255,20 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     )(using pos: Position): Unit =
       mustShowElementsWithContent(selector = "h2", expectedTexts = expectedHeadings, description = "headings")
 
-    def createTestMustShowParagraphsWithContent(
-        expectedParagraphs: List[String],
-        includeHelpLink: Boolean = false
+    def createTestsWithParagraphs(
+        paragraphs: List[String]
     )(using
         pos: Position
     ): Unit = {
       mustShowElementsWithContent(
-        selector = if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector,
-        expectedTexts = expectedParagraphs,
+        selector = excludeHelpLinkParagraphsSelector,
+        expectedTexts = paragraphs,
         description = "paragraphs"
       )
 
       "all paragraphs must have the expected CSS class" in {
         def paragraphs =
-          target.resolve.select(if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector).asScala
+          target.resolve.select(excludeHelpLinkParagraphsSelector).asScala
 
         paragraphs.foreach(paragraph =>
           withClue(s"$paragraph did not have the expected CSS class\n") {
