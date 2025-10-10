@@ -23,7 +23,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
-  private def doChecks(doc: Document, mode: Mode): Unit = {
+  private def doCommonChecks(doc: Document, mode: Mode): Unit = {
     doc.mustHaveCorrectPageTitle(pageHeading)
     doc.createTestForBackLink(show = true)
     doc.createTestMustHaveCorrectPageHeading(pageTitle)
@@ -37,49 +37,26 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
   "$className$View" - {
 
-    val docWithUnBoundForm = generateView(form, NormalMode)
-    val docWithBoundForm = generateView(form.bind(Map("value" -> testInputValue)), NormalMode)
-
-    doChecks(docWithUnBoundForm, NormalMode)
-
-    "when using NormalMode" - {
-      "when using unBound form" - {
-        docWithUnBoundForm.createTestMustShowASingleInput(
-          expectedLabel = pageHeading,
-          expectedValue = "",
-          expectedHint = None
-        )
-      }
-
-      "when using bound form" - {
-        docWithBoundForm.createTestMustShowASingleInput(
-          expectedLabel = pageHeading,
-          expectedValue = testInputValue,
-          expectedHint = None
-        )
-      }
-    }
-
-    "when using CheckMode" - {
-
-      val docWithUnBoundForm = generateView(form, CheckMode)
-      val docWithBoundForm = generateView(form.bind(Map("value" -> testInputValue)), CheckMode)
-      doChecks(docWithUnBoundForm, CheckMode)
-
-      "when using unBound form" - {
-        docWithUnBoundForm.createTestMustShowASingleInput(
-          expectedLabel = pageHeading,
-          expectedValue = "",
-          expectedHint = None
-        )
-      }
-
-      "when using bound form" - {
-        docWithBoundForm.createTestMustShowASingleInput(
-          expectedLabel = pageHeading,
-          expectedValue = testInputValue,
-          expectedHint = None
-        )
+    Mode.values.foreach { mode =>
+      "when using " + mode.toString - {
+        "when using unBound form" - {
+          val doc = generateView(form, mode)
+          doCommonChecks(doc, mode)
+          doc.createTestMustShowASingleInput(
+            expectedLabel = pageHeading,
+            expectedValue = "",
+            expectedHint = None
+          )
+        }
+        "when using bound form" - {
+          val doc = generateView(form.bind(Map("value" -> testInputValue)), mode)
+          doCommonChecks(doc, mode)
+          doc.createTestMustShowASingleInput(
+            expectedLabel = pageHeading,
+            expectedValue = testInputValue,
+            expectedHint = None
+          )
+        }
       }
     }
   }
