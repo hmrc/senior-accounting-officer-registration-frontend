@@ -58,7 +58,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
                 expectedValue = "",
-                expectedHint = Some(expectedHints)
+                expectedHint = Some(expectedHintsNew)
               )
 
               doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
@@ -93,7 +93,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
                 expectedValue = testInputValue,
-                expectedHint = Some(expectedHints)
+                expectedHint = Some(expectedHintsNew)
               )
 
               doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
@@ -121,7 +121,7 @@ object ContactEmailViewSpec {
   val pageTitleSecond: String = "Second contact details"
   val pageTitleThird: String  = "Third contact details"
 
-  val expectedHints: String  = "We’ll only use this to contact them about the company’s submission."
+  val expectedHintsNew: String  = "We’ll only use this to contact them about the company’s submission."
   val testInputValue: String = "test Input Value"
 
   val submitButtonText: String = "Continue"
