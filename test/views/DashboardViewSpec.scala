@@ -73,9 +73,9 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
           case ContactsInfo =>
             doc.createTestMustNotShowElement("govuk-button")
           case Submission =>
-            doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-              expectedAction = controllers.routes.IndexController.continue(),
-              expectedSubmitButtonText = submitButtonText
+            doc.createTestsWithSubmissionButton(
+              action = controllers.routes.IndexController.continue(),
+              buttonText = submitButtonText
             )
         }
 

@@ -59,9 +59,9 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 hint = Some(expectedHints)
               )
 
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonText
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
               )
             }
 
@@ -90,9 +90,9 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 hint = Some(expectedHints)
               )
 
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonText
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
               )
             }
           }

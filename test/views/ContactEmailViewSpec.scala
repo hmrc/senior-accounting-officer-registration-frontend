@@ -59,9 +59,9 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 hint = Some(expectedHints)
               )
 
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactEmailController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonText
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactEmailController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
               )
 
             }
@@ -91,9 +91,9 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 hint = Some(expectedHints)
               )
 
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactEmailController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonText
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactEmailController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
               )
             }
           }

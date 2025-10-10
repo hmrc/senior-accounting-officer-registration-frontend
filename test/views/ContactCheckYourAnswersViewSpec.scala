@@ -64,9 +64,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         dl.size() mustBe 1
       }
 
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        expectedSubmitButtonText = submitButtonText
+      doc.createTestsWithSubmissionButton(
+        action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
+        buttonText = submitButtonText
       )
 
     }
@@ -124,9 +124,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         dl.size() mustBe 2
       }
 
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        expectedSubmitButtonText = submitButtonText
+      doc.createTestsWithSubmissionButton(
+        action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
+        buttonText = submitButtonText
       )
 
     }
@@ -202,9 +202,9 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         dl.size() mustBe 3
       }
 
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        expectedSubmitButtonText = submitButtonText
+      doc.createTestsWithSubmissionButton(
+        action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
+        buttonText = submitButtonText
       )
 
     }

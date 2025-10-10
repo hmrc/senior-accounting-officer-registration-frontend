@@ -192,42 +192,29 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
     }
 
-    def createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction: Call,
-        expectedSubmitButtonText: String
+    def createTestsWithSubmissionButton(
+        action: Call,
+        buttonText: String
     )(using
         pos: Position
     ): Unit = {
-      s"must have a form which submits to '${expectedAction.method} ${expectedAction.url}'" in {
+      s"must have a form which submits to '${action.method} ${action.url}'" in {
         val form = target.resolve.select("form")
-        form.attr("method") mustBe expectedAction.method
-        form.attr("action") mustBe expectedAction.url
+        form.attr("method") mustBe action.method
+        form.attr("action") mustBe action.url
         form.size() mustBe 1
       }
 
-      s"must have a submit button with text '$expectedSubmitButtonText'" in {
+      s"must have a submit button with text '$buttonText'" in {
         val button = target.resolve.select("button[type=submit], input[type=submit]")
         withClue(
-          s"Submit Button with text $expectedSubmitButtonText not found\n"
+          s"Submit Button with text $buttonText not found\n"
         ) {
-          button.text() mustBe expectedSubmitButtonText
+          button.text() mustBe buttonText
           button.size() mustBe 1
         }
       }
     }
-
-    def createTestMustHaveSubmitButton(expectedText: String)(using
-        pos: Position
-    ): Unit =
-      s"must have a button with text '$expectedText'" in {
-        val button = target.resolve.select("button[type=submit], input[type=submit]")
-        withClue(
-          s"Submit Button with text $expectedText not found\n"
-        ) {
-          button.text() mustBe expectedText
-          button.size() mustBe 1
-        }
-      }
 
     def createTestMustNotShowElement(classes: String)(using pos: Position): Unit =
       s"must not show the element of class $classes" in {

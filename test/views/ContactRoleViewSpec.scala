@@ -61,9 +61,9 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 hint = Some(expectedHints)
               )
 
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactRoleController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonText
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactRoleController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
               )
 
             }
@@ -94,9 +94,9 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 hint = Some(expectedHints)
               )
 
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactRoleController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonText
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactRoleController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
               )
 
             }
