@@ -62,9 +62,9 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         doc.getMainContent
           .getParagraphs()
           .last
-          .createTestMustShowLink(
-            expectedText = "submit a notification and certificate.",
-            expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
+          .createTestWithLink(
+            linkText = "submit a notification and certificate.",
+            destinationUrl = "/beta/beta-sao-digitalisation-dashboard.html"
           )
       }
 
@@ -74,9 +74,9 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         doc.getMainContent
           .select("li")
           .get(0)
-          .createTestMustShowLink(
-            expectedText = bulletPointTexts.head,
-            expectedUrl = "#"
+          .createTestWithLink(
+            linkText = bulletPointTexts.head,
+            destinationUrl = "#"
           )
       }
 
@@ -84,9 +84,9 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         doc.getMainContent
           .select("li")
           .get(1)
-          .createTestMustShowLink(
-            expectedText = bulletPointTexts.last,
-            expectedUrl = "#"
+          .createTestWithLink(
+            linkText = bulletPointTexts.last,
+            destinationUrl = "#"
           )
       }
 

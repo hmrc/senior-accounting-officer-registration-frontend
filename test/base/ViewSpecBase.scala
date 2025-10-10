@@ -293,13 +293,13 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         description = "captions"
       )
 
-    def createTestMustShowLink(
-        expectedText: String,
-        expectedUrl: String
+    def createTestWithLink(
+        linkText: String,
+        destinationUrl: String
     )(using
         pos: Position
     ): Unit =
-      s"must have expected link with correct text: $expectedText and correct url $expectedUrl withing provided element" in {
+      s"must have expected link with correct text: $linkText and correct url $destinationUrl withing provided element" in {
         val element       = target.resolve
         val link: Element = if element.tagName() == "a" then {
           element
@@ -310,11 +310,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
           links.head
         }
-        withClue(s"link text was not as expected. Got ${link.text()}, expected '$expectedText'\n") {
-          link.text mustBe expectedText
+        withClue(s"link text was not as expected. Got ${link.text()}, expected '$linkText'\n") {
+          link.text mustBe linkText
         }
-        withClue(s"link href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl'\n") {
-          link.attr("href") mustBe expectedUrl
+        withClue(s"link href was not as expected. Got ${link.attr("href")}, expected '$destinationUrl'\n") {
+          link.attr("href") mustBe destinationUrl
         }
 
         withClue(s"link must have expected CSS class\n") {
