@@ -216,9 +216,9 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-    def createTestMustNotShowElement(classes: String)(using pos: Position): Unit =
-      s"must not show the element of class $classes" in {
-        val elements = target.resolve.getElementsByClass(classes)
+    def createTestWithoutElements(byClass: String)(using pos: Position): Unit =
+      s"must not show the element of class $byClass" in {
+        val elements = target.resolve.getElementsByClass(byClass)
         elements.size() mustBe 0
       }
 
@@ -249,11 +249,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
       }
     }
-
-    def createTestMustShowHeadingH2s(
-        expectedHeadings: List[String]
-    )(using pos: Position): Unit =
-      mustShowElementsWithContent(selector = "h2", expectedTexts = expectedHeadings, description = "headings")
 
     def createTestsWithParagraphs(
         paragraphs: List[String]

@@ -69,9 +69,9 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
         stage match {
           case CompanyDetails =>
-            doc.createTestMustNotShowElement("govuk-button")
+            doc.createTestWithoutElements(byClass = "govuk-button")
           case ContactsInfo =>
-            doc.createTestMustNotShowElement("govuk-button")
+            doc.createTestWithoutElements(byClass = "govuk-button")
           case Submission =>
             doc.createTestsWithSubmissionButton(
               action = controllers.routes.IndexController.continue(),
