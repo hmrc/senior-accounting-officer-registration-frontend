@@ -40,7 +40,7 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 
     doc.createTestsWithParagraphs(paragraphs = paragraphTexts)
 
-    doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
+    doc.createTestsWithBulletPoints(bullets = bulletPointTexts)
 
     doc.createTestsWithSubmissionButton(
       action = controllers.routes.ContactDetailsGuidanceController.continue(),

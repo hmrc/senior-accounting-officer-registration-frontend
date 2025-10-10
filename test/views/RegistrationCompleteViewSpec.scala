@@ -68,7 +68,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           )
       }
 
-      doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
+      doc.createTestsWithBulletPoints(bullets = bulletPointTexts)
 
       "First bullet point" - {
         doc.getMainContent

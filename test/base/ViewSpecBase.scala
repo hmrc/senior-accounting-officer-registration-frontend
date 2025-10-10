@@ -278,14 +278,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-    def createTestMustShowBulletPointsWithContent(
-        expectedTexts: List[String]
+    def createTestsWithBulletPoints(
+        bullets: List[String]
     )(using
         pos: Position
     ): Unit =
       mustShowElementsWithContent(
         selector = "li",
-        expectedTexts = expectedTexts,
+        expectedTexts = bullets,
         description = "bullets"
       )
 
