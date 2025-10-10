@@ -47,8 +47,8 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 showIsThisPageNotWorkingProperlyLink = true
               )
 
-              doc.createTestMustShowCaptionWithContent(
-                expectedCaption = contactType match {
+              doc.createTestsWithCaption(
+                caption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
@@ -80,8 +80,8 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
                 showIsThisPageNotWorkingProperlyLink = true
               )
 
-              doc.createTestMustShowCaptionWithContent(
-                expectedCaption = contactType match {
+              doc.createTestsWithCaption(
+                caption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption

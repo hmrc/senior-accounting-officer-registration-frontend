@@ -45,8 +45,8 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 showIsThisPageNotWorkingProperlyLink = true
               )
 
-              doc.createTestMustShowCaptionWithContent(
-                expectedCaption = contactType match {
+              doc.createTestsWithCaption(
+                caption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
@@ -76,8 +76,8 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 showIsThisPageNotWorkingProperlyLink = true
               )
 
-              doc.createTestMustShowCaptionWithContent(
-                expectedCaption = contactType match {
+              doc.createTestsWithCaption(
+                caption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption

@@ -34,8 +34,8 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
       showIsThisPageNotWorkingProperlyLink = true
     )
 
-    doc.createTestMustShowCaptionWithContent(
-      expectedCaption = caption
+    doc.createTestsWithCaption(
+      caption = caption
     )
 
     doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphTexts)

@@ -290,12 +290,12 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         description = "bullets"
       )
 
-    def createTestMustShowCaptionWithContent(
-        expectedCaption: String
+    def createTestsWithCaption(
+        caption: String
     )(using pos: Position): Unit =
       mustShowElementsWithContent(
         selector = "span.govuk-caption-m",
-        expectedTexts = List(expectedCaption),
+        expectedTexts = List(caption),
         description = "captions"
       )
 
