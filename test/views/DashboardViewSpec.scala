@@ -20,6 +20,7 @@ import base.ViewSpecBase
 import models.DashboardStage
 import models.DashboardStage.{CompanyDetails, ContactsInfo, Submission}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.DashboardViewSpec.*
 import views.html.DashboardView
 
@@ -29,11 +30,14 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
     DashboardStage.values.foreach { stage =>
       s"must generate a view for $stage stage" - {
-        val doc = Jsoup.parse(SUT(stage).toString)
+        val doc: Document = Jsoup.parse(SUT(stage).toString)
 
-        doc.mustHaveCorrectPageTitle(pageHeading)
-
-        doc.createTestMustHaveCorrectPageHeading(pageHeading)
+        doc.createTestsWithStandardPageElements(
+          pageTitle = pageHeading,
+          pageHeading = pageHeading,
+          showBackLink = false,
+          showIsThisPageNotWorkingProperlyLink = true
+        )
 
         doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphs)
 
@@ -75,7 +79,6 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
             )
         }
 
-        doc.createTestMustShowIsThisPageNotWorkingProperlyLink
       }
     }
   }

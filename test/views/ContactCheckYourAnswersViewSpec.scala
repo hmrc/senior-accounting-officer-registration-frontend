@@ -33,11 +33,12 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val contacts      = List(firstContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = true)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageHeading,
+        pageHeading = pageHeading,
+        showBackLink = true,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -68,19 +69,18 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         expectedSubmitButtonText = submitButtonText
       )
 
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
     }
 
     "When exactly two contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = true)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageHeading,
+        pageHeading = pageHeading,
+        showBackLink = true,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -129,18 +129,18 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         expectedSubmitButtonText = submitButtonText
       )
 
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
 
     "When exactly three contacts, must generate a view" - {
       val contacts      = List(firstContact, secondContact, thirdContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = true)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageHeading,
+        pageHeading = pageHeading,
+        showBackLink = true,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -207,7 +207,6 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         expectedSubmitButtonText = submitButtonText
       )
 
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 

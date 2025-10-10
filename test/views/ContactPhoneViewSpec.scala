@@ -21,6 +21,7 @@ import forms.ContactPhoneFormProvider
 import models.ContactType.*
 import models.{ContactType, Mode}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.ContactPhoneViewSpec.*
 import views.html.ContactPhoneView
 
@@ -35,14 +36,17 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
         Mode.values.foreach { mode =>
           s"must generate a view for $contactType contact in $mode" - {
             "when there are no prior data for the page" - {
-              val doc =
+              val doc: Document =
                 Jsoup.parse(
                   SUT(formProvider(), contactType, mode).toString
                 )
 
-              doc.mustHaveCorrectPageTitle(pageHeading)
-
-              doc.createTestForBackLink(show = true)
+              doc.createTestsWithStandardPageElements(
+                pageTitle = pageHeading,
+                pageHeading = pageHeading,
+                showBackLink = true,
+                showIsThisPageNotWorkingProperlyLink = true
+              )
 
               doc.createTestMustShowCaptionWithContent(
                 expectedCaption = contactType match {
@@ -51,8 +55,6 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                   case Third  => contactTypeThirdCaption
                 }
               )
-
-              doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
@@ -65,18 +67,20 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                 expectedSubmitButtonText = submitButtonText
               )
 
-              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
             }
 
             "when there exists prior data for the page" - {
-              val doc =
+              val doc: Document =
                 Jsoup.parse(
                   SUT(formProvider().bind(Map("value" -> "test Input Value")), contactType, mode).toString
                 )
 
-              doc.mustHaveCorrectPageTitle(pageHeading)
-
-              doc.createTestForBackLink(show = true)
+              doc.createTestsWithStandardPageElements(
+                pageTitle = pageHeading,
+                pageHeading = pageHeading,
+                showBackLink = true,
+                showIsThisPageNotWorkingProperlyLink = true
+              )
 
               doc.createTestMustShowCaptionWithContent(
                 expectedCaption = contactType match {
@@ -85,8 +89,6 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                   case Third  => contactTypeThirdCaption
                 }
               )
-
-              doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
@@ -99,7 +101,6 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
                 expectedSubmitButtonText = submitButtonText
               )
 
-              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
             }
           }
         }

@@ -18,23 +18,25 @@ package views
 
 import base.ViewSpecBase
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.ContactDetailsGuidanceViewSpec.*
 import views.html.ContactDetailsGuidanceView
 
 class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidanceView] {
 
   "ContactDetailsGuidanceView" - {
-    val doc = Jsoup.parse(SUT().toString)
+    val doc: Document = Jsoup.parse(SUT().toString)
 
-    doc.mustHaveCorrectPageTitle(caption)
-
-    doc.createTestForBackLink(show = true)
+    doc.createTestsWithStandardPageElements(
+      pageTitle = caption,
+      pageHeading = pageHeading,
+      showBackLink = true,
+      showIsThisPageNotWorkingProperlyLink = true
+    )
 
     doc.createTestMustShowCaptionWithContent(
       expectedCaption = caption
     )
-
-    doc.createTestMustHaveCorrectPageHeading(expectedHeading = pageHeading)
 
     doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphTexts)
 
@@ -45,7 +47,6 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
       expectedSubmitButtonText = submitButtonText
     )
 
-    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
   }
 }
 

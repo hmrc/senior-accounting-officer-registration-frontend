@@ -44,23 +44,35 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .Try(doc.select(".govuk-panel.govuk-panel--confirmation").get(0))
         .getOrElse(throw RuntimeException("No Confirmation Panel found"))
 
-    def mustHaveCorrectPageTitle(title: String)(using pos: Position): Unit =
+    def createTestsWithStandardPageElements(
+        pageTitle: String,
+        pageHeading: String,
+        showBackLink: Boolean,
+        showIsThisPageNotWorkingProperlyLink: true
+    )(using pos: Position): Unit = {
+      createTestWithPageTitle(pageTitle = pageTitle)
+      createTestWithPageHeading(pageHeading = pageHeading)
+      createTestWithBackLink(show = showBackLink)
+      createTestWithIsThisPageNotWorkingProperlyLink
+    }
+
+    def createTestWithPageTitle(pageTitle: String)(using pos: Position): Unit =
       "must generate a view with the correct title" in {
-        doc.title mustBe s"$title - $expectedServiceName - GOV.UK"
+        doc.title mustBe s"$pageTitle - $expectedServiceName - GOV.UK"
       }
 
-    def createTestMustHaveCorrectPageHeading(expectedHeading: String)(using
+    def createTestWithPageHeading(pageHeading: String)(using
         pos: Position
     ): Unit =
       "must generate a view with the correct page heading" in {
         val actualH1 = doc.getMainContent.getElementsByTag("h1")
-        withClue(s"the page must contain only a single <h1> with content '$expectedHeading'\n") {
-          actualH1.get(0).text() mustBe expectedHeading
+        withClue(s"the page must contain only a single <h1> with content '$pageHeading'\n") {
+          actualH1.get(0).text() mustBe pageHeading
           actualH1.size() mustBe 1
         }
       }
 
-    def createTestForBackLink(show: Boolean)(using pos: Position): Unit =
+    def createTestWithBackLink(show: Boolean)(using pos: Position): Unit =
       if show then
         "must show a backlink " in {
           val backLink = doc.getElementsByClass("govuk-back-link")
@@ -80,7 +92,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
         }
 
-    def createTestMustShowIsThisPageNotWorkingProperlyLink(using
+    def createTestWithIsThisPageNotWorkingProperlyLink(using
         pos: Position
     ): Unit =
       "must generate a view with 'Is this page not working properly? (opens in new tab)' " in {

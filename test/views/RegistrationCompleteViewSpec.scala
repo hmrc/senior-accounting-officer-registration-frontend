@@ -19,6 +19,7 @@ package views
 import base.ViewSpecBase
 import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.RegistrationCompleteViewSpec.*
 import views.html.RegistrationCompleteView
 
@@ -36,13 +37,14 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
-      val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
+      val doc: Document = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = false)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageHeading,
+        pageHeading = pageHeading,
+        showBackLink = false,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
 
       "with a confirmation panel that" - {
         "must have the correct title" - {
@@ -88,7 +90,6 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           )
       }
 
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 }
