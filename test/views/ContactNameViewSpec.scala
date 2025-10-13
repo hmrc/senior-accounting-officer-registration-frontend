@@ -37,11 +37,10 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               val doc =
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
-              doc.mustHaveCorrectPageTitle(
-                contactType match {
-                  case First  => pageTitleFirst
-                  case Second => pageTitleSecond
-                  case Third  => pageTitleThird
+              doc.mustHaveCorrectPageTitle(contactType match {
+                case First  => pageTitleFirst
+                case Second => pageTitleSecond
+                case Third  => pageTitleThird
               })
 
               doc.createTestForBackLink(show = true)
@@ -73,11 +72,10 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               val doc =
                 Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
-              doc.mustHaveCorrectPageTitle(
-                contactType match {
-                  case First  => pageTitleFirst
-                  case Second => pageTitleSecond
-                  case Third  => pageTitleThird
+              doc.mustHaveCorrectPageTitle(contactType match {
+                case First  => pageTitleFirst
+                case Second => pageTitleSecond
+                case Third  => pageTitleThird
               })
 
               doc.createTestForBackLink(show = true)

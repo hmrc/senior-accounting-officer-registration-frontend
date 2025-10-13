@@ -16,13 +16,12 @@
 
 package views
 
-import views.html.ContactHaveYouAddedAllView
 import base.ViewSpecBase
-import models.ContactType.*
-import models.ContactType
-import org.jsoup.Jsoup
-import views.ContactEmailViewSpec.*
 import forms.ContactHaveYouAddedAllFormProvider
+import models.ContactType
+import models.ContactType.*
+import org.jsoup.Jsoup
+import views.html.ContactHaveYouAddedAllView
 
 class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAllView] {
 
@@ -31,6 +30,7 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
   val pageHeading: String                              = "Have you added all the contacts you need?"
   val pageHint: String                                 =
     "Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details."
+
   "ContactHaveYouAddedAllView" - {
     "when there are no prior data for the page" - {
       val doc = Jsoup.parse(SUT(formProvider(), First).toString)
@@ -38,6 +38,18 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
       doc.mustHaveCorrectPageTitle(pageTitle)
       doc.createTestMustHaveCorrectPageHeading(pageHeading)
       doc.createTestMustShowHint(pageHint)
+
+      doc.createTestsWithRadioButtons(
+        values = List("yes", "no"),
+        labels = List("Yes", "No, add another contact")
+      )
+
+      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
+        expectedAction = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First),
+        expectedSubmitButtonText = "Continue"
+      )
+
+      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 }

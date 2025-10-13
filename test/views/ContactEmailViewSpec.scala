@@ -37,12 +37,12 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               val doc =
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
-              // doc.mustHaveCorrectPageTitle(pageHeading)
               doc.mustHaveCorrectPageTitle(contactType match {
                 case First  => pageTitleFirst
                 case Second => pageTitleSecond
                 case Third  => pageTitleThird
               })
+
               doc.createTestForBackLink(show = true)
 
               doc.createTestMustShowCaptionWithContent(
@@ -121,8 +121,8 @@ object ContactEmailViewSpec {
   val pageTitleSecond: String = "Second contact details"
   val pageTitleThird: String  = "Third contact details"
 
-  val expectedHintsNew: String  = "We’ll only use this to contact them about the company’s submission."
-  val testInputValue: String = "test Input Value"
+  val expectedHintsNew: String = "We’ll only use this to contact them about the company’s submission."
+  val testInputValue: String   = "test Input Value"
 
   val submitButtonText: String = "Continue"
 }
