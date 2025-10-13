@@ -38,7 +38,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   "$className$View" - {
 
     Mode.values.foreach { mode =>
-      s"when using \${mode.toString}" - {
+      s"when using \$mode" - {
         "when using unBound form" - {
           val doc = generateView(form, mode)
           doCommonChecks(doc, mode)
