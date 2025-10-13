@@ -19,6 +19,7 @@ package views
 import base.ViewSpecBase
 import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.RegistrationCompleteViewSpec.*
 import views.html.RegistrationCompleteView
 
@@ -36,45 +37,46 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
-      val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
+      val doc: Document = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = false)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageHeading,
+        pageHeading = pageHeading,
+        showBackLink = false,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
 
       "with a confirmation panel that" - {
         "must have the correct title" - {
-          doc.getConfirmationPanel.getPanelTitle.createTestMustShowText(expectedText = panelTitle)
+          doc.getConfirmationPanel.getPanelTitle.createTestWithText(text = panelTitle)
         }
 
         "must have the correct body" - {
-          doc.getConfirmationPanel.getPanelBody.createTestMustShowText(expectedText = panelBody)
+          doc.getConfirmationPanel.getPanelBody.createTestWithText(text = panelBody)
         }
       }
 
-      doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphsList)
+      doc.createTestsWithParagraphs(paragraphs = paragraphsList)
 
       "The final paragraph" - {
         doc.getMainContent
           .getParagraphs()
           .last
-          .createTestMustShowLink(
-            expectedText = "submit a notification and certificate.",
-            expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
+          .createTestWithLink(
+            linkText = "submit a notification and certificate.",
+            destinationUrl = "/beta/beta-sao-digitalisation-dashboard.html"
           )
       }
 
-      doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
+      doc.createTestsWithBulletPoints(bullets = bulletPointTexts)
 
       "First bullet point" - {
         doc.getMainContent
           .select("li")
           .get(0)
-          .createTestMustShowLink(
-            expectedText = bulletPointTexts.head,
-            expectedUrl = "#"
+          .createTestWithLink(
+            linkText = bulletPointTexts.head,
+            destinationUrl = "#"
           )
       }
 
@@ -82,13 +84,12 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         doc.getMainContent
           .select("li")
           .get(1)
-          .createTestMustShowLink(
-            expectedText = bulletPointTexts.last,
-            expectedUrl = "#"
+          .createTestWithLink(
+            linkText = bulletPointTexts.last,
+            destinationUrl = "#"
           )
       }
 
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 }

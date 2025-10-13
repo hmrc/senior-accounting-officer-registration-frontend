@@ -21,6 +21,7 @@ import forms.ContactNameFormProvider
 import models.ContactType.*
 import models.{ContactType, Mode}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.ContactNameViewSpec.*
 import views.html.ContactNameView
 
@@ -34,67 +35,65 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
         Mode.values.foreach { mode =>
           s"must generate a view for $contactType contact in $mode" - {
             "when there are no prior data for the page" - {
-              val doc =
+              val doc: Document =
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
-              doc.mustHaveCorrectPageTitle(pageHeading)
+              doc.createTestsWithStandardPageElements(
+                pageTitle = pageHeading,
+                pageHeading = pageHeading,
+                showBackLink = true,
+                showIsThisPageNotWorkingProperlyLink = true
+              )
 
-              doc.createTestForBackLink(show = true)
-
-              doc.createTestMustShowCaptionWithContent(
-                expectedCaption = contactType match {
+              doc.createTestsWithCaption(
+                caption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
                 }
               )
 
-              doc.createTestMustHaveCorrectPageHeading(pageHeading)
-
-              doc.createTestMustShowASingleInput(
-                expectedLabel = pageHeading,
-                expectedValue = "",
-                expectedHint = Some(expectedHints)
+              doc.createTestsWithASingleTextInput(
+                label = pageHeading,
+                value = "",
+                hint = Some(expectedHints)
               )
 
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonText
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
               )
-
-              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
             }
 
             "when there exists prior data for the page" - {
-              val doc =
+              val doc: Document =
                 Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
-              doc.mustHaveCorrectPageTitle(pageHeading)
+              doc.createTestsWithStandardPageElements(
+                pageTitle = pageHeading,
+                pageHeading = pageHeading,
+                showBackLink = true,
+                showIsThisPageNotWorkingProperlyLink = true
+              )
 
-              doc.createTestForBackLink(show = true)
-
-              doc.createTestMustShowCaptionWithContent(
-                expectedCaption = contactType match {
+              doc.createTestsWithCaption(
+                caption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
                   case Third  => contactTypeThirdCaption
                 }
               )
 
-              doc.createTestMustHaveCorrectPageHeading(pageHeading)
-
-              doc.createTestMustShowASingleInput(
-                expectedLabel = pageHeading,
-                expectedValue = testInputValue,
-                expectedHint = Some(expectedHints)
+              doc.createTestsWithASingleTextInput(
+                label = pageHeading,
+                value = testInputValue,
+                hint = Some(expectedHints)
               )
 
-              doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-                expectedAction = controllers.routes.ContactNameController.onSubmit(contactType, mode),
-                expectedSubmitButtonText = submitButtonText
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
               )
-
-              doc.createTestMustShowIsThisPageNotWorkingProperlyLink
             }
           }
         }
