@@ -208,14 +208,12 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
       }
 
-      for (value, index) <- values.zipWithIndex do {
-        s"must have a radio button with value '$value' (check ${index + 1})" in {
-          withClue(s"value with content '$value' not found\n") {
-            elements.zip(values).foreach { case (element, expectedText) =>
-              element.attributes().get("value") mustEqual expectedText
-            }
+      elements.zip(values).foreach {
+        case (element, expectedText) =>
+          val elementValue = element.attr("value")
+          s"radio button value $elementValue must match $expectedText" in {
+            elementValue mustEqual expectedText
           }
-        }
       }
     }
 

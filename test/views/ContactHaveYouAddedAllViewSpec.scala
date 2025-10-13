@@ -21,16 +21,12 @@ import forms.ContactHaveYouAddedAllFormProvider
 import models.ContactType
 import models.ContactType.*
 import org.jsoup.Jsoup
+import views.ContactHaveYouAddedAllViewSpec.*
 import views.html.ContactHaveYouAddedAllView
 
 class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAllView] {
 
   val formProvider: ContactHaveYouAddedAllFormProvider = app.injector.instanceOf[ContactHaveYouAddedAllFormProvider]
-  val pageTitle: String                                = "First contact details"
-  val pageHeading: String                              = "Have you added all the contacts you need?"
-  val pageHint: String                                 =
-    "Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details."
-
   "ContactHaveYouAddedAllView" - {
     "when there are no prior data for the page" - {
       val doc = Jsoup.parse(SUT(formProvider(), First).toString)
@@ -52,4 +48,11 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
       doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
+}
+
+object ContactHaveYouAddedAllViewSpec {
+  val pageTitle: String   = "First contact details"
+  val pageHeading: String = "Have you added all the contacts you need?"
+  val pageHint: String    =
+    "Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details."
 }
