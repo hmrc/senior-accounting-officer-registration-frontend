@@ -116,6 +116,25 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .Try(target.resolve.select(".govuk-panel__body").get(0))
         .getOrElse(throw RuntimeException("No panel body found"))
 
+    def createTestMustShowInput(
+       expectedName: String,
+       expectedLabel: String
+    )(using pos: Position): Unit = {
+      s"must have an input with the name $expectedName" in {
+        val element = target.resolve.select(s"input[name=$expectedName]")
+        withClue(s"input with name '$expectedName' not found\n") {
+          element.size() mustBe 1
+        }
+      }
+
+      s"must have a label for the input of '$expectedLabel'" in {
+        val inputId = target.resolve.select(s"input[name=$expectedName]").attr("id")
+        withClue(s"a label with '$expectedLabel' for the input is not found\n") {
+          target.resolve.select(s"label[for=$inputId]").text mustEqual expectedLabel
+        }
+      }
+    }
+
     def createTestMustShowASingleInput(
         expectedLabel: String,
         expectedValue: String,

@@ -24,16 +24,11 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
-  private def doChecks(doc: Document, mode: Mode): Unit = {
+  private def doCommonChecks(doc: Document, mode: Mode): Unit = {
     doc.mustHaveCorrectPageTitle(pageHeading)
     doc.createTestForBackLink(show = true)
     doc.createTestMustHaveCorrectPageHeading(pageTitle)
     doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-    "must display the correct labels for fields" in {
-      doc.select("label[for=$field1Name$]").text() mustBe field1Label
-      doc.select("label[for=$field2Name$]").text() mustBe field2Label
-    }
 
     doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
       controllers.routes.$className$Controller.onSubmit(mode),
@@ -42,13 +37,27 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   }
 
   "$className$View" - {
-    "when using NormalMode, when the form is empty (no errors)" - {
-      val doc = generateView(form, NormalMode)
-      doChecks(doc, NormalMode)
-    }
-    "when using CheckMode" - {
-      val doc = generateView(form, CheckMode)
-      doChecks(doc, CheckMode)
+    Mode.values.foreach { mode =>
+      s"when using \$mode" - {
+        "when using unBound form" - {
+          val doc = generateView(form, mode)
+
+          doCommonChecks(doc, mode)
+          doc.createTestMustShowInput("$field1Name$", field1Label)
+          doc.createTestMustShowInput("$field2Name$", field2Label)
+        }
+
+        "when using bound form" - {
+          val boundForm = form.bind(Map("$field1Name$" -> testInputValue1, "$field2Name$" -> testInputValue2))
+          val doc = generateView(boundForm, mode)
+
+          doCommonChecks(doc, mode)
+          doc.createTestMustShowInput("$field1Name$", field1Label)
+          doc.createTestMustShowInput("$field2Name$", field2Label)
+          doc.getElementById("$field1Name$").attr("value") mustBe testInputValue1
+          doc.getElementById("$field2Name$").attr("value") mustBe testInputValue2
+        }
+      }
     }
   }
 }
@@ -58,4 +67,8 @@ object $className$ViewSpec {
   val pageTitle = "$className;format="decap"$"
   val field1Label = "$field1Name$"
   val field2Label = "$field2Name$"
+
+  val testInputValue1 = "test value 1"
+  val testInputValue2 = "test value 2"
+
 }
