@@ -37,7 +37,11 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               val doc =
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
-              doc.mustHaveCorrectPageTitle(pageHeading)
+              doc.mustHaveCorrectPageTitle(contactType match {
+                case First  => pageTitleFirst
+                case Second => pageTitleSecond
+                case Third  => pageTitleThird
+              })
 
               doc.createTestForBackLink(show = true)
 
@@ -50,7 +54,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               )
 
               doc.createTestMustHaveCorrectPageHeading(pageHeading)
-
               doc.createTestMustShowASingleInput(
                 expectedLabel = pageHeading,
                 expectedValue = "",
@@ -69,7 +72,11 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               val doc =
                 Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
-              doc.mustHaveCorrectPageTitle(pageHeading)
+              doc.mustHaveCorrectPageTitle(contactType match {
+                case First  => pageTitleFirst
+                case Second => pageTitleSecond
+                case Third  => pageTitleThird
+              })
 
               doc.createTestForBackLink(show = true)
 
@@ -104,15 +111,18 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 }
 
 object ContactNameViewSpec {
-  val pageHeading: String = "Enter full name"
+  val pageHeading: String = "Enter the name of the person or team to keep on record"
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
   val contactTypeThirdCaption: String  = "Third contact details"
 
+  val pageTitleFirst: String  = "First contact details"
+  val pageTitleSecond: String = "Second contact details"
+  val pageTitleThird: String  = "Third contact details"
+
   val testInputValue: String = "test Input Value"
-  val expectedHints: String  =
-    "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
+  val expectedHints: String  = "For example, ‘Ashley Smith or Tax team’."
 
   val submitButtonText: String = "Continue"
 
