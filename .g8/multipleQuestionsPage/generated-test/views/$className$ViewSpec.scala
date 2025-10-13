@@ -43,8 +43,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           val doc = generateView(form, mode)
 
           doCommonChecks(doc, mode)
-          doc.createTestMustShowInput("$field1Name$", field1Label)
-          doc.createTestMustShowInput("$field2Name$", field2Label)
+          doc.createTestMustShowInput(expectedName = "$field1Name$", expectedLabel = field1Label, expectedValue = "")
+          doc.createTestMustShowInput(expectedName = "$field2Name$", expectedLabel = field2Label, expectedValue = "")
         }
 
         "when using bound form" - {
@@ -52,10 +52,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           val doc = generateView(boundForm, mode)
 
           doCommonChecks(doc, mode)
-          doc.createTestMustShowInput("$field1Name$", field1Label)
-          doc.createTestMustShowInput("$field2Name$", field2Label)
-          doc.getElementById("$field1Name$").attr("value") mustBe testInputValue1
-          doc.getElementById("$field2Name$").attr("value") mustBe testInputValue2
+          doc.createTestMustShowInput(expectedName = "$field1Name$", expectedLabel = field1Label, expectedValue = testInputValue1)
+          doc.createTestMustShowInput(expectedName = "$field2Name$", expectedLabel = field2Label, expectedValue = testInputValue2)
         }
       }
     }
