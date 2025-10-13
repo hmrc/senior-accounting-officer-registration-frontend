@@ -187,7 +187,12 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       expectedHint: Option[String] = None
     )(using pos: Position): Unit = {
       createTestMustShowNumberOfInputs(1)
-      createTestMustShowInput("value", expectedLabel, expectedValue, expectedHint)
+      createTestMustShowInput(
+        expectedName = "value",
+        expectedLabel = expectedLabel,
+        expectedValue = expectedValue,
+        expectedHint = expectedHint
+      )
     }
 
     def createTestMustHaveASubmissionButtonWhichSubmitsTo(
