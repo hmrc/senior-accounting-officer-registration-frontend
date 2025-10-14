@@ -40,7 +40,6 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               doc.mustHaveCorrectPageTitle(contactType match {
                 case First  => pageTitleFirst
                 case Second => pageTitleSecond
-                case Third  => pageTitleThird
               })
 
               doc.createTestForBackLink(show = true)
@@ -75,7 +74,6 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               doc.mustHaveCorrectPageTitle(contactType match {
                 case First  => pageTitleFirst
                 case Second => pageTitleSecond
-                case Third  => pageTitleThird
               })
               doc.createTestForBackLink(show = true)
 
@@ -113,11 +111,9 @@ object ContactEmailViewSpec {
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
-  val contactTypeThirdCaption: String  = "Third contact details"
 
   val pageTitleFirst: String  = "First contact details"
   val pageTitleSecond: String = "Second contact details"
-  val pageTitleThird: String  = "Third contact details"
 
   val expectedHints: String  = "We’ll only use this to contact them about the company’s submission."
   val testInputValue: String = "test Input Value"
