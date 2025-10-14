@@ -25,25 +25,50 @@ import views.html.RegistrationCompleteView
 
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 import javax.inject.Inject
+import repositories.SessionRepository
+import scala.concurrent.ExecutionContext
+import pages.CompanyDetailsPage
 
 class RegistrationCompleteController @Inject() (
-    override val messagesApi: MessagesApi,
-    identify: IdentifierAction,
-    getData: DataRetrievalAction,
-    requireData: DataRequiredAction,
-    val controllerComponents: MessagesControllerComponents,
-    view: RegistrationCompleteView
-) extends FrontendBaseController
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  view: RegistrationCompleteView,
+  sessionRepository: SessionRepository,
+)(using ec: ExecutionContext) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    sessionRepository.get(request.userAnswers.id).map{
+      option => {
+        option match
+          case None => {        // TODO: how to handle this situation?
+            val registrationCompleteDetails = RegistrationCompleteDetails(
+              companyName = "Boom",
+              registrationId = "XMPLR0123456789",
+              registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
+            )
 
-    val registrationCompleteDetails = RegistrationCompleteDetails(
-      companyName = "ABC Ltd",
-      registrationId = "XMPLR0123456789",
-      registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
-    )
+            Ok(view(registrationCompleteDetails))
+          }
+          case Some(userAnswers) => {
+            val companyName = userAnswers.get(CompanyDetailsPage) match 
+              case Some(x) => x.companyName
+              case None => "Bang" // TODO: how to handle this situation?
 
-    Ok(view(registrationCompleteDetails))
+            val registrationCompleteDetails = RegistrationCompleteDetails(
+              companyName = companyName,
+              registrationId = "XMPLR0123456789",
+              registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
+            )
+
+            Ok(view(registrationCompleteDetails))
+        }
+      }
+        
+    }
+    
   }
 }

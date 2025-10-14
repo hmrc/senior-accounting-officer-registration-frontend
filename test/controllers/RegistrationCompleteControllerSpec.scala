@@ -30,7 +30,7 @@ class RegistrationCompleteControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithCompanyDetails)).build()
 
       running(application) {
         val request          = FakeRequest(GET, routes.RegistrationCompleteController.onPageLoad().url)
