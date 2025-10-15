@@ -208,12 +208,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
       }
 
-      elements.zip(values).foreach {
-        case (element, expectedText) =>
-          val elementValue = element.attr("value")
-          s"radio button value $elementValue must match $expectedText" in {
-            elementValue mustEqual expectedText
-          }
+      elements.zip(values).foreach { case (element, expectedText) =>
+        val elementValue = element.attr("value")
+        s"radio button value $elementValue must match $expectedText" in {
+          elementValue mustEqual expectedText
+        }
       }
     }
 

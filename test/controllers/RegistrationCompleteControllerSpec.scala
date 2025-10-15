@@ -17,7 +17,10 @@
 package controllers
 
 import base.SpecBase
+import models.UserAnswers
+import models.registration.CompanyDetails
 import models.registration.RegistrationCompleteDetails
+import pages.CompanyDetailsPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.RegistrationCompleteView
@@ -27,13 +30,27 @@ import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 class RegistrationCompleteControllerSpec extends SpecBase {
 
   "RegistrationComplete Controller" - {
+    lazy val registrationCompleteRoute = routes.RegistrationCompleteController.onPageLoad().url
+    "must return OK and the correct view for a GET when company details are available" in {
 
-    "must return OK and the correct view for a GET" in {
+      val userAnswersWithCompanyDetails =
+        UserAnswers(id = "id")
+          .set(
+            CompanyDetailsPage,
+            CompanyDetails(
+              companyName = "ABC Ltd",
+              companyNumber = "number",
+              ctUtr = "ctUtr",
+              registeredBusinessPartnerId = "registeredBusinessPartnerId"
+            )
+          )
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithCompanyDetails)).build()
 
       running(application) {
-        val request          = FakeRequest(GET, routes.RegistrationCompleteController.onPageLoad().url)
+        val request          = FakeRequest(GET, registrationCompleteRoute)
         val result           = route(application, request).value
         val view             = application.injector.instanceOf[RegistrationCompleteView]
         val registrationData = RegistrationCompleteDetails(
@@ -44,6 +61,18 @@ class RegistrationCompleteControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(registrationData)(using request, messages(application)).toString
+      }
+    }
+
+    "must redirect to the journey recovery view for a GET when company details are not available" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, registrationCompleteRoute)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
