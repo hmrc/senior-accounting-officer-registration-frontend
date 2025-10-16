@@ -52,6 +52,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
+                expectedName = "value",
                 expectedLabel = pageHeading,
                 expectedValue = "",
                 expectedHint = Some(expectedHints)
@@ -84,6 +85,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
+                expectedName = "value",
                 expectedLabel = pageHeading,
                 expectedValue = testInputValue,
                 expectedHint = Some(expectedHints)

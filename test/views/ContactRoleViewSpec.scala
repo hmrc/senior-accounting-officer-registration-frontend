@@ -54,6 +54,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
               doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
+                expectedName = "value",
                 expectedLabel = pageHeading,
                 expectedValue = "",
                 expectedHint = Some(expectedHints)
@@ -87,6 +88,7 @@ class ContactRoleViewSpec extends ViewSpecBase[ContactRoleView] {
               doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
+                expectedName = "value",
                 expectedLabel = pageHeading,
                 expectedValue = testInputValue,
                 expectedHint = Some(expectedHints)
