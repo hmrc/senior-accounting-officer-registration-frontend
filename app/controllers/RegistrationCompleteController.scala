@@ -40,7 +40,7 @@ class RegistrationCompleteController @Inject() (
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CompanyDetailsPage) match
-      case None        => Redirect(routes.JourneyRecoveryController.onPageLoad())
+      case None                 => Redirect(routes.JourneyRecoveryController.onPageLoad())
       case Some(companyDetails) =>
         Ok(
           view(
