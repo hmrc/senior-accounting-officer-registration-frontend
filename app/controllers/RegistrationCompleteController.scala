@@ -41,11 +41,11 @@ class RegistrationCompleteController @Inject() (
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CompanyDetailsPage) match
       case None        => Redirect(routes.JourneyRecoveryController.onPageLoad())
-      case Some(value) =>
+      case Some(companyDetails) =>
         Ok(
           view(
             RegistrationCompleteDetails(
-              companyName = value.companyName,
+              companyName = companyDetails.companyName,
               registrationId = "XMPLR0123456789",
               registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
             )
