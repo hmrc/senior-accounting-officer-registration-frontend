@@ -60,7 +60,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           .last
           .createTestMustShowLink(
             expectedText = "submit a notification and certificate.",
-            expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
+            expectedUrl = "/senior-accounting-officer/registration"
           )
       }
 
