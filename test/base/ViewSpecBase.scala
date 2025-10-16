@@ -136,24 +136,22 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
       s"for input '$expectedName'" - {
 
-        def getInputElement(): Option[Element] = {
+        def getInputElement: Option[Element] = {
           val elements = target.resolve.select(s"input[name=$expectedName]")
           if (elements.size() > 0) Some(elements.get(0)) else None
         }
 
-        "must exist on the page" in {
+        s"input with name '$expectedName' must exist on the page" in {
           withClue(s"input with the name '$expectedName' not found\n'") {
-            getInputElement() must not be None
+            getInputElement must not be None
           }
         }
-
-        def element = target.resolve.select(s"input[name=$expectedName]").get(0)
-
-        s"must have a label with text '$expectedLabel'" in {
-          getInputElement() match {
+        
+        s"input with name '$expectedName' must have a label '$expectedLabel' with correct id and text" in {
+          getInputElement match {
             case Some(element) =>
               val inputId = element.attr("id")
-              withClue(s"input must have a an 'id' attribute associated with a label\n") {
+              withClue(s"input with an 'id' attribute not found\n") {
                 inputId must not be ""
               }
 
@@ -172,20 +170,20 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         }
 
         s"must have value of '$expectedValue'" in {
-          getInputElement() match {
+          getInputElement match {
             case Some(element) =>
-              withClue(s"input value does not match expected value '$expectedValue'\n") {
+              withClue(s"input with name '$expectedName' does not have a value attribute '$expectedValue'\n") {
                 element.attr("value") mustEqual expectedValue
               }
             case None =>
               fail(s"input with expected name '$expectedName' not found")
           }
         }
-
+        
         expectedHint match {
           case Some(expectedHintText) =>
-            s"must have a hint with values '$expectedHintText'" in {
-              getInputElement() match {
+            s"with name '$expectedName' must have a hint with values '$expectedHintText'" in {
+              getInputElement match {
                 case Some(element) =>
                   val hintId = element.attr("aria-describedby")
                   withClue("input does not have 'aria-describedby' attribute for hint\n") {
@@ -206,8 +204,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
               }
             }
           case None =>
-            "must not have an associated hint" in {
-              getInputElement() match {
+            s"with name '$expectedName' must not have an associated hint" in {
+              getInputElement match {
                 case Some(element) =>
                   val hintId = element.attr("aria-describedby")
                   withClue(s"input has unexpected hint with id '$hintId'\n") {
