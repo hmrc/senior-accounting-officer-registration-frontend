@@ -40,7 +40,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               doc.mustHaveCorrectPageTitle(contactType match {
                 case First  => pageTitleFirst
                 case Second => pageTitleSecond
-                case Third  => pageTitleThird
               })
 
               doc.createTestForBackLink(show = true)
@@ -49,7 +48,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
-                  case Third  => contactTypeThirdCaption
                 }
               )
 
@@ -75,7 +73,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
               doc.mustHaveCorrectPageTitle(contactType match {
                 case First  => pageTitleFirst
                 case Second => pageTitleSecond
-                case Third  => pageTitleThird
               })
 
               doc.createTestForBackLink(show = true)
@@ -84,7 +81,6 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
-                  case Third  => contactTypeThirdCaption
                 }
               )
 
@@ -115,11 +111,9 @@ object ContactNameViewSpec {
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
-  val contactTypeThirdCaption: String  = "Third contact details"
 
   val pageTitleFirst: String  = "First contact details"
   val pageTitleSecond: String = "Second contact details"
-  val pageTitleThird: String  = "Third contact details"
 
   val testInputValue: String = "test Input Value"
   val expectedHints: String  = "For example, ‘Ashley Smith or Tax team’."

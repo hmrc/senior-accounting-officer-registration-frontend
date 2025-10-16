@@ -40,26 +40,6 @@ POST        /contact-details/second/name                       controllers.Conta
 GET         /contact-details/second/change-name                controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 POST        /contact-details/second/change-name                controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 
-GET         /contact-details/third/name                        controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
-POST        /contact-details/third/name                        controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
-GET         /contact-details/third/change-name                 controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
-POST        /contact-details/third/change-name                 controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
-
-GET         /contact-details/first/role                        controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
-POST        /contact-details/first/role                        controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
-GET         /contact-details/first/change-role                 controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
-POST        /contact-details/first/change-role                 controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
-
-GET         /contact-details/second/role                       controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
-POST        /contact-details/second/role                       controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
-GET         /contact-details/second/change-role                controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-POST        /contact-details/second/change-role                controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-
-GET         /contact-details/third/role                        controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
-POST        /contact-details/third/role                        controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
-GET         /contact-details/third/change-role                 controllers.ContactRoleController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
-POST        /contact-details/third/change-role                 controllers.ContactRoleController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
-
 GET         /contact-details/first/email                       controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
 POST        /contact-details/first/email                       controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
 GET         /contact-details/first/change-email                controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
@@ -69,26 +49,6 @@ GET         /contact-details/second/email                      controllers.Conta
 POST        /contact-details/second/email                      controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
 GET         /contact-details/second/change-email               controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 POST        /contact-details/second/change-email               controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-
-GET         /contact-details/third/email                       controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
-POST        /contact-details/third/email                       controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
-GET         /contact-details/third/change-email                controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
-POST        /contact-details/third/change-email                controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
-
-GET         /contact-details/first/phone-number                controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
-POST        /contact-details/first/phone-number                controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
-GET         /contact-details/first/change-phone-number         controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
-POST        /contact-details/first/change-phone-number         controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
-
-GET         /contact-details/second/phone-number               controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
-POST        /contact-details/second/phone-number               controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
-GET         /contact-details/second/change-phone-number        controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-POST        /contact-details/second/change-phone-number        controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
-
-GET         /contact-details/third/phone-number                controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
-POST        /contact-details/third/phone-number                controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = NormalMode)
-GET         /contact-details/third/change-phone-number         controllers.ContactPhoneController.onPageLoad(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
-POST        /contact-details/third/change-phone-number         controllers.ContactPhoneController.onSubmit(contactType: ContactType = ContactType.Third, mode: Mode = CheckMode)
 
 GET         /contact-details/first/add-another                 controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.First)
 POST        /contact-details/first/add-another                 controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.First)
