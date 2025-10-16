@@ -118,8 +118,9 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
     def createTestMustShowNumberOfInputs(expectedCount: Int)(using pos: Position): Unit = {
       s"must have a $expectedCount of input(s)" in {
-        //def elements = target.resolve.select("input[type=text]").asScala
-        def elements = target.resolve.select("input:not([type=hidden]):not([type=submit]):not([type=radio]):not([type=checkbox])").asScala
+        val selector = """input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"]"""
+        def elements = target.resolve.select(selector).asScala
+
         withClue(s"Expected a $expectedCount of inputs but found ${elements.size}\n") {
           elements.size mustBe expectedCount
         }
