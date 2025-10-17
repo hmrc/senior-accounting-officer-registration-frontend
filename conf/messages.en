@@ -62,9 +62,9 @@ registration.dashboard.submit = Submit your registration
 registration.checkYourAnswers.title = checkYourAnswers
 registration.checkYourAnswers.heading = checkYourAnswers
 
-registration.complete.title = Registration Complete
+registration.complete.title = SAO Registration Confirmation
 registration.complete.heading = Registration Complete
-registration.complete.referenceNumberPrefix = Your reference number
+registration.complete.referenceNumberPrefix = Your reference ID
 registration.complete.p1 = has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on
 registration.complete.p2 = We have sent a confirmation email with your reference ID to al the contact you gave during registration.
 registration.complete.p3 = If you need to keep a record of your registration

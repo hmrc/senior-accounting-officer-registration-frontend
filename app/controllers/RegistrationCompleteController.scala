@@ -16,8 +16,11 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import controllers.actions.*
+import models.registration.CompanyDetails
 import models.registration.RegistrationCompleteDetails
+import pages.CompanyDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -32,18 +35,24 @@ class RegistrationCompleteController @Inject() (
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    view: RegistrationCompleteView
+    view: RegistrationCompleteView,
+    configuration: FrontendAppConfig
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-
-    val registrationCompleteDetails = RegistrationCompleteDetails(
-      companyName = "ABC Ltd",
-      registrationId = "XMPLR0123456789",
-      registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
-    )
-
-    Ok(view(registrationCompleteDetails))
+    request.userAnswers.get(CompanyDetailsPage) match
+      case None                 => Redirect(routes.JourneyRecoveryController.onPageLoad())
+      case Some(companyDetails) =>
+        Ok(
+          view(
+            RegistrationCompleteDetails(
+              companyName = companyDetails.companyName,
+              registrationId = "XMPLR0123456789",
+              registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
+            ),
+            configuration.hubUrl + "/senior-accounting-officer"
+          )
+        )
   }
 }
