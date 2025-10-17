@@ -37,7 +37,10 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               val doc =
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
-              doc.mustHaveCorrectPageTitle(pageHeading)
+              doc.mustHaveCorrectPageTitle(contactType match {
+                case First  => pageTitleFirst
+                case Second => pageTitleSecond
+              })
 
               doc.createTestForBackLink(show = true)
 
@@ -45,7 +48,6 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
-                  case Third  => contactTypeThirdCaption
                 }
               )
 
@@ -70,15 +72,16 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
               val doc =
                 Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
-              doc.mustHaveCorrectPageTitle(pageHeading)
-
+              doc.mustHaveCorrectPageTitle(contactType match {
+                case First  => pageTitleFirst
+                case Second => pageTitleSecond
+              })
               doc.createTestForBackLink(show = true)
 
               doc.createTestMustShowCaptionWithContent(
                 expectedCaption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
-                  case Third  => contactTypeThirdCaption
                 }
               )
 
@@ -110,9 +113,11 @@ object ContactEmailViewSpec {
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
-  val contactTypeThirdCaption: String  = "Third contact details"
 
-  val expectedHints: String  = "We’ll only use this to contact you about the company’s tax accounting arrangements"
+  val pageTitleFirst: String  = "First contact details"
+  val pageTitleSecond: String = "Second contact details"
+
+  val expectedHints: String  = "We’ll only use this to contact them about the company’s submission."
   val testInputValue: String = "test Input Value"
 
   val submitButtonText: String = "Continue"

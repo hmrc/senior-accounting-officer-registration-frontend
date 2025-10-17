@@ -250,6 +250,42 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 //      )
 //    }
 
+    def createTestMustShowHint(expectedHint: String)(using pos: Position): Unit = {
+      s"must have a hint with values '$expectedHint'" in {
+        val hintElement = target.resolve.getElementsByClass("govuk-hint").asScala.headOption
+        hintElement match {
+          case Some(hint) => hint.text mustEqual expectedHint
+          case None       => fail(s"no hint element found\n")
+        }
+      }
+    }
+
+    def createTestsWithRadioButtons(
+        values: List[String],
+        labels: List[String]
+    )(using pos: Position): Unit = {
+      mustShowElementsWithContent(
+        selector = ".govuk-radios label",
+        expectedTexts = labels,
+        description = "radio button label"
+      )
+
+      val expectedCount = values.size
+      val elements      = target.resolve.select(".govuk-radios input").asScala
+      s"must have $expectedCount radio buttons" in {
+        withClue(s"Expected $expectedCount radio buttons but found ${elements.size}\n") {
+          elements.size mustBe expectedCount
+        }
+      }
+
+      elements.zip(values).foreach { case (element, expectedText) =>
+        val elementValue = element.attr("value")
+        s"radio button value $elementValue must match $expectedText" in {
+          elementValue mustEqual expectedText
+        }
+      }
+    }
+
     def createTestMustHaveASubmissionButtonWhichSubmitsTo(
         expectedAction: Call,
         expectedSubmitButtonText: String

@@ -26,7 +26,7 @@
 
 @(form: Form[?], contactType: ContactType, mode: Mode)(using request: Request[?], messages: Messages)
 
-@layout(pageTitle = title(form, messages("contactEmail.title"))) {
+@layout(pageTitle = title(form, messages(s"contactEmail.title.${contactType.messageKey}"))) {
 
     <span class="govuk-caption-m">@messages(s"contact.${contactType.messageKey}.caption")</span>
     @formHelper(action = routes.ContactEmailController.onSubmit(contactType, mode)) {

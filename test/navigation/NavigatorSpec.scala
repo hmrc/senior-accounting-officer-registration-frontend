@@ -36,28 +36,14 @@ class NavigatorSpec extends SpecBase {
       }
 
       "when the user is in the add first contact details journey" - {
-        "must go from contact name to contact role" in {
-          navigator.nextPage(ContactNamePage(First), NormalMode, UserAnswers("id")) mustBe routes.ContactRoleController
+        "must go from contact name to contact email" in {
+          navigator.nextPage(ContactNamePage(First), NormalMode, UserAnswers("id")) mustBe routes.ContactEmailController
             .onPageLoad(First, NormalMode)
         }
 
-        "must go from contact role to contact email" in {
-          navigator.nextPage(ContactRolePage(First), NormalMode, UserAnswers("id")) mustBe routes.ContactEmailController
-            .onPageLoad(First, NormalMode)
-        }
-
-        "must go from contact email to contact phone" in {
+        "must go from contact email to add another" in {
           navigator.nextPage(
             ContactEmailPage(First),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactPhoneController
-            .onPageLoad(First, NormalMode)
-        }
-
-        "must go from contact phone to add another" in {
-          navigator.nextPage(
-            ContactPhonePage(First),
             NormalMode,
             UserAnswers("id")
           ) mustBe routes.ContactHaveYouAddedAllController
@@ -84,90 +70,24 @@ class NavigatorSpec extends SpecBase {
       }
 
       "when the user is in the add second contact details journey" - {
-        "must go from contact name to contact role" in {
-          navigator.nextPage(ContactNamePage(Second), NormalMode, UserAnswers("id")) mustBe routes.ContactRoleController
-            .onPageLoad(Second, NormalMode)
-        }
-
-        "must go from contact role to contact email" in {
+        "must go from contact name to contact email" in {
           navigator.nextPage(
-            ContactRolePage(Second),
+            ContactNamePage(Second),
             NormalMode,
             UserAnswers("id")
           ) mustBe routes.ContactEmailController
             .onPageLoad(Second, NormalMode)
         }
 
-        "must go from contact email to contact phone" in {
+        "must go from contact email to review page" in {
           navigator.nextPage(
             ContactEmailPage(Second),
             NormalMode,
             UserAnswers("id")
-          ) mustBe routes.ContactPhoneController
-            .onPageLoad(Second, NormalMode)
-        }
-
-        "must go from contact phone to add another" in {
-          navigator.nextPage(
-            ContactPhonePage(Second),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactHaveYouAddedAllController
-            .onPageLoad(Second)
-        }
-
-        "on add another page" - {
-          "when the user answers Yes must go to contact check your answers" in {
-            navigator.nextPage(
-              ContactHaveYouAddedAllPage(Second),
-              NormalMode,
-              UserAnswers("id").set(ContactHaveYouAddedAllPage(Second), ContactHaveYouAddedAll.Yes).get
-            ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
-          }
-          "when the user answers No must go to 2nd contact name" in {
-            navigator.nextPage(
-              ContactHaveYouAddedAllPage(Second),
-              NormalMode,
-              UserAnswers("id").set(ContactHaveYouAddedAllPage(Second), ContactHaveYouAddedAll.No).get
-            ) mustBe routes.ContactNameController
-              .onPageLoad(Third, NormalMode)
-          }
+          ) mustBe routes.ContactCheckYourAnswersController
+            .onPageLoad()
         }
       }
-
-      "when the user is in the add third contact details journey" - {
-        "must go from contact name to contact role" in {
-          navigator.nextPage(ContactNamePage(Third), NormalMode, UserAnswers("id")) mustBe routes.ContactRoleController
-            .onPageLoad(Third, NormalMode)
-        }
-
-        "must go from contact role to contact email" in {
-          navigator.nextPage(
-            ContactRolePage(Third),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactEmailController
-            .onPageLoad(Third, NormalMode)
-        }
-
-        "must go from contact email to contact phone" in {
-          navigator.nextPage(
-            ContactEmailPage(Third),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactPhoneController
-            .onPageLoad(Third, NormalMode)
-        }
-
-        "must go from contact phone to contact check your answers" in {
-          navigator.nextPage(
-            ContactPhonePage(Third),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
-        }
-      }
-
     }
 
     "in Check mode" - {

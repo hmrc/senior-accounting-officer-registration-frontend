@@ -19,7 +19,7 @@ package models
 import play.api.mvc.JavascriptLiteral
 
 enum ContactType {
-  case First, Second, Third
+  case First, Second
 }
 
 object ContactType {
@@ -27,18 +27,15 @@ object ContactType {
     def toMongoPath: String = value match {
       case First  => "firstContact"
       case Second => "secondContact"
-      case Third  => "thirdContact"
     }
     def messageKey: String = value match {
       case First  => "first"
       case Second => "second"
-      case Third  => "third"
     }
   }
 
   given JavascriptLiteral[ContactType] = {
     case First  => "First"
     case Second => "Second"
-    case Third  => "Third"
   }
 }

@@ -32,7 +32,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
-import uk.gov.hmrc.http.{HttpResponse, InternalServerException}
+import uk.gov.hmrc.http.HttpResponse
 import utils.IdentifierGenerator
 
 import scala.concurrent.Future
@@ -85,7 +85,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "when GRS returns a 201 with an invalid json must throw InternalServerException" in {
+      "when GRS returns a 201 with an invalid json must return InternalServerError" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -98,11 +98,11 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(application, request).value
 
-          intercept[InternalServerException](await(result))
+          status(result) mustBe INTERNAL_SERVER_ERROR
         }
       }
 
-      "when GRS returns a 404 must throw InternalServerException" in {
+      "when GRS returns a 404 must return InternalServerError" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -115,11 +115,11 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(application, request).value
 
-          intercept[InternalServerException](await(result))
+          status(result) mustBe INTERNAL_SERVER_ERROR
         }
       }
 
-      "when GRS returns a 500 must throw InternalServerException" in {
+      "when GRS returns a 500 must return InternalServerError" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -132,7 +132,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(application, request).value
 
-          intercept[InternalServerException](await(result))
+          status(result) mustBe INTERNAL_SERVER_ERROR
         }
       }
 
@@ -211,7 +211,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "when GRS connector returns Left(None) response must throw InternalServerException" in {
+      "when GRS connector returns Left(None) response must return InternalServerError" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -225,25 +225,25 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(application, request).value
 
-          intercept[InternalServerException](await(result))
+          status(result) mustBe INTERNAL_SERVER_ERROR
         }
       }
 
-      "when GRS connector returns Left(Exception) response must throw InternalServerException" in {
+      "when GRS connector returns Left(Exception) response must return InternalServerError" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
           val grsConnector = application.injector.instanceOf[GrsConnector]
 
           when(grsConnector.retrieve(any())(using any())).thenReturn(
-            Future.successful(Left(new Exception("")))
+            Future.successful(Left(Some(new Exception(""))))
           )
 
           val request = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
 
           val result = route(application, request).value
 
-          intercept[InternalServerException](await(result))
+          status(result) mustBe INTERNAL_SERVER_ERROR
         }
       }
 

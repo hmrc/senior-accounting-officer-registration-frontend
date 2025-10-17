@@ -77,59 +77,41 @@ registration-complete.dateTime = {0} at {1} ({2}).
 
 contactDetailsGuidance.title = Contact details
 contactDetailsGuidance.caption = Contact details
-contactDetailsGuidance.heading = We need contact details for this [company/group]
-contactDetailsGuidance.p1 = Provide HMRC with contact details for the person or team responsible for this company or group.
+contactDetailsGuidance.heading = Provide contact details for the company
+contactDetailsGuidance.p1 = You need to give us the contact details of the person or team responsible for submitting the company’s notification and certificate.
 contactDetailsGuidance.p2 = We’ll use these details to:
 contactDetailsGuidance.b1 = contact the right person if we have questions about the company’s tax accounting arrangements
 contactDetailsGuidance.b2 = send confirmation when the notification and certificate have been submitted
-contactDetailsGuidance.p3 = You could also include the Senior Accounting Officer’s contact details so they can stay informed.
+contactDetailsGuidance.p3 = You can provide details for up to 2 contacts. For each contact, you’ll need to enter their full name and email address.
 
 contact.first.caption = First contact details
 contact.second.caption = Second contact details
-contact.third.caption = Third contact details
 
-contactName.title = Enter full name
-contactName.heading = Enter full name
-contactName.hint = Add the full name, role and contact details of the person or team that is able to deal with enquiries about the company's account and management of tax accounting arrangements.
+contactName.title.first  = First contact details
+contactName.title.second = Second contact details
+contactName.title.third  = Third contact details
+contactName.heading = Enter the name of the person or team to keep on record
+contactName.hint = For example, ‘Ashley Smith or Tax team’.
 contactName.checkYourAnswersLabel = Full name
 contactName.error.required = Enter contactName
 contactName.error.length = ContactName must be 100 characters or less
 contactName.change.first.hidden = change the full name
 contactName.change.second.hidden = change the full name
-contactName.change.third.hidden = change the full name
 
-contactRole.title = Enter role
-contactRole.heading = Enter role
-contactRole.hint = For example, ‘Chief Financial Officer’.
-contactRole.checkYourAnswersLabel = Role
-contactRole.error.required = Enter contactRole
-contactRole.error.length = contactRole must be 100 characters or less
-contactRole.change.first.hidden = change the role
-contactRole.change.second.hidden = change the role
-contactRole.change.third.hidden = change the role
-
-contactEmail.title = Enter email address
+contactEmail.title.first  = First contact details
+contactEmail.title.second = Second contact details
+contactEmail.title.third  = Third contact details
 contactEmail.heading = Enter email address
-contactEmail.hint = We’ll only use this to contact you about the company’s tax accounting arrangements
+contactEmail.hint = We’ll only use this to contact them about the company’s submission.
 contactEmail.checkYourAnswersLabel = Email address
 contactEmail.error.required = Enter contactEmail
 contactEmail.error.length = ContactEmail must be 100 characters or less
 contactEmail.change.first.hidden = change the email address
 contactEmail.change.second.hidden = change the email address
-contactEmail.change.third.hidden = change the email address
 
-contactPhone.title = Phone number
-contactPhone.heading = Phone number
-contactPhone.hint = We’ll only use this to contact you about the company’s tax accounting arrangements
-contactPhone.checkYourAnswersLabel = Phone number
-contactPhone.error.required = Enter contactPhone
-contactPhone.error.length = ContactPhone must be 100 characters or less
-contactPhone.change.first.hidden = change the phone number
-contactPhone.change.second.hidden = change the phone number
-contactPhone.change.third.hidden = change the phone number
-
-contactHaveYouAddedAll.title = Have you added all the contacts you need?
+contactHaveYouAddedAll.title = First contact details
 contactHaveYouAddedAll.heading = Have you added all the contacts you need?
+contactHaveYouAddedAll.hint = Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details.
 contactHaveYouAddedAll.yes = Yes
 contactHaveYouAddedAll.no = No, add another contact
 contactHaveYouAddedAll.checkYourAnswersLabel = Have you added all the contacts you need?

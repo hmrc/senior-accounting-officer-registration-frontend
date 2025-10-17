@@ -17,6 +17,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       doc.mustHaveCorrectPageTitle(pageHeading)
       doc.createTestForBackLink(show = true)
       doc.createTestMustHaveCorrectPageHeading(pageTitle)
+      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 }
