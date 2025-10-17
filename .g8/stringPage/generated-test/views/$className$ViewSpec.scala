@@ -43,6 +43,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           val doc = generateView(form, mode)
           doCommonChecks(doc, mode)
           doc.createTestMustShowASingleInput(
+            expectedName = "value",
             expectedLabel = pageHeading,
             expectedValue = "",
             expectedHint = None
@@ -52,6 +53,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           val doc = generateView(form.bind(Map("value" -> testInputValue)), mode)
           doCommonChecks(doc, mode)
           doc.createTestMustShowASingleInput(
+            expectedName = "value",
             expectedLabel = pageHeading,
             expectedValue = testInputValue,
             expectedHint = None
