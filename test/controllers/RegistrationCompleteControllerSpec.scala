@@ -31,7 +31,8 @@ class RegistrationCompleteControllerSpec extends SpecBase {
 
   "RegistrationComplete Controller" - {
     lazy val registrationCompleteRoute = routes.RegistrationCompleteController.onPageLoad().url
-    "must return OK and the correct view for a GET when company details are available" in {
+
+    "must return OK and the correct view for a GET when company details are available and host is not localhost" in {
 
       val userAnswersWithCompanyDetails =
         UserAnswers(id = "id")
@@ -47,7 +48,9 @@ class RegistrationCompleteControllerSpec extends SpecBase {
           .success
           .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithCompanyDetails)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithCompanyDetails))
+        .configure(Map("hub-frontend.host" -> "xyz"))
+        .build()
 
       running(application) {
         val request          = FakeRequest(GET, registrationCompleteRoute)
@@ -60,7 +63,10 @@ class RegistrationCompleteControllerSpec extends SpecBase {
         )
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(registrationData)(using request, messages(application)).toString
+        contentAsString(result) mustEqual view(registrationData, "xyz/senior-accounting-officer")(using
+          request,
+          messages(application)
+        ).toString
       }
     }
 

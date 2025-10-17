@@ -22,6 +22,7 @@ import models.registration.RegistrationCompleteDetails
 import pages.CompanyDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
 
@@ -34,7 +35,8 @@ class RegistrationCompleteController @Inject() (
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    view: RegistrationCompleteView
+    view: RegistrationCompleteView,
+    servicesConfig: ServicesConfig
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -48,7 +50,8 @@ class RegistrationCompleteController @Inject() (
               companyName = companyDetails.companyName,
               registrationId = "XMPLR0123456789",
               registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
-            )
+            ),
+            servicesConfig.getString("hub-frontend.host") + "/senior-accounting-officer"
           )
         )
   }
