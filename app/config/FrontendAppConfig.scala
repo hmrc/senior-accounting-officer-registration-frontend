@@ -39,6 +39,8 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
   def feedbackUrl(using request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
+  val hubUrl: String = servicesConfig.getString("hub-frontend.host")
+
   val loginUrl: String         = configuration.get[String]("urls.login").removeTrailingPathSeparator
   val loginContinueUrl: String = configuration.get[String]("urls.loginContinue").removeTrailingPathSeparator
   val signOutUrl: String       = configuration.get[String]("urls.signOut").removeTrailingPathSeparator
