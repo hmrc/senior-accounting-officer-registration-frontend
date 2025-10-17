@@ -55,6 +55,7 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
               doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
+                expectedName = "value",
                 expectedLabel = pageHeading,
                 expectedValue = "",
                 expectedHint = Some(expectedHints)
@@ -89,6 +90,7 @@ class ContactPhoneViewSpec extends ViewSpecBase[ContactPhoneView] {
               doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
               doc.createTestMustShowASingleInput(
+                expectedName = "value",
                 expectedLabel = pageHeading,
                 expectedValue = testInputValue,
                 expectedHint = Some(expectedHints)
