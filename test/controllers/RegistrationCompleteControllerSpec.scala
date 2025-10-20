@@ -21,10 +21,14 @@ import models.UserAnswers
 import models.registration.CompanyDetails
 import models.registration.RegistrationCompleteDetails
 import pages.CompanyDetailsPage
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.RegistrationCompleteView
 
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 
 class RegistrationCompleteControllerSpec extends SpecBase {
@@ -50,16 +54,18 @@ class RegistrationCompleteControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(userAnswersWithCompanyDetails))
         .configure(Map("hub-frontend.host" -> "xyz"))
+        .overrides(bind[Clock].to[MockClock])
         .build()
 
       running(application) {
-        val request          = FakeRequest(GET, registrationCompleteRoute)
-        val result           = route(application, request).value
-        val view             = application.injector.instanceOf[RegistrationCompleteView]
+        val request = FakeRequest(GET, registrationCompleteRoute)
+        val result  = route(application, request).value
+        val view    = application.injector.instanceOf[RegistrationCompleteView]
+
         val registrationData = RegistrationCompleteDetails(
           companyName = "ABC Ltd",
           registrationId = "XMPLR0123456789",
-          registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
+          registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 30), ZoneOffset.UTC)
         )
 
         status(result) mustEqual OK
@@ -82,4 +88,14 @@ class RegistrationCompleteControllerSpec extends SpecBase {
       }
     }
   }
+}
+
+class MockClock extends Clock {
+  override def instant(): Instant = {
+    LocalDateTime.of(2025, 1, 17, 11, 30).toInstant(ZoneOffset.UTC)
+  }
+
+  override def withZone(zone: ZoneId): Clock = ???
+
+  override def getZone(): ZoneId = ZoneOffset.UTC
 }

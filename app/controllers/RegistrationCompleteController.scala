@@ -26,7 +26,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
 
-import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
+import java.time.{Clock, ZonedDateTime}
 import javax.inject.Inject
 
 class RegistrationCompleteController @Inject() (
@@ -36,7 +36,8 @@ class RegistrationCompleteController @Inject() (
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     view: RegistrationCompleteView,
-    configuration: FrontendAppConfig
+    configuration: FrontendAppConfig,
+    clock: Clock
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -49,7 +50,7 @@ class RegistrationCompleteController @Inject() (
             RegistrationCompleteDetails(
               companyName = companyDetails.companyName,
               registrationId = "XMPLR0123456789",
-              registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
+              registrationDateTime = ZonedDateTime.now(clock)
             ),
             configuration.hubUrl + "/senior-accounting-officer"
           )
