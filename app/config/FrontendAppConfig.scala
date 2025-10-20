@@ -41,10 +41,10 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
 
   def hubUrl: String = getFromSystemPropertiesOrConfig("hub-frontend.host")
 
-  private def getFromSystemPropertiesOrConfig(key: String): String = sys.props.get(key) match {
-    case Some(value) => value
-    case None        => configuration.get[String](key)
-  }
+  private def getFromSystemPropertiesOrConfig(key: String): String =
+    sys.props.get(key).getOrElse(
+      configuration.get[String](key)
+    )
 
   val loginUrl: String         = configuration.get[String]("urls.login").removeTrailingPathSeparator
   val loginContinueUrl: String = configuration.get[String]("urls.loginContinue").removeTrailingPathSeparator
