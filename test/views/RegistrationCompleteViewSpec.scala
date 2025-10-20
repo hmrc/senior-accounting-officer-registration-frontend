@@ -23,6 +23,7 @@ import views.RegistrationCompleteViewSpec.*
 import views.html.RegistrationCompleteView
 
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
+import config.FrontendAppConfig
 
 class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView] {
 
@@ -36,13 +37,12 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
+      FrontendAppConfig.setValue("senior-accounting-officer-hub-frontend.host", "hub-url")
       val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
-      doc.mustHaveCorrectPageTitle(pageHeading)
+      doc.mustHaveCorrectPageTitle(pageTitle)
 
       doc.createTestForBackLink(show = false)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
 
       "with a confirmation panel that" - {
         "must have the correct title" - {
@@ -62,7 +62,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           .last
           .createTestMustShowLink(
             expectedText = "submit a notification and certificate.",
-            expectedUrl = "/beta/beta-sao-digitalisation-dashboard.html"
+            expectedUrl = "hub-url/senior-accounting-officer"
           )
       }
 
@@ -94,11 +94,11 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 }
 
 object RegistrationCompleteViewSpec {
-  val pageHeading: String = "Registration Complete"
+  val pageTitle: String = "SAO Registration Confirmation"
 
   val panelTitle: String = "Registration Complete"
 
-  val panelBody: String = "Your reference number REG12345"
+  val panelBody: String = "Your reference ID REG12345"
 
   val paragraphsList: List[String] = List(
     "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
