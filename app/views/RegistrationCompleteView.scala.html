@@ -15,12 +15,14 @@
  *@
 
 @import models.registration.RegistrationCompleteDetails
+@import _root_.config.FrontendAppConfig
 
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    config: FrontendAppConfig
 )
 
-@(details: RegistrationCompleteDetails, hubLink: String)(using request: Request[?], messages: Messages)
+@(details: RegistrationCompleteDetails)(using request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("registration.complete.title")), showBackLink = false) {
 
@@ -43,6 +45,6 @@
 
     <h2 class="govuk-heading-m">@messages("registration.complete.h2")</h2>
     <p class="govuk-body">@messages("registration.complete.p4")
-        <a class="govuk-link" href=@hubLink>@messages("registration.complete.a3").</a>
+        <a class="govuk-link" href=@config.hubUrl/senior-accounting-officer>@messages("registration.complete.a3").</a>
     </p>
 }

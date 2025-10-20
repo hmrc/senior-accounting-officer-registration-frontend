@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import controllers.actions.*
 import models.registration.CompanyDetails
 import models.registration.RegistrationCompleteDetails
@@ -36,7 +35,6 @@ class RegistrationCompleteController @Inject() (
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     view: RegistrationCompleteView,
-    configuration: FrontendAppConfig,
     clock: Clock
 ) extends FrontendBaseController
     with I18nSupport {
@@ -51,8 +49,7 @@ class RegistrationCompleteController @Inject() (
               companyName = companyDetails.companyName,
               registrationId = "XMPLR0123456789",
               registrationDateTime = ZonedDateTime.now(clock)
-            ),
-            configuration.hubUrl + "/senior-accounting-officer"
+            )
           )
         )
   }

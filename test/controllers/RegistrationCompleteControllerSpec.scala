@@ -69,7 +69,7 @@ class RegistrationCompleteControllerSpec extends SpecBase {
         )
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(registrationData, "xyz/senior-accounting-officer")(using
+        contentAsString(result) mustEqual view(registrationData)(using
           request,
           messages(application)
         ).toString

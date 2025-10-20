@@ -36,7 +36,8 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
-      val doc = Jsoup.parse(SUT(registrationCompleteDetails, "hub-url").toString)
+      sys.props.addOne(("hub-frontend.host", "hub-url"))
+      val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
       doc.mustHaveCorrectPageTitle(pageTitle)
 
@@ -60,7 +61,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           .last
           .createTestMustShowLink(
             expectedText = "submit a notification and certificate.",
-            expectedUrl = "hub-url"
+            expectedUrl = "hub-url/senior-accounting-officer"
           )
       }
 
