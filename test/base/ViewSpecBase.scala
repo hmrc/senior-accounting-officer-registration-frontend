@@ -235,21 +235,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       )
     }
 
-
-//    def createTestMustShowASingleInput(
-//      expectedLabel: String,
-//      expectedValue: String,
-//      expectedHint: Option[String] = None
-//    )(using pos: Position): Unit = {
-//      createTestMustShowNumberOfInputs(1)
-//      createTestMustShowInput(
-//        expectedName = "value",
-//        expectedLabel = expectedLabel,
-//        expectedValue = expectedValue,
-//        expectedHint = expectedHint
-//      )
-//    }
-
     def createTestMustShowHint(expectedHint: String)(using pos: Position): Unit = {
       s"must have a hint with values '$expectedHint'" in {
         val hintElement = target.resolve.getElementsByClass("govuk-hint").asScala.headOption
