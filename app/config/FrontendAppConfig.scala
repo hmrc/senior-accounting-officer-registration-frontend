@@ -39,9 +39,9 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
   def feedbackUrl(using request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
-  def hubUrl: String = getFromSystemPropertiesOrConfig("hub-frontend.host")
+  def hubUrl: String = getValue("senior-accounting-officer-hub-frontend.host")
 
-  private def getFromSystemPropertiesOrConfig(key: String): String =
+  private def getValue(key: String): String =
     sys.props.get(key).getOrElse(
       configuration.get[String](key)
     )
@@ -87,4 +87,7 @@ object FrontendAppConfig {
 
     def prependHost(call: Call): String = prependHost(call.url)
   }
+
+  def setValue(key: String, value: String): Unit =
+    sys.props.addOne((key, value)): Unit
 }

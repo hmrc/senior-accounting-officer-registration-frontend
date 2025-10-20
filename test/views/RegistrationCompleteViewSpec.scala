@@ -23,6 +23,7 @@ import views.RegistrationCompleteViewSpec.*
 import views.html.RegistrationCompleteView
 
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
+import config.FrontendAppConfig
 
 class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView] {
 
@@ -36,7 +37,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
-      sys.props.addOne(("hub-frontend.host", "hub-url"))
+      FrontendAppConfig.setValue("senior-accounting-officer-hub-frontend.host", "hub-url")
       val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
       doc.mustHaveCorrectPageTitle(pageTitle)
