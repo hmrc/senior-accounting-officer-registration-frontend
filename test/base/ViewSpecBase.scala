@@ -118,7 +118,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
     def createTestMustShowNumberOfInputs(expectedCount: Int)(using pos: Position): Unit = {
       s"must have a $expectedCount of input(s)" in {
-        val selector = """input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"]"""
+        val selector =
+          """input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"]"""
         def elements = target.resolve.select(selector).asScala
 
         withClue(s"Expected a $expectedCount of inputs but found ${elements.size}\n") {
@@ -138,7 +139,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
         def getInputElement: Option[Element] = {
           val elements = target.resolve.select(s"input[name=$expectedName]")
-          if (elements.size() > 0) Some(elements.get(0)) else None
+          if elements.size() > 0 then Some(elements.get(0)) else None
         }
 
         s"input with name '$expectedName' must exist on the page" in {
@@ -196,7 +197,9 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
                   withClue(s"input with name '$expectedName' multiple hint elements with id '$hintId' found\n") {
                     hints.size() mustBe 1
                   }
-                  withClue(s"input with name '$expectedName' hint text does not match expected value '$expectedHintText' not found\n") {
+                  withClue(
+                    s"input with name '$expectedName' hint text does not match expected value '$expectedHintText' not found\n"
+                  ) {
                     hints.get(0).text mustEqual expectedHintText
                   }
                 case None =>
@@ -221,11 +224,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
 
     def createTestMustShowASingleInput(
-                                        expectedName: String,
-                                        expectedLabel: String,
-                                        expectedValue: String,
-                                        expectedHint: Option[String] = None
-                                      )(using pos: Position): Unit = {
+        expectedName: String,
+        expectedLabel: String,
+        expectedValue: String,
+        expectedHint: Option[String] = None
+    )(using pos: Position): Unit = {
       createTestMustShowNumberOfInputs(1)
       createTestMustShowInput(
         expectedName = expectedName,
@@ -325,7 +328,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         description: String
     )(using pos: Position): Unit = {
       val expectedCount = expectedTexts.size
-      val elements = target.resolve.select(selector).asScala
+      val elements      = target.resolve.select(selector).asScala
       s"must have $expectedCount of $description" in {
         withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
           elements.size mustBe expectedCount
