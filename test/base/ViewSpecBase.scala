@@ -116,68 +116,126 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .Try(target.resolve.select(".govuk-panel__body").get(0))
         .getOrElse(throw RuntimeException("No panel body found"))
 
-    def createTestMustShowASingleInput(
+    def createTestMustShowNumberOfInputs(expectedCount: Int)(using pos: Position): Unit = {
+      s"must have a $expectedCount of input(s)" in {
+        val selector =
+          """input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"]"""
+        def elements = target.resolve.select(selector).asScala
+
+        withClue(s"Expected a $expectedCount of inputs but found ${elements.size}\n") {
+          elements.size mustBe expectedCount
+        }
+      }
+    }
+
+    def createTestMustShowInput(
+        expectedName: String,
         expectedLabel: String,
         expectedValue: String,
         expectedHint: Option[String] = None
     )(using pos: Position): Unit = {
 
-      def elements = target.resolve.select("input").asScala
+      s"for input '$expectedName'" - {
 
-      "must have a single of input" in {
-        withClue(s"Expected a single input but found ${elements.size}\n") {
-          elements.size mustBe 1
+        def getInputElement: Option[Element] = {
+          val elements = target.resolve.select(s"input[name=$expectedName]")
+          if elements.size() > 0 then Some(elements.get(0)) else None
         }
-      }
 
-      s"must have an input with the value of '$expectedValue'" in {
-        val element = elements.head
-        withClue(s"input with value '$expectedValue' not found\n") {
-          element.attr("value") mustEqual expectedValue
-        }
-      }
-
-      s"must have a label for the input of '$expectedLabel'" in {
-        val element = elements.head
-        val inputId = element.attr("id")
-
-        withClue(s"a label with '$expectedLabel' for the input is not found\n") {
-          target.resolve.select(s"""label[for="$inputId"]""").text mustEqual expectedLabel
-        }
-      }
-
-      expectedHint
-        .map { expectedHintText =>
-          s"must have a hint with values '$expectedHint'" in {
-            val element = elements.head
-
-            val hintId = element.attr("aria-describedby")
-
-            withClue("a hint for the input is not found\n") {
-              hintId must not be ""
-            }
-
-            val hints = target.resolve.select(s".govuk-hint#$hintId")
-            withClue("multiple hint with the same id was found on the page\n") {
-              hints.size() mustBe 1
-            }
-
-            val hint = target.resolve.select(s".govuk-hint#$hintId").get(0)
-
-            withClue(s"hint with value '$expectedHintText' not found\n") {
-              hint.text mustEqual expectedHintText
-            }
+        s"input with name '$expectedName' must exist on the page" in {
+          withClue(s"input with the name '$expectedName' not found\n'") {
+            getInputElement must not be None
           }
         }
-        .getOrElse {
-          "must not have an associated hint" in {
-            val element = elements.head
 
-            withClue("a hint for the input was found\n") {
-              element.attr("aria-describedby") mustBe ""
-            }
+        s"input with name '$expectedName' must have a label '$expectedLabel' with correct id and text" in {
+          getInputElement match {
+            case Some(element) =>
+              val inputId = element.attr("id")
+              withClue(s"input with an 'id' attribute not found\n") {
+                inputId must not be ""
+              }
+
+              val labels = target.resolve.select(s"""label[for="$inputId"]""")
+              withClue(s"label for '$inputId' not found\n") {
+                labels.size() must be > 0
+              }
+              withClue(s"label text does not match expected label text '$expectedLabel'\n") {
+                labels.get(0).text mustEqual expectedLabel
+              }
+
+            case None =>
+              fail(s"input with expected name '$expectedName' not found")
+          }
+
+        }
+
+        s"input with name '$expectedName' must have value of '$expectedValue'" in {
+          getInputElement match {
+            case Some(element) =>
+              withClue(s"input with name '$expectedName' does not have a value attribute '$expectedValue'\n") {
+                element.attr("value") mustEqual expectedValue
+              }
+            case None =>
+              fail(s"input with expected name '$expectedName' not found")
           }
         }
+
+        expectedHint match {
+          case Some(expectedHintText) =>
+            s"input with name '$expectedName' must have a hint with values '$expectedHintText'" in {
+              getInputElement match {
+                case Some(element) =>
+                  val hintId = element.attr("aria-describedby")
+                  withClue(s"input with name '$expectedName' does not have 'aria-describedby' attribute for hint\n") {
+                    hintId must not be ""
+                  }
+                  val hints = target.resolve.select(s".govuk-hint#$hintId")
+                  withClue(s"for input with name '$expectedName' hint element with id '$hintId' not found\n") {
+                    hints.size() must be > 0
+                  }
+                  withClue(s"input with name '$expectedName' multiple hint elements with id '$hintId' found\n") {
+                    hints.size() mustBe 1
+                  }
+                  withClue(
+                    s"input with name '$expectedName' hint text does not match expected value '$expectedHintText' not found\n"
+                  ) {
+                    hints.get(0).text mustEqual expectedHintText
+                  }
+                case None =>
+                  fail(s"input with expected name '$expectedName' not found")
+              }
+            }
+          case None =>
+            s"input with name '$expectedName' must not have an associated hint" in {
+              getInputElement match {
+                case Some(element) =>
+                  val hintId = element.attr("aria-describedby")
+                  withClue(s"input has unexpected hint with id '$hintId'\n") {
+                    hintId mustBe ""
+                  }
+                case None =>
+                  fail(s"input with expected name '$expectedName' not found")
+              }
+            }
+        }
+
+      }
+    }
+
+    def createTestMustShowASingleInput(
+        expectedName: String,
+        expectedLabel: String,
+        expectedValue: String,
+        expectedHint: Option[String] = None
+    )(using pos: Position): Unit = {
+      createTestMustShowNumberOfInputs(1)
+      createTestMustShowInput(
+        expectedName = expectedName,
+        expectedLabel = expectedLabel,
+        expectedValue = expectedValue,
+        expectedHint = expectedHint
+      )
     }
 
     def createTestMustShowHint(expectedHint: String)(using pos: Position): Unit = {
