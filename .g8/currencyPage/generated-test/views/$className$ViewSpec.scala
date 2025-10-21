@@ -75,5 +75,5 @@ object $className$ViewSpec {
   val pageHeading = "$className$"
   val pageTitle = "$className$"
   val pageCaption = "$className$"
-  val testInputValue = "4"
+  val testInputValue = "$minimum$"
 }
