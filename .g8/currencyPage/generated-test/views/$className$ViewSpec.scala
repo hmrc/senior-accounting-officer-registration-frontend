@@ -33,8 +33,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
         doc.createTestMustHaveCorrectPageHeading(pageTitle)
         doc.createTestMustShowIsThisPageNotWorkingProperlyLink
 
-        doc.createTestMustShowNumberOfInputs(1)
-        doc.createTestMustShowInput(
+        doc.createTestMustShowASingleInput(
           expectedName = "value",
           expectedLabel = "$className$",
           expectedValue = "",
