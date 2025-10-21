@@ -19,9 +19,6 @@ GET         /unauthorised                                      controllers.Unaut
 GET         /                                                  controllers.IndexController.onPageLoad()
 POST        /                                                  controllers.IndexController.continue()
 
-GET         /check-your-answers                                controllers.CheckYourAnswersController.onPageLoad()
-POST        /check-your-answers                                controllers.CheckYourAnswersController.continue()
-
 GET         /registration-complete                             controllers.RegistrationCompleteController.onPageLoad()
 
 GET         /business-match                                    controllers.GrsController.start()
