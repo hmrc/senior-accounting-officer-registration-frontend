@@ -43,6 +43,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           val doc = generateView(form, mode)
 
           doCommonChecks(doc, mode)
+          doc.createTestMustShowNumberOfInputs(2)
           doc.createTestMustShowInput(expectedName = "$field1Name$", expectedLabel = field1Label, expectedValue = "")
           doc.createTestMustShowInput(expectedName = "$field2Name$", expectedLabel = field2Label, expectedValue = "")
         }
@@ -52,6 +53,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           val doc = generateView(boundForm, mode)
 
           doCommonChecks(doc, mode)
+          doc.createTestMustShowNumberOfInputs(2)
           doc.createTestMustShowInput(expectedName = "$field1Name$", expectedLabel = field1Label, expectedValue = testInputValue1)
           doc.createTestMustShowInput(expectedName = "$field2Name$", expectedLabel = field2Label, expectedValue = testInputValue2)
         }
