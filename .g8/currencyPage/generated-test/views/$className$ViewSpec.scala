@@ -30,9 +30,13 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       doc.createTestForBackLink(show = true)
       doc.createTestMustHaveCorrectPageHeading(pageTitle)
 
-      "must display the correct label" in {
-        doc.select("label[for=value]").text() mustBe pageTitle
-      }
+      doc.createTestMustShowNumberOfInputs(1)
+      doc.createTestMustShowInput(
+        expectedName = "value",
+        expectedLabel = "$className$",
+        expectedValue = "",
+        expectedHint = None
+      )
     }
   }
 }
