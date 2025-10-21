@@ -44,7 +44,7 @@ class IndexController @Inject() (
   }
 
   def continue: Action[AnyContent] = (identify andThen getData) { implicit request =>
-    Redirect(routes.CheckYourAnswersController.onPageLoad())
+    Redirect(routes.RegistrationCompleteController.onPageLoad())
   }
 
 }
