@@ -27,9 +27,6 @@ error.title.prefix = Error:
 error.prefix = Error
 error.summary.title = There is a problem
 
-checkYourAnswers.title = Check your answers
-checkYourAnswers.heading = Check your answers
-
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
 journeyRecovery.continue.guidance = [Add content to explain how to proceed.]
@@ -58,9 +55,6 @@ registration.dashboard.row.status.cannotStartYet = Cannot start yet
 registration.dashboard.row.status.completed = Completed
 
 registration.dashboard.submit = Submit your registration
-
-registration.checkYourAnswers.title = checkYourAnswers
-registration.checkYourAnswers.heading = checkYourAnswers
 
 registration.complete.title = SAO Registration Confirmation
 registration.complete.heading = Registration Complete
