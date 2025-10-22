@@ -24,32 +24,52 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
-  private def doChecks(doc: Document, mode: Mode): Unit = {
-    doc.mustHaveCorrectPageTitle(pageHeading)
-    doc.createTestForBackLink(show = true)
-    doc.createTestMustHaveCorrectPageHeading(pageTitle)
-    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-    "must display the correct checkbox labels" in {
-      doc.getMainContent.select("label[for=value_0]").text() mustBe option1Label
-      doc.getMainContent.select("label[for=value_1]").text() mustBe option2Label
-    }
-
-    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-      controllers.routes.$className$Controller.onSubmit(mode),
-      "Continue"
-    )
-  }
-
   "$className$View" - {
-    "when using NormalMode, the form is empty (no errors))" - {
-      val doc = generateView(form, NormalMode)
-      doChecks(doc, NormalMode)
-    }
 
-    "when using CheckMode" - {
-      val doc = generateView(form, CheckMode)
-      doChecks(doc, CheckMode)
+    Mode.values.foreach { mode =>
+      s"when using \$mode" - {
+        "when the form is not filled in" - {
+          val doc = generateView(form, mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
+          "must display the correct checkbox labels" in {
+            doc.getMainContent.select("label[for=value_0]").text() mustBe option1Label
+            doc.getMainContent.select("label[for=value_1]").text() mustBe option2Label
+          }
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+        }
+
+        "when the form is filled in" - {
+          val doc = generateView(form.bind(Map("value[0]" -> option1Key, "value[1]" -> option2Key)), mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
+          "must display the correct checkbox labels" in {
+            doc.getMainContent.select("label[for=value_0]").text() mustBe option1Label
+            doc.getMainContent.select("label[for=value_1]").text() mustBe option2Label
+          }
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+        }
+      }
     }
   }
 }
@@ -57,6 +77,9 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 object $className$ViewSpec {
   val pageHeading = "$title$"
   val pageTitle = "$title$"
+  val option1Key = "$option1key;format="decap"$"
   val option1Label = "$option1msg$"
+  val option2Key = "$option2key;format="decap"$"
   val option2Label = "$option2msg$"
+
 }

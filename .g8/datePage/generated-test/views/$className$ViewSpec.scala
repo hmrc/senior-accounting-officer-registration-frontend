@@ -24,33 +24,54 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
-  private def doChecks(doc: Document, mode: Mode): Unit = {
-    doc.mustHaveCorrectPageTitle(pageHeading)
-    doc.createTestForBackLink(show = true)
-    doc.createTestMustHaveCorrectPageHeading(pageTitle)
-    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-    "must display the correct label" in {
-      doc.select("label[for=value.day]").text() mustBe "Day"
-      doc.select("label[for=value.month]").text() mustBe "Month"
-      doc.select("label[for=value.year]").text() mustBe "Year"
-    }
-
-    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-      controllers.routes.$className$Controller.onSubmit(mode),
-      "Continue"
-    )
-  }
-
   "$className$View" - {
-    "when in NormalMode, the form is empty (no errors)" - {
-      val doc = generateView(form, NormalMode)
-      doChecks(doc, NormalMode)
-    }
 
-    "when in CheckMode" - {
-      val doc = generateView(form, CheckMode)
-      doChecks(doc, CheckMode)
+    Mode.values.foreach { mode =>
+      s"when using \$mode" - {
+        "when the form is not filled in" - {
+          val doc = generateView(form, mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
+          "must display the correct label" in {
+            doc.select("label[for=value.day]").text() mustBe "Day"
+            doc.select("label[for=value.month]").text() mustBe "Month"
+            doc.select("label[for=value.year]").text() mustBe "Year"
+          }
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+        }
+
+        "when the form is filled in" - {
+          val doc = generateView(form.bind(Map("value.day" -> "1", "value.month" -> "1", "value.year" -> "2000")), mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
+          "must display the correct label" in {
+            doc.select("label[for=value.day]").text() mustBe "Day"
+            doc.select("label[for=value.month]").text() mustBe "Month"
+            doc.select("label[for=value.year]").text() mustBe "Year"
+          }
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+        }
+      }
     }
   }
 }
