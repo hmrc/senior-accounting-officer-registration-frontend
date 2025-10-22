@@ -19,7 +19,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   private val formProvider = app.injector.instanceOf[$className$FormProvider]
   private val form: Form[Int] = formProvider()
 
-  private def generateView(form: Form[BigDecimal], mode: Mode): Document = {
+  private def generateView(form: Form[Int], mode: Mode): Document = {
     val view = SUT(form, mode)
     Jsoup.parse(view.toString)
   }
