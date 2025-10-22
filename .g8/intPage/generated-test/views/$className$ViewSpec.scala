@@ -75,5 +75,5 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 object $className$ViewSpec {
   val pageHeading = "$className$"
   val pageTitle = "$className$"
-  val testInputValue = $minimum$.toString()
+  val testInputValue = $minimum$.toString
 }
