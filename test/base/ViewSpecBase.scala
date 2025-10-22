@@ -34,7 +34,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
   def SUT: T = app.injector.instanceOf[T]
 
   given request: Request[?] = FakeRequest()
-  given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
+  given Messages            = app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
 
   extension (doc: Document) {
     def getMainContent: Element = doc.getElementById("main-content")
@@ -128,66 +128,168 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .Try(target.resolve.select(".govuk-panel__body").get(0))
         .getOrElse(throw RuntimeException("No panel body found"))
 
-    def createTestsWithASingleTextInput(
+    def createTestMustShowNumberOfInputs(expectedCount: Int)(using pos: Position): Unit = {
+      s"must have a $expectedCount of input(s)" in {
+        val selector =
+          """input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"]"""
+
+        def elements = target.resolve.select(selector).asScala
+
+        withClue(s"Expected a $expectedCount of inputs but found ${elements.size}\n") {
+          elements.size mustBe expectedCount
+        }
+      }
+    }
+
+    def createTestMustShowInput(
+        name: String,
         label: String,
         value: String,
         hint: Option[String] = None
     )(using pos: Position): Unit = {
 
-      def elements = target.resolve.select("input").asScala
+      s"for input '$name'" - {
 
-      "must have a single of input" in {
-        withClue(s"Expected a single input but found ${elements.size}\n") {
-          elements.size mustBe 1
+        def getInputElement: Option[Element] = {
+          val elements = target.resolve.select(s"input[name=$name]")
+          if elements.size() > 0 then Some(elements.get(0)) else None
         }
-      }
 
-      s"must have an input with the value of '$value'" in {
-        val element = elements.head
-        withClue(s"input with value '$value' not found\n") {
-          element.attr("value") mustEqual value
-        }
-      }
-
-      s"must have a label for the input of '$label'" in {
-        val element = elements.head
-        val inputId = element.attr("id")
-
-        withClue(s"a label with '$label' for the input is not found\n") {
-          target.resolve.select(s"""label[for="$inputId"]""").text mustEqual label
-        }
-      }
-
-      hint
-        .map { expectedHintText =>
-          s"must have a hint with values '$hint'" in {
-            val element = elements.head
-
-            val hintId = element.attr("aria-describedby")
-
-            withClue("a hint for the input is not found\n") {
-              hintId must not be ""
-            }
-
-            val hints = target.resolve.select(s".govuk-hint#$hintId")
-            withClue("multiple hint with the same id was found on the page\n") {
-              hints.size() mustBe 1
-            }
-
-            val hint = target.resolve.select(s".govuk-hint#$hintId").get(0)
-
-            withClue(s"hint with value '$expectedHintText' not found\n") {
-              hint.text mustEqual expectedHintText
-            }
+        s"input with name '$name' must exist on the page" in {
+          withClue(s"input with the name '$name' not found\n'") {
+            getInputElement must not be None
           }
         }
-        .getOrElse {
-          "must not have an associated hint" in {
-            val element = elements.head
 
-            withClue("a hint for the input was found\n") {
-              element.attr("aria-describedby") mustBe ""
+        s"input with name '$name' must have a label '$label' with correct id and text" in {
+          getInputElement match {
+            case Some(element) =>
+              val inputId = element.attr("id")
+              withClue(s"input with an 'id' attribute not found\n") {
+                inputId must not be ""
+              }
+
+              val labels = target.resolve.select(s"""label[for="$inputId"]""")
+              withClue(s"label for '$inputId' not found\n") {
+                labels.size() must be > 0
+              }
+              withClue(s"label text does not match expected label text '$label'\n") {
+                labels.get(0).text mustEqual label
+              }
+
+            case None =>
+              fail(s"input with expected name '$name' not found")
+          }
+
+        }
+
+        s"input with name '$name' must have value of '$value'" in {
+          getInputElement match {
+            case Some(element) =>
+              withClue(s"input with name '$name' does not have a value attribute '$value'\n") {
+                element.attr("value") mustEqual value
+              }
+            case None =>
+              fail(s"input with expected name '$name' not found")
+          }
+        }
+
+        hint match {
+          case Some(expectedHintText) =>
+            s"input with name '$name' must have a hint with values '$expectedHintText'" in {
+              getInputElement match {
+                case Some(element) =>
+                  val hintId = element.attr("aria-describedby")
+                  withClue(s"input with name '$name' does not have 'aria-describedby' attribute for hint\n") {
+                    hintId must not be ""
+                  }
+                  val hints = target.resolve.select(s".govuk-hint#$hintId")
+                  withClue(s"for input with name '$name' hint element with id '$hintId' not found\n") {
+                    hints.size() must be > 0
+                  }
+                  withClue(s"input with name '$name' multiple hint elements with id '$hintId' found\n") {
+                    hints.size() mustBe 1
+                  }
+                  withClue(
+                    s"input with name '$name' hint text does not match expected value '$expectedHintText' not found\n"
+                  ) {
+                    hints.get(0).text mustEqual expectedHintText
+                  }
+                case None =>
+                  fail(s"input with expected name '$name' not found")
+              }
             }
+          case None =>
+            s"input with name '$name' must not have an associated hint" in {
+              getInputElement match {
+                case Some(element) =>
+                  val hintId = element.attr("aria-describedby")
+                  withClue(s"input has unexpected hint with id '$hintId'\n") {
+                    hintId mustBe ""
+                  }
+                case None =>
+                  fail(s"input with expected name '$name' not found")
+              }
+            }
+        }
+
+      }
+    }
+
+    def createTestsWithASingleTextInput(
+        name: String,
+        label: String,
+        value: String,
+        hint: Option[String] = None
+    )(using pos: Position): Unit = {
+      createTestMustShowNumberOfInputs(1)
+      createTestMustShowInput(
+        name = name,
+        label = label,
+        value = value,
+        hint = hint
+      )
+    }
+
+    def createTestMustShowHint(expectedHint: String)(using pos: Position): Unit = {
+      s"must have a hint with values '$expectedHint'" in {
+        val hintElement = target.resolve.getElementsByClass("govuk-hint").asScala.headOption
+        hintElement match {
+          case Some(hint) => hint.text mustEqual expectedHint
+          case None       => fail(s"no hint element found\n")
+        }
+      }
+    }
+
+    def createTestsWithRadioButtons(
+        values: List[String],
+        labels: List[String]
+    )(using pos: Position): Unit = {
+      createTestWithCountOfElement(
+        selector = ".govuk-radios label",
+        count = labels.size,
+        description = "radio button label"
+      )
+      createTestsWithOrderOfElements(
+        selector = ".govuk-radios label",
+        texts = labels,
+        description = "radio button label"
+      )
+
+      createTestWithCountOfElement(
+        selector = ".govuk-radios input",
+        count = values.size,
+        description = "radio buttons"
+      )
+
+      target.resolve
+        .select(".govuk-radios input")
+        .asScala
+        .zip(values)
+        .foreach { case (element, expectedText) =>
+          val elementValue = element.attr("value")
+          s"radio button value $elementValue must match $expectedText" in {
+            elementValue mustEqual expectedText
           }
         }
     }

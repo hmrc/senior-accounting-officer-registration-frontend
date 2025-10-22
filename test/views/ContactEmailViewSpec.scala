@@ -39,7 +39,10 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
               doc.createTestsWithStandardPageElements(
-                pageTitle = pageHeading,
+                pageTitle = contactType match {
+                  case First  => pageTitleFirst
+                  case Second => pageTitleSecond
+                },
                 pageHeading = pageHeading,
                 showBackLink = true,
                 showIsThisPageNotWorkingProperlyLink = true
@@ -49,11 +52,11 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 caption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
-                  case Third  => contactTypeThirdCaption
                 }
               )
 
               doc.createTestsWithASingleTextInput(
+                name = "value",
                 label = pageHeading,
                 value = "",
                 hint = Some(expectedHints)
@@ -71,7 +74,10 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
               doc.createTestsWithStandardPageElements(
-                pageTitle = pageHeading,
+                pageTitle = contactType match {
+                  case First  => pageTitleFirst
+                  case Second => pageTitleSecond
+                },
                 pageHeading = pageHeading,
                 showBackLink = true,
                 showIsThisPageNotWorkingProperlyLink = true
@@ -81,11 +87,11 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 caption = contactType match {
                   case First  => contactTypeFirstCaption
                   case Second => contactTypeSecondCaption
-                  case Third  => contactTypeThirdCaption
                 }
               )
 
               doc.createTestsWithASingleTextInput(
+                name = "value",
                 label = pageHeading,
                 value = testInputValue,
                 hint = Some(expectedHints)
@@ -108,9 +114,11 @@ object ContactEmailViewSpec {
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
-  val contactTypeThirdCaption: String  = "Third contact details"
 
-  val expectedHints: String  = "We’ll only use this to contact you about the company’s tax accounting arrangements"
+  val pageTitleFirst: String  = "First contact details"
+  val pageTitleSecond: String = "Second contact details"
+
+  val expectedHints: String  = "We’ll only use this to contact them about the company’s submission."
   val testInputValue: String = "test Input Value"
 
   val submitButtonText: String = "Continue"

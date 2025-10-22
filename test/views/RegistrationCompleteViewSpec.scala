@@ -17,6 +17,7 @@
 package views
 
 import base.ViewSpecBase
+import config.FrontendAppConfig
 import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -37,11 +38,13 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
+      FrontendAppConfig.setValue("senior-accounting-officer-hub-frontend.host", "hub-url")
+
       val doc: Document = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
       doc.createTestsWithStandardPageElements(
-        pageTitle = pageHeading,
-        pageHeading = pageHeading,
+        pageTitle = pageTitle,
+        pageHeading = panelTitle,
         showBackLink = false,
         showIsThisPageNotWorkingProperlyLink = true
       )
@@ -64,7 +67,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           .last
           .createTestWithLink(
             linkText = "submit a notification and certificate.",
-            destinationUrl = "/beta/beta-sao-digitalisation-dashboard.html"
+            destinationUrl = "hub-url/senior-accounting-officer"
           )
       }
 
@@ -95,11 +98,11 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 }
 
 object RegistrationCompleteViewSpec {
-  val pageHeading: String = "Registration Complete"
+  val pageTitle: String = "SAO Registration Confirmation"
 
   val panelTitle: String = "Registration Complete"
 
-  val panelBody: String = "Your reference number REG12345"
+  val panelBody: String = "Your reference ID REG12345"
 
   val paragraphsList: List[String] = List(
     "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
