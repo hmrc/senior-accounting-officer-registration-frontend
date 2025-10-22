@@ -27,7 +27,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
   "$className$View" - {
     Mode.values.foreach { mode =>
       s"when using \$mode" - {
-        s"when the form is filled in" - {
+        s"when the form is not filled in" - {
           val doc = generateView(form, mode)
           doc.mustHaveCorrectPageTitle(pageHeading)
           doc.createTestForBackLink(show = true)
@@ -47,7 +47,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           )
         }
 
-        s"when the form is not filled in" - {
+        s"when the form is filled in" - {
           val doc = generateView(form.bind(Map("value" -> testInputValue)), mode)
           doc.mustHaveCorrectPageTitle(pageHeading)
           doc.createTestForBackLink(show = true)
