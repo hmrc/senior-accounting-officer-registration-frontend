@@ -13,6 +13,7 @@ class $className$FormProviderSpec extends CurrencyFieldBehaviours {
   val fieldName = "value"
   val requiredKey = "$className;format="decap"$.error.required"
   val nonNumericKey = "$className;format="decap"$.error.nonNumeric"
+  val invalidNumericKey = "$className;format="decap"$.error.invalidNumeric"
   val aboveMaximumKey = "$className;format="decap"$.error.aboveMaximum"
   val belowMinimumKey = "$className;format="decap"$.error.belowMinimum"
 
@@ -64,6 +65,11 @@ class $className$FormProviderSpec extends CurrencyFieldBehaviours {
       "Enter your $className;format="decap"$ using numbers and a decimal point"
     )
 
+    createTestWithErrorMessageAssertion(
+      invalidNumericKey,
+      "Enter your $className;format="decap"$ using up to two decimal places"
+    )
+    
     createTestWithErrorMessageAssertion(
       aboveMaximumKey,
       "$className$ must be {0} or less"
