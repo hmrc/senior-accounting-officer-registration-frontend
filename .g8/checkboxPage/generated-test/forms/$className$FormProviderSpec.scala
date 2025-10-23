@@ -26,8 +26,8 @@ class $className$FormProviderSpec extends CheckboxFieldBehaviours {
       requiredKey
     )
 
-    "messages" - {
-      createTestWithMessage(
+    "error message keys must map to the expected text" - {
+      createTestWithErrorMessageAssertion(
         requiredKey,
         "Select $className;format="decap"$"
       )

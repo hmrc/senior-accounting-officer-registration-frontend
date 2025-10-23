@@ -49,23 +49,23 @@ class $className$FormProviderSpec extends IntFieldBehaviours {
     )
   }
 
-  "messages" - {
-    createTestWithMessage(
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
       requiredKey,
       "Enter your $className;format="decap"$"
     )
 
-    createTestWithMessage(
+    createTestWithErrorMessageAssertion(
       nonNumericKey,
       "Enter your $className;format="decap"$ using numbers"
     )
 
-    createTestWithMessage(
+    createTestWithErrorMessageAssertion(
       wholeNumberKey,
       "Enter your $className;format="decap"$ using whole numbers"
     )
 
-    createTestWithMessage(
+    createTestWithErrorMessageAssertion(
       outOfRangeKey,
       "$className;format="decap"$ must be between {0} and {1}"
     )

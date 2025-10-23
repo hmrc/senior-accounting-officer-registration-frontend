@@ -10,10 +10,13 @@ import scala.math.BigDecimal.RoundingMode
 class $className$FormProviderSpec extends CurrencyFieldBehaviours {
 
   val form = new $className$FormProvider()()
+  val fieldName = "value"
+  val requiredKey = "$className;format="decap"$.error.required"
+  val nonNumericKey = "$className;format="decap"$.error.nonNumeric"
+  val aboveMaximumKey = "$className;format="decap"$.error.aboveMaximum"
+  val belowMinimumKey = "$className;format="decap"$.error.belowMinimum"
 
   ".value" - {
-
-    val fieldName = "value"
 
     val minimum = $minimum$
     val maximum = $maximum$
@@ -47,6 +50,28 @@ class $className$FormProviderSpec extends CurrencyFieldBehaviours {
       form,
       fieldName,
       requiredError = FormError(fieldName, "$className;format="decap"$.error.required")
+    )
+  }
+
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
+      requiredKey,
+      "Enter your $className;format="decap"$"
+    )
+
+    createTestWithErrorMessageAssertion(
+      nonNumericKey,
+      "Enter your $className;format="decap"$ using numbers and a decimal point"
+    )
+
+    createTestWithErrorMessageAssertion(
+      aboveMaximumKey,
+      "$className$ must be {0} or less"
+    )
+
+    createTestWithErrorMessageAssertion(
+      belowMinimumKey,
+      "$className$ must be {0} or more"
     )
   }
 }

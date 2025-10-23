@@ -42,8 +42,8 @@ class ContactHaveYouAddedAllFormProviderSpec extends OptionFieldBehaviours {
     )
   }
 
-  "messages" - {
-    createTestWithMessage(
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
       requiredKey,
       "Select contactHaveYouAddedAll"
     )
