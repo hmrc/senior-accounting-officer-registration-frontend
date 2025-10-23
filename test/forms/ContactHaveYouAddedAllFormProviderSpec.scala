@@ -31,7 +31,7 @@ class ContactHaveYouAddedAllFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[ContactHaveYouAddedAll](
       form,
       fieldName,
-      validValues = ContactHaveYouAddedAll.values.toIndexedSeq,
+      validValues = ContactHaveYouAddedAll.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 
