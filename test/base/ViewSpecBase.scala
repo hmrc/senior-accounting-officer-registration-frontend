@@ -349,12 +349,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       val expectedCount = texts.size
       val elements      = target.resolve.select(selector).asScala
 
-      for (content, index) <- texts.zipWithIndex do {
-        s"must have a $description with content '$content' (check ${index + 1})" in {
-          withClue(s"$description with content '$content' not found\n") {
-            elements.zip(texts).foreach { case (element, expectedText) =>
-              element.text() mustEqual expectedText
-            }
+      texts.zipWithIndex.foreach { case (expectedText, index) =>
+        s"must have a $description with content '$expectedText' (check ${index + 1})" in {
+          withClue(s"$description with content '$expectedText' not found\n") {
+            val element =
+              util
+                .Try(elements(index))
+                .getOrElse(fail(s"Index $index out of bounds for length ${elements.size}"))
+            element.text() mustEqual expectedText
           }
         }
       }
