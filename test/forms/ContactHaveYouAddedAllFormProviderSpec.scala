@@ -22,17 +22,16 @@ import play.api.data.FormError
 
 class ContactHaveYouAddedAllFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new ContactHaveYouAddedAllFormProvider()()
+  val form        = new ContactHaveYouAddedAllFormProvider()()
+  val requiredKey = "contactHaveYouAddedAll.error.required"
 
   ".value" - {
-
-    val fieldName   = "value"
-    val requiredKey = "contactHaveYouAddedAll.error.required"
+    val fieldName = "value"
 
     behave like optionsField[ContactHaveYouAddedAll](
       form,
       fieldName,
-      validValues = ContactHaveYouAddedAll.values,
+      validValues = ContactHaveYouAddedAll.values.toIndexedSeq,
       invalidError = FormError(fieldName, "error.invalid")
     )
 
@@ -40,6 +39,13 @@ class ContactHaveYouAddedAllFormProviderSpec extends OptionFieldBehaviours {
       form,
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  "messages" - {
+    createTestWithMessage(
+      requiredKey,
+      "Select contactHaveYouAddedAll"
     )
   }
 }

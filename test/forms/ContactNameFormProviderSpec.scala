@@ -50,4 +50,16 @@ class ContactNameFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
+  "messages" - {
+    createTestWithMessage(
+      requiredKey,
+      "Enter contactName"
+    )
+
+    createTestWithMessage(
+      lengthKey,
+      "ContactName must be 100 characters or less"
+    )
+  }
 }

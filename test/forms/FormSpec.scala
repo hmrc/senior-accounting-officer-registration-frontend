@@ -21,6 +21,8 @@ import org.scalatest.compatible.Assertion
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.data.{Form, FormError}
+import play.api.i18n.MessagesApi
+import play.api.inject.guice.GuiceApplicationBuilder
 
 trait FormSpec extends AnyFreeSpec with Matchers with OptionValues {
 
@@ -43,4 +45,13 @@ trait FormSpec extends AnyFreeSpec with Matchers with OptionValues {
   def error(key: String, value: String, args: Any*): Seq[FormError] = Seq(FormError(key, value, args))
 
   lazy val emptyForm: Map[String, String] = Map[String, String]()
+
+  def createTestWithMessage(key: String, expectedValue: String): Unit = {
+    s"key $key is in messages file with expected value" in {
+      val app         = GuiceApplicationBuilder().build()
+      val messagesApi = app.injector.instanceOf[MessagesApi]
+      val messages    = messagesApi.preferred(Seq.empty)
+      expectedValue mustEqual messages(key)
+    }
+  }
 }
