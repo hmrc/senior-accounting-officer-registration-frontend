@@ -141,7 +141,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-    def createTestMustShowInput(
+    def createTestMustShowTextInput(
         name: String,
         label: String,
         value: String,
@@ -243,7 +243,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         hint: Option[String] = None
     )(using pos: Position): Unit = {
       createTestMustShowNumberOfInputs(1)
-      createTestMustShowInput(
+      createTestMustShowTextInput(
         name = name,
         label = label,
         value = value,
@@ -428,7 +428,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     )(using
         pos: Position
     ): Unit =
-      s"must have expected link with correct text: $linkText and correct url $destinationUrl withing provided element" in {
+      s"must have expected link with correct text: $linkText and correct url $destinationUrl within provided element" in {
         val element       = target.resolve
         val link: Element = if element.tagName() == "a" then {
           element

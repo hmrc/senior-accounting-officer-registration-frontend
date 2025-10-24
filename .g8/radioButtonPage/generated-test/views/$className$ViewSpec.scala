@@ -78,8 +78,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 object $className$ViewSpec {
   val pageHeading = "$title$"
   val pageTitle = "$title$"
-  val option1key = "$option1key$"
+  val option1key = "$option1key;format="decap"$"
   val option1Label = "$option1msg$"
-  val option2key = "$option2key$"
+  val option2key = "$option2key;format="decap"$"
   val option2Label = "$option2msg$"
 }
