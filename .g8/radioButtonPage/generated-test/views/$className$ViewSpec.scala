@@ -39,8 +39,11 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           )
 
           doc.createTestsWithRadioButtons(
-            values = List(option1key, option2key),
-            labels = List(option1Label, option2Label)
+            name = "value",
+            radios = List(
+              radio(value = option1key, label = option1Label),
+              radio(value = option2key, label = option2Label),
+            )
           )
 
           doc.createTestsWithSubmissionButton(
@@ -60,8 +63,11 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           )
 
           doc.createTestsWithRadioButtons(
-            values = List(option1key, option2key),
-            labels = List(option1Label, option2Label)
+            name = "value",
+            radios = List(
+              radio(value = option1key, label = option1Label),
+              radio(value = option2key, label = option2Label),
+            )
           )
 
           doc.createTestsWithSubmissionButton(
