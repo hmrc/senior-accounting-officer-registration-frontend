@@ -26,4 +26,11 @@ class $className$FormProviderSpec extends BooleanFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
+      requiredKey,
+      "Select yes if $className;format="decap"$"
+    )
+  }
 }

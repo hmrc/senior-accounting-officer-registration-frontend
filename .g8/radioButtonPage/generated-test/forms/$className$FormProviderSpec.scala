@@ -7,11 +7,11 @@ import play.api.data.FormError
 class $className$FormProviderSpec extends OptionFieldBehaviours {
 
   val form = new $className$FormProvider()()
+  val requiredKey = "$className;format="decap"$.error.required"
 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "$className;format="decap"$.error.required"
 
     behave like optionsField[$className$](
       form,
@@ -24,6 +24,13 @@ class $className$FormProviderSpec extends OptionFieldBehaviours {
       form,
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
+      requiredKey,
+      "Select $className;format="decap"$"
     )
   }
 }
