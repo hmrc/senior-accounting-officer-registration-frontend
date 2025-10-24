@@ -20,13 +20,13 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = LegendViewModel("$className;format="decap"$.heading".toText).asPageHeading(LegendSize.Large),
+                legend = LegendViewModel(messages("$className;format="decap"$.heading").toText).asPageHeading(LegendSize.Large),
                 items  = $className$.checkboxItems
             )
         )
 
         @govukButton(
-            ButtonViewModel("site.continue".toText)
+            ButtonViewModel(messages("site.continue").toText)
         )
     }
 }

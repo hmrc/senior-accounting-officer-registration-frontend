@@ -30,14 +30,14 @@
 
     <ul class="govuk-task-list">
         @row(
-            linkText = "registration.dashboard.row.company",
+            linkText = messages("registration.dashboard.row.company"),
             href = routes.GrsController.start(),
             statusIdName = "company-details",
             status = currentStage.companyDetailsStatus
         )
 
         @row(
-            linkText = "registration.dashboard.row.contacts",
+            linkText = messages("registration.dashboard.row.contacts"),
             href = routes.ContactDetailsGuidanceController.onPageLoad(),
             statusIdName = "contacts-details",
             status = currentStage.contactsInfoStatus
@@ -47,7 +47,7 @@
     @if(currentStage.showSubmit) {
         @formHelper(action = routes.IndexController.continue()) {
             @govukButton(
-                ButtonViewModel("registration.dashboard.submit".toText).withAttribute("id", "submit")
+                ButtonViewModel(messages("registration.dashboard.submit").toText).withAttribute("id", "submit")
             )
         }
     }
@@ -59,10 +59,10 @@
         <div class="govuk-task-list__name-and-hint">
             @if(status == DashboardStatus.NotStarted) {
                 <a class="govuk-link govuk-task-list__link" href="@href" aria-describedby="@statusIdName-status">
-                    @messages(linkText)
+                    @linkText
                 </a>
             } else {
-                @messages(linkText)
+                @linkText
             }
         </div>
         <div class="govuk-task-list__status" id="@statusIdName-status">

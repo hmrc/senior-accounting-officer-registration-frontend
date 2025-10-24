@@ -16,10 +16,10 @@ object $className$Summary  {
       answer =>
 
         SummaryListRowViewModel(
-          key     = "$className;format="decap"$.checkYourAnswersLabel".toKey,
+          key     = messages("$className;format="decap"$.checkYourAnswersLabel").toKey,
           value   = ValueViewModel(HtmlFormat.escape(answer).toText),
           actions = Seq(
-            ActionItemViewModel("site.change".toText, routes.$className$Controller.onPageLoad(CheckMode).url)
+            ActionItemViewModel(messages("site.change").toText, routes.$className$Controller.onPageLoad(CheckMode).url)
               .withVisuallyHiddenText(messages("$className;format="decap"$.change.hidden"))
           )
         )

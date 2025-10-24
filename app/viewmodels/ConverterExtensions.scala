@@ -30,15 +30,15 @@ trait ConverterExtensions {
   }
 
   extension (string: String) {
-    def toText(using messages: Messages): Text =
-      Text(messages(string))
+    inline def toText: Text =
+      Text(string)
 
-    def toKey(using messages: Messages): Key =
-      Key(content = Text(messages(string)))
+    inline def toKey: Key =
+      Key(content = Text(string))
   }
 
   extension (html: Html) {
-    def toText(using messages: Messages): Text =
-      Text(messages(html.toString))
+    inline def toText: Text =
+      Text(html.toString)
   }
 }
