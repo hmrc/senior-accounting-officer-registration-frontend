@@ -18,34 +18,35 @@ package views
 
 import base.ViewSpecBase
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.ContactDetailsGuidanceViewSpec.*
 import views.html.ContactDetailsGuidanceView
 
 class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidanceView] {
 
   "ContactDetailsGuidanceView" - {
-    val doc = Jsoup.parse(SUT().toString)
+    val doc: Document = Jsoup.parse(SUT().toString)
 
-    doc.mustHaveCorrectPageTitle(caption)
-
-    doc.createTestForBackLink(show = true)
-
-    doc.createTestMustShowCaptionWithContent(
-      expectedCaption = caption
+    doc.createTestsWithStandardPageElements(
+      pageTitle = caption,
+      pageHeading = pageHeading,
+      showBackLink = true,
+      showIsThisPageNotWorkingProperlyLink = true
     )
 
-    doc.createTestMustHaveCorrectPageHeading(expectedHeading = pageHeading)
-
-    doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphTexts)
-
-    doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
-
-    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-      expectedAction = controllers.routes.ContactDetailsGuidanceController.continue(),
-      expectedSubmitButtonText = submitButtonText
+    doc.createTestsWithCaption(
+      caption = caption
     )
 
-    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
+    doc.createTestsWithParagraphs(paragraphs = paragraphTexts)
+
+    doc.createTestsWithBulletPoints(bullets = bulletPointTexts)
+
+    doc.createTestsWithSubmissionButton(
+      action = controllers.routes.ContactDetailsGuidanceController.continue(),
+      buttonText = submitButtonText
+    )
+
   }
 }
 

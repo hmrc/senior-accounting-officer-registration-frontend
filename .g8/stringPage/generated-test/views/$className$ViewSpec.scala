@@ -23,40 +23,53 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
-  private def doCommonChecks(doc: Document, mode: Mode): Unit = {
-    doc.mustHaveCorrectPageTitle(pageHeading)
-    doc.createTestForBackLink(show = true)
-    doc.createTestMustHaveCorrectPageHeading(pageTitle)
-    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-      controllers.routes.$className$Controller.onSubmit(mode),
-      "Continue"
-    )
-  }
-
   "$className$View" - {
 
     Mode.values.foreach { mode =>
       s"when using \$mode" - {
-        "when using unBound form" - {
+        "when the form is not filled in" - {
           val doc = generateView(form, mode)
-          doCommonChecks(doc, mode)
-          doc.createTestMustShowASingleInput(
-            expectedName = "value",
-            expectedLabel = pageHeading,
-            expectedValue = "",
-            expectedHint = None
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
+          doc.createTestsWithASingleTextInput(
+            name = "value",
+            label = pageHeading,
+            value = "",
+            hint = None
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
           )
         }
-        "when using bound form" - {
+
+        "when the form is filled in" - {
           val doc = generateView(form.bind(Map("value" -> testInputValue)), mode)
-          doCommonChecks(doc, mode)
-          doc.createTestMustShowASingleInput(
-            expectedName = "value",
-            expectedLabel = pageHeading,
-            expectedValue = testInputValue,
-            expectedHint = None
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
+          doc.createTestsWithASingleTextInput(
+            name = "value",
+            label = pageHeading,
+            value = testInputValue,
+            hint = None
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
           )
         }
       }

@@ -34,7 +34,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
   def SUT: T = app.injector.instanceOf[T]
 
   given request: Request[?] = FakeRequest()
-  given Messages            = app.injector.instanceOf[MessagesApi].preferred(request)
+  given Messages            = app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
 
   extension (doc: Document) {
     def getMainContent: Element = doc.getElementById("main-content")
@@ -44,23 +44,35 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .Try(doc.select(".govuk-panel.govuk-panel--confirmation").get(0))
         .getOrElse(throw RuntimeException("No Confirmation Panel found"))
 
-    def mustHaveCorrectPageTitle(title: String)(using pos: Position): Unit =
+    def createTestsWithStandardPageElements(
+        pageTitle: String,
+        pageHeading: String,
+        showBackLink: Boolean,
+        showIsThisPageNotWorkingProperlyLink: true
+    )(using pos: Position): Unit = {
+      createTestWithPageTitle(pageTitle = pageTitle)
+      createTestWithPageHeading(pageHeading = pageHeading)
+      createTestWithBackLink(show = showBackLink)
+      createTestWithIsThisPageNotWorkingProperlyLink
+    }
+
+    def createTestWithPageTitle(pageTitle: String)(using pos: Position): Unit =
       "must generate a view with the correct title" in {
-        doc.title mustBe s"$title - $expectedServiceName - GOV.UK"
+        doc.title mustBe s"$pageTitle - $expectedServiceName - GOV.UK"
       }
 
-    def createTestMustHaveCorrectPageHeading(expectedHeading: String)(using
+    def createTestWithPageHeading(pageHeading: String)(using
         pos: Position
     ): Unit =
       "must generate a view with the correct page heading" in {
         val actualH1 = doc.getMainContent.getElementsByTag("h1")
-        withClue(s"the page must contain only a single <h1> with content '$expectedHeading'\n") {
-          actualH1.get(0).text() mustBe expectedHeading
+        withClue(s"the page must contain only a single <h1> with content '$pageHeading'\n") {
+          actualH1.get(0).text() mustBe pageHeading
           actualH1.size() mustBe 1
         }
       }
 
-    def createTestForBackLink(show: Boolean)(using pos: Position): Unit =
+    def createTestWithBackLink(show: Boolean)(using pos: Position): Unit =
       if show then
         "must show a backlink " in {
           val backLink = doc.getElementsByClass("govuk-back-link")
@@ -80,7 +92,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
         }
 
-    def createTestMustShowIsThisPageNotWorkingProperlyLink(using
+    def createTestWithIsThisPageNotWorkingProperlyLink(using
         pos: Position
     ): Unit =
       "must generate a view with 'Is this page not working properly? (opens in new tab)' " in {
@@ -120,6 +132,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       s"must have a $expectedCount of input(s)" in {
         val selector =
           """input[type="text"], input[type="password"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"]"""
+
         def elements = target.resolve.select(selector).asScala
 
         withClue(s"Expected a $expectedCount of inputs but found ${elements.size}\n") {
@@ -128,27 +141,27 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-    def createTestMustShowInput(
-        expectedName: String,
-        expectedLabel: String,
-        expectedValue: String,
-        expectedHint: Option[String] = None
+    def createTestMustShowTextInput(
+        name: String,
+        label: String,
+        value: String,
+        hint: Option[String] = None
     )(using pos: Position): Unit = {
 
-      s"for input '$expectedName'" - {
+      s"for input '$name'" - {
 
         def getInputElement: Option[Element] = {
-          val elements = target.resolve.select(s"input[name=$expectedName]")
+          val elements = target.resolve.select(s"input[name=$name]")
           if elements.size() > 0 then Some(elements.get(0)) else None
         }
 
-        s"input with name '$expectedName' must exist on the page" in {
-          withClue(s"input with the name '$expectedName' not found\n'") {
+        s"input with name '$name' must exist on the page" in {
+          withClue(s"input with the name '$name' not found\n'") {
             getInputElement must not be None
           }
         }
 
-        s"input with name '$expectedName' must have a label '$expectedLabel' with correct id and text" in {
+        s"input with name '$name' must have a label '$label' with correct id and text" in {
           getInputElement match {
             case Some(element) =>
               val inputId = element.attr("id")
@@ -160,54 +173,54 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
               withClue(s"label for '$inputId' not found\n") {
                 labels.size() must be > 0
               }
-              withClue(s"label text does not match expected label text '$expectedLabel'\n") {
-                labels.get(0).text mustEqual expectedLabel
+              withClue(s"label text does not match expected label text '$label'\n") {
+                labels.get(0).text mustEqual label
               }
 
             case None =>
-              fail(s"input with expected name '$expectedName' not found")
+              fail(s"input with expected name '$name' not found")
           }
 
         }
 
-        s"input with name '$expectedName' must have value of '$expectedValue'" in {
+        s"input with name '$name' must have value of '$value'" in {
           getInputElement match {
             case Some(element) =>
-              withClue(s"input with name '$expectedName' does not have a value attribute '$expectedValue'\n") {
-                element.attr("value") mustEqual expectedValue
+              withClue(s"input with name '$name' does not have a value attribute '$value'\n") {
+                element.attr("value") mustEqual value
               }
             case None =>
-              fail(s"input with expected name '$expectedName' not found")
+              fail(s"input with expected name '$name' not found")
           }
         }
 
-        expectedHint match {
+        hint match {
           case Some(expectedHintText) =>
-            s"input with name '$expectedName' must have a hint with values '$expectedHintText'" in {
+            s"input with name '$name' must have a hint with values '$expectedHintText'" in {
               getInputElement match {
                 case Some(element) =>
                   val hintId = element.attr("aria-describedby")
-                  withClue(s"input with name '$expectedName' does not have 'aria-describedby' attribute for hint\n") {
+                  withClue(s"input with name '$name' does not have 'aria-describedby' attribute for hint\n") {
                     hintId must not be ""
                   }
                   val hints = target.resolve.select(s".govuk-hint#$hintId")
-                  withClue(s"for input with name '$expectedName' hint element with id '$hintId' not found\n") {
+                  withClue(s"for input with name '$name' hint element with id '$hintId' not found\n") {
                     hints.size() must be > 0
                   }
-                  withClue(s"input with name '$expectedName' multiple hint elements with id '$hintId' found\n") {
+                  withClue(s"input with name '$name' multiple hint elements with id '$hintId' found\n") {
                     hints.size() mustBe 1
                   }
                   withClue(
-                    s"input with name '$expectedName' hint text does not match expected value '$expectedHintText' not found\n"
+                    s"input with name '$name' hint text does not match expected value '$expectedHintText' not found\n"
                   ) {
                     hints.get(0).text mustEqual expectedHintText
                   }
                 case None =>
-                  fail(s"input with expected name '$expectedName' not found")
+                  fail(s"input with expected name '$name' not found")
               }
             }
           case None =>
-            s"input with name '$expectedName' must not have an associated hint" in {
+            s"input with name '$name' must not have an associated hint" in {
               getInputElement match {
                 case Some(element) =>
                   val hintId = element.attr("aria-describedby")
@@ -215,7 +228,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
                     hintId mustBe ""
                   }
                 case None =>
-                  fail(s"input with expected name '$expectedName' not found")
+                  fail(s"input with expected name '$name' not found")
               }
             }
         }
@@ -223,18 +236,18 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-    def createTestMustShowASingleInput(
-        expectedName: String,
-        expectedLabel: String,
-        expectedValue: String,
-        expectedHint: Option[String] = None
+    def createTestsWithASingleTextInput(
+        name: String,
+        label: String,
+        value: String,
+        hint: Option[String] = None
     )(using pos: Position): Unit = {
       createTestMustShowNumberOfInputs(1)
-      createTestMustShowInput(
-        expectedName = expectedName,
-        expectedLabel = expectedLabel,
-        expectedValue = expectedValue,
-        expectedHint = expectedHint
+      createTestMustShowTextInput(
+        name = name,
+        label = label,
+        value = value,
+        hint = hint
       )
     }
 
@@ -252,119 +265,122 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         values: List[String],
         labels: List[String]
     )(using pos: Position): Unit = {
-      mustShowElementsWithContent(
+      createTestWithCountOfElement(
         selector = ".govuk-radios label",
-        expectedTexts = labels,
+        count = labels.size,
+        description = "radio button label"
+      )
+      createTestsWithOrderOfElements(
+        selector = ".govuk-radios label",
+        texts = labels,
         description = "radio button label"
       )
 
-      val expectedCount = values.size
-      val elements      = target.resolve.select(".govuk-radios input").asScala
-      s"must have $expectedCount radio buttons" in {
-        withClue(s"Expected $expectedCount radio buttons but found ${elements.size}\n") {
-          elements.size mustBe expectedCount
-        }
-      }
+      createTestWithCountOfElement(
+        selector = ".govuk-radios input",
+        count = values.size,
+        description = "radio buttons"
+      )
 
-      elements.zip(values).foreach { case (element, expectedText) =>
-        val elementValue = element.attr("value")
-        s"radio button value $elementValue must match $expectedText" in {
-          elementValue mustEqual expectedText
+      target.resolve
+        .select(".govuk-radios input")
+        .asScala
+        .zip(values)
+        .foreach { case (element, expectedText) =>
+          val elementValue = element.attr("value")
+          s"radio button value $elementValue must match $expectedText" in {
+            elementValue mustEqual expectedText
+          }
         }
-      }
     }
 
-    def createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction: Call,
-        expectedSubmitButtonText: String
+    def createTestsWithSubmissionButton(
+        action: Call,
+        buttonText: String
     )(using
         pos: Position
     ): Unit = {
-      s"must have a form which submits to '${expectedAction.method} ${expectedAction.url}'" in {
+      s"must have a form which submits to '${action.method} ${action.url}'" in {
         val form = target.resolve.select("form")
-        form.attr("method") mustBe expectedAction.method
-        form.attr("action") mustBe expectedAction.url
+        form.attr("method") mustBe action.method
+        form.attr("action") mustBe action.url
         form.size() mustBe 1
       }
 
-      s"must have a submit button with text '$expectedSubmitButtonText'" in {
+      s"must have a submit button with text '$buttonText'" in {
         val button = target.resolve.select("button[type=submit], input[type=submit]")
         withClue(
-          s"Submit Button with text $expectedSubmitButtonText not found\n"
+          s"Submit Button with text $buttonText not found\n"
         ) {
-          button.text() mustBe expectedSubmitButtonText
+          button.text() mustBe buttonText
           button.size() mustBe 1
         }
       }
     }
 
-    def createTestMustHaveSubmitButton(expectedText: String)(using
-        pos: Position
-    ): Unit =
-      s"must have a button with text '$expectedText'" in {
-        val button = target.resolve.select("button[type=submit], input[type=submit]")
-        withClue(
-          s"Submit Button with text $expectedText not found\n"
-        ) {
-          button.text() mustBe expectedText
-          button.size() mustBe 1
-        }
-      }
-
-    def createTestMustNotShowElement(classes: String)(using pos: Position): Unit =
-      s"must not show the element of class $classes" in {
-        val elements = target.resolve.getElementsByClass(classes)
+    def createTestWithoutElements(byClass: String)(using pos: Position): Unit =
+      s"must not show the element of class $byClass" in {
+        val elements = target.resolve.getElementsByClass(byClass)
         elements.size() mustBe 0
       }
 
-    def createTestMustShowText(expectedText: String)(using pos: Position): Unit =
-      s"must have text '$expectedText'" in {
-        target.resolve.text() mustBe expectedText
+    def createTestWithText(text: String)(using pos: Position): Unit =
+      s"must have text '$text'" in {
+        target.resolve.text() mustBe text
       }
 
-    private def mustShowElementsWithContent(
+    private def createTestWithCountOfElement(
         selector: String,
-        expectedTexts: List[String],
+        count: Int,
         description: String
-    )(using pos: Position): Unit = {
-      val expectedCount = expectedTexts.size
-      val elements      = target.resolve.select(selector).asScala
-      s"must have $expectedCount of $description" in {
-        withClue(s"Expected $expectedCount $description but found ${elements.size}\n") {
-          elements.size mustBe expectedCount
+    )(using pos: Position): Unit =
+      s"must have $count of $description" in {
+        val elements = target.resolve.select(selector).asScala
+        withClue(s"Expected $count $description but found ${elements.size}\n") {
+          elements.size mustBe count
         }
       }
-      for (content, index) <- expectedTexts.zipWithIndex do {
-        s"must have a $description with content '$content' (check ${index + 1})" in {
-          withClue(s"$description with content '$content' not found\n") {
-            elements.zip(expectedTexts).foreach { case (element, expectedText) =>
-              element.text() mustEqual expectedText
-            }
+
+    private def createTestsWithOrderOfElements(
+        selector: String,
+        texts: List[String],
+        description: String
+    )(using pos: Position): Unit = {
+      val expectedCount = texts.size
+      val elements      = target.resolve.select(selector).asScala
+
+      texts.zipWithIndex.foreach { case (expectedText, index) =>
+        s"must have a $description with content '$expectedText' (check ${index + 1})" in {
+          withClue(s"$description with content '$expectedText' not found\n") {
+            val element =
+              util
+                .Try(elements(index))
+                .getOrElse(fail(s"Index $index out of bounds for length ${elements.size}"))
+            element.text() mustEqual expectedText
           }
         }
       }
     }
 
-    def createTestMustShowHeadingH2s(
-        expectedHeadings: List[String]
-    )(using pos: Position): Unit =
-      mustShowElementsWithContent(selector = "h2", expectedTexts = expectedHeadings, description = "headings")
-
-    def createTestMustShowParagraphsWithContent(
-        expectedParagraphs: List[String],
-        includeHelpLink: Boolean = false
+    def createTestsWithParagraphs(
+        paragraphs: List[String]
     )(using
         pos: Position
     ): Unit = {
-      mustShowElementsWithContent(
-        selector = if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector,
-        expectedTexts = expectedParagraphs,
+      createTestWithCountOfElement(
+        selector = excludeHelpLinkParagraphsSelector,
+        count = paragraphs.size,
+        description = "paragraphs"
+      )
+      createTestsWithOrderOfElements(
+        selector = excludeHelpLinkParagraphsSelector,
+        texts = paragraphs,
         description = "paragraphs"
       )
 
       "all paragraphs must have the expected CSS class" in {
         def paragraphs =
-          target.resolve.select(if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector).asScala
+          target.resolve.select(excludeHelpLinkParagraphsSelector).asScala
 
         paragraphs.foreach(paragraph =>
           withClue(s"$paragraph did not have the expected CSS class\n") {
@@ -374,33 +390,45 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-    def createTestMustShowBulletPointsWithContent(
-        expectedTexts: List[String]
+    def createTestsWithBulletPoints(
+        bullets: List[String]
     )(using
         pos: Position
-    ): Unit =
-      mustShowElementsWithContent(
+    ): Unit = {
+      createTestWithCountOfElement(
         selector = "li",
-        expectedTexts = expectedTexts,
+        count = bullets.size,
         description = "bullets"
       )
+      createTestsWithOrderOfElements(
+        selector = "li",
+        texts = bullets,
+        description = "bullets"
+      )
+    }
 
-    def createTestMustShowCaptionWithContent(
-        expectedCaption: String
-    )(using pos: Position): Unit =
-      mustShowElementsWithContent(
+    def createTestsWithCaption(
+        caption: String
+    )(using pos: Position): Unit = {
+      createTestWithCountOfElement(
         selector = "span.govuk-caption-m",
-        expectedTexts = List(expectedCaption),
+        count = 1,
         description = "captions"
       )
+      createTestsWithOrderOfElements(
+        selector = "span.govuk-caption-m",
+        texts = List(caption),
+        description = "captions"
+      )
+    }
 
-    def createTestMustShowLink(
-        expectedText: String,
-        expectedUrl: String
+    def createTestWithLink(
+        linkText: String,
+        destinationUrl: String
     )(using
         pos: Position
     ): Unit =
-      s"must have expected link with correct text: $expectedText and correct url $expectedUrl withing provided element" in {
+      s"must have expected link with correct text: $linkText and correct url $destinationUrl within provided element" in {
         val element       = target.resolve
         val link: Element = if element.tagName() == "a" then {
           element
@@ -411,11 +439,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
           links.head
         }
-        withClue(s"link text was not as expected. Got ${link.text()}, expected '$expectedText'\n") {
-          link.text mustBe expectedText
+        withClue(s"link text was not as expected. Got ${link.text()}, expected '$linkText'\n") {
+          link.text mustBe linkText
         }
-        withClue(s"link href was not as expected. Got ${link.attr("href")}, expected '$expectedUrl'\n") {
-          link.attr("href") mustBe expectedUrl
+        withClue(s"link href was not as expected. Got ${link.attr("href")}, expected '$destinationUrl'\n") {
+          link.attr("href") mustBe destinationUrl
         }
 
         withClue(s"link must have expected CSS class\n") {

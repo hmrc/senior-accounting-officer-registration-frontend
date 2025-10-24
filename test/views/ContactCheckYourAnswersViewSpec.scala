@@ -33,11 +33,12 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val contacts      = List(firstContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = true)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageHeading,
+        pageHeading = pageHeading,
+        showBackLink = true,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -63,12 +64,10 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         dl.size() mustBe 1
       }
 
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        expectedSubmitButtonText = submitButtonText
+      doc.createTestsWithSubmissionButton(
+        action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
+        buttonText = submitButtonText
       )
-
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
 
     }
 
@@ -76,11 +75,12 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       val contacts      = List(firstContact, secondContact)
       val doc: Document = Jsoup.parse(SUT(contacts).toString)
 
-      doc.mustHaveCorrectPageTitle(pageHeading)
-
-      doc.createTestForBackLink(show = true)
-
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageHeading,
+        pageHeading = pageHeading,
+        showBackLink = true,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
 
       val dl = doc.getMainContent.getElementsByTag("dl")
 
@@ -124,12 +124,11 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         dl.size() mustBe 2
       }
 
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        expectedSubmitButtonText = submitButtonText
+      doc.createTestsWithSubmissionButton(
+        action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
+        buttonText = submitButtonText
       )
 
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 

@@ -24,42 +24,53 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
-  private def doCommonChecks(doc: Document, mode: Mode): Unit = {
-    doc.mustHaveCorrectPageTitle(pageHeading)
-    doc.createTestForBackLink(show = true)
-    doc.createTestMustHaveCorrectPageHeading(pageTitle)
-    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-      controllers.routes.$className$Controller.onSubmit(mode),
-      "Continue"
-    )
-  }
-
   "$className$View" - {
+
     Mode.values.foreach { mode =>
       s"when using \$mode" - {
-        "when using unBound form" - {
+        "when the form is not filled in" - {
           val doc = generateView(form, mode)
 
-          doCommonChecks(doc, mode)
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
           doc.createTestMustShowNumberOfInputs(2)
-          doc.createTestMustShowInput(expectedName = "$field1Name$", expectedLabel = field1Label, expectedValue = "")
-          doc.createTestMustShowInput(expectedName = "$field2Name$", expectedLabel = field2Label, expectedValue = "")
+          doc.createTestMustShowInput(name = "$field1Name$", label = field1Label, value = "")
+          doc.createTestMustShowInput(name = "$field2Name$", label = field2Label, value = "")
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
         }
 
-        "when using bound form" - {
-          val boundForm = form.bind(Map("$field1Name$" -> testInputValue1, "$field2Name$" -> testInputValue2))
-          val doc = generateView(boundForm, mode)
+        "when the form is filled in" - {
+          val doc = generateView(form.bind(Map("$field1Name$" -> testInputValue1, "$field2Name$" -> testInputValue2)), mode)
 
-          doCommonChecks(doc, mode)
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
           doc.createTestMustShowNumberOfInputs(2)
-          doc.createTestMustShowInput(expectedName = "$field1Name$", expectedLabel = field1Label, expectedValue = testInputValue1)
-          doc.createTestMustShowInput(expectedName = "$field2Name$", expectedLabel = field2Label, expectedValue = testInputValue2)
+          doc.createTestMustShowInput(name = "$field1Name$", label = field1Label, value = testInputValue1)
+          doc.createTestMustShowInput(name = "$field2Name$", label = field2Label, value = testInputValue2)
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
         }
       }
     }
   }
+
 }
 
 object $className$ViewSpec {

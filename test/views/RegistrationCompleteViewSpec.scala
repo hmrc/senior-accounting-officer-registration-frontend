@@ -17,13 +17,14 @@
 package views
 
 import base.ViewSpecBase
+import config.FrontendAppConfig
 import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.RegistrationCompleteViewSpec.*
 import views.html.RegistrationCompleteView
 
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
-import config.FrontendAppConfig
 
 class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView] {
 
@@ -38,43 +39,47 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
   "RegistrationCompleteView" - {
     "must generate a view" - {
       FrontendAppConfig.setValue("senior-accounting-officer-hub-frontend.host", "hub-url")
-      val doc = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
-      doc.mustHaveCorrectPageTitle(pageTitle)
+      val doc: Document = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
-      doc.createTestForBackLink(show = false)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageTitle,
+        pageHeading = panelTitle,
+        showBackLink = false,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
 
       "with a confirmation panel that" - {
         "must have the correct title" - {
-          doc.getConfirmationPanel.getPanelTitle.createTestMustShowText(expectedText = panelTitle)
+          doc.getConfirmationPanel.getPanelTitle.createTestWithText(text = panelTitle)
         }
 
         "must have the correct body" - {
-          doc.getConfirmationPanel.getPanelBody.createTestMustShowText(expectedText = panelBody)
+          doc.getConfirmationPanel.getPanelBody.createTestWithText(text = panelBody)
         }
       }
 
-      doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphsList)
+      doc.createTestsWithParagraphs(paragraphs = paragraphsList)
 
       "The final paragraph" - {
         doc.getMainContent
           .getParagraphs()
           .last
-          .createTestMustShowLink(
-            expectedText = "submit a notification and certificate.",
-            expectedUrl = "hub-url/senior-accounting-officer"
+          .createTestWithLink(
+            linkText = "submit a notification and certificate.",
+            destinationUrl = "hub-url/senior-accounting-officer"
           )
       }
 
-      doc.createTestMustShowBulletPointsWithContent(expectedTexts = bulletPointTexts)
+      doc.createTestsWithBulletPoints(bullets = bulletPointTexts)
 
       "First bullet point" - {
         doc.getMainContent
           .select("li")
           .get(0)
-          .createTestMustShowLink(
-            expectedText = bulletPointTexts.head,
-            expectedUrl = "#"
+          .createTestWithLink(
+            linkText = bulletPointTexts.head,
+            destinationUrl = "#"
           )
       }
 
@@ -82,13 +87,12 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         doc.getMainContent
           .select("li")
           .get(1)
-          .createTestMustShowLink(
-            expectedText = bulletPointTexts.last,
-            expectedUrl = "#"
+          .createTestWithLink(
+            linkText = bulletPointTexts.last,
+            destinationUrl = "#"
           )
       }
 
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 }

@@ -21,6 +21,7 @@ import forms.ContactHaveYouAddedAllFormProvider
 import models.ContactType
 import models.ContactType.*
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.ContactHaveYouAddedAllViewSpec.*
 import views.html.ContactHaveYouAddedAllView
 
@@ -29,10 +30,15 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
   val formProvider: ContactHaveYouAddedAllFormProvider = app.injector.instanceOf[ContactHaveYouAddedAllFormProvider]
   "ContactHaveYouAddedAllView" - {
     "when there are no prior data for the page" - {
-      val doc = Jsoup.parse(SUT(formProvider(), First).toString)
+      val doc: Document = Jsoup.parse(SUT(formProvider(), First).toString)
 
-      doc.mustHaveCorrectPageTitle(pageTitle)
-      doc.createTestMustHaveCorrectPageHeading(pageHeading)
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageTitle,
+        pageHeading = pageHeading,
+        showBackLink = true,
+        showIsThisPageNotWorkingProperlyLink = true
+      )
+
       doc.createTestMustShowHint(pageHint)
 
       doc.createTestsWithRadioButtons(
@@ -40,12 +46,11 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         labels = List("Yes", "No, add another contact")
       )
 
-      doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-        expectedAction = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First),
-        expectedSubmitButtonText = "Continue"
+      doc.createTestsWithSubmissionButton(
+        action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First),
+        buttonText = "Continue"
       )
 
-      doc.createTestMustShowIsThisPageNotWorkingProperlyLink
     }
   }
 }

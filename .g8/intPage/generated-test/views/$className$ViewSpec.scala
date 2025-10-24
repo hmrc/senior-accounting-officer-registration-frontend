@@ -29,48 +29,53 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       s"when using \$mode" - {
         "when the form is not filled in" - {
           val doc = generateView(form, mode)
-          doc.mustHaveCorrectPageTitle(pageHeading)
-          doc.createTestForBackLink(show = true)
-          doc.createTestMustHaveCorrectPageHeading(pageTitle)
-          doc.createTestMustShowIsThisPageNotWorkingProperlyLink
 
-          doc.createTestMustShowASingleInput(
-            expectedName = "value",
-            expectedLabel = "$className$",
-            expectedValue = "",
-            expectedHint = None
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
           )
 
-          doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-            controllers.routes.$className$Controller.onSubmit(mode),
-            "Continue"
+          doc.createTestsWithASingleTextInput(
+            name = "value",
+            label = "$className$",
+            value = "",
+            hint = None
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
           )
         }
 
         "when the form is filled in" - {
           val doc = generateView(form.bind(Map("value" -> testInputValue)), mode)
-          doc.mustHaveCorrectPageTitle(pageHeading)
-          doc.createTestForBackLink(show = true)
-          doc.createTestMustHaveCorrectPageHeading(pageTitle)
-          doc.createTestMustShowIsThisPageNotWorkingProperlyLink
 
-          doc.createTestMustShowASingleInput(
-            expectedName = "value",
-            expectedLabel = "$className$",
-            expectedValue = testInputValue,
-            expectedHint = None
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
           )
 
-          doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-            controllers.routes.$className$Controller.onSubmit(mode),
-            "Continue"
+          doc.createTestsWithASingleTextInput(
+            name = "value",
+            label = "$className$",
+            value = testInputValue,
+            hint = None
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
           )
         }
       }
     }
   }
 }
-
 
 object $className$ViewSpec {
   val pageHeading = "$className$"

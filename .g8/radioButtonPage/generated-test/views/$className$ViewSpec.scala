@@ -24,39 +24,62 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
     Jsoup.parse(view.toString)
   }
 
-
-  private def doChecks(doc: Document, mode: Mode): Unit = {
-    doc.mustHaveCorrectPageTitle(pageHeading)
-    doc.createTestForBackLink(show = true)
-    doc.createTestMustHaveCorrectPageHeading(pageTitle)
-    doc.createTestMustShowIsThisPageNotWorkingProperlyLink
-
-    "must display the correct radio button lables" in {
-      doc.getMainContent.select("label[for=value_0]").text() mustBe option1Label
-      doc.getMainContent.select("label[for=value_1]").text() mustBe option2Label
-    }
-
-    doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-      controllers.routes.$className$Controller.onSubmit(mode),
-      "Continue"
-    )
-  }
-
   "$className$View" - {
-    "when using NormalMode, the form is empty (no errors)" - {
-      val doc = generateView(form, NormalMode)
-      doChecks(doc, NormalMode)
+
+    Mode.values.foreach { mode =>
+      s"when using \$mode" - {
+        "when the form is not filled in" - {
+          val doc = generateView(form, mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
+          doc.createTestsWithRadioButtons(
+            values = List(option1key, option2key),
+            labels = List(option1Label, option2Label)
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+        }
+
+        "when the form is filled in" - {
+          val doc = generateView(form.bind(Map("value" -> option1key)), mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true
+          )
+
+          doc.createTestsWithRadioButtons(
+            values = List(option1key, option2key),
+            labels = List(option1Label, option2Label)
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+        }
+      }
     }
-    "when using CheckMode" - {
-      val doc = generateView(form, CheckMode)
-      doChecks(doc, CheckMode)
-    }
+
   }
 }
 
 object $className$ViewSpec {
   val pageHeading = "$title$"
   val pageTitle = "$title$"
+  val option1key = "$option1key;format="decap"$"
   val option1Label = "$option1msg$"
+  val option2key = "$option2key;format="decap"$"
   val option2Label = "$option2msg$"
 }

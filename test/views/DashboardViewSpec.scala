@@ -20,6 +20,7 @@ import base.ViewSpecBase
 import models.DashboardStage
 import models.DashboardStage.{CompanyDetails, ContactsInfo, Submission}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import views.DashboardViewSpec.*
 import views.html.DashboardView
 
@@ -29,13 +30,16 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
     DashboardStage.values.foreach { stage =>
       s"must generate a view for $stage stage" - {
-        val doc = Jsoup.parse(SUT(stage).toString)
+        val doc: Document = Jsoup.parse(SUT(stage).toString)
 
-        doc.mustHaveCorrectPageTitle(pageHeading)
+        doc.createTestsWithStandardPageElements(
+          pageTitle = pageHeading,
+          pageHeading = pageHeading,
+          showBackLink = false,
+          showIsThisPageNotWorkingProperlyLink = true
+        )
 
-        doc.createTestMustHaveCorrectPageHeading(pageHeading)
-
-        doc.createTestMustShowParagraphsWithContent(expectedParagraphs = paragraphs)
+        doc.createTestsWithParagraphs(paragraphs = paragraphs)
 
         "must show the correct statuses" in {
           val statusTags = doc.getMainContent.getElementsByClass("govuk-task-list__status")
@@ -65,17 +69,16 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
         stage match {
           case CompanyDetails =>
-            doc.createTestMustNotShowElement("govuk-button")
+            doc.createTestWithoutElements(byClass = "govuk-button")
           case ContactsInfo =>
-            doc.createTestMustNotShowElement("govuk-button")
+            doc.createTestWithoutElements(byClass = "govuk-button")
           case Submission =>
-            doc.createTestMustHaveASubmissionButtonWhichSubmitsTo(
-              expectedAction = controllers.routes.IndexController.continue(),
-              expectedSubmitButtonText = submitButtonText
+            doc.createTestsWithSubmissionButton(
+              action = controllers.routes.IndexController.continue(),
+              buttonText = submitButtonText
             )
         }
 
-        doc.createTestMustShowIsThisPageNotWorkingProperlyLink
       }
     }
   }
