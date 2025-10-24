@@ -262,30 +262,43 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
 
     def createTestsWithRadioButtons(
-        values: List[String],
-        labels: List[String]
+        name: String,
+        radios: Seq[RadioButton]
     )(using pos: Position): Unit = {
+      def matchingRadioSelector = s"input[type=radio][name=$name]"
+      def labelCssSelector      = {
+        target.resolve.select(matchingRadioSelector)
+        val matchingRadioButtons = target.resolve.select(matchingRadioSelector).asScala
+        if matchingRadioButtons.isEmpty then {
+          // this method can't result in an empty string, and we know this would yield with no result
+          s"$matchingRadioSelector+label"
+        } else
+          matchingRadioButtons
+            .map(element => s"label[for=${element.attr("id")}]")
+            .mkString(",")
+      }
+
       createTestWithCountOfElement(
-        selector = ".govuk-radios label",
-        count = labels.size,
+        selector = labelCssSelector,
+        count = radios.size,
         description = "radio button label"
       )
       createTestsWithOrderOfElements(
-        selector = ".govuk-radios label",
-        texts = labels,
+        selector = labelCssSelector,
+        texts = radios.map(_.label),
         description = "radio button label"
       )
 
       createTestWithCountOfElement(
-        selector = ".govuk-radios input",
-        count = values.size,
-        description = "radio buttons"
+        selector = matchingRadioSelector,
+        count = radios.size,
+        description = s"radio buttons for $name"
       )
 
       target.resolve
-        .select(".govuk-radios input")
+        .select(matchingRadioSelector)
         .asScala
-        .zip(values)
+        .zip(radios.map(_.value))
         .foreach { case (element, expectedText) =>
           val elementValue = element.attr("value")
           s"radio button value $elementValue must match $expectedText" in {
@@ -343,7 +356,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
     private def createTestsWithOrderOfElements(
         selector: String,
-        texts: List[String],
+        texts: Seq[String],
         description: String
     )(using pos: Position): Unit = {
       val expectedCount = texts.size
@@ -363,7 +376,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
 
     def createTestsWithParagraphs(
-        paragraphs: List[String]
+        paragraphs: Seq[String]
     )(using
         pos: Position
     ): Unit = {
@@ -391,7 +404,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
 
     def createTestsWithBulletPoints(
-        bullets: List[String]
+        bullets: Seq[String]
     )(using
         pos: Position
     ): Unit = {
@@ -417,7 +430,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       )
       createTestsWithOrderOfElements(
         selector = "span.govuk-caption-m",
-        texts = List(caption),
+        texts = Seq(caption),
         description = "captions"
       )
     }
@@ -453,10 +466,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
   }
 
+  @inline def radio(value: String, label: String): RadioButton = RadioButton(value = value, label = label)
+
 }
 
 object ViewSpecBase {
   val expectedServiceName               = "Senior Accounting Officer notification and certificate"
   val expectedServiceId                 = "senior-accounting-officer-registration-frontend"
   val excludeHelpLinkParagraphsSelector = "p:not(:has(a.hmrc-report-technical-issue))"
+
+  final case class RadioButton(value: String, label: String)
 }

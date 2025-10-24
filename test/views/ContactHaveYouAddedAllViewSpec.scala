@@ -42,8 +42,11 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
       doc.createTestMustShowHint(pageHint)
 
       doc.createTestsWithRadioButtons(
-        values = List("yes", "no"),
-        labels = List("Yes", "No, add another contact")
+        name = "value",
+        radios = List(
+          radio(value = "yes", label = "Yes"),
+          radio(value = "no", label = "No, add another contact"),
+        )
       )
 
       doc.createTestsWithSubmissionButton(
