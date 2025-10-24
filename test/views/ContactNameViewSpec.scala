@@ -16,88 +16,110 @@
 
 package views
 
-import base.SpecBase
+import base.ViewSpecBase
 import forms.ContactNameFormProvider
 import models.ContactType.*
-import models.{ContactType, NormalMode}
+import models.{ContactType, Mode}
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
-import play.api.test.FakeRequest
+import org.jsoup.nodes.Document
+import views.ContactNameViewSpec.*
 import views.html.ContactNameView
 
-class ContactNameViewSpec extends SpecBase with GuiceOneAppPerSuite {
+class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
-  val SUT: ContactNameView                  = app.injector.instanceOf[ContactNameView]
-  given request: Request[?]                 = FakeRequest()
-  given Messages                            = app.injector.instanceOf[MessagesApi].preferred(request)
   val formProvider: ContactNameFormProvider = app.injector.instanceOf[ContactNameFormProvider]
-  val testValue                             = "test input value"
 
   "ContactNameView" - {
     ContactType.values.foreach { contactType =>
       s"must generate a view for $contactType contact" - {
-        val doc = Jsoup.parse(SUT(formProvider().bind(Map("value" -> testValue)), contactType, NormalMode).toString)
+        Mode.values.foreach { mode =>
+          s"must generate a view for $contactType contact in $mode" - {
+            "when there are no prior data for the page" - {
+              val doc: Document =
+                Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
 
-        "with the correct heading" in {
-          val mainContent = doc.getElementById("main-content")
+              doc.createTestsWithStandardPageElements(
+                pageTitle = contactType match {
+                  case First  => pageTitleFirst
+                  case Second => pageTitleSecond
+                },
+                pageHeading = pageHeading,
+                showBackLink = true,
+                showIsThisPageNotWorkingProperlyLink = true
+              )
 
-          val h1 = mainContent.getElementsByTag("h1")
-          h1.size() mustBe 1
+              doc.createTestsWithCaption(
+                caption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                }
+              )
 
-          h1.get(0).text() mustBe "Enter full name"
-        }
+              doc.createTestsWithASingleTextInput(
+                name = "value",
+                label = pageHeading,
+                value = "",
+                hint = Some(expectedHints)
+              )
 
-        "with the correct caption" in {
-          val mainContent = doc.getElementById("main-content")
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
+              )
+            }
 
-          val caption = mainContent.select("span.govuk-caption-m")
-          caption.size() mustBe 1
+            "when there exists prior data for the page" - {
+              val doc: Document =
+                Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
-          caption.get(0).text() mustBe (contactType match {
-            case First  => "First contact details"
-            case Second => "Second contact details"
-            case Third  => "Third contact details"
-          })
-        }
+              doc.createTestsWithStandardPageElements(
+                pageTitle = contactType match {
+                  case First  => pageTitleFirst
+                  case Second => pageTitleSecond
+                },
+                pageHeading = pageHeading,
+                showBackLink = true,
+                showIsThisPageNotWorkingProperlyLink = true
+              )
 
-        "with the correct hint" in {
-          val mainContent = doc.getElementById("main-content")
+              doc.createTestsWithCaption(
+                caption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                }
+              )
 
-          val hint = mainContent.select("div.govuk-hint")
-          hint.size() mustBe 1
+              doc.createTestsWithASingleTextInput(
+                name = "value",
+                label = pageHeading,
+                value = testInputValue,
+                hint = Some(expectedHints)
+              )
 
-          hint.get(0).text() mustBe "Add the full name, role and contact details of the person or team that is able to deal with enquiries about the companys account and management of tax accounting arrangements."
-        }
-
-        "set the input value with what is in the form" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val input = mainContent.select("input")
-          input.size() mustBe 1
-
-          input.get(0).`val`() mustBe testValue
-        }
-
-        "must have a continue button" in {
-          val mainContent = doc.getElementById("main-content")
-
-          mainContent.getElementById("submit").text() mustBe "Continue"
-        }
-
-        "must show a back link" in {
-          val backLink = doc.getElementsByClass("govuk-back-link")
-          backLink.size() mustBe 1
-        }
-
-        "must show help link" in {
-          val mainContent = doc.getElementById("main-content")
-
-          val helpLink = mainContent.getElementsByClass("govuk-link hmrc-report-technical-issue ")
-          helpLink.size() mustBe 1
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactNameController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
+              )
+            }
+          }
         }
       }
     }
   }
+}
+
+object ContactNameViewSpec {
+  val pageHeading: String = "Enter the name of the person or team to keep on record"
+
+  val contactTypeFirstCaption: String  = "First contact details"
+  val contactTypeSecondCaption: String = "Second contact details"
+
+  val pageTitleFirst: String  = "First contact details"
+  val pageTitleSecond: String = "Second contact details"
+
+  val testInputValue: String = "test Input Value"
+  val expectedHints: String  = "For example, ‘Ashley Smith or Tax team’."
+
+  val submitButtonText: String = "Continue"
+
 }

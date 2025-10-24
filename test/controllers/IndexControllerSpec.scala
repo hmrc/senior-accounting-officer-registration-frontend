@@ -68,7 +68,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
       }
     }
 
-    "must continue to Check page for POST" in {
+    "must continue to Registration Complete page for POST" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -76,7 +76,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.CheckYourAnswersController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.RegistrationCompleteController.onPageLoad().url
       }
     }
   }

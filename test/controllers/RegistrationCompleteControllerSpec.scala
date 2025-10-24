@@ -17,34 +17,85 @@
 package controllers
 
 import base.SpecBase
+import models.UserAnswers
+import models.registration.CompanyDetails
 import models.registration.RegistrationCompleteDetails
+import pages.CompanyDetailsPage
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.RegistrationCompleteView
 
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 
 class RegistrationCompleteControllerSpec extends SpecBase {
 
   "RegistrationComplete Controller" - {
+    lazy val registrationCompleteRoute = routes.RegistrationCompleteController.onPageLoad().url
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET when company details are available and host is not localhost" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswersWithCompanyDetails =
+        UserAnswers(id = "id")
+          .set(
+            CompanyDetailsPage,
+            CompanyDetails(
+              companyName = "ABC Ltd",
+              companyNumber = "number",
+              ctUtr = "ctUtr",
+              registeredBusinessPartnerId = "registeredBusinessPartnerId"
+            )
+          )
+          .success
+          .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithCompanyDetails))
+        .configure(Map("hub-frontend.host" -> "xyz"))
+        .overrides(bind[Clock].to[MockClock])
+        .build()
 
       running(application) {
-        val request          = FakeRequest(GET, routes.RegistrationCompleteController.onPageLoad().url)
-        val result           = route(application, request).value
-        val view             = application.injector.instanceOf[RegistrationCompleteView]
+        val request = FakeRequest(GET, registrationCompleteRoute)
+        val result  = route(application, request).value
+        val view    = application.injector.instanceOf[RegistrationCompleteView]
+
         val registrationData = RegistrationCompleteDetails(
           companyName = "ABC Ltd",
           registrationId = "XMPLR0123456789",
-          registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
+          registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 30), ZoneOffset.UTC)
         )
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(registrationData)(using request, messages(application)).toString
+        contentAsString(result) mustEqual view(registrationData)(using
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must redirect to the journey recovery view for a GET when company details are not available" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, registrationCompleteRoute)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
+}
+
+class MockClock extends Clock {
+  override def instant(): Instant = {
+    LocalDateTime.of(2025, 1, 17, 11, 30).toInstant(ZoneOffset.UTC)
+  }
+
+  override def withZone(zone: ZoneId): Clock = ???
+
+  override def getZone(): ZoneId = ZoneOffset.UTC
 }

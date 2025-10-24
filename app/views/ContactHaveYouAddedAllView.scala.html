@@ -38,6 +38,7 @@
                 legend = LegendViewModel("contactHaveYouAddedAll.heading".toText).asPageHeading(LegendSize.Large),
                 items  = ContactHaveYouAddedAll.options
             )
+            .withHint(HintViewModel("contactHaveYouAddedAll.hint".toText))
         )
 
         @govukButton(

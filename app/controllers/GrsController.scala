@@ -16,22 +16,21 @@
 
 package controllers
 
+import cats.data.EitherT
 import connectors.GrsConnector
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import models.UserAnswers
 import models.grs.create.NewJourneyResponse
-import models.grs.retrieve.CompanyDetails as GrsCompanyDetails
 import models.registration.CompanyDetails
 import pages.CompanyDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.*
 import repositories.SessionRepository
 import services.GrsService
-import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 import javax.inject.Inject
@@ -56,12 +55,13 @@ class GrsController @Inject() (
     } yield {
       r.status match {
         case CREATED =>
-          val response =
-            Try(Json.parse(r.body).as[NewJourneyResponse])
-              .getOrElse(throw InternalServerException("Malformatted start journey response from GRS"))
-          SeeOther(response.journeyStartUrl)
+          Try(Json.parse(r.body).as[NewJourneyResponse]).toEither
+            .map(response => SeeOther(response.journeyStartUrl))
+            .left
+            .map(_ => InternalServerError("Malformatted start journey response from GRS"))
+            .merge
         case code =>
-          throw InternalServerException(
+          InternalServerError(
             s"Invalid start journey response from GRS, status=$code body=${r.body}, requestBody=${Json.toJson(grsStartRequest)}"
           )
       }
@@ -69,23 +69,26 @@ class GrsController @Inject() (
   }
 
   def callBack(journeyId: String): Action[AnyContent] = (identify andThen getData) async { implicit request =>
-    def convert(grsCompanyDetailsOrException: Either[Option[Exception], GrsCompanyDetails]): CompanyDetails = {
-      for {
-        grsCompanyDetails <- grsCompanyDetailsOrException
-        companyDetails    <- grsMappingService.map(grsCompanyDetails)
-      } yield companyDetails
-    }.getOrElse(throw new InternalServerException("Invalid response from GRS"))
-
-    for {
-      grsCompanyDetailsOrException <- grsConnector.retrieve(journeyId)
-      companyDetails = convert(grsCompanyDetailsOrException)
-      updatedAnswer  = request.userAnswers
-        .getOrElse(UserAnswers(request.userId))
-        .set(CompanyDetailsPage, companyDetails)
-        .get
-      _ <- sessionRepository.set(updatedAnswer)
+    val flow: EitherT[Future, Result, Result] = for {
+      grsCompanyDetails <- EitherT(grsConnector.retrieve(journeyId))
+        .leftMap(_ => InternalServerError("Failure response from GRS"))
+      companyDetails <- EitherT
+        .fromEither[Future](grsMappingService.map(grsCompanyDetails))
+        .leftMap(_ => InternalServerError("Invalid data from GRS"))
+      updatedAnswer <- EitherT
+        .fromEither[Future](
+          request.userAnswers
+            .getOrElse(UserAnswers(request.userId))
+            .set(CompanyDetailsPage, companyDetails)
+            .toEither
+        )
+        .leftMap(_ => InternalServerError("Failed to set Session data"))
+      _ <- EitherT
+        .right(sessionRepository.set(updatedAnswer))
+        .leftMap(_ => InternalServerError("Failed to update Session repository"))
     } yield Redirect(routes.IndexController.onPageLoad())
 
+    flow.merge
   }
 
 }

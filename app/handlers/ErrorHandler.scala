@@ -17,8 +17,7 @@
 package handlers
 
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{RequestHeader, Result}
-import play.api.{Logger, PlayException}
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.ErrorTemplate
@@ -35,35 +34,8 @@ class ErrorHandler @Inject() (
     extends FrontendErrorHandler
     with I18nSupport {
 
-  private val logger = Logger(getClass)
-
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(using
       rh: RequestHeader
   ): Future[Html] =
     Future.successful(view(pageTitle, heading, message))
-
-  // copied from FrontendErrorHandler in order to override the private logError method
-  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
-    logError(request, exception)
-    resolveError(request, exception)
-  }
-
-  // copied from FrontendErrorHandler (the only intended change is from logger.error to logger.warn)
-  private def logError(request: RequestHeader, ex: Throwable): Unit =
-    logger.warn(
-      """
-        |
-        |! %sInternal server error, for (%s) [%s] ->
-        | """.stripMargin
-        .format(
-          ex match {
-            case p: PlayException => "@" + p.id + " - "
-            case _                => ""
-          },
-          request.method,
-          request.uri
-        ),
-      ex
-    )
-
 }
