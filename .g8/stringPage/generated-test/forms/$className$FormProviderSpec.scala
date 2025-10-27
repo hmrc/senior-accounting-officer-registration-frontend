@@ -34,4 +34,16 @@ class $className$FormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
+      key = requiredKey,
+      message = "Enter $className;format="decap"$"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = lengthKey,
+      message = "$className$ must be $maxLength$ characters or less"
+    )
+  }
 }
