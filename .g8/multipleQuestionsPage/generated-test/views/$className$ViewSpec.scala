@@ -39,8 +39,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           )
 
           doc.createTestMustShowNumberOfInputs(2)
-          doc.createTestMustShowInput(name = "$field1Name$", label = field1Label, value = "")
-          doc.createTestMustShowInput(name = "$field2Name$", label = field2Label, value = "")
+          doc.createTestMustShowTextInput(name = "$field1Name$", label = field1Label, value = "")
+          doc.createTestMustShowTextInput(name = "$field2Name$", label = field2Label, value = "")
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
@@ -59,8 +59,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           )
 
           doc.createTestMustShowNumberOfInputs(2)
-          doc.createTestMustShowInput(name = "$field1Name$", label = field1Label, value = testInputValue1)
-          doc.createTestMustShowInput(name = "$field2Name$", label = field2Label, value = testInputValue2)
+          doc.createTestMustShowTextInput(name = "$field1Name$", label = field1Label, value = testInputValue1)
+          doc.createTestMustShowTextInput(name = "$field2Name$", label = field2Label, value = testInputValue2)
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
