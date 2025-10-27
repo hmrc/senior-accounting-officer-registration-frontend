@@ -29,23 +29,23 @@ class $className$FormProviderSpec extends DateBehaviours {
 
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
-      requiredAllKey,
-      "Enter the $className;format="decap"$"
+      key = requiredAllKey,
+      message = "Enter the $className;format="decap"$"
     )
 
     createTestWithErrorMessageAssertion(
-      requiredTwoKey,
-      "The $className;format="decap"$ must include {0} and {1}"
+      key = requiredTwoKey,
+      message = "The $className;format="decap"$ must include {0} and {1}"
     )
 
     createTestWithErrorMessageAssertion(
-      requiredKey,
-      "The $className;format="decap"$ must include {0}"
+      key = requiredKey,
+      message = "The $className;format="decap"$ must include {0}"
     )
 
     createTestWithErrorMessageAssertion(
-      invalidKey,
-      "Enter a real $className$"
+      key = invalidKey,
+      message = "Enter a real $className$"
     )
   }
 }

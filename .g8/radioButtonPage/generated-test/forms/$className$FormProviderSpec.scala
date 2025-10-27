@@ -29,8 +29,8 @@ class $className$FormProviderSpec extends OptionFieldBehaviours {
 
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
-      requiredKey,
-      "Select $className;format="decap"$"
+      key = requiredKey,
+      message = "Select $className;format="decap"$"
     )
   }
 }

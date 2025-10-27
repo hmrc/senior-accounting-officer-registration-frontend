@@ -56,28 +56,28 @@ class $className$FormProviderSpec extends CurrencyFieldBehaviours {
 
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
-      requiredKey,
-      "Enter your $className;format="decap"$"
+      key = requiredKey,
+      message = "Enter your $className;format="decap"$"
     )
 
     createTestWithErrorMessageAssertion(
-      nonNumericKey,
-      "Enter your $className;format="decap"$ using numbers and a decimal point"
+      key = nonNumericKey,
+      message = "Enter your $className;format="decap"$ using numbers and a decimal point"
     )
 
     createTestWithErrorMessageAssertion(
-      invalidNumericKey,
-      "Enter your $className;format="decap"$ using up to two decimal places"
+      key = invalidNumericKey,
+      message = "Enter your $className;format="decap"$ using up to two decimal places"
     )
     
     createTestWithErrorMessageAssertion(
-      aboveMaximumKey,
-      "$className$ must be {0} or less"
+      key = aboveMaximumKey,
+      message = "$className$ must be {0} or less"
     )
 
     createTestWithErrorMessageAssertion(
-      belowMinimumKey,
-      "$className$ must be {0} or more"
+      key = belowMinimumKey,
+      message = "$className$ must be {0} or more"
     )
   }
 }

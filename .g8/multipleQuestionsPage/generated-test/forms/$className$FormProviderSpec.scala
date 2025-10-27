@@ -65,23 +65,23 @@ class $className$FormProviderSpec extends StringFieldBehaviours {
 
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
-      field1RequiredKey,
-      "Enter $field1Name$"
+      key = field1RequiredKey,
+      message = "Enter $field1Name$"
     )
 
     createTestWithErrorMessageAssertion(
-      field1LengthKey,
-      "$field1Name$ must be 100 characters or less"
+      key = field1LengthKey,
+      message = "$field1Name$ must be 100 characters or less"
     )
 
     createTestWithErrorMessageAssertion(
-      field2RequiredKey,
-      "Enter $field2Name$"
+      key = field2RequiredKey,
+      message = "Enter $field2Name$"
     )
 
     createTestWithErrorMessageAssertion(
-      field2LengthKey,
-      "$field2Name$ must be 100 characters or less"
+      key = field2LengthKey,
+      message = "$field2Name$ must be 100 characters or less"
     )
   }
 }
