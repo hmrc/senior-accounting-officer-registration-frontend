@@ -49,9 +49,9 @@ trait FormSpec extends AnyFreeSpec with Matchers with OptionValues {
   lazy val app = GuiceApplicationBuilder().build()
   def messages = app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
   
-  def createTestWithErrorMessageAssertion(key: String, expectedValue: String): Unit = {
+  def createTestWithErrorMessageAssertion(key: String, message: String): Unit = {
     s"key $key is in messages file with expected value" in {
-      expectedValue mustEqual messages(key)
+      message mustEqual messages(key)
     }
   }
 }
