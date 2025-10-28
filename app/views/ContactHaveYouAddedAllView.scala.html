@@ -35,14 +35,14 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel("contactHaveYouAddedAll.heading".toText).asPageHeading(LegendSize.Large),
+                legend = LegendViewModel(messages("contactHaveYouAddedAll.heading").toText).asPageHeading(LegendSize.Large),
                 items  = ContactHaveYouAddedAll.options
             )
-            .withHint(HintViewModel("contactHaveYouAddedAll.hint".toText))
+            .withHint(HintViewModel(messages("contactHaveYouAddedAll.hint").toText))
         )
 
         @govukButton(
-            ButtonViewModel("site.continue".toText).withAttribute("id", "submit")
+            ButtonViewModel(messages("site.continue").toText).withAttribute("id", "submit")
         )
     }
 }

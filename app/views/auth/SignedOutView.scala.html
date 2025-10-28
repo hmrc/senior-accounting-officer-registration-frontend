@@ -34,7 +34,7 @@
 
     <p class="govuk-body">
         @govukButton(
-            ButtonViewModel("site.signIn".toText)
+            ButtonViewModel(messages("site.signIn").toText)
                 .asLink(routes.IndexController.onPageLoad().url)
         )
     </p>
