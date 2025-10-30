@@ -133,7 +133,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
             errorHint.size mustBe 1
           }
 
-          withClue("error message key should be defined\n") {
+          withClue(s"error message key $errorMessageKey should be defined\n") {
             Messages.isDefinedAt(errorMessageKey) mustBe true
           }
         }
