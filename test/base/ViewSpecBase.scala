@@ -48,17 +48,19 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         pageTitle: String,
         pageHeading: String,
         showBackLink: Boolean,
-        showIsThisPageNotWorkingProperlyLink: true
+        showIsThisPageNotWorkingProperlyLink: true,
+        hasError: Boolean
     )(using pos: Position): Unit = {
-      createTestWithPageTitle(pageTitle = pageTitle)
+      createTestWithPageTitle(pageTitle = pageTitle, hasError = hasError)
       createTestWithPageHeading(pageHeading = pageHeading)
       createTestWithBackLink(show = showBackLink)
       createTestWithIsThisPageNotWorkingProperlyLink
     }
 
-    def createTestWithPageTitle(pageTitle: String)(using pos: Position): Unit =
+    def createTestWithPageTitle(pageTitle: String, hasError: Boolean)(using pos: Position): Unit =
       "must generate a view with the correct title" in {
-        doc.title mustBe s"$pageTitle - $expectedServiceName - GOV.UK"
+        val errorPrefix = if hasError then "Error: " else ""
+        doc.title mustBe s"$errorPrefix$pageTitle - $expectedServiceName - GOV.UK"
       }
 
     def createTestWithPageHeading(pageHeading: String)(using
@@ -107,11 +109,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
       }
 
-    def createTestsWithError(isErrored: Boolean, errorMessage: String): Unit =
-      if isErrored then
+    def createTestsWithError(hasError: Boolean, errorMessage: String): Unit =
+      if hasError then
         "must show an error" in {
           val elements = doc.getElementsByClass("govuk-error-summary")
-          withClue("error message should be shown") {
+          withClue("error message should be shown\n") {
             elements.size mustBe 1
           }
 
@@ -125,12 +127,12 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           errorSummaryMessage.text mustBe errorMessage
 
           val erroredFormGroup = doc.getElementsByClass("govuk-form-group--error")
-          withClue("errored content should be shown") {
+          withClue("errored content should be shown\n") {
             erroredFormGroup.size mustBe 1
           }
 
           val errorHint = doc.getElementsByClass("govuk-error-message")
-          withClue("error hint should be shown") {
+          withClue("error hint should be shown\n") {
             errorHint.size mustBe 1
           }
           errorHint.text mustBe "Error: " + errorMessage
@@ -138,7 +140,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       else
         "must not show an error" in {
           val elements = doc.getElementsByClass("govuk-error-summary govuk-form-group--error")
-          withClue("error message should not be shown") {
+          withClue("error message should not be shown\n") {
             elements.isEmpty() mustBe true
           }
         }
@@ -258,23 +260,21 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
             s"input with name '$name' must not have an associated hint" in {
               getInputElement match {
                 case Some(element) =>
-                  val hintIds = element
+                  element
                     .attr("aria-describedby")
                     .split(" ")
-                    .filter(!_.isEmpty)
-
-                  hintIds.foreach(hintId => {
-                    val hints = target.resolve.select(s"#$hintId.govuk-hint")
-                    withClue(s"input has unexpected hint with id '$hintId'\n") {
-                      hints.size mustBe 0
-                    }
-                  })
+                    .filter(_.nonEmpty)
+                    .foreach(id => {
+                      val hints = target.resolve.select(s"#$id.govuk-hint")
+                      withClue(s"input has unexpected hint with id '$id'\n") {
+                        hints.size mustBe 0
+                      }
+                    })
                 case None =>
                   fail(s"input with expected name '$name' not found")
               }
             }
         }
-
       }
     }
 

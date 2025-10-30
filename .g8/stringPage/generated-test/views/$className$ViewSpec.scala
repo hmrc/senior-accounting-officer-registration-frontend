@@ -35,6 +35,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageHeading = pageHeading,
             showBackLink = true,
             showIsThisPageNotWorkingProperlyLink = true,
+            hasError = false
           )
 
           doc.createTestsWithASingleTextInput(
@@ -58,6 +59,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageHeading = pageHeading,
             showBackLink = true,
             showIsThisPageNotWorkingProperlyLink = true,
+            hasError = false
           )
 
           doc.createTestsWithASingleTextInput(
@@ -77,10 +79,11 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           val doc = generateView(form.withError("value", errorMessage), mode)
 
           doc.createTestsWithStandardPageElements(
-            pageTitle = "Error: " + pageTitle,
+            pageTitle = pageTitle,
             pageHeading = pageHeading,
             showBackLink = true,
             showIsThisPageNotWorkingProperlyLink = true,
+            hasError = true
           )
 
           doc.createTestsWithASingleTextInput(
@@ -96,7 +99,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           )
 
           doc.createTestsWithError(
-            isErrored = true,
+            hasError = true,
             errorMessage = errorMessage
           )
         }

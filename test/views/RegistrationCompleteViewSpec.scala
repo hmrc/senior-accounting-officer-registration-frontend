@@ -46,7 +46,8 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         pageTitle = pageTitle,
         pageHeading = panelTitle,
         showBackLink = false,
-        showIsThisPageNotWorkingProperlyLink = true
+        showIsThisPageNotWorkingProperlyLink = true,
+        hasError = false
       )
 
       "with a confirmation panel that" - {

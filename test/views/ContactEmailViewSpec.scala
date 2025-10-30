@@ -45,7 +45,8 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 },
                 pageHeading = pageHeading,
                 showBackLink = true,
-                showIsThisPageNotWorkingProperlyLink = true
+                showIsThisPageNotWorkingProperlyLink = true,
+                hasError = false
               )
 
               doc.createTestsWithCaption(
@@ -80,7 +81,8 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 },
                 pageHeading = pageHeading,
                 showBackLink = true,
-                showIsThisPageNotWorkingProperlyLink = true
+                showIsThisPageNotWorkingProperlyLink = true,
+                hasError = false
               )
 
               doc.createTestsWithCaption(

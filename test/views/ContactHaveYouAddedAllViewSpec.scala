@@ -36,7 +36,8 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         pageTitle = pageTitle,
         pageHeading = pageHeading,
         showBackLink = true,
-        showIsThisPageNotWorkingProperlyLink = true
+        showIsThisPageNotWorkingProperlyLink = true,
+        hasError = false
       )
 
       doc.createTestMustShowHint(pageHint)

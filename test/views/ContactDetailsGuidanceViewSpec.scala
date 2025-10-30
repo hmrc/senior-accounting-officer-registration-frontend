@@ -31,7 +31,8 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
       pageTitle = caption,
       pageHeading = pageHeading,
       showBackLink = true,
-      showIsThisPageNotWorkingProperlyLink = true
+      showIsThisPageNotWorkingProperlyLink = true,
+      hasError = false
     )
 
     doc.createTestsWithCaption(
@@ -46,7 +47,6 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
       action = controllers.routes.ContactDetailsGuidanceController.continue(),
       buttonText = submitButtonText
     )
-
   }
 }
 

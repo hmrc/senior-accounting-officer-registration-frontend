@@ -36,7 +36,8 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
           pageTitle = pageHeading,
           pageHeading = pageHeading,
           showBackLink = false,
-          showIsThisPageNotWorkingProperlyLink = true
+          showIsThisPageNotWorkingProperlyLink = true,
+          hasError = false
         )
 
         doc.createTestsWithParagraphs(paragraphs = paragraphs)

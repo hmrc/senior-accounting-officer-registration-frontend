@@ -45,7 +45,8 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 },
                 pageHeading = pageHeading,
                 showBackLink = true,
-                showIsThisPageNotWorkingProperlyLink = true
+                showIsThisPageNotWorkingProperlyLink = true,
+                hasError = false
               )
 
               doc.createTestsWithCaption(
@@ -79,7 +80,8 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 },
                 pageHeading = pageHeading,
                 showBackLink = true,
-                showIsThisPageNotWorkingProperlyLink = true
+                showIsThisPageNotWorkingProperlyLink = true,
+                hasError = false
               )
 
               doc.createTestsWithCaption(
