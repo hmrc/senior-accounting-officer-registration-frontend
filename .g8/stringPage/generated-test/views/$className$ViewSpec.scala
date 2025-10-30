@@ -34,7 +34,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageTitle = pageTitle,
             pageHeading = pageHeading,
             showBackLink = true,
-            showIsThisPageNotWorkingProperlyLink = true
+            showIsThisPageNotWorkingProperlyLink = true,
           )
 
           doc.createTestsWithASingleTextInput(
@@ -57,7 +57,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageTitle = pageTitle,
             pageHeading = pageHeading,
             showBackLink = true,
-            showIsThisPageNotWorkingProperlyLink = true
+            showIsThisPageNotWorkingProperlyLink = true,
           )
 
           doc.createTestsWithASingleTextInput(
@@ -72,6 +72,34 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             buttonText = "Continue"
           )
         }
+
+        "when the form has errors" - {
+          val doc = generateView(form.withError("value", errorMessage), mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = "Error: " + pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true,
+          )
+
+          doc.createTestsWithASingleTextInput(
+            name = "value",
+            label = pageHeading,
+            value = "",
+            hint = None
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+
+          doc.createTestsWithError(
+            isErrored = true,
+            errorMessage = errorMessage
+          )
+        }
       }
     }
   }
@@ -81,4 +109,5 @@ object $className$ViewSpec {
   val pageHeading = "$className;format="decap"$"
   val pageTitle = "$className;format="decap"$"
   val testInputValue = "myTestInputValue"
+  val errorMessage = "broken"
 }

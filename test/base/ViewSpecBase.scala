@@ -107,6 +107,41 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
       }
 
+    def createTestsWithError(isErrored: Boolean, errorMessage: String): Unit =
+      if isErrored then
+        "must show an error" in {
+          val elements = doc.getElementsByClass("govuk-error-summary")
+          withClue("error message should be shown") {
+            elements.size mustBe 1
+          }
+
+          val errorSummary      = elements.first
+          val errorSummaryTitle = errorSummary.getElementsByClass("govuk-error-summary__title")
+
+          errorSummaryTitle.text mustBe "There is a problem"
+
+          val errorSummaryMessage = errorSummary.getElementsByClass("govuk-error-summary__list")
+
+          errorSummaryMessage.text mustBe errorMessage
+
+          val erroredFormGroup = doc.getElementsByClass("govuk-form-group--error")
+          withClue("errored content should be shown") {
+            erroredFormGroup.size mustBe 1
+          }
+
+          val errorHint = doc.getElementsByClass("govuk-error-message")
+          withClue("error hint should be shown") {
+            errorHint.size mustBe 1
+          }
+          errorHint.text mustBe "Error: " + errorMessage
+        }
+      else
+        "must not show an error" in {
+          val elements = doc.getElementsByClass("govuk-error-summary govuk-form-group--error")
+          withClue("error message should not be shown") {
+            elements.isEmpty() mustBe true
+          }
+        }
   }
 
   extension (target: => Document | Element) {
@@ -203,7 +238,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
                   withClue(s"input with name '$name' does not have 'aria-describedby' attribute for hint\n") {
                     hintId must not be ""
                   }
-                  val hints = target.resolve.select(s".govuk-hint#$hintId")
+                  val hints = target.resolve.select(s"#$hintId.govuk-hint")
                   withClue(s"for input with name '$name' hint element with id '$hintId' not found\n") {
                     hints.size() must be > 0
                   }
@@ -223,10 +258,17 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
             s"input with name '$name' must not have an associated hint" in {
               getInputElement match {
                 case Some(element) =>
-                  val hintId = element.attr("aria-describedby")
-                  withClue(s"input has unexpected hint with id '$hintId'\n") {
-                    hintId mustBe ""
-                  }
+                  val hintIds = element
+                    .attr("aria-describedby")
+                    .split(" ")
+                    .filter(!_.isEmpty)
+
+                  hintIds.foreach(hintId => {
+                    val hints = target.resolve.select(s"#$hintId.govuk-hint")
+                    withClue(s"input has unexpected hint with id '$hintId'\n") {
+                      hints.size mustBe 0
+                    }
+                  })
                 case None =>
                   fail(s"input with expected name '$name' not found")
               }
