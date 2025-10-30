@@ -100,7 +100,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
           doc.createTestsWithError(
             hasError = true,
-            errorMessage = errorMessage
+            errorMessageKey = "$className;format="decap"$.error.required"
           )
         }
       }

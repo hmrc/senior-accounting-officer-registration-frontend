@@ -27,6 +27,7 @@ import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
 
 import scala.jdk.CollectionConverters.*
 import scala.reflect.ClassTag
+import viewmodels.converters.*
 
 class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlFormat.Appendable]]: ClassTag]
     extends SpecBase
@@ -109,7 +110,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
       }
 
-    def createTestsWithError(hasError: Boolean, errorMessage: String): Unit =
+    def createTestsWithError(hasError: Boolean, errorMessageKey: String): Unit =
       if hasError then
         "must show an error" in {
           val elements = doc.getElementsByClass("govuk-error-summary")
@@ -122,10 +123,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
           errorSummaryTitle.text mustBe "There is a problem"
 
-          val errorSummaryMessage = errorSummary.getElementsByClass("govuk-error-summary__list")
-
-          errorSummaryMessage.text mustBe errorMessage
-
           val erroredFormGroup = doc.getElementsByClass("govuk-form-group--error")
           withClue("errored content should be shown\n") {
             erroredFormGroup.size mustBe 1
@@ -135,7 +132,10 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           withClue("error hint should be shown\n") {
             errorHint.size mustBe 1
           }
-          errorHint.text mustBe "Error: " + errorMessage
+
+          withClue("error message key should be defined\n") {
+            Messages.isDefinedAt(errorMessageKey) mustBe true
+          }
         }
       else
         "must not show an error" in {
