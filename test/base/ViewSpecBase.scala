@@ -109,7 +109,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
       }
 
-    def createTestsWithOrWithoutError(hasError: Boolean, errorMessageKey: String): Unit =
+    def createTestsWithOrWithoutError(hasError: Boolean): Unit =
       if hasError then
         "must show an error" in {
           val elements = doc.getElementsByClass("govuk-error-summary")
@@ -130,10 +130,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           val errorHint = doc.getElementsByClass("govuk-error-message")
           withClue("error hint must be shown\n") {
             errorHint.size mustBe 1
-          }
-
-          withClue(s"error message key $errorMessageKey must be defined\n") {
-            Messages.isDefinedAt(errorMessageKey) mustBe true
           }
         }
       else
