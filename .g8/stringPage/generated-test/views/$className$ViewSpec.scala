@@ -76,7 +76,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
         }
 
         "when the form has errors" - {
-          val doc = generateView(form.withError("value", errorMessage), mode)
+          val doc = generateView(form.withError("value", "broken"), mode)
 
           doc.createTestsWithStandardPageElements(
             pageTitle = pageTitle,
@@ -112,5 +112,4 @@ object $className$ViewSpec {
   val pageHeading = "$className;format="decap"$"
   val pageTitle = "$className;format="decap"$"
   val testInputValue = "myTestInputValue"
-  val errorMessage = "broken"
 }
