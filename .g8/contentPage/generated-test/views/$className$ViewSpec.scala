@@ -22,6 +22,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       showIsThisPageNotWorkingProperlyLink = true,
       hasError = false
     )
+
+    doc.createTestsWithOrWithoutError(hasError = false)
   }
 }
 
