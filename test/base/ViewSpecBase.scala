@@ -27,7 +27,6 @@ import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
 
 import scala.jdk.CollectionConverters.*
 import scala.reflect.ClassTag
-import viewmodels.converters.*
 
 class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlFormat.Appendable]]: ClassTag]
     extends SpecBase
