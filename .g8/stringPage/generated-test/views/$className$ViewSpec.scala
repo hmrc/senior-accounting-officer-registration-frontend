@@ -98,7 +98,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             buttonText = "Continue"
           )
 
-          doc.createTestsWithError(
+          doc.createTestsWithOrWithoutError(
             hasError = true,
             errorMessageKey = "$className;format="decap"$.error.required"
           )

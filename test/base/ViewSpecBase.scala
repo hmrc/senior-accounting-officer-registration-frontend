@@ -109,7 +109,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         java.net.URI(helpLink.get(0).attributes.get("href")).getQuery must include(s"service=$expectedServiceId")
       }
 
-    def createTestsWithError(hasError: Boolean, errorMessageKey: String): Unit =
+    def createTestsWithOrWithoutError(hasError: Boolean, errorMessageKey: String): Unit =
       if hasError then
         "must show an error" in {
           val elements = doc.getElementsByClass("govuk-error-summary")
