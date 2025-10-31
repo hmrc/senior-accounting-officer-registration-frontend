@@ -20,7 +20,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
       pageHeading = pageHeading,
       showBackLink = true,
       showIsThisPageNotWorkingProperlyLink = true,
-      isErrored = false
+      hasError = false
     )
   }
 }

@@ -36,7 +36,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageHeading = pageHeading,
             showBackLink = true,
             showIsThisPageNotWorkingProperlyLink = true,
-            isErrored = false
+            hasError = false
           )
 
           "must display the correct label" in {
@@ -59,7 +59,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageHeading = pageHeading,
             showBackLink = true,
             showIsThisPageNotWorkingProperlyLink = true,
-            isErrored = false
+            hasError = false
           )
 
           "must display the correct label" in {
