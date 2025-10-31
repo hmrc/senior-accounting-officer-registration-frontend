@@ -37,7 +37,8 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         pageTitle = pageHeading,
         pageHeading = pageHeading,
         showBackLink = true,
-        showIsThisPageNotWorkingProperlyLink = true
+        showIsThisPageNotWorkingProperlyLink = true,
+        hasError = false
       )
 
       val dl = doc.getMainContent.getElementsByTag("dl")
@@ -79,7 +80,8 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         pageTitle = pageHeading,
         pageHeading = pageHeading,
         showBackLink = true,
-        showIsThisPageNotWorkingProperlyLink = true
+        showIsThisPageNotWorkingProperlyLink = true,
+        hasError = false
       )
 
       val dl = doc.getMainContent.getElementsByTag("dl")

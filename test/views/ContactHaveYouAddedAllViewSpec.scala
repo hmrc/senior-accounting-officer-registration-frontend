@@ -36,7 +36,8 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         pageTitle = pageTitle,
         pageHeading = pageHeading,
         showBackLink = true,
-        showIsThisPageNotWorkingProperlyLink = true
+        showIsThisPageNotWorkingProperlyLink = true,
+        hasError = false
       )
 
       doc.createTestMustShowHint(pageHint)
@@ -45,7 +46,7 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         name = "value",
         radios = List(
           radio(value = "yes", label = "Yes"),
-          radio(value = "no", label = "No, add another contact"),
+          radio(value = "no", label = "No, add another contact")
         )
       )
 

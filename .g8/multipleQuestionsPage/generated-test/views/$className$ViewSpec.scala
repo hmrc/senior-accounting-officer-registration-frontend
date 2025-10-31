@@ -35,7 +35,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageTitle = pageTitle,
             pageHeading = pageHeading,
             showBackLink = true,
-            showIsThisPageNotWorkingProperlyLink = true
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = false
           )
 
           doc.createTestMustShowNumberOfInputs(2)
@@ -55,7 +56,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageTitle = pageTitle,
             pageHeading = pageHeading,
             showBackLink = true,
-            showIsThisPageNotWorkingProperlyLink = true
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = false
           )
 
           doc.createTestMustShowNumberOfInputs(2)
