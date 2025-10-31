@@ -113,7 +113,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       if hasError then
         "must show an error" in {
           val elements = doc.getElementsByClass("govuk-error-summary")
-          withClue("error message should be shown\n") {
+          withClue("error message must be shown\n") {
             elements.size mustBe 1
           }
 
@@ -123,23 +123,23 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           errorSummaryTitle.text mustBe "There is a problem"
 
           val erroredFormGroup = doc.getElementsByClass("govuk-form-group--error")
-          withClue("errored content should be shown\n") {
+          withClue("error content must be shown\n") {
             erroredFormGroup.size mustBe 1
           }
 
           val errorHint = doc.getElementsByClass("govuk-error-message")
-          withClue("error hint should be shown\n") {
+          withClue("error hint must be shown\n") {
             errorHint.size mustBe 1
           }
 
-          withClue(s"error message key $errorMessageKey should be defined\n") {
+          withClue(s"error message key $errorMessageKey must be defined\n") {
             Messages.isDefinedAt(errorMessageKey) mustBe true
           }
         }
       else
         "must not show an error" in {
           val elements = doc.getElementsByClass("govuk-error-summary govuk-form-group--error")
-          withClue("error message should not be shown\n") {
+          withClue("error message must not be shown\n") {
             elements.isEmpty() mustBe true
           }
         }
