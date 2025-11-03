@@ -20,11 +20,11 @@ import org.scalatest.OptionValues
 import org.scalatest.compatible.Assertion
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import play.api.Application
 import play.api.data.{Form, FormError}
+import play.api.i18n.Messages
 import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.Application
-import play.api.i18n.Messages
 
 trait FormSpec extends AnyFreeSpec with Matchers with OptionValues {
 

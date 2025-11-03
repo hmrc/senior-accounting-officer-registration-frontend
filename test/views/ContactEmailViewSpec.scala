@@ -60,7 +60,8 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 name = "value",
                 label = pageHeading,
                 value = "",
-                hint = Some(expectedHints)
+                hint = Some(expectedHints),
+                hasError = false
               )
 
               doc.createTestsWithSubmissionButton(
@@ -96,7 +97,8 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 name = "value",
                 label = pageHeading,
                 value = testInputValue,
-                hint = Some(expectedHints)
+                hint = Some(expectedHints),
+                hasError = false
               )
 
               doc.createTestsWithSubmissionButton(
