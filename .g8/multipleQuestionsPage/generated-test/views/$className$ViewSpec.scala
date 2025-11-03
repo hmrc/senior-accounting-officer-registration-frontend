@@ -40,12 +40,16 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           )
 
           doc.createTestMustShowNumberOfInputs(2)
-          doc.createTestMustShowTextInput(name = "$field1Name$", label = field1Label, value = "")
-          doc.createTestMustShowTextInput(name = "$field2Name$", label = field2Label, value = "")
+          doc.createTestMustShowTextInput(name = "$field1Name$", label = field1Label, value = "", hint = None, hasError = false)
+          doc.createTestMustShowTextInput(name = "$field2Name$", label = field2Label, value = "", hint = None, hasError = false)
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
+          )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = false
           )
         }
 
@@ -61,12 +65,41 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           )
 
           doc.createTestMustShowNumberOfInputs(2)
-          doc.createTestMustShowTextInput(name = "$field1Name$", label = field1Label, value = testInputValue1)
-          doc.createTestMustShowTextInput(name = "$field2Name$", label = field2Label, value = testInputValue2)
+          doc.createTestMustShowTextInput(name = "$field1Name$", label = field1Label, value = testInputValue1, hint = None, hasError = false)
+          doc.createTestMustShowTextInput(name = "$field2Name$", label = field2Label, value = testInputValue2, hint = None, hasError = false)
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
+          )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = false
+          )
+        }
+
+        "when the form has errors" - {
+          val doc = generateView(form.withError("FieldA", "broken").withError("FieldB", "broken"), mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = true
+          )
+
+          doc.createTestMustShowNumberOfInputs(2)
+          doc.createTestMustShowTextInput(name = "$field1Name$", label = field1Label, value = "", hint = None, hasError = true)
+          doc.createTestMustShowTextInput(name = "$field2Name$", label = field2Label, value = "", hint = None, hasError = true)
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = true
           )
         }
       }

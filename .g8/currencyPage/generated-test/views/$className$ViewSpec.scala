@@ -42,7 +42,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             name = "value",
             label = "$className$",
             value = "",
-            hint = None
+            hint = None,
+            hasError = false
           )
 
           doc.createTestsWithSubmissionButton(
@@ -70,7 +71,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             name = "value",
             label = "$className$",
             value = testInputValue,
-            hint = None
+            hint = None,
+            hasError = false
           )
 
           doc.createTestsWithSubmissionButton(
@@ -98,7 +100,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             name = "value",
             label = pageHeading,
             value = "",
-            hint = None
+            hint = None,
+            hasError = true
           )
 
           doc.createTestsWithSubmissionButton(

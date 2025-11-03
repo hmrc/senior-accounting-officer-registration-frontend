@@ -60,7 +60,8 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 name = "value",
                 label = pageHeading,
                 value = "",
-                hint = Some(expectedHints)
+                hint = Some(expectedHints),
+                hasError = false
               )
 
               doc.createTestsWithSubmissionButton(
@@ -95,7 +96,8 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
                 name = "value",
                 label = pageHeading,
                 value = testInputValue,
-                hint = Some(expectedHints)
+                hint = Some(expectedHints),
+                hasError = false
               )
 
               doc.createTestsWithSubmissionButton(

@@ -121,16 +121,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           val errorSummaryTitle = errorSummary.getElementsByClass("govuk-error-summary__title")
 
           errorSummaryTitle.text mustBe "There is a problem"
-
-          val erroredFormGroup = doc.getElementsByClass("govuk-form-group--error")
-          withClue("error content must be shown\n") {
-            erroredFormGroup.size mustBe 1
-          }
-
-          val errorHint = doc.getElementsByClass("govuk-error-message")
-          withClue("error hint must be shown\n") {
-            errorHint.size mustBe 1
-          }
         }
       else
         "must not show an error" in {
@@ -177,7 +167,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         name: String,
         label: String,
         value: String,
-        hint: Option[String] = None
+        hint: Option[String],
+        hasError: Boolean
     )(using pos: Position): Unit = {
 
       s"for input '$name'" - {
@@ -208,6 +199,12 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
               withClue(s"label text does not match expected label text '$label'\n") {
                 labels.get(0).text mustEqual label
               }
+
+              if hasError then
+                val erroredFormGroup = target.resolve.select(s""".govuk-form-group--error label[for="$inputId"]""")
+                withClue("error content must be shown\n") {
+                  erroredFormGroup.size mustBe 1
+                }
 
             case None =>
               fail(s"input with expected name '$name' not found")
@@ -270,6 +267,40 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
               }
             }
         }
+
+        if hasError then {
+          s"input with name '$name' must show an associated error message when field has error" in {
+            getInputElement
+              .foreach(element => {
+                element
+                  .attr("aria-describedby")
+                  .split(" ")
+                  .filter(_.nonEmpty)
+                  .foreach(id => {
+                    val errorMessage = target.resolve.select(s"#$id.govuk-error-message")
+                    withClue(s"input does not have expected error message with id '$id'\n") {
+                      errorMessage.size mustBe 1
+                    }
+                  })
+              })
+          }
+        } else {
+          s"input with name '$name' must not show an associated error message when field has no error" in {
+            getInputElement
+              .foreach(element => {
+                element
+                  .attr("aria-describedby")
+                  .split(" ")
+                  .filter(_.nonEmpty)
+                  .foreach(id => {
+                    val errorMessage = target.resolve.select(s"#$id.govuk-error-message")
+                    withClue(s"input has unexpected error message with id '$id'\n") {
+                      errorMessage.size mustBe 0
+                    }
+                  })
+              })
+          }
+        }
       }
     }
 
@@ -277,14 +308,16 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         name: String,
         label: String,
         value: String,
-        hint: Option[String] = None
+      hint: Option[String],
+      hasError: Boolean
     )(using pos: Position): Unit = {
       createTestMustShowNumberOfInputs(1)
       createTestMustShowTextInput(
         name = name,
         label = label,
         value = value,
-        hint = hint
+        hint = hint,
+        hasError = hasError
       )
     }
 
