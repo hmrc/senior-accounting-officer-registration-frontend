@@ -71,6 +71,28 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             buttonText = "Continue"
           )
         }
+
+        "when the form has errors" - {
+          val doc = generateView(form.withError("value", "broken"), mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = true
+          )
+
+          "must display the correct checkbox labels" in {
+            doc.getMainContent.select("label[for=value_0]").text() mustBe option1Label
+            doc.getMainContent.select("label[for=value_1]").text() mustBe option2Label
+          }
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+        }
       }
     }
   }

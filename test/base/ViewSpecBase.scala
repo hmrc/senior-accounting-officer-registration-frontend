@@ -173,7 +173,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
       s"for input '$name'" - {
 
-        val inputElements = target.resolve.select(s"input[name=$name]")
+        def inputElements = target.resolve.select(s"input[name=$name]")
 
         s"input with name '$name' must exist on the page" in {
           withClue(s"input with the name '$name' not found\n'") {
@@ -181,7 +181,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
         }
 
-        val inputElement = inputElements.get(0)
+        def inputElement = inputElements.get(0)
 
         s"input with name '$name' must have a label '$label' with correct id and text" in {
           val inputId = inputElement.attr("id")
@@ -197,10 +197,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
             labels.get(0).text mustEqual label
           }
 
+          val erroredFormGroup = target.resolve.select(s""".govuk-form-group--error label[for="$inputId"]""")
           if hasError then {
-            val erroredFormGroup = target.resolve.select(s""".govuk-form-group--error label[for="$inputId"]""")
             withClue("error content must be shown\n") {
               erroredFormGroup.size mustBe 1
+            }
+          } else {
+            withClue("error content must not be shown\n") {
+              erroredFormGroup.size mustBe 0
             }
           }
         }
@@ -244,8 +248,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
                     hints.size mustBe 0
                   }
                 })
-              }
             }
+        }
 
         if hasError then {
           s"input with name '$name' must show an associated error message when field has error" in {
@@ -379,7 +383,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .attr("aria-describedby")
         .split(" ")
         .filter(_.nonEmpty)
-        .map(describingId => "#" + describingId + ".govuk-error-message")
+        .map(describingId => s"#$describingId.govuk-error-message")
         .mkString(",")
 
       val errorMessageElements = fieldsetElement.select(errorMessageSelector)
