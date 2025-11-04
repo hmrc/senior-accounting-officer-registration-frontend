@@ -308,8 +308,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         name: String,
         label: String,
         value: String,
-      hint: Option[String],
-      hasError: Boolean
+        hint: Option[String],
+        hasError: Boolean
     )(using pos: Position): Unit = {
       createTestMustShowNumberOfInputs(1)
       createTestMustShowTextInput(
@@ -375,6 +375,55 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
             elementValue mustEqual expectedText
           }
         }
+    }
+
+    def createTestsWithDateInput(values: DateFieldValues, hasError: Boolean): Unit = {
+      val fieldsetElement = target.resolve.select("fieldset.govuk-fieldset")
+
+      "must contain a single fieldset" in {
+        fieldsetElement.size mustBe 1
+      }
+
+      "must display the correct input fields" in {
+        fieldsetElement.select("""input#value\.day""").size() mustBe 1
+        fieldsetElement.select("""input#value\.month""").size() mustBe 1
+        fieldsetElement.select("""input#value\.year""").size() mustBe 1
+      }
+
+      "must display the correct label" in {
+        fieldsetElement.select("label[for=value.day]").text() mustBe "Day"
+        fieldsetElement.select("label[for=value.month]").text() mustBe "Month"
+        fieldsetElement.select("label[for=value.year]").text() mustBe "Year"
+      }
+
+      "must show correct values" in {
+        fieldsetElement.select("""input#value\.day""").attr("value") mustBe values.day
+        fieldsetElement.select("""input#value\.month""").attr("value") mustBe values.month
+        fieldsetElement.select("""input#value\.year""").attr("value") mustBe values.year
+      }
+
+      val errorMessageSelector = fieldsetElement
+        .attr("aria-describedby")
+        .split(" ")
+        .filter(_.nonEmpty)
+        .map(describingId => "#" + describingId + ".govuk-error-message")
+        .mkString(",")
+
+      val errorMessageElements = fieldsetElement.select(errorMessageSelector)
+
+      if hasError then {
+        "must show error message" in {
+          withClue("no error message found\n") {
+            errorMessageElements.size mustBe 1
+          }
+        }
+      } else {
+        "must not show error message" in {
+          withClue("error message found\n") {
+            errorMessageElements.size mustBe 0
+          }
+        }
+      }
     }
 
     def createTestsWithSubmissionButton(
@@ -546,4 +595,5 @@ object ViewSpecBase {
   val excludeHelpLinkParagraphsSelector = "p:not(:has(a.hmrc-report-technical-issue))"
 
   final case class RadioButton(value: String, label: String)
+  final case class DateFieldValues(day: String, month: String, year: String)
 }

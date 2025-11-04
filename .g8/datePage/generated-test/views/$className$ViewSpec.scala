@@ -12,7 +12,7 @@ import forms.$className$FormProvider
 import views.html.$className$View
 import views.$className$ViewSpec.*
 import java.time.LocalDate
-
+import base.ViewSpecBase.DateFieldValues
 
 class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
@@ -39,11 +39,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             hasError = false
           )
 
-          "must display the correct label" in {
-            doc.select("label[for=value.day]").text() mustBe "Day"
-            doc.select("label[for=value.month]").text() mustBe "Month"
-            doc.select("label[for=value.year]").text() mustBe "Year"
-          }
+          doc.createTestsWithDateInput(DateFieldValues("", "", ""), false)
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
@@ -62,11 +58,35 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             hasError = false
           )
 
-          "must display the correct label" in {
-            doc.select("label[for=value.day]").text() mustBe "Day"
-            doc.select("label[for=value.month]").text() mustBe "Month"
-            doc.select("label[for=value.year]").text() mustBe "Year"
-          }
+          doc.createTestsWithDateInput(DateFieldValues("1", "1", "2000"), false)
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+        }
+
+        "when the form has errors" - {
+          val doc = generateView(
+            form// .bind(Map("value.day" -> "aaaa", "value.month" -> "xxx", "value.year" -> "zzz"))
+              .withError(
+                "value",
+                "broken"
+              )
+            ,
+            mode
+          )
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = true
+          )
+
+          // doc.createTestsWithDateInput(DateFieldValues("aaaa", "xxx", "zzz"), true)
+          doc.createTestsWithDateInput(DateFieldValues("", "", ""), true)
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
