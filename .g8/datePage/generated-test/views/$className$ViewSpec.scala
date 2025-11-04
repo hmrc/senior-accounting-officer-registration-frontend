@@ -68,12 +68,11 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
 
         "when the form has errors" - {
           val doc = generateView(
-            form// .bind(Map("value.day" -> "aaaa", "value.month" -> "xxx", "value.year" -> "zzz"))
+            form
               .withError(
                 "value",
                 "broken"
-              )
-            ,
+              ),
             mode
           )
 
@@ -85,7 +84,6 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             hasError = true
           )
 
-          // doc.createTestsWithDateInput(DateFieldValues("aaaa", "xxx", "zzz"), true)
           doc.createTestsWithDateInput(DateFieldValues("", "", ""), true)
 
           doc.createTestsWithSubmissionButton(
