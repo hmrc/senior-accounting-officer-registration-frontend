@@ -56,6 +56,34 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
       )
 
     }
+
+    "when the page is errored" - {
+      val doc: Document = Jsoup.parse(SUT(formProvider().withError("value", "broken"), First).toString)
+
+      doc.createTestsWithStandardPageElements(
+        pageTitle = pageTitle,
+        pageHeading = pageHeading,
+        showBackLink = true,
+        showIsThisPageNotWorkingProperlyLink = true,
+        hasError = true
+      )
+
+      doc.createTestMustShowHint(pageHint)
+
+      doc.createTestsWithRadioButtons(
+        name = "value",
+        radios = List(
+          radio(value = "yes", label = "Yes"),
+          radio(value = "no", label = "No, add another contact")
+        )
+      )
+
+      doc.createTestsWithSubmissionButton(
+        action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First),
+        buttonText = "Continue"
+      )
+
+    }
   }
 }
 
