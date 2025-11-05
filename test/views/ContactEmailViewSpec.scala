@@ -106,6 +106,42 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 buttonText = submitButtonText
               )
             }
+
+            "when the page has an error" - {
+              val doc: Document =
+                Jsoup.parse(SUT(formProvider().withError("value", "broken"), contactType, mode).toString)
+
+              doc.createTestsWithStandardPageElements(
+                pageTitle = contactType match {
+                  case First  => pageTitleFirst
+                  case Second => pageTitleSecond
+                },
+                pageHeading = pageHeading,
+                showBackLink = true,
+                showIsThisPageNotWorkingProperlyLink = true,
+                hasError = true
+              )
+
+              doc.createTestsWithCaption(
+                caption = contactType match {
+                  case First  => contactTypeFirstCaption
+                  case Second => contactTypeSecondCaption
+                }
+              )
+
+              doc.createTestsWithASingleTextInput(
+                name = "value",
+                label = pageHeading,
+                value = "",
+                hint = Some(expectedHints),
+                hasError = true
+              )
+
+              doc.createTestsWithSubmissionButton(
+                action = controllers.routes.ContactEmailController.onSubmit(contactType, mode),
+                buttonText = submitButtonText
+              )
+            }
           }
         }
       }

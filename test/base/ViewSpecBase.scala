@@ -215,18 +215,22 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
         }
 
+        val hintSelector = inputElement
+          .attr("aria-describedby")
+          .split(" ")
+          .filter(_.nonEmpty)
+          .map(describingId => s"#$describingId.govuk-hint")
+          .mkString(",")
+
+        val hints = target.resolve.select(hintSelector)
+
         hint match {
           case Some(expectedHintText) => {
             s"input with name '$name' must have a hint with values '$expectedHintText'" in {
-              val hintId = inputElement.attr("aria-describedby")
-              withClue(s"input with name '$name' does not have 'aria-describedby' attribute for hint\n") {
-                hintId must not be ""
-              }
-              val hints = target.resolve.select(s"#$hintId.govuk-hint")
-              withClue(s"for input with name '$name' hint element with id '$hintId' not found\n") {
+              withClue(s"for input with name '$name' hint element not found\n") {
                 hints.size() must be > 0
               }
-              withClue(s"input with name '$name' multiple hint elements with id '$hintId' found\n") {
+              withClue(s"input with name '$name' multiple hint elements found\n") {
                 hints.size() mustBe 1
               }
               withClue(
@@ -238,44 +242,32 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
           case None =>
             s"input with name '$name' must not have an associated hint" in {
-              inputElement
-                .attr("aria-describedby")
-                .split(" ")
-                .filter(_.nonEmpty)
-                .foreach(id => {
-                  val hints = target.resolve.select(s"#$id.govuk-hint")
-                  withClue(s"input has unexpected hint with id '$id'\n") {
-                    hints.size mustBe 0
-                  }
-                })
+              withClue(s"for input with name '$name' hint element not found\n") {
+                hints.size() mustBe 0
+              }
             }
         }
 
+        val errorMessageSelector = inputElement
+          .attr("aria-describedby")
+          .split(" ")
+          .filter(_.nonEmpty)
+          .map(describingId => s"#$describingId.govuk-error-message")
+          .mkString(",")
+
+        val errorMessageElements = target.resolve.select(errorMessageSelector)
+
         if hasError then {
           s"input with name '$name' must show an associated error message when field has error" in {
-            inputElement
-              .attr("aria-describedby")
-              .split(" ")
-              .filter(_.nonEmpty)
-              .foreach(id => {
-                val errorMessage = target.resolve.select(s"#$id.govuk-error-message")
-                withClue(s"input does not have expected error message with id '$id'\n") {
-                  errorMessage.size mustBe 1
-                }
-              })
+            withClue(s"input does not have expected error message with id '$name'\n") {
+              errorMessageElements.size mustBe 1
+            }
           }
         } else {
           s"input with name '$name' must not show an associated error message when field has no error" in {
-            inputElement
-              .attr("aria-describedby")
-              .split(" ")
-              .filter(_.nonEmpty)
-              .foreach(id => {
-                val errorMessage = target.resolve.select(s"#$id.govuk-error-message")
-                withClue(s"input has unexpected error message with id '$id'\n") {
-                  errorMessage.size mustBe 0
-                }
-              })
+            withClue(s"input has unexpected error message with id '$name'\n") {
+              errorMessageElements.size mustBe 0
+            }
           }
         }
       }
