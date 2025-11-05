@@ -48,6 +48,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
           )
+
+          doc.createTestsWithOrWithoutError(hasError = false)
         }
 
         "when the form is filled in" - {
@@ -70,6 +72,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
           )
+
+          doc.createTestsWithOrWithoutError(hasError = false)
         }
 
         "when the form has errors" - {
@@ -92,6 +96,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
           )
+
+          doc.createTestsWithOrWithoutError(hasError = true)
         }
       }
     }
