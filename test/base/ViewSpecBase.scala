@@ -18,6 +18,7 @@ package base
 
 import base.ViewSpecBase.*
 import org.jsoup.nodes.{Document, Element}
+import org.jsoup.select.Elements
 import org.scalactic.source.Position
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
@@ -137,6 +138,11 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       case _             => target
     }
 
+    private def safeSelect(cssQuery: String): Elements =
+      if cssQuery.nonEmpty
+      then target.resolve.select(cssQuery)
+      else Elements()
+
     def getParagraphs(includeHelpLink: Boolean = false): Iterable[Element] =
       target.resolve.select(if includeHelpLink then "p" else excludeHelpLinkParagraphsSelector).asScala
 
@@ -221,10 +227,10 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
               .attr("aria-describedby")
               .split(" ")
               .filter(_.nonEmpty)
-              .map(describingId => s"#$describingId.govuk-hint")
+              .map("#" + _ + ".govuk-hint")
               .mkString(",")
 
-            val hints = target.resolve.select(hintSelector)
+            val hints = target.resolve.safeSelect(hintSelector)
 
             s"input with name '$name' must have a hint with values '$expectedHintText'" in {
               withClue(s"for input with name '$name' hint element not found\n") {
@@ -256,10 +262,10 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
               .attr("aria-describedby")
               .split(" ")
               .filter(_.nonEmpty)
-              .map(describingId => s"#$describingId.govuk-error-message")
+              .map("#" + _ + ".govuk-error-message")
               .mkString(",")
 
-            val errorMessageElements = target.resolve.select(errorMessageSelector)
+            val errorMessageElements = target.resolve.safeSelect(errorMessageSelector)
 
             withClue(s"input does not have expected error message with id '$name'\n") {
               errorMessageElements.size mustBe 1
@@ -379,10 +385,10 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .attr("aria-describedby")
         .split(" ")
         .filter(_.nonEmpty)
-        .map(describingId => s"#$describingId.govuk-error-message")
+        .map("#" + _ + ".govuk-error-message")
         .mkString(",")
 
-      val errorMessageElements = fieldsetElement.select(errorMessageSelector)
+      val errorMessageElements = target.resolve.safeSelect(errorMessageSelector)
 
       if hasError then {
         "must show error message" in {
