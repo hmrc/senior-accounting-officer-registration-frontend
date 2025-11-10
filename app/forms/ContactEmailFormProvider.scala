@@ -23,9 +23,14 @@ import javax.inject.Inject
 
 class ContactEmailFormProvider @Inject() extends Mappings {
 
+  val emailRegex =
+    """^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$""".r
+
   def apply(): Form[String] =
     Form(
       "value" -> text("contactEmail.error.required")
-        .verifying(maxLength(100, "contactEmail.error.length"))
+        .verifying(maxLength(50, "contactEmail.error.length"))
+        .verifying("contactEmail.error.format", email => emailRegex.findFirstMatchIn(email).isDefined)
     )
+
 }

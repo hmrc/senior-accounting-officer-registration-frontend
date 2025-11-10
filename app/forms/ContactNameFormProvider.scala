@@ -23,9 +23,12 @@ import javax.inject.Inject
 
 class ContactNameFormProvider @Inject() extends Mappings {
 
+  val illegalCharsRegex = """[<>\"&]""".r
+
   def apply(): Form[String] =
     Form(
       "value" -> text("contactName.error.required")
-        .verifying(maxLength(100, "contactName.error.length"))
+        .verifying(maxLength(50, "contactName.error.length"))
+        .verifying("contactName.error.invalidChars", name => !illegalCharsRegex.findFirstIn(name).isDefined)
     )
 }

@@ -23,7 +23,7 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "contactEmail.error.required"
   val lengthKey   = "contactEmail.error.length"
-  val maxLength   = 100
+  val maxLength   = 50
 
   val form = new ContactEmailFormProvider()()
 
@@ -54,12 +54,12 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
       key = requiredKey,
-      message = "Enter contactEmail"
+      message = "Enter the email address of the person or team"
     )
 
     createTestWithErrorMessageAssertion(
       key = lengthKey,
-      message = "ContactEmail must be 100 characters or less"
+      message = "The email address you enter must be 50 characters or less"
     )
   }
 }

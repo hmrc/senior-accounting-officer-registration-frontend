@@ -23,7 +23,7 @@ class ContactNameFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "contactName.error.required"
   val lengthKey   = "contactName.error.length"
-  val maxLength   = 100
+  val maxLength   = 50
 
   val form = new ContactNameFormProvider()()
 
@@ -54,12 +54,13 @@ class ContactNameFormProviderSpec extends StringFieldBehaviours {
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
       key = requiredKey,
-      message = "Enter contactName"
+      message =
+        """Enter the name of the person or team who can deal with enquiries about the companys tax accounting arrangements."""
     )
 
     createTestWithErrorMessageAssertion(
       key = lengthKey,
-      message = "ContactName must be 100 characters or less"
+      message = "Name of the person or team must be 50 characters or less"
     )
   }
 }
