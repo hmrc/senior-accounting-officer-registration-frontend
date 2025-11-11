@@ -23,6 +23,7 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "contactEmail.error.required"
   val lengthKey   = "contactEmail.error.length"
+  val formatKey = "contactEmail.error.format"
   val maxLength   = 50
 
   val form = new ContactEmailFormProvider()()
@@ -31,24 +32,32 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "value"
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
+    behave like fieldWithValidEmailformat(
+      form = form,
+      fieldName = fieldName,
+      generator = genValidEmailAddress
     )
 
-    behave like fieldWithMaxLength(
+    behave like fieldWithMaxEmailLength(
       form,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      genLongEmailAddresses,
+      FormError(fieldName, lengthKey)
     )
 
     behave like mandatoryField(
-      form,
-      fieldName,
+      form =form,
+      fieldName = fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    behave like fieldWithInvalidEmailformat(
+      form = form,
+      fieldName = fieldName,
+      generator = genInvalidEmailAddresses,
+      requiredError = FormError(fieldName, formatKey)
+    )
+
   }
 
   "error message keys must map to the expected text" - {
@@ -61,5 +70,14 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
       key = lengthKey,
       message = "The email address you enter must be 50 characters or less"
     )
+
+    createTestWithErrorMessageAssertion(
+      key = formatKey,
+      message = "Enter an email address in the correct format, like name@example.com"
+    )
   }
+
+
+
+
 }

@@ -26,6 +26,8 @@ trait Generators extends ModelGenerators {
 
   given dontShrink: Shrink[String] = Shrink.shrinkAny
 
+  val maxEmailLength = 50
+
   def genIntersperseString(gen: Gen[String], value: String, frequencyV: Int = 1, frequencyN: Int = 10): Gen[String] = {
 
     val genValue: Gen[Option[String]] = Gen.frequency(frequencyN -> None, frequencyV -> Gen.const(Some(value)))
@@ -127,6 +129,46 @@ trait Generators extends ModelGenerators {
       date <- datesBetween(min = LocalDate.of(0, 1, 1), max = LocalDate.of(9999, 12, 31))
       time <- genLocalTime
     } yield ZonedDateTime.of(date, time, ZoneOffset.UTC)
+
+  def genValidEmailAddress: Gen[String] = {
+    val safeChar = Gen.oneOf(('a' to 'z') ++ ('A' to 'Z') ++ ('0' to '9'))
+    for {
+      localLength <- Gen.choose(1, 20)
+      local <- Gen.listOfN(localLength, safeChar).map(_.mkString)
+      domainLength <- Gen.choose(1, Math.min(15, maxEmailLength - localLength - 5))
+      domain <- Gen.listOfN(domainLength, safeChar).map(_.mkString)
+      tld <- Gen.oneOf("com", "org", "net", "uk", "io")
+    } yield s"$local@domain.$tld"
+  }
+
+  def genLongEmailAddresses: Gen[String] = {
+    val safeChar = Gen.oneOf(('a' to 'z') ++ ('A' to 'Z') ++ ('0' to '9'))
+    for {
+      excessLength <- Gen.choose(1, 20)
+      targetLength = maxEmailLength + excessLength
+
+      overhead = 11
+      availableLength = (targetLength - overhead).max(1)
+
+      localLength <- Gen.choose(1, availableLength - 1)
+      local <- Gen.listOfN(localLength, safeChar).map(_.mkString)
+
+      domainLength = availableLength - localLength
+      domain <- Gen.listOfN(domainLength.max(1), safeChar).map(_.mkString)
+
+    } yield s"$local@domain.com"
+  }
+
+  def genInvalidEmailAddresses: Gen[String] = {
+    Gen.oneOf(
+      Gen.const("nopAnEmail"),
+      Gen.const("missing@domain"),
+      Gen.const("@noDomain.com"),
+      Gen.const("no@domain@here.com"),
+      Gen.const("spaces in email@here.com"),
+      Gen.const("missingAtSign.com")
+    )
+  }
 }
 
 object Generators extends Generators
