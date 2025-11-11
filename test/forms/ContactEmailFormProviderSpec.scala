@@ -23,8 +23,10 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "contactEmail.error.required"
   val lengthKey   = "contactEmail.error.length"
-  val formatKey = "contactEmail.error.format"
+  val formatKey   = "contactEmail.error.format"
   val maxLength   = 50
+  val emailRegex  =
+    """^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"""
 
   val form = new ContactEmailFormProvider()()
 
@@ -42,11 +44,11 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       genLongEmailAddresses,
-      FormError(fieldName, lengthKey)
+      FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like mandatoryField(
-      form =form,
+      form = form,
       fieldName = fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
@@ -55,9 +57,8 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
       form = form,
       fieldName = fieldName,
       generator = genInvalidEmailAddresses,
-      requiredError = FormError(fieldName, formatKey)
+      requiredError = FormError(fieldName, formatKey, Seq(emailRegex))
     )
-
   }
 
   "error message keys must map to the expected text" - {
@@ -76,8 +77,4 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
       message = "Enter an email address in the correct format, like name@example.com"
     )
   }
-
-
-
-
 }
