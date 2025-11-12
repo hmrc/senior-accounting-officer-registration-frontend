@@ -30,12 +30,8 @@ class ContactEmailFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("contactEmail.error.required")
-        .verifying(
-          firstError(
-            maxLength(50, "contactEmail.error.length"),
-            regexp(emailRegex, "contactEmail.error.format")
-          )
-        )
+        .verifying(maxLength(50, "contactEmail.error.length"))
+        .verifying(regexp(emailRegex, "contactEmail.error.format"))
     )
 
 }

@@ -34,10 +34,10 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "value"
 
-    behave like fieldWithValidEmailformat(
+    behave like mandatoryField(
       form = form,
       fieldName = fieldName,
-      generator = genValidEmailAddress
+      requiredError = FormError(fieldName, requiredKey)
     )
 
     behave like fieldWithMaxEmailLength(
@@ -47,18 +47,19 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
       FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
-    behave like mandatoryField(
-      form = form,
-      fieldName = fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-
     behave like fieldWithInvalidEmailformat(
       form = form,
       fieldName = fieldName,
       generator = genInvalidEmailAddresses,
       requiredError = FormError(fieldName, formatKey, Seq(emailRegex))
     )
+
+    behave like fieldWithValidEmailformat(
+      form = form,
+      fieldName = fieldName,
+      generator = genValidEmailAddress
+    )
+
   }
 
   "error message keys must map to the expected text" - {
