@@ -20,10 +20,11 @@ import forms.mappings.Mappings
 import play.api.data.Form
 
 import javax.inject.Inject
+import scala.util.matching.Regex
 
 class ContactNameFormProvider @Inject() extends Mappings {
 
-  val illegalCharsRegex = """[<>\"&]""".r
+  val illegalCharsRegex: Regex = """[<>\"&]""".r
 
   def apply(): Form[String] =
     Form(
