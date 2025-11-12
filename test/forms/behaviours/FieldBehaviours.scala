@@ -77,14 +77,14 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
   def fieldWithMaxEmailLength(
       form: Form[?],
       fieldName: String,
-      validEmailDataGenerator: Gen[String],
-      lengthError: FormError
+      generator: Gen[String],
+      requiredError: FormError
   ): Unit = {
     "not bind email with invalid length" in {
-      forAll(validEmailDataGenerator -> "longEmail") { (longEmailStr: String) =>
+      forAll(generator -> "longEmail") { (longEmailStr: String) =>
         whenever(longEmailStr.length > maxEmailLength) {
           val result = form.bind(Map(fieldName -> longEmailStr)).apply(fieldName)
-          result.errors.toList must contain(lengthError)
+          result.errors.toList must contain(requiredError)
         }
       }
     }

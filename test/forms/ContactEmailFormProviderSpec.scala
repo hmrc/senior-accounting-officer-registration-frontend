@@ -41,10 +41,10 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
     )
 
     behave like fieldWithMaxEmailLength(
-      form,
-      fieldName,
-      genLongEmailAddresses,
-      FormError(fieldName, lengthKey, Seq(maxLength))
+      form = form,
+      fieldName = fieldName,
+      generator = genLongEmailAddresses,
+      requiredError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like fieldWithInvalidEmailformat(
