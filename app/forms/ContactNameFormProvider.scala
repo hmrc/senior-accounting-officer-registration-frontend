@@ -19,8 +19,9 @@ package forms
 import forms.mappings.Mappings
 import play.api.data.Form
 
-import javax.inject.Inject
 import scala.util.matching.Regex
+
+import javax.inject.Inject
 
 class ContactNameFormProvider @Inject() extends Mappings {
 
@@ -30,6 +31,9 @@ class ContactNameFormProvider @Inject() extends Mappings {
     Form(
       "value" -> text("contactName.error.required")
         .verifying(maxLength(50, "contactName.error.length"))
-        .verifying("contactName.error.invalidChars", name => !illegalCharsRegex.findFirstIn(name).isDefined)
+        .verifying(
+          "contactName.error.invalidChars",
+          name => illegalCharsRegex.findFirstIn(name).isEmpty
+        )
     )
 }

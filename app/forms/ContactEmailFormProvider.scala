@@ -23,9 +23,7 @@ import javax.inject.Inject
 
 class ContactEmailFormProvider @Inject() extends Mappings {
 
-  4
-  val emailRegex =
-    """^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"""
+  val emailRegex = """^.+[@].+[.].+$"""
 
   def apply(): Form[String] =
     Form(
