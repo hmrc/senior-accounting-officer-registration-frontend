@@ -26,7 +26,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
 
   def fieldThatBindsValidData(form: Form[?], fieldName: String, generator: Gen[String]): Unit = {
 
-    "bind valid data" in {
+    "must bind valid data" in {
 
       forAll(generator -> "validDataItem") { (dataItem: String) =>
         val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
@@ -43,7 +43,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
       requiredError: FormError
   ): Unit = {
 
-    "bind invalid data" in {
+    "must not bind invalid data" in {
 
       forAll(generator -> "invalidDataItem") { (dataItem: String) =>
         val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
@@ -54,13 +54,13 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
 
   def mandatoryField(form: Form[?], fieldName: String, requiredError: FormError): Unit = {
 
-    "not bind when key is not present at all" in {
+    "must not bind when key is not present at all" in {
 
       val result = form.bind(emptyForm).apply(fieldName)
       result.errors mustEqual Seq(requiredError)
     }
 
-    "not bind blank values" in {
+    "must not bind blank value" in {
 
       val result = form.bind(Map(fieldName -> "")).apply(fieldName)
       result.errors mustEqual Seq(requiredError)
@@ -73,7 +73,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
       generator: Gen[String],
       requiredError: FormError
   ): Unit = {
-    "not bind invalid email format" in {
+    "must not bind invalid email format" in {
       forAll(generator -> "invalidEmail") { (email: String) =>
         val result = form.bind(Map(fieldName -> email)).apply(fieldName)
         result.errors.toList must contain(requiredError)
@@ -82,7 +82,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
   }
 
   def fieldWithValidEmailformat(form: Form[?], fieldName: String, generator: Gen[String]): Unit = {
-    "bind valid email format" in {
+    "must bind valid email format" in {
       forAll(generator -> "validEmail") { (email: String) =>
         val result = form.bind(Map(fieldName -> email)).apply(fieldName)
         result.errors mustBe empty
@@ -96,7 +96,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
       generator: Gen[String],
       requiredError: FormError
   ): Unit = {
-    "does not bind invalid email format" in {
+    "must not bind email with invalid length" in {
       forAll(generator -> "longEmail") { (longEmailStr: String) =>
         whenever(longEmailStr.length > maxEmailLength) {
           val result = form.bind(Map(fieldName -> longEmailStr)).apply(fieldName)
@@ -105,5 +105,4 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
       }
     }
   }
-
 }
