@@ -96,7 +96,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
       generator: Gen[String],
       requiredError: FormError
   ): Unit = {
-    "not bind email with invalid length" in {
+    "does not bind invalid email format" in {
       forAll(generator -> "longEmail") { (longEmailStr: String) =>
         whenever(longEmailStr.length > maxEmailLength) {
           val result = form.bind(Map(fieldName -> longEmailStr)).apply(fieldName)
