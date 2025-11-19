@@ -34,7 +34,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageTitle = pageTitle,
             pageHeading = pageHeading,
             showBackLink = true,
-            showIsThisPageNotWorkingProperlyLink = true
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = false
           )
 
           doc.createTestsWithASingleTextInput(
@@ -48,6 +49,10 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
           )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = false
+          )
         }
 
         "when the form is filled in" - {
@@ -57,7 +62,8 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             pageTitle = pageTitle,
             pageHeading = pageHeading,
             showBackLink = true,
-            showIsThisPageNotWorkingProperlyLink = true
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = false
           )
 
           doc.createTestsWithASingleTextInput(
@@ -70,6 +76,38 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
+          )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = false
+          )
+        }
+
+        "when the form has errors" - {
+          val doc = generateView(form.withError("value", "broken"), mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = true
+          )
+
+          doc.createTestsWithASingleTextInput(
+            name = "value",
+            label = pageHeading,
+            value = "",
+            hint = None
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = true
           )
         }
       }

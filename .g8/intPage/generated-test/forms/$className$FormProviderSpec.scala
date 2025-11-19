@@ -7,6 +7,11 @@ class $className$FormProviderSpec extends IntFieldBehaviours {
 
   val form = new $className$FormProvider()()
 
+  val requiredKey = "$className;format="decap"$.error.required"
+  val nonNumericKey = "$className;format="decap"$.error.nonNumeric"
+  val wholeNumberKey = "$className;format="decap"$.error.wholeNumber"
+  val outOfRangeKey = "$className;format="decap"$.error.outOfRange"
+
   ".value" - {
 
     val fieldName = "value"
@@ -25,8 +30,8 @@ class $className$FormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "$className;format="decap"$.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "$className;format="decap"$.error.wholeNumber")
+      nonNumericError  = FormError(fieldName, nonNumericKey),
+      wholeNumberError = FormError(fieldName, wholeNumberKey)
     )
 
     behave like intFieldWithRange(
@@ -34,13 +39,35 @@ class $className$FormProviderSpec extends IntFieldBehaviours {
       fieldName,
       minimum       = minimum,
       maximum       = maximum,
-      expectedError = FormError(fieldName, "$className;format="decap"$.error.outOfRange", Seq(minimum, maximum))
+      expectedError = FormError(fieldName, outOfRangeKey, Seq(minimum, maximum))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "$className;format="decap"$.error.required")
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
+      key = requiredKey,
+      message = "Enter your $className;format="decap"$"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = nonNumericKey,
+      message = "Enter your $className;format="decap"$ using numbers"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = wholeNumberKey,
+      message = "Enter your $className;format="decap"$ using whole numbers"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = outOfRangeKey,
+      message = "$className;format="decap"$ must be between {0} and {1}"
     )
   }
 }

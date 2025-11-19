@@ -7,8 +7,13 @@ import play.api.test.Helpers.stubMessages
 
 class $className$FormProviderSpec extends DateBehaviours {
 
-  private given messages: Messages = stubMessages()
-  private val form = new $className$FormProvider()()
+  private given messages2: Messages = stubMessages()
+  val form = new $className$FormProvider()()
+
+  val requiredAllKey = "$className;format="decap"$.error.required.all"
+  val requiredTwoKey = "$className;format="decap"$.error.required.two"
+  val requiredKey = "$className;format="decap"$.error.required"
+  val invalidKey = "$className;format="decap"$.error.invalid"
 
   ".value" - {
 
@@ -19,6 +24,28 @@ class $className$FormProviderSpec extends DateBehaviours {
 
     behave like dateField(form, "value", validData)
 
-    behave like mandatoryDateField(form, "value", "$className;format="decap"$.error.required.all")
+    behave like mandatoryDateField(form, "value", requiredAllKey)
+  }
+
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
+      key = requiredAllKey,
+      message = "Enter the $className;format="decap"$"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = requiredTwoKey,
+      message = "The $className;format="decap"$ must include {0} and {1}"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = requiredKey,
+      message = "The $className;format="decap"$ must include {0}"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = invalidKey,
+      message = "Enter a real $className$"
+    )
   }
 }

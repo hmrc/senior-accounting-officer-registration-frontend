@@ -22,12 +22,11 @@ import play.api.data.FormError
 
 class ContactHaveYouAddedAllFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new ContactHaveYouAddedAllFormProvider()()
+  val form        = new ContactHaveYouAddedAllFormProvider()()
+  val requiredKey = "contactHaveYouAddedAll.error.required"
 
   ".value" - {
-
-    val fieldName   = "value"
-    val requiredKey = "contactHaveYouAddedAll.error.required"
+    val fieldName = "value"
 
     behave like optionsField[ContactHaveYouAddedAll](
       form,
@@ -40,6 +39,13 @@ class ContactHaveYouAddedAllFormProviderSpec extends OptionFieldBehaviours {
       form,
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  "error message keys must map to the expected text" - {
+    createTestWithErrorMessageAssertion(
+      key = requiredKey,
+      message = "Select contactHaveYouAddedAll"
     )
   }
 }

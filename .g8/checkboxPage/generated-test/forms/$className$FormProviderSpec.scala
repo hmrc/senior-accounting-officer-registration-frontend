@@ -7,11 +7,11 @@ import play.api.data.FormError
 class $className$FormProviderSpec extends CheckboxFieldBehaviours {
 
   val form = new $className$FormProvider()()
+  val requiredKey = "$className;format="decap"$.error.required"
 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "$className;format="decap"$.error.required"
 
     behave like checkboxField[$className$](
       form,
@@ -25,5 +25,12 @@ class $className$FormProviderSpec extends CheckboxFieldBehaviours {
       fieldName,
       requiredKey
     )
+
+    "error message keys must map to the expected text" - {
+      createTestWithErrorMessageAssertion(
+        key = requiredKey,
+        message = "Select $className;format="decap"$"
+      )
+    }
   }
 }

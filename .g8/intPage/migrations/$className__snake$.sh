@@ -20,7 +20,7 @@ echo "$className;format="decap"$.checkYourAnswersLabel = $className$" >> ../conf
 echo "$className;format="decap"$.error.nonNumeric = Enter your $className;format="decap"$ using numbers" >> ../conf/messages.en
 echo "$className;format="decap"$.error.required = Enter your $className;format="decap"$" >> ../conf/messages.en
 echo "$className;format="decap"$.error.wholeNumber = Enter your $className;format="decap"$ using whole numbers" >> ../conf/messages.en
-echo "$className;format="decap"$.error.outOfRange = $className$ must be between {0} and {1}" >> ../conf/messages.en
+echo "$className;format="decap"$.error.outOfRange = $className;format="decap"$ must be between {0} and {1}" >> ../conf/messages.en
 echo "$className;format="decap"$.change.hidden = $className$" >> ../conf/messages.en
 
 echo "Migration $className;format="snake"$ completed"
