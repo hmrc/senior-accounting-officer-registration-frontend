@@ -26,6 +26,8 @@ trait Generators extends ModelGenerators {
 
   given dontShrink: Shrink[String] = Shrink.shrinkAny
 
+  val maxEmailLength = 50
+
   def genIntersperseString(gen: Gen[String], value: String, frequencyV: Int = 1, frequencyN: Int = 10): Gen[String] = {
 
     val genValue: Gen[Option[String]] = Gen.frequency(frequencyN -> None, frequencyV -> Gen.const(Some(value)))
@@ -87,6 +89,16 @@ trait Generators extends ModelGenerators {
       chars  <- listOfN(length, arbitrary[Char])
     } yield chars.mkString
 
+  def invalidStringsForNameFieldWithMaxLength(maxLength: Int): Gen[String] =
+    val specialChars = Gen.oneOf('<', '>', '&')
+    for {
+      length         <- choose(1, maxLength)
+      normalChars    <- listOfN(length - 1, arbitrary[Char])
+      specialChar    <- specialChars
+      insertionIndex <- choose(0, length - 1)
+      chars = normalChars.take(insertionIndex) :+ specialChar :++ normalChars.drop(insertionIndex)
+    } yield chars.mkString
+
   def stringsLongerThan(minLength: Int): Gen[String] = for {
     maxLength <- (minLength * 2).max(100)
     length    <- Gen.chooseNum(minLength + 1, maxLength)
@@ -127,6 +139,34 @@ trait Generators extends ModelGenerators {
       date <- datesBetween(min = LocalDate.of(0, 1, 1), max = LocalDate.of(9999, 12, 31))
       time <- genLocalTime
     } yield ZonedDateTime.of(date, time, ZoneOffset.UTC)
+
+  def genValidEmailAddress: Gen[String] = {
+    val safeChar = Gen.oneOf(('a' to 'z') ++ ('A' to 'Z') ++ ('0' to '9'))
+    for {
+      localLength <- Gen.choose(1, 20)
+      local       <- Gen.listOfN(localLength, safeChar).map(_.mkString)
+      domain      <- Gen.listOfN(5, safeChar).map(_.mkString)
+      tld         <- Gen.oneOf("com", "org", "net", "uk", "io")
+    } yield s"$local@$domain.$tld"
+  }
+
+  def genLongEmailAddresses: Gen[String] = {
+    val safeChar = Gen.oneOf(('a' to 'z') ++ ('A' to 'Z') ++ ('0' to '9'))
+    for {
+      excessLength <- Gen.choose(1, 20)
+      localPartLength = maxEmailLength + excessLength - 11
+      localPart <- Gen.listOfN(localPartLength, safeChar).map(_.mkString)
+    } yield s"$localPart@domain.com"
+  }
+
+  def genInvalidEmailAddresses: Gen[String] = {
+    Gen.oneOf(
+      Gen.const("notAnEmail"),
+      Gen.const("missing@domain"),
+      Gen.const("@noDomain.com"),
+      Gen.const("missingAtSign.com")
+    )
+  }
 }
 
 object Generators extends Generators

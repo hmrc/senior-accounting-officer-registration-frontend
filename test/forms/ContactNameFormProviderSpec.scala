@@ -21,9 +21,10 @@ import play.api.data.FormError
 
 class ContactNameFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "contactName.error.required"
-  val lengthKey   = "contactName.error.length"
-  val maxLength   = 100
+  val requiredKey     = "contactName.error.required"
+  val lengthKey       = "contactName.error.length"
+  val invalidCharsKey = "contactName.error.invalidChars"
+  val maxLength       = 50
 
   val form = new ContactNameFormProvider()()
 
@@ -32,9 +33,16 @@ class ContactNameFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "value"
 
     behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
+      form = form,
+      fieldName = fieldName,
+      generator = stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatBindsInvalidData(
+      form = form,
+      fieldName = fieldName,
+      generator = invalidStringsForNameFieldWithMaxLength(maxLength),
+      requiredError = FormError(fieldName, invalidCharsKey)
     )
 
     behave like fieldWithMaxLength(
@@ -54,12 +62,18 @@ class ContactNameFormProviderSpec extends StringFieldBehaviours {
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
       key = requiredKey,
-      message = "Enter contactName"
+      message =
+        """Enter the name of the person or team who can deal with enquiries about the companys tax accounting arrangements."""
     )
 
     createTestWithErrorMessageAssertion(
       key = lengthKey,
-      message = "ContactName must be 100 characters or less"
+      message = "Name of the person or team must be 50 characters or less"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = invalidCharsKey,
+      message = "The name you enter must not include the following characters <, >, \" or &"
     )
   }
 }

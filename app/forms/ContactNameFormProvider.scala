@@ -19,13 +19,21 @@ package forms
 import forms.mappings.Mappings
 import play.api.data.Form
 
+import scala.util.matching.Regex
+
 import javax.inject.Inject
 
 class ContactNameFormProvider @Inject() extends Mappings {
 
+  val illegalCharsRegex: Regex = """[<>\"&]""".r
+
   def apply(): Form[String] =
     Form(
       "value" -> text("contactName.error.required")
-        .verifying(maxLength(100, "contactName.error.length"))
+        .verifying(maxLength(50, "contactName.error.length"))
+        .verifying(
+          "contactName.error.invalidChars",
+          name => illegalCharsRegex.findFirstIn(name).isEmpty
+        )
     )
 }
