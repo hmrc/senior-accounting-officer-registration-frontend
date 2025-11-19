@@ -50,6 +50,10 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
           )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = false
+          )
         }
 
         "when the form is filled in" - {
@@ -74,6 +78,39 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
             buttonText = "Continue"
+          )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = false
+          )
+        }
+
+        "when the form has errors" - {
+          val doc = generateView(form.withError("value", "broken"), mode)
+
+          doc.createTestsWithStandardPageElements(
+            pageTitle = pageTitle,
+            pageHeading = pageHeading,
+            showBackLink = true,
+            showIsThisPageNotWorkingProperlyLink = true,
+            hasError = true
+          )
+
+          doc.createTestsWithRadioButtons(
+            name = "value",
+            radios = List(
+              radio(value = yesKey, label = yesLabel),
+              radio(value = noKey, label = noLabel),
+            )
+          )
+
+          doc.createTestsWithSubmissionButton(
+            action = controllers.routes.$className$Controller.onSubmit(mode),
+            buttonText = "Continue"
+          )
+
+          doc.createTestsWithOrWithoutError(
+            hasError = true
           )
         }
       }
