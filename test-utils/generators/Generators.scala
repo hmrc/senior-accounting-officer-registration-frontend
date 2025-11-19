@@ -143,30 +143,20 @@ trait Generators extends ModelGenerators {
   def genValidEmailAddress: Gen[String] = {
     val safeChar = Gen.oneOf(('a' to 'z') ++ ('A' to 'Z') ++ ('0' to '9'))
     for {
-      localLength  <- Gen.choose(1, 20)
-      local        <- Gen.listOfN(localLength, safeChar).map(_.mkString)
-      domainLength <- Gen.choose(1, Math.min(15, maxEmailLength - localLength - 5))
-      domain       <- Gen.listOfN(domainLength, safeChar).map(_.mkString)
-      tld          <- Gen.oneOf("com", "org", "net", "uk", "io")
-    } yield s"$local@domain.$tld"
+      localLength <- Gen.choose(1, 20)
+      local       <- Gen.listOfN(localLength, safeChar).map(_.mkString)
+      domain      <- Gen.listOfN(5, safeChar).map(_.mkString)
+      tld         <- Gen.oneOf("com", "org", "net", "uk", "io")
+    } yield s"$local@$domain.$tld"
   }
 
   def genLongEmailAddresses: Gen[String] = {
     val safeChar = Gen.oneOf(('a' to 'z') ++ ('A' to 'Z') ++ ('0' to '9'))
     for {
       excessLength <- Gen.choose(1, 20)
-      targetLength = maxEmailLength + excessLength
-
-      overhead        = 11
-      availableLength = (targetLength - overhead).max(1)
-
-      localLength <- Gen.choose(1, availableLength - 1)
-      local       <- Gen.listOfN(localLength, safeChar).map(_.mkString)
-
-      domainLength = availableLength - localLength
-      domain <- Gen.listOfN(domainLength.max(1), safeChar).map(_.mkString)
-
-    } yield s"$local@domain.com"
+      localPartLength = maxEmailLength + excessLength - 11
+      localPart <- Gen.listOfN(localPartLength, safeChar).map(_.mkString)
+    } yield s"$localPart@domain.com"
   }
 
   def genInvalidEmailAddresses: Gen[String] = {
@@ -174,8 +164,6 @@ trait Generators extends ModelGenerators {
       Gen.const("notAnEmail"),
       Gen.const("missing@domain"),
       Gen.const("@noDomain.com"),
-      // Gen.const("no@domain@here.com"),
-      // Gen.const("spaces in email@here.com"),
       Gen.const("missingAtSign.com")
     )
   }
