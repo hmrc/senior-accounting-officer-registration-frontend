@@ -38,7 +38,10 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             hasError = false
           )
 
-          doc.createTestsWithDateInput(DateFieldValues("", "", ""), false)
+          doc.createTestsWithDateInput(
+            values = DateFieldValues("", "", ""),
+            hasError = false
+          )
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
@@ -59,7 +62,10 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             hasError = false
           )
 
-          doc.createTestsWithDateInput(DateFieldValues("1", "1", "2000"), false)
+          doc.createTestsWithDateInput(
+            values = DateFieldValues("1", "1", "2000"),
+            hasError = false
+          )
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
@@ -80,7 +86,10 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
             hasError = true
           )
 
-          doc.createTestsWithDateInput(DateFieldValues("", "", ""), true)
+          doc.createTestsWithDateInput(
+            values = DateFieldValues("", "", ""),
+            hasError = true
+          )
 
           doc.createTestsWithSubmissionButton(
             action = controllers.routes.$className$Controller.onSubmit(mode),
