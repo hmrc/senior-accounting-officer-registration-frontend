@@ -30,7 +30,7 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
   val formProvider: ContactHaveYouAddedAllFormProvider = app.injector.instanceOf[ContactHaveYouAddedAllFormProvider]
   "ContactHaveYouAddedAllView" - {
     "when there are no prior data for the page" - {
-      val doc: Document = Jsoup.parse(SUT(formProvider(), First).toString)
+      val doc: Document = Jsoup.parse(SUT(formProvider().bind(Map("value" -> "yes")), First).toString)
 
       doc.createTestsWithStandardPageElements(
         pageTitle = pageTitle,
@@ -77,7 +77,8 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
           radio(value = "yes", label = "Yes"),
           radio(value = "no", label = "No, add another contact")
         ),
-        hasError = true
+        hasError = true,
+        isChecked = None
       )
 
       doc.createTestsWithSubmissionButton(

@@ -313,8 +313,9 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     def createTestsWithRadioButtons(
         name: String,
         radios: Seq[RadioButton],
-        hasError: Boolean
-    )(using pos: Position): Unit = {
+        hasError: Boolean,
+        isChecked: Option[RadioButton] = None
+      )(using pos: Position): Unit = {
       def matchingRadioSelector = s"input[type=radio][name=$name]"
       def labelCssSelector      = {
         val matchingRadioButtons = target.resolve.select(matchingRadioSelector).asScala
@@ -374,9 +375,16 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .asScala
         .zip(radios.map(_.value))
         .foreach { case (element, expectedText) =>
-          val elementValue = element.attr("value")
+          def elementValue = element.attr("value")
           s"radio button value $elementValue must match $expectedText" in {
             elementValue mustEqual expectedText
+          }
+
+          def elementIsChecked: Boolean = element.hasAttr("checked")
+          s"radio button value $elementValue must not be checked" in {
+            withClue(s"The '$elementValue' radio button was erroneously checked!\n") {
+              elementIsChecked mustEqual false
+            }
           }
         }
     }
