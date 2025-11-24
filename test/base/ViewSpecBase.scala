@@ -312,11 +312,12 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
     def createTestsWithRadioButtons(
         name: String,
-        radios: Seq[RadioButton]
+        radios: Seq[RadioButton],
+        isChecked: Option[RadioButton],
+        hasError: Boolean
     )(using pos: Position): Unit = {
       def matchingRadioSelector = s"input[type=radio][name=$name]"
       def labelCssSelector      = {
-        target.resolve.select(matchingRadioSelector)
         val matchingRadioButtons = target.resolve.select(matchingRadioSelector).asScala
         if matchingRadioButtons.isEmpty then {
           // this method can't result in an empty string, and we know this would yield with no result
@@ -325,6 +326,31 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           matchingRadioButtons
             .map(element => s"label[for=${element.attr("id")}]")
             .mkString(",")
+      }
+
+      def fieldsetElement = target.resolve.select("fieldset.govuk-fieldset")
+
+      def errorMessageSelector = fieldsetElement
+        .attr("aria-describedby")
+        .split(" ")
+        .filter(_.nonEmpty)
+        .map("#" + _ + ".govuk-error-message")
+        .mkString(",")
+
+      def errorMessageElements = target.resolve.safeSelect(errorMessageSelector)
+
+      if hasError then {
+        "must show error message" in {
+          withClue("no error message found\n") {
+            errorMessageElements.size mustBe 1
+          }
+        }
+      } else {
+        "must not show error message" in {
+          withClue("error message found\n") {
+            errorMessageElements.size mustBe 0
+          }
+        }
       }
 
       createTestWithCountOfElement(
@@ -347,17 +373,37 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       target.resolve
         .select(matchingRadioSelector)
         .asScala
-        .zip(radios.map(_.value))
-        .foreach { case (element, expectedText) =>
-          val elementValue = element.attr("value")
+        .zip(radios)
+        .foreach { case (element, radio) =>
+          def expectedText = radio.value
+          def elementValue = element.attr("value")
           s"radio button value $elementValue must match $expectedText" in {
             elementValue mustEqual expectedText
           }
+
+          def shouldBeChecked: Boolean = isChecked.contains(radio)
+
+          def elementIsChecked: Boolean = element.hasAttr("checked")
+
+          if shouldBeChecked then {
+            s"radio button value $elementValue must be checked" in {
+              withClue(s"The '$elementValue' radio button was not checked!\n") {
+                elementIsChecked mustEqual true
+              }
+            }
+          } else {
+            s"radio button value $elementValue must not be checked" in {
+              withClue(s"The '$elementValue' radio button was erroneously checked!\n") {
+                elementIsChecked mustEqual false
+              }
+            }
+          }
+
         }
     }
 
     def createTestsWithDateInput(values: DateFieldValues, hasError: Boolean): Unit = {
-      val fieldsetElement = target.resolve.select("fieldset.govuk-fieldset")
+      def fieldsetElement = target.resolve.select("fieldset.govuk-fieldset")
 
       "must contain a single fieldset" in {
         fieldsetElement.size mustBe 1
@@ -381,14 +427,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         fieldsetElement.select("""input#value\.year""").attr("value") mustBe values.year
       }
 
-      val errorMessageSelector = fieldsetElement
+      def errorMessageSelector = fieldsetElement
         .attr("aria-describedby")
         .split(" ")
         .filter(_.nonEmpty)
         .map("#" + _ + ".govuk-error-message")
         .mkString(",")
 
-      val errorMessageElements = target.resolve.safeSelect(errorMessageSelector)
+      def errorMessageElements = target.resolve.safeSelect(errorMessageSelector)
 
       if hasError then {
         "must show error message" in {

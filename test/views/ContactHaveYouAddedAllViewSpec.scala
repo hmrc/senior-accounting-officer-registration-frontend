@@ -47,7 +47,9 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         radios = List(
           radio(value = "yes", label = "Yes"),
           radio(value = "no", label = "No, add another contact")
-        )
+        ),
+        isChecked = None,
+        hasError = false
       )
 
       doc.createTestsWithSubmissionButton(
@@ -75,7 +77,9 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         radios = List(
           radio(value = "yes", label = "Yes"),
           radio(value = "no", label = "No, add another contact")
-        )
+        ),
+        isChecked = None,
+        hasError = true
       )
 
       doc.createTestsWithSubmissionButton(
