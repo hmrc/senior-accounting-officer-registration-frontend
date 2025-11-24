@@ -28,6 +28,7 @@ import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
 
 import scala.jdk.CollectionConverters.*
 import scala.reflect.ClassTag
+import scala.util.Try
 
 class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlFormat.Appendable]]: ClassTag]
     extends SpecBase
@@ -223,14 +224,14 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 
         hint match {
           case Some(expectedHintText) => {
-            val hintSelector = inputElement
+            def hintSelector = inputElement
               .attr("aria-describedby")
               .split(" ")
               .filter(_.nonEmpty)
               .map("#" + _ + ".govuk-hint")
               .mkString(",")
 
-            val hints = target.resolve.safeSelect(hintSelector)
+            def hints = target.resolve.safeSelect(hintSelector)
 
             s"input with name '$name' must have a hint with values '$expectedHintText'" in {
               withClue(s"for input with name '$name' hint element not found\n") {
@@ -456,22 +457,19 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         selector: String,
         texts: Seq[String],
         description: String
-    )(using pos: Position): Unit = {
-      val expectedCount = texts.size
-      val elements      = target.resolve.select(selector).asScala
-
+    )(using pos: Position): Unit =
       texts.zipWithIndex.foreach { case (expectedText, index) =>
         s"must have a $description with content '$expectedText' (check ${index + 1})" in {
+          val elements = target.resolve.select(selector).asScala
+
           withClue(s"$description with content '$expectedText' not found\n") {
             val element =
-              util
-                .Try(elements(index))
+              Try(elements(index))
                 .getOrElse(fail(s"Index $index out of bounds for length ${elements.size}"))
             element.text() mustEqual expectedText
           }
         }
       }
-    }
 
     def createTestsWithParagraphs(
         paragraphs: Seq[String]
