@@ -313,7 +313,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     def createTestsWithRadioButtons(
         name: String,
         radios: Seq[RadioButton],
-        hasError: Boolean = false
+        hasError: Boolean
     )(using pos: Position): Unit = {
       def matchingRadioSelector = s"input[type=radio][name=$name]"
       def labelCssSelector      = {
