@@ -45,6 +45,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
               radio(value = option1key, label = option1Label),
               radio(value = option2key, label = option2Label),
             ),
+            isChecked = None,
             hasError = false
           )
 
@@ -75,6 +76,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
               radio(value = option1key, label = option1Label),
               radio(value = option2key, label = option2Label),
             ),
+            isChecked = Some(radio(value = option1key, label = option1Label)),
             hasError = false
           )
 
@@ -105,6 +107,7 @@ class $className$ViewSpec extends ViewSpecBase[$className$View] {
               radio(value = option1key, label = option1Label),
               radio(value = option2key, label = option2Label),
             ),
+            isChecked = None,
             hasError = true
           )
 
