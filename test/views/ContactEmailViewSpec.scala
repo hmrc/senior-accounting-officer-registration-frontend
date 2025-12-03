@@ -159,7 +159,7 @@ object ContactEmailViewSpec {
   val pageTitleSecond: String = "Second contact details"
 
   val expectedHints: String  = "We’ll only use this to contact them about the company’s submission."
-  val testInputValue: String = "test Input Value"
+  val testInputValue: String = "test@example.com"
 
   val submitButtonText: String = "Continue"
 }

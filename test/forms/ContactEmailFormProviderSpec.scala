@@ -23,7 +23,10 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "contactEmail.error.required"
   val lengthKey   = "contactEmail.error.length"
-  val maxLength   = 100
+  val formatKey   = "contactEmail.error.format"
+  val maxLength   = 50
+
+  val emailRegex = """^.+[@].+[.].+$"""
 
   val form = new ContactEmailFormProvider()()
 
@@ -31,35 +34,48 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "value"
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
     behave like mandatoryField(
-      form,
-      fieldName,
+      form = form,
+      fieldName = fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    behave like fieldWithMaxEmailLength(
+      form = form,
+      fieldName = fieldName,
+      generator = genLongEmailAddresses,
+      requiredError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like fieldWithInvalidEmailformat(
+      form = form,
+      fieldName = fieldName,
+      generator = genInvalidEmailAddresses,
+      requiredError = FormError(fieldName, formatKey, Seq(emailRegex))
+    )
+
+    behave like fieldWithValidEmailformat(
+      form = form,
+      fieldName = fieldName,
+      generator = genValidEmailAddress
+    )
+
   }
 
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
       key = requiredKey,
-      message = "Enter contactEmail"
+      message = "Enter the email address of the person or team"
     )
 
     createTestWithErrorMessageAssertion(
       key = lengthKey,
-      message = "ContactEmail must be 100 characters or less"
+      message = "The email address you enter must be 50 characters or less"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = formatKey,
+      message = "Enter an email address in the correct format, like name@example.com"
     )
   }
 }
