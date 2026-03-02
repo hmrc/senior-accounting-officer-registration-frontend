@@ -17,8 +17,8 @@
 package navigation
 
 import controllers.routes
-import models.ContactType.*
 import models.*
+import models.ContactType.*
 import pages.*
 import play.api.mvc.Call
 

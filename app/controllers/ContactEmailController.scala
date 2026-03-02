@@ -51,7 +51,6 @@ class ContactEmailController @Inject() (
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>
-
       val preparedForm = request.userAnswers.get(ContactEmailPage(contactType)) match {
         case None        => form
         case Some(value) => form.fill(value)
