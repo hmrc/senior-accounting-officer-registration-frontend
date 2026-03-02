@@ -18,8 +18,8 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import models.ContactType.*
 import models.*
+import models.ContactType.*
 import pages.*
 
 class NavigatorSpec extends SpecBase {

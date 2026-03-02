@@ -61,7 +61,6 @@ class RegistrationCompleteDetailsSpec
       } yield (companyName, registrationId, registrationDateTime)
 
       forAll(gen) { (companyName, registrationId, registrationDateTime) =>
-
         val companyDetailsJsValue: JsValue = Json.parse(s"""
                           | {
                           |   "companyName" : "$companyName",
