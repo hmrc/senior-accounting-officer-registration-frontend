@@ -34,10 +34,10 @@ lazy val microservice = (project in file("."))
     scalacOptions ++= Seq(
       "-feature",
       "-Wconf:"
-      + "cat=deprecation:w,"
-      + "cat=feature:w,"
-      + "src=target/.*:s,"
-      + "src=test/.*&id=E176:s"
+        + "cat=deprecation:w,"
+        + "cat=feature:w,"
+        + "src=target/.*:s,"
+        + "src=test/.*&id=E176:s"
     ),
     libraryDependencies ++= AppDependencies(),
     retrieveManaged          := true,
@@ -59,7 +59,7 @@ lazy val it =
     .dependsOn(microservice % "test->test")
 
 val scalafixSettings: Seq[Setting[?]] = Seq(
-  semanticdbEnabled := true,
+  semanticdbEnabled := true
 )
 
 addCommandAlias("checkLint", "scalafmtSbtCheck;scalafmtCheckAll")
