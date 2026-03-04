@@ -20,7 +20,6 @@ import controllers.routes
 import models.CheckMode
 import models.ContactType
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.converters.*
 import viewmodels.govuk.summarylist.*
@@ -30,7 +29,7 @@ object ContactEmailSummary {
   def row(contactType: ContactType, email: String)(using messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = messages("contactEmail.checkYourAnswersLabel").toKey,
-      value = ValueViewModel(HtmlFormat.escape(email).toText),
+      value = ValueViewModel(email.toText),
       actions = Seq(
         ActionItemViewModel(
           messages("site.change").toText,
