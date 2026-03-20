@@ -16,7 +16,7 @@
 
 package controllers.auth
 
-import config.FrontendAppConfig
+import config.AppConfig
 import controllers.actions.IdentifierAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 class AuthController @Inject() (
     val controllerComponents: MessagesControllerComponents,
-    config: FrontendAppConfig,
+    config: AppConfig,
     sessionRepository: SessionRepository,
     identify: IdentifierAction
 )(using ec: ExecutionContext)

@@ -17,7 +17,7 @@
 package views
 
 import base.ViewSpecBase
-import config.FrontendAppConfig
+import config.AppConfig
 import models.registration.RegistrationCompleteDetails
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -38,7 +38,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
-      FrontendAppConfig.setValue("senior-accounting-officer-hub-frontend.host", "hub-url")
+      AppConfig.setValue("senior-accounting-officer-hub-frontend.host", "hub-url")
 
       val doc: Document = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 

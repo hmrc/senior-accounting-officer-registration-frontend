@@ -16,14 +16,14 @@
 
 package routes
 
-import config.FrontendAppConfig
+import config.AppConfig
 import play.api.http.{HeaderNames, Status}
 import support.MockAuthHelper.authSession
 import support.{ISpecBase, MockAuthHelper, SessionCookieBaker}
 
 class AuthActionISpec extends ISpecBase {
 
-  val appConfig = app.injector.instanceOf[FrontendAppConfig]
+  val appConfig = app.injector.instanceOf[AppConfig]
   val targetUrl = s"$baseUrl/senior-accounting-officer/registration"
 
   "An endpoint with Auth Action when" - {

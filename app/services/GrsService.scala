@@ -16,7 +16,7 @@
 
 package services
 
-import config.FrontendAppConfig
+import config.AppConfig
 import models.grs.create.{NewJourneyRequest, ServiceLabels}
 import models.grs.retrieve.{CompanyDetails as GrsCompanyDetails, Registration}
 import models.registration.CompanyDetails
@@ -29,7 +29,7 @@ import java.net.URI
 import javax.inject.Inject
 
 class GrsService @Inject() (
-    appConfig: FrontendAppConfig,
+    appConfig: AppConfig,
     accessibilityStatementConfig: AccessibilityStatementConfig,
     messagesApi: MessagesApi
 ) {

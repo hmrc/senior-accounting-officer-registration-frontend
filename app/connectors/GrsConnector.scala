@@ -16,7 +16,7 @@
 
 package connectors
 
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.GrsConnector.given
 import models.grs.create.NewJourneyRequest
 import models.grs.retrieve.CompanyDetails
@@ -35,7 +35,7 @@ import scala.util.Try
 import java.net.URI
 import javax.inject.Inject
 
-class GrsConnector @Inject (appConfig: FrontendAppConfig, http: HttpClientV2)(using
+class GrsConnector @Inject (appConfig: AppConfig, http: HttpClientV2)(using
     ExecutionContext
 ) {
 

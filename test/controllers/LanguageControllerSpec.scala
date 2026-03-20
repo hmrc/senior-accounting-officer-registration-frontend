@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import config.FrontendAppConfig
+import config.AppConfig
 import models.UserAnswers
 import play.api.i18n.Lang
 import play.api.inject.bind
@@ -43,7 +43,7 @@ class LanguageControllerSpec extends SpecBase {
     super
       .applicationBuilder(userAnswers)
       .overrides(
-        bind[FrontendAppConfig].to[TestFrontendAppConfig]
+        bind[AppConfig].to[TestAppConfig]
       )
       .configure("play.i18n.langs" -> List("en", "cy"))
 
@@ -82,7 +82,7 @@ class LanguageControllerSpec extends SpecBase {
     }
 }
 
-class TestFrontendAppConfig @Inject() (servicesConfig: ServicesConfig, configuration: Configuration)
-    extends FrontendAppConfig(servicesConfig, configuration) {
+class TestAppConfig @Inject() (servicesConfig: ServicesConfig, configuration: Configuration)
+    extends AppConfig(servicesConfig, configuration) {
   override def languageMap: Map[String, Lang] = Map("en" -> Lang("en"), "cy" -> Lang("cy"))
 }
