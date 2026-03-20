@@ -15,11 +15,11 @@
  *@
 
 @import models.registration.RegistrationCompleteDetails
-@import _root_.config.FrontendAppConfig
+@import _root_.config.AppConfig
 
 @this(
     layout: templates.Layout,
-    config: FrontendAppConfig
+    config: AppConfig
 )
 
 @(details: RegistrationCompleteDetails)(using request: Request[?], messages: Messages)

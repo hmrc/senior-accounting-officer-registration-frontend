@@ -17,7 +17,7 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
+import config.AppConfig
 import controllers.routes
 import models.requests.IdentifierRequest
 import play.api.mvc.*
@@ -35,7 +35,7 @@ trait IdentifierAction
 
 final class FrontendAuthenticatedIdentifierAction @Inject() (
     override val authConnector: AuthConnector,
-    config: FrontendAppConfig,
+    config: AppConfig,
     override val parser: BodyParsers.Default
 )(using ExecutionContext)
     extends AuthenticatedIdentifierAction(config, parser, isFrontend = true)
@@ -44,14 +44,14 @@ trait ApiAuthenticatedIdentifierAction extends IdentifierAction
 
 class ApiAuthenticatedIdentifierActionImpl @Inject() (
     override val authConnector: AuthConnector,
-    config: FrontendAppConfig,
+    config: AppConfig,
     override val parser: BodyParsers.Default
 )(using ExecutionContext)
     extends AuthenticatedIdentifierAction(config, parser, isFrontend = false)
     with ApiAuthenticatedIdentifierAction
 
 abstract class AuthenticatedIdentifierAction(
-    config: FrontendAppConfig,
+    config: AppConfig,
     val parser: BodyParsers.Default,
     isFrontend: Boolean
 )(using override val executionContext: ExecutionContext)

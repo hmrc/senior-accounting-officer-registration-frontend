@@ -16,7 +16,7 @@
 
 package controllers.testonly
 
-import config.FrontendAppConfig
+import config.AppConfig
 import controllers.actions.{ApiAuthenticatedIdentifierAction, IdentifierAction}
 import models.grs.create.NewJourneyResponse
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -35,7 +35,7 @@ class GrsStubsController @Inject() (
     apiIdentify: ApiAuthenticatedIdentifierAction,
     stubGrsView: StubGrsView,
     val controllerComponents: MessagesControllerComponents,
-    appConfig: FrontendAppConfig
+    appConfig: AppConfig
 ) extends FrontendBaseController
     with I18nSupport {
 

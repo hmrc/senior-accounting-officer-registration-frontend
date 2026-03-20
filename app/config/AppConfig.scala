@@ -23,10 +23,10 @@ import play.api.i18n.Lang
 import play.api.mvc.{Call, RequestHeader}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import FrontendAppConfig.*
+import AppConfig.*
 
 @Singleton
-class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Configuration)
+class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Configuration)
     extends FeatureConfigSupport {
   given Configuration = configuration
 
@@ -76,14 +76,14 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig, val configura
 
 }
 
-object FrontendAppConfig {
+object AppConfig {
   private val pathSeparator: String = "/"
 
   extension (str: String) {
     def removeTrailingPathSeparator: String = str.replaceAll(pathSeparator + "$", "")
   }
 
-  extension (appConfig: FrontendAppConfig) {
+  extension (appConfig: AppConfig) {
     def prependHost(url: String): String =
       s"${appConfig.host}${if url.startsWith(pathSeparator) then "" else pathSeparator}$url"
 
