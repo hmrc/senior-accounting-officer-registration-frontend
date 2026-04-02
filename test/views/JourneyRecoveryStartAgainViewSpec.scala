@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package views.auth
+package views
 
-import views.html.auth.SignedOutView
 import base.ViewSpecBase
+import views.html.JourneyRecoveryStartAgainView
 import org.jsoup.Jsoup
-import views.auth.SignedOutViewSpec.pageHeading
-import views.auth.SignedOutViewSpec.paragraphs
-import views.auth.SignedOutViewSpec.buttonText
+import views.JourneyRecoveryStartAgainViewSpec.{pageHeading, pageTitle, paragraphs, buttonText}
 import controllers.routes
 
-class SignedOutViewSpec extends ViewSpecBase[SignedOutView] {
-  "SignedOutView" - {
+class JourneyRecoveryStartAgainViewSpec extends ViewSpecBase[JourneyRecoveryStartAgainView] {
+  "JourneyRecoveryStartAgainView" - {
     val doc = Jsoup.parse(SUT().toString)
 
     doc.createTestsWithStandardPageElements(
-      pageTitle = pageHeading,
+      pageTitle = pageTitle,
       pageHeading = pageHeading,
-      showBackLink = false,
+      showBackLink = true,
       showIsThisPageNotWorkingProperlyLink = true,
       hasError = false
     )
@@ -47,8 +45,9 @@ class SignedOutViewSpec extends ViewSpecBase[SignedOutView] {
   }
 }
 
-object SignedOutViewSpec {
-  val pageHeading: String = "For your security, we signed you out"
-  val buttonText          = "Sign in"
-  val paragraphs          = List("We did not save your answers.", buttonText)
+object JourneyRecoveryStartAgainViewSpec {
+  val pageTitle   = "Sorry, there is a problem with the service"
+  val pageHeading = "Sorry, there is a problem with the service"
+  val buttonText  = "Start again"
+  val paragraphs  = List("[Add content to explain why the user needs to start again.]", buttonText)
 }

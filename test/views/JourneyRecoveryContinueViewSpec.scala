@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package views.auth
+package views
 
-import views.html.auth.SignedOutView
 import base.ViewSpecBase
+import views.html.JourneyRecoveryContinueView
 import org.jsoup.Jsoup
-import views.auth.SignedOutViewSpec.pageHeading
-import views.auth.SignedOutViewSpec.paragraphs
-import views.auth.SignedOutViewSpec.buttonText
-import controllers.routes
+import views.JourneyRecoveryContinueViewSpec.{pageHeading, pageTitle, paragraphs, buttonText}
 
-class SignedOutViewSpec extends ViewSpecBase[SignedOutView] {
-  "SignedOutView" - {
-    val doc = Jsoup.parse(SUT().toString)
+class JourneyRecoveryContinueViewSpec extends ViewSpecBase[JourneyRecoveryContinueView] {
+  "JourneyRecoveryContinueView" - {
+    val doc = Jsoup.parse(SUT("").toString)
 
     doc.createTestsWithStandardPageElements(
-      pageTitle = pageHeading,
+      pageTitle = pageTitle,
       pageHeading = pageHeading,
-      showBackLink = false,
+      showBackLink = true,
       showIsThisPageNotWorkingProperlyLink = true,
       hasError = false
     )
@@ -42,13 +39,14 @@ class SignedOutViewSpec extends ViewSpecBase[SignedOutView] {
       val button = doc.getMainContent.select("a.govuk-button")
       button.size mustBe 1
       button.text() mustBe buttonText
-      button.attr("href") mustBe routes.IndexController.onPageLoad().url
+      button.attr("href") mustBe "#"
     }
   }
 }
 
-object SignedOutViewSpec {
-  val pageHeading: String = "For your security, we signed you out"
-  val buttonText          = "Sign in"
-  val paragraphs          = List("We did not save your answers.", buttonText)
+object JourneyRecoveryContinueViewSpec {
+  val pageTitle   = "Sorry, there is a problem with the service"
+  val pageHeading = "Sorry, there is a problem with the service"
+  val buttonText  = "Continue"
+  val paragraphs  = List("[Add content to explain how to proceed.]", buttonText)
 }
