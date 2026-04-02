@@ -23,7 +23,7 @@ import views.html.JourneyRecoveryContinueView
 
 class JourneyRecoveryContinueViewSpec extends ViewSpecBase[JourneyRecoveryContinueView] {
   "JourneyRecoveryContinueView" - {
-    val doc = Jsoup.parse(SUT("").toString)
+    val doc = Jsoup.parse(SUT(linkText).toString)
 
     doc.createTestsWithStandardPageElements(
       pageTitle = pageTitle,
@@ -39,7 +39,7 @@ class JourneyRecoveryContinueViewSpec extends ViewSpecBase[JourneyRecoveryContin
       val button = doc.getMainContent.select("a.govuk-button")
       button.size mustBe 1
       button.text() mustBe buttonText
-      button.attr("href") mustBe "#"
+      button.attr("href") mustBe linkText
     }
   }
 }
@@ -49,4 +49,5 @@ object JourneyRecoveryContinueViewSpec {
   val pageHeading              = "Sorry, there is a problem with the service"
   val buttonText               = "Continue"
   val paragraphs: List[String] = List("[Add content to explain how to proceed.]", buttonText)
+  val linkText                 = "citrus/date"
 }
