@@ -16,13 +16,11 @@
 
 package views.auth
 
-import views.html.auth.SignedOutView
 import base.ViewSpecBase
-import org.jsoup.Jsoup
-import views.auth.SignedOutViewSpec.pageHeading
-import views.auth.SignedOutViewSpec.paragraphs
-import views.auth.SignedOutViewSpec.buttonText
 import controllers.routes
+import org.jsoup.Jsoup
+import views.auth.SignedOutViewSpec.{buttonText, pageHeading, paragraphs}
+import views.html.auth.SignedOutView
 
 class SignedOutViewSpec extends ViewSpecBase[SignedOutView] {
   "SignedOutView" - {
@@ -48,7 +46,7 @@ class SignedOutViewSpec extends ViewSpecBase[SignedOutView] {
 }
 
 object SignedOutViewSpec {
-  val pageHeading: String = "For your security, we signed you out"
-  val buttonText          = "Sign in"
-  val paragraphs          = List("We did not save your answers.", buttonText)
+  val pageHeading: String      = "For your security, we signed you out"
+  val buttonText               = "Sign in"
+  val paragraphs: List[String] = List("We did not save your answers.", buttonText)
 }

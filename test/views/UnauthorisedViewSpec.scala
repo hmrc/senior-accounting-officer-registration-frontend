@@ -17,9 +17,9 @@
 package views
 
 import base.ViewSpecBase
-import views.html.UnauthorisedView
 import org.jsoup.Jsoup
 import views.UnauthorisedViewSpec.{pageHeading, pageTitle, paragraphs}
+import views.html.UnauthorisedView
 
 class UnauthorisedViewSpec extends ViewSpecBase[UnauthorisedView] {
   "UnauthorisedView" - {
@@ -38,7 +38,7 @@ class UnauthorisedViewSpec extends ViewSpecBase[UnauthorisedView] {
 }
 
 object UnauthorisedViewSpec {
-  val pageTitle   = "You can’t access this service with this account"
-  val pageHeading = "You can’t access this service with this account"
-  val paragraphs  = List("unauthorised.guidance")
+  val pageTitle                = "You can’t access this service with this account"
+  val pageHeading              = "You can’t access this service with this account"
+  val paragraphs: List[String] = List("unauthorised.guidance")
 }

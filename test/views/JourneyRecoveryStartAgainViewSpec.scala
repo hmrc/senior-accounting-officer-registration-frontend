@@ -17,10 +17,10 @@
 package views
 
 import base.ViewSpecBase
-import views.html.JourneyRecoveryStartAgainView
-import org.jsoup.Jsoup
-import views.JourneyRecoveryStartAgainViewSpec.{pageHeading, pageTitle, paragraphs, buttonText}
 import controllers.routes
+import org.jsoup.Jsoup
+import views.JourneyRecoveryStartAgainViewSpec.*
+import views.html.JourneyRecoveryStartAgainView
 
 class JourneyRecoveryStartAgainViewSpec extends ViewSpecBase[JourneyRecoveryStartAgainView] {
   "JourneyRecoveryStartAgainView" - {
@@ -46,8 +46,8 @@ class JourneyRecoveryStartAgainViewSpec extends ViewSpecBase[JourneyRecoveryStar
 }
 
 object JourneyRecoveryStartAgainViewSpec {
-  val pageTitle   = "Sorry, there is a problem with the service"
-  val pageHeading = "Sorry, there is a problem with the service"
-  val buttonText  = "Start again"
-  val paragraphs  = List("[Add content to explain why the user needs to start again.]", buttonText)
+  val pageTitle                = "Sorry, there is a problem with the service"
+  val pageHeading              = "Sorry, there is a problem with the service"
+  val buttonText               = "Start again"
+  val paragraphs: List[String] = List("[Add content to explain why the user needs to start again.]", buttonText)
 }

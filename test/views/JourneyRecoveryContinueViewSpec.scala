@@ -17,9 +17,9 @@
 package views
 
 import base.ViewSpecBase
-import views.html.JourneyRecoveryContinueView
 import org.jsoup.Jsoup
-import views.JourneyRecoveryContinueViewSpec.{pageHeading, pageTitle, paragraphs, buttonText}
+import views.JourneyRecoveryContinueViewSpec.*
+import views.html.JourneyRecoveryContinueView
 
 class JourneyRecoveryContinueViewSpec extends ViewSpecBase[JourneyRecoveryContinueView] {
   "JourneyRecoveryContinueView" - {
@@ -45,8 +45,8 @@ class JourneyRecoveryContinueViewSpec extends ViewSpecBase[JourneyRecoveryContin
 }
 
 object JourneyRecoveryContinueViewSpec {
-  val pageTitle   = "Sorry, there is a problem with the service"
-  val pageHeading = "Sorry, there is a problem with the service"
-  val buttonText  = "Continue"
-  val paragraphs  = List("[Add content to explain how to proceed.]", buttonText)
+  val pageTitle                = "Sorry, there is a problem with the service"
+  val pageHeading              = "Sorry, there is a problem with the service"
+  val buttonText               = "Continue"
+  val paragraphs: List[String] = List("[Add content to explain how to proceed.]", buttonText)
 }
