@@ -63,7 +63,7 @@ class ContactNameFormProviderSpec extends StringFieldBehaviours {
     createTestWithErrorMessageAssertion(
       key = requiredKey,
       message =
-        """Enter the name of the person or team who can deal with enquiries about the companys tax accounting arrangements."""
+        """Enter the name of the person or team who can deal with enquiries about the company’s tax accounting arrangements."""
     )
 
     createTestWithErrorMessageAssertion(
