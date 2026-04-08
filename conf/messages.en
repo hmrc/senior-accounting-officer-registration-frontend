@@ -47,7 +47,7 @@ registration.dashboard.heading = Register your nominated company
 registration.dashboard.p1 = Register the nominated UK company that will submit the SAO notification and certificate on behalf of all companies the SAO is responsible for.
 registration.dashboard.p2 = You only need to register once for your group. If your group has more than one SAO, you can use the same account to submit notifications and certificates for all SAOs, or register again to create a separate account.
 
-registration.dashboard.row.company = Enter your company details
+registration.dashboard.row.company = Enter your nominated company details
 registration.dashboard.row.contacts = Enter your contact details
 
 registration.dashboard.row.status.notStarted = Not started
