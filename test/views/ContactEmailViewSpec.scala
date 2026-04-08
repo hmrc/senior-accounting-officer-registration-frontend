@@ -150,7 +150,7 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
 }
 
 object ContactEmailViewSpec {
-  val pageHeading: String = "Enter email address"
+  val pageHeading: String = "What is their email address?"
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
