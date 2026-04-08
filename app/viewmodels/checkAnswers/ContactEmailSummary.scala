@@ -31,9 +31,13 @@ object ContactEmailSummary {
   def row(contactType: ContactType, email: String)(using messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = Key(
-        HtmlContent(s"""<span data-test-id="first-contact-email-key">${messages("contactEmail.checkYourAnswersLabel")}</span>""")
+        HtmlContent(
+          s"""<span data-test-id="first-contact-email-key">${messages("contactEmail.checkYourAnswersLabel")}</span>"""
+        )
       ),
-      value = ValueViewModel(HtmlContent(s"""<span data-test-id="first-contact-email-value">${HtmlFormat.escape(email)}</span>""")),
+      value = ValueViewModel(
+        HtmlContent(s"""<span data-test-id="first-contact-email-value">${HtmlFormat.escape(email)}</span>""")
+      ),
       actions = Seq(
         ActionItemViewModel(
           messages("site.change").toText,
