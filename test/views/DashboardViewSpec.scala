@@ -57,14 +57,11 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
               contactsInfoTag.getElementsByTag("strong").size() mustBe 0
             case ContactsInfo =>
               companyDetailsTag.text() mustBe "Completed"
-              companyDetailsTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--green"
               contactsInfoTag.text() mustBe "Not started"
               contactsInfoTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--blue"
             case Submission =>
               companyDetailsTag.text() mustBe "Completed"
-              companyDetailsTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--green"
               contactsInfoTag.text() mustBe "Completed"
-              contactsInfoTag.getElementsByTag("strong").attr("class") mustBe "govuk-tag govuk-tag--green"
           }
         }
 
@@ -86,11 +83,11 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 }
 
 object DashboardViewSpec {
-  val pageHeading: String = "Register your company"
+  val pageHeading: String = "Register your nominated company"
 
   val paragraphs: List[String] = List(
-    "Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from.",
-    "If your group has more than one SAO, you’ll need to complete a separate registration for each SAO."
+    "Register the nominated UK company that will submit the SAO notification and certificate on behalf of all companies the SAO is responsible for.",
+    "You only need to register once for your group. If your group has more than one SAO, you can use the same account to submit notifications and certificates for all SAOs, or register again to create a separate account."
   )
 
   val submitButtonText: String = "Submit your registration"

@@ -41,11 +41,11 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-registration.dashboard.title = Register your company
-registration.dashboard.heading = Register your company
+registration.dashboard.title = Register your nominated company
+registration.dashboard.heading = Register your nominated company
 
-registration.dashboard.p1 = Register the company responsible for submitting the Senior Accounting Officer (SAO) notification and certificate. There’s no required company type. This should be the company where the SAO works from.
-registration.dashboard.p2 = If your group has more than one SAO, you’ll need to complete a separate registration for each SAO.
+registration.dashboard.p1 = Register the nominated UK company that will submit the SAO notification and certificate on behalf of all companies the SAO is responsible for.
+registration.dashboard.p2 = You only need to register once for your group. If your group has more than one SAO, you can use the same account to submit notifications and certificates for all SAOs, or register again to create a separate account.
 
 registration.dashboard.row.company = Enter your company details
 registration.dashboard.row.contacts = Enter your contact details
