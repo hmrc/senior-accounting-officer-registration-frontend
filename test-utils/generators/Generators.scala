@@ -27,6 +27,7 @@ trait Generators extends ModelGenerators {
   given dontShrink: Shrink[String] = Shrink.shrinkAny
 
   val maxEmailLength = 50
+  val specialChars   = List('<', '>', '&')
 
   def genIntersperseString(gen: Gen[String], value: String, frequencyV: Int = 1, frequencyN: Int = 10): Gen[String] = {
 
@@ -90,20 +91,20 @@ trait Generators extends ModelGenerators {
     } yield chars.mkString
 
   def invalidStringsForNameFieldWithMaxLength(maxLength: Int): Gen[String] =
-    val specialChars = Gen.oneOf('<', '>', '&')
     for {
       length         <- choose(1, maxLength)
       normalChars    <- listOfN(length - 1, arbitrary[Char])
-      specialChar    <- specialChars
+      specialChar    <- Gen.oneOf(specialChars)
       insertionIndex <- choose(0, length - 1)
       chars = normalChars.take(insertionIndex) :+ specialChar :++ normalChars.drop(insertionIndex)
     } yield chars.mkString
 
-  def stringsLongerThan(minLength: Int): Gen[String] = for {
-    maxLength <- (minLength * 2).max(100)
-    length    <- Gen.chooseNum(minLength + 1, maxLength)
-    chars     <- listOfN(length, arbitrary[Char])
-  } yield chars.mkString
+  def stringsLongerThan(minLength: Int): Gen[String] =
+    for {
+      maxLength <- (minLength * 2).max(100)
+      length    <- Gen.chooseNum(minLength + 1, maxLength)
+      chars     <- listOfN(length, arbitrary[Char].withFilter(char => !specialChars.contains(char)))
+    } yield chars.mkString
 
   def stringsExceptSpecificValues(excluded: Seq[String]): Gen[String] =
     nonEmptyString suchThat (!excluded.contains(_))
