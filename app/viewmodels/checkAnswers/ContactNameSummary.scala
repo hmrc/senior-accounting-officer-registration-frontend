@@ -20,7 +20,9 @@ import controllers.routes
 import models.CheckMode
 import models.ContactType
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.converters.*
 import viewmodels.govuk.summarylist.*
 
@@ -28,14 +30,21 @@ object ContactNameSummary {
 
   def row(contactType: ContactType, contactName: String)(using messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
-      key = messages("contactName.checkYourAnswersLabel").toKey,
-      value = ValueViewModel(contactName.toText),
+      key = Key(
+        HtmlContent(
+          s"""<span data-test-id="first-contact-name-key">${messages("contactName.checkYourAnswersLabel")}</span>"""
+        )
+      ),
+      value = ValueViewModel(
+        HtmlContent(s"""<span data-test-id="first-contact-name-value">${HtmlFormat.escape(contactName)}</span>""")
+      ),
       actions = Seq(
         ActionItemViewModel(
           messages("site.change").toText,
           routes.ContactNameController.onPageLoad(contactType, CheckMode).url
         )
           .withVisuallyHiddenText(messages(s"contactName.change.${contactType.messageKey}.hidden"))
+          .withAttribute("data-test-id", "first-contact-name-change-link")
       )
     )
 }
