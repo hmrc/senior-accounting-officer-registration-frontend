@@ -68,8 +68,20 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
         stage match {
           case CompanyDetails =>
             doc.createTestWithoutElements(byClass = "govuk-button")
+            doc.getMainContent
+              .selectFirst("li a[aria-describedby='company-details-status']")
+              .createTestWithLink(
+                linkText = enterNominatedCompanyDetailsLinkText,
+                destinationUrl = enterNominatedCompanyDetailsLinkUrl
+              )
           case ContactsInfo =>
             doc.createTestWithoutElements(byClass = "govuk-button")
+            doc.getMainContent
+              .selectFirst("li a[aria-describedby='contacts-details-status']")
+              .createTestWithLink(
+                linkText = enterYourContactDetailsLinkText,
+                destinationUrl = enterYourContactDetailsLinkUrl
+              )
           case Submission =>
             doc.createTestsWithSubmissionButton(
               action = controllers.routes.IndexController.continue(),
@@ -83,9 +95,12 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 }
 
 object DashboardViewSpec {
-  val pageHeading: String = "Register your nominated company"
-
-  val paragraphs: List[String] = List(
+  val pageHeading: String                  = "Register your nominated company"
+  val enterNominatedCompanyDetailsLinkText = "Enter your nominated company details"
+  val enterNominatedCompanyDetailsLinkUrl  = "/senior-accounting-officer/registration/business-match"
+  val enterYourContactDetailsLinkText      = "Enter your contact details"
+  val enterYourContactDetailsLinkUrl       = "/senior-accounting-officer/registration/contact-details"
+  val paragraphs: List[String]             = List(
     "Register the nominated UK company that will submit the SAO notification and certificate on behalf of all companies the SAO is responsible for.",
     "You only need to register once for your group. If your group has more than one SAO, you can use the same account to submit notifications and certificates for all SAOs, or register again to create a separate account."
   )
