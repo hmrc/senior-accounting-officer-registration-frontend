@@ -149,7 +149,7 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 }
 
 object ContactNameViewSpec {
-  val pageHeading: String = "Enter the name of the person or team to keep on record"
+  val pageHeading: String = "What is the name of the person or team to keep on record?"
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
