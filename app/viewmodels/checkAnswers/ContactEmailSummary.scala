@@ -20,31 +20,16 @@ import controllers.routes
 import models.CheckMode
 import models.ContactType
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
-import viewmodels.converters.*
-import viewmodels.govuk.summarylist.*
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 object ContactEmailSummary {
 
   def row(contactType: ContactType, email: String)(using messages: Messages): SummaryListRow =
-    SummaryListRowViewModel(
-      key = Key(
-        HtmlContent(
-          s"""<span data-test-id="first-contact-email-key">${messages("contactEmail.checkYourAnswersLabel")}</span>"""
-        )
-      ),
-      value = ValueViewModel(
-        HtmlContent(s"""<span data-test-id="first-contact-email-value">${HtmlFormat.escape(email)}</span>""")
-      ),
-      actions = Seq(
-        ActionItemViewModel(
-          messages("site.change").toText,
-          routes.ContactEmailController.onPageLoad(contactType, CheckMode).url
-        )
-          .withVisuallyHiddenText(messages(s"contactEmail.change.${contactType.messageKey}.hidden"))
-          .withAttribute("data-test-id", "first-contact-email-change-link")
-      )
+    ContactSummaryRow.row(
+      labelMessageKey = "contactEmail.checkYourAnswersLabel",
+      value = email,
+      changeUrl = routes.ContactEmailController.onPageLoad(contactType, CheckMode).url,
+      hiddenTextMessageKey = s"contactEmail.change.${contactType.messageKey}.hidden",
+      testIdPrefix = "first-contact-email"
     )
 }
