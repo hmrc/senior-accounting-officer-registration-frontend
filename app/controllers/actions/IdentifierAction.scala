@@ -20,10 +20,12 @@ import com.google.inject.Inject
 import config.AppConfig
 import controllers.routes
 import models.requests.IdentifierRequest
+import play.api.Logger
 import play.api.mvc.*
 import play.api.mvc.Results.*
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -66,16 +68,29 @@ abstract class AuthenticatedIdentifierAction(
         HeaderCarrierConverter.fromRequest(request)
       }
 
-    authorised().retrieve(Retrievals.internalId) {
-      _.map { internalId =>
-        block(IdentifierRequest(request, internalId))
-      }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
-    } recover {
-      case _: NoActiveSession =>
-        Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
-      case _: AuthorisationException =>
-        Redirect(routes.UnauthorisedController.onPageLoad())
-    }
+    Logger(getClass).error("authorization="+hc.authorization.map(_.value).getOrElse(""))
+
+    authorised()
+      .retrieve(Retrievals.internalId  and Retrievals.affinityGroup and Retrievals.credentials and Retrievals.groupIdentifier and Retrievals.allEnrolments) {
+        case internalId ~ Some(affinityGroup) ~ Some(Credentials(providerId, _)) ~ Some(groupIdentifier) ~ enrolments =>
+          Logger(getClass).error("internalId=" + internalId)
+          Logger(getClass).error("affinityGroup=" + affinityGroup)
+          Logger(getClass).error("providerId=" + providerId)
+          Logger(getClass).error("groupIdentifier=" + groupIdentifier)
+          Logger(getClass).error("enrolments=" + enrolments.enrolments.mkString(","))
+
+          internalId
+            .map { internalId =>
+              block(IdentifierRequest(request, internalId))
+            }
+            .getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+      }
+      .recover {
+        case _: NoActiveSession =>
+          Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+        case _: AuthorisationException =>
+          Redirect(routes.UnauthorisedController.onPageLoad())
+      }
   }
 }
 
