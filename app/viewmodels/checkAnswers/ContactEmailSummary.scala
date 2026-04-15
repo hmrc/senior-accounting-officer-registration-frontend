@@ -30,6 +30,6 @@ object ContactEmailSummary {
       value = email,
       changeUrl = routes.ContactEmailController.onPageLoad(contactType, CheckMode).url,
       hiddenTextMessageKey = s"contactEmail.change.${contactType.messageKey}.hidden",
-      testIdPrefix = "first-contact-email"
+      testIdPrefix = s"${contactType.messageKey}-contact-email"
     )
 }
