@@ -17,8 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.CheckMode
-import models.ContactType
+import models.{CheckMode, ContactType}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
@@ -30,6 +29,6 @@ object ContactNameSummary {
       value = contactName,
       changeUrl = routes.ContactNameController.onPageLoad(contactType, CheckMode).url,
       hiddenTextMessageKey = s"contactName.change.${contactType.messageKey}.hidden",
-      testIdPrefix = "first-contact-name"
+      testIdPrefix = s"${contactType.messageKey}-contact-name"
     )
 }
