@@ -55,3 +55,8 @@ POST        /contact-details/second/add-another                controllers.Conta
 
 GET         /contact-details/check-your-answers                controllers.ContactCheckYourAnswersController.onPageLoad()
 POST        /contact-details/check-your-answers                controllers.ContactCheckYourAnswersController.saveAndContinue()
+
+GET        /nominatedCompanyDetailsGuidance                        controllers.NominatedCompanyDetailsGuidanceController.onPageLoad(mode: Mode = NormalMode)
+POST       /nominatedCompanyDetailsGuidance                        controllers.NominatedCompanyDetailsGuidanceController.onSubmit(mode: Mode = NormalMode)
+GET        /changeNominatedCompanyDetailsGuidance                  controllers.NominatedCompanyDetailsGuidanceController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeNominatedCompanyDetailsGuidance                  controllers.NominatedCompanyDetailsGuidanceController.onSubmit(mode: Mode = CheckMode)

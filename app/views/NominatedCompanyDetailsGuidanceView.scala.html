@@ -1,0 +1,33 @@
+@import viewmodels.InputWidth.*
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton
+)
+
+@(form: Form[?], mode: Mode)(using request: Request[?], messages: Messages)
+
+@layout(pageTitle = title(form, messages("nominatedCompanyDetailsGuidance.title"))) {
+
+    @formHelper(action = routes.NominatedCompanyDetailsGuidanceController.onSubmit(mode)) {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @govukInput(
+            InputViewModel(
+                field = form("value"),
+                label = LabelViewModel(messages("nominatedCompanyDetailsGuidance.heading").toText).asPageHeading(LabelSize.Large)
+            )
+            .withWidth(Full)
+        )
+
+        @govukButton(
+            ButtonViewModel(messages("site.continue").toText)
+        )
+    }
+}

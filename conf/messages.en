@@ -117,3 +117,10 @@ contactHaveYouAddedAll.change.hidden = ContactHaveYouAddedAll
 contactCheckYourAnswers.title = Check your answers
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Save and Continue
+
+nominatedCompanyDetailsGuidance.title = nominatedCompanyDetailsGuidance
+nominatedCompanyDetailsGuidance.heading = nominatedCompanyDetailsGuidance
+nominatedCompanyDetailsGuidance.checkYourAnswersLabel = nominatedCompanyDetailsGuidance
+nominatedCompanyDetailsGuidance.error.required = Enter nominatedCompanyDetailsGuidance
+nominatedCompanyDetailsGuidance.error.length = NominatedCompanyDetailsGuidance must be 100 characters or less
+nominatedCompanyDetailsGuidance.change.hidden = NominatedCompanyDetailsGuidance
