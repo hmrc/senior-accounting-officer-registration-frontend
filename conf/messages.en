@@ -117,3 +117,6 @@ contactHaveYouAddedAll.change.hidden = ContactHaveYouAddedAll
 contactCheckYourAnswers.title = Check your answers
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Save and Continue
+
+nominatedCompanyDetailsGuidance.title = nominatedCompanyDetailsGuidance
+nominatedCompanyDetailsGuidance.heading = nominatedCompanyDetailsGuidance
