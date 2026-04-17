@@ -36,4 +36,9 @@ class NominatedCompanyDetailsGuidanceController @Inject()(
     implicit request =>
       Ok(view())
   }
+
+  def continue: Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      Redirect(routes.GrsController.start())
+  }
 }

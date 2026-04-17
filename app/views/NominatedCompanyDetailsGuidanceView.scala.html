@@ -16,7 +16,8 @@
 
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        formHelper: FormWithCSRF
 )
 
 @()(using request: Request[?], messages: Messages)
@@ -40,8 +41,10 @@
         @messages("nominatedCompanyDetailsGuidance.inset.text")
     </div>
 
-    @govukButton(
-    ButtonViewModel(messages("site.continue").toText).withAttribute("id", "submit")
-    )
+    @formHelper(action = routes.NominatedCompanyDetailsGuidanceController.continue()) {
+        @govukButton(
+        ButtonViewModel(messages("site.continue").toText).withAttribute("id", "submit")
+        )
+    }
 
 }
