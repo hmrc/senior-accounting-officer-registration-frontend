@@ -118,5 +118,12 @@ contactCheckYourAnswers.title = Check your answers
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Save and Continue
 
-nominatedCompanyDetailsGuidance.title = nominatedCompanyDetailsGuidance
-nominatedCompanyDetailsGuidance.heading = nominatedCompanyDetailsGuidance
+nominatedCompanyDetailsGuidance.title = Company Details
+nominatedCompanyDetailsGuidance.heading = Provide your nominated company details
+nominatedCompanyDetailsGuidance.caption = Nominated company details
+nominatedCompanyDetailsGuidance.p1 = You’ll need to enter the nominated company's details so we can confirm your company and link it to the correct HMRC records.
+nominatedCompanyDetailsGuidance.p2 = You'll be asked to provide your:
+nominatedCompanyDetailsGuidance.b1 = Company Registration Number (CRN)
+nominatedCompanyDetailsGuidance.b2 = Unique Taxpayer Reference (UTR)
+nominatedCompanyDetailsGuidance.p3 = These details must match Companies House records. If they do not, you will not be able to register for the service.
+nominatedCompanyDetailsGuidance.inset.text = If your organisation is not registered with Companies House, nominate a company in your group with a CRN to register. If no company in your group has a CRN, contact HMRC using your usual compliance contact or existing support channels.
