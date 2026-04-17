@@ -77,7 +77,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 object RegistrationCompleteViewSpec {
   val pageTitle: String = "SAO Registration Confirmation"
 
-  val panelTitle: String = "Registration Complete"
+  val panelTitle: String = "Registration complete"
 
   val panelBody: String = "Your reference number REG12345"
 
