@@ -32,12 +32,12 @@ class NominatedCompanyDetailsGuidanceController @Inject()(
                                        view: NominatedCompanyDetailsGuidanceView
                                      ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = (identify) {
     implicit request =>
       Ok(view())
   }
 
-  def continue: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def continue: Action[AnyContent] = (identify) {
     implicit request =>
       Redirect(routes.GrsController.start())
   }
