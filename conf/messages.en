@@ -57,7 +57,7 @@ registration.dashboard.row.status.completed = Completed
 registration.dashboard.submit = Submit your registration
 
 registration.complete.title = SAO Registration Confirmation
-registration.complete.heading = Registration Complete
+registration.complete.heading = Registration complete
 registration.complete.referenceNumberPrefix = Your reference number
 registration.complete.p1 = We’ve sent a confirmation email to all the contacts you gave during registration.
 registration.complete.p2 = if you want to keep a paper record of your registration.
