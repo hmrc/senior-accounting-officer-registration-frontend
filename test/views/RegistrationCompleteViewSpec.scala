@@ -56,13 +56,15 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
       doc.createTestsWithParagraphs(paragraphsList)
 
-      doc.getMainContent
-        .select("p")
-        .get(1)
-        .createTestWithLink(
-          linkText = "Print this page",
-          destinationUrl = "#"
-        )
+      "must have a print this page link" - {
+        doc.getMainContent
+          .select("a[onclick*=\"window.print\"]")
+          .get(0)
+          .createTestWithLink(
+            linkText = "Print this page",
+            destinationUrl = "#"
+          )
+      }
 
       "Continue button" - {
         doc.getMainContent

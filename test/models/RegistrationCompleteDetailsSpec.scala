@@ -37,11 +37,9 @@ class RegistrationCompleteDetailsSpec
       val gen: Gen[String] = genValidRegistrationId
 
       forAll(gen) { registrationId =>
-        val jsValue: JsValue = Json.parse(s"""
-                          | {
-                          |   "registrationId" : "$registrationId"
-                          | }
-                          |""".stripMargin)
+        val jsValue: JsValue = Json.obj(
+          "registrationId" -> registrationId
+        )
         jsValue
           .validate[RegistrationCompleteDetails]
           .asOpt
@@ -72,11 +70,9 @@ class RegistrationCompleteDetailsSpec
           registrationId = registrationId
         )
 
-        Json.toJson(registrationCompleteDetails) mustEqual Json.parse(s"""
-                                                                          | {
-                                                                          |   "registrationId" : "$registrationId"
-                                                                          | }
-                                                                          |""".stripMargin)
+        Json.toJson(registrationCompleteDetails) mustEqual Json.obj(
+          "registrationId" -> registrationId
+        )
       }
     }
   }
@@ -88,9 +84,6 @@ object RegistrationCompleteDetailsSpec {
 
   val genInvalidJsObj: Gen[JsValue] = Gen.alphaNumStr.map(JsString.apply)
 
-  val genMissingRegistrationId: Gen[JsValue] = Json.parse(s"""
-       | {
-       | }
-       |""".stripMargin)
+  val genMissingRegistrationId: Gen[JsValue] = Json.obj()
 
 }
