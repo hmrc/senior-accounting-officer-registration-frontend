@@ -35,6 +35,12 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
 
+      "when the user is in the add nominated company details journey" - {
+        "must go from nominated company guidance page to GRS stubs" in {
+          navigator.nextPage(NominatedCompanyDetailsGuidancePage, NormalMode, UserAnswers("id")) mustBe routes.GrsController.start()
+        }
+      }
+
       "when the user is in the add first contact details journey" - {
         "must go from contact name to contact email" in {
           navigator.nextPage(ContactNamePage(First), NormalMode, UserAnswers("id")) mustBe routes.ContactEmailController
