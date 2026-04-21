@@ -97,7 +97,7 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 object DashboardViewSpec {
   val pageHeading: String                  = "Register your nominated company"
   val enterNominatedCompanyDetailsLinkText = "Enter your nominated company details"
-  val enterNominatedCompanyDetailsLinkUrl  = "/senior-accounting-officer/registration/business-match"
+  val enterNominatedCompanyDetailsLinkUrl  = "/senior-accounting-officer/registration/nominatedCompanyDetailsGuidance"
   val enterYourContactDetailsLinkText      = "Enter your contact details"
   val enterYourContactDetailsLinkUrl       = "/senior-accounting-officer/registration/contact-details"
   val paragraphs: List[String]             = List(

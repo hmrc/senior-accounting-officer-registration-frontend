@@ -26,18 +26,16 @@ import views.html.NominatedCompanyDetailsGuidanceView
 class NominatedCompanyDetailsGuidanceController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: NominatedCompanyDetailsGuidanceView
                                      ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify) {
+  def onPageLoad: Action[AnyContent] = identify {
     implicit request =>
       Ok(view())
   }
 
-  def continue: Action[AnyContent] = (identify) {
+  def continue: Action[AnyContent] = identify {
     implicit request =>
       Redirect(routes.GrsController.start())
   }

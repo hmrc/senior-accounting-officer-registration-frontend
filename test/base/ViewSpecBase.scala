@@ -46,6 +46,17 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         .Try(doc.select(".govuk-panel.govuk-panel--confirmation").get(0))
         .getOrElse(throw RuntimeException("No Confirmation Panel found"))
 
+    def createTestForInsetText(text: String): Unit = {
+      val insetTextElement = doc.getMainContent.select(".govuk-inset-text")
+      "must have one inset string" in {
+        insetTextElement.size() mustBe 1
+      }
+
+      s"must have expected inset string of $text" in {
+        insetTextElement.text() mustBe text
+      }
+    }
+
     def createTestsWithStandardPageElements(
         pageTitle: String,
         pageHeading: String,
@@ -572,6 +583,21 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       )
       createTestsWithOrderOfElements(
         selector = "span.govuk-caption-m",
+        texts = Seq(caption),
+        description = "captions"
+      )
+    }
+
+    def createTestsWithLargeCaption(
+                                caption: String
+                              )(using pos: Position): Unit = {
+      createTestWithCountOfElement(
+        selector = "span.govuk-caption-l",
+        count = 1,
+        description = "captions"
+      )
+      createTestsWithOrderOfElements(
+        selector = "span.govuk-caption-l",
         texts = Seq(caption),
         description = "captions"
       )
