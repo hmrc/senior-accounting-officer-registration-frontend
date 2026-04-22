@@ -56,9 +56,32 @@ class GrsStubsController @Inject() (
   }
 
   def getGrs(journeyId: String): Action[AnyContent] = apiIdentify { implicit request =>
-    Ok(Json.parse(s"""
-        |{"companyProfile":{"companyName":"Test Company Ltd","companyNumber":"${IdentifierGenerator.randomCompanyNumber}","dateOfIncorporation":"2020-01-01","unsanitisedCHROAddress":{"address_line_1":"testLine1","address_line_2":"test town","care_of":"test name","country":"United Kingdom","locality":"test city","po_box":"123","postal_code":"AA11AA","premises":"1","region":"test region"}},"identifiersMatch":true,"registration":{"registrationStatus":"REGISTERED","registeredBusinessPartnerId":"${IdentifierGenerator.randomSafeId}"},"ctutr":"${IdentifierGenerator.randomUtr}"}
-        |""".stripMargin))
+    Ok(
+      Json.obj(
+        "companyProfile" -> Json.obj(
+          "companyName"            -> "Test Company Ltd",
+          "companyNumber"          -> IdentifierGenerator.randomCompanyNumber,
+          "dateOfIncorporation"    -> "2020-01-01",
+          "unsanitisedCHROAddress" -> Json.obj(
+            "address_line_1" -> "testLine1",
+            "address_line_2" -> "test town",
+            "care_of"        -> "test name",
+            "country"        -> "United Kingdom",
+            "locality"       -> "test city",
+            "po_box"         -> "123",
+            "postal_code"    -> "AA11AA",
+            "premises"       -> "1",
+            "region"         -> "test region"
+          )
+        ),
+        "identifiersMatch" -> true,
+        "registration"     -> Json.obj(
+          "registrationStatus"          -> "REGISTERED",
+          "registeredBusinessPartnerId" -> IdentifierGenerator.randomSafeId
+        ),
+        "ctutr" -> IdentifierGenerator.randomUtr
+      )
+    )
   }
 
 }

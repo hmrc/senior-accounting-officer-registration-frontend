@@ -29,7 +29,7 @@ import views.html.RegistrationCompleteView
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
-import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
+import java.time.{LocalDateTime, ZoneOffset}
 
 class RegistrationCompleteControllerSpec extends SpecBase {
 
@@ -63,9 +63,7 @@ class RegistrationCompleteControllerSpec extends SpecBase {
         val view    = application.injector.instanceOf[RegistrationCompleteView]
 
         val registrationData = RegistrationCompleteDetails(
-          companyName = "ABC Ltd",
-          registrationId = "XMPLR0123456789",
-          registrationDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 30), ZoneOffset.UTC)
+          registrationId = "XMPLR0123456789"
         )
 
         status(result) mustEqual OK

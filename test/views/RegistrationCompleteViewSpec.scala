@@ -24,16 +24,10 @@ import org.jsoup.nodes.Document
 import views.RegistrationCompleteViewSpec.*
 import views.html.RegistrationCompleteView
 
-import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
-
 class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView] {
 
-  private val testDateTime = ZonedDateTime.of(LocalDateTime.of(2025, 1, 17, 11, 45), ZoneOffset.UTC)
-
   private val registrationCompleteDetails = RegistrationCompleteDetails(
-    companyName = "Test Corp Ltd",
-    registrationId = "REG12345",
-    registrationDateTime = testDateTime
+    registrationId = "REG12345"
   )
 
   "RegistrationCompleteView" - {
@@ -52,48 +46,32 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
       "with a confirmation panel that" - {
         "must have the correct title" - {
-          doc.getConfirmationPanel.getPanelTitle.createTestWithText(text = panelTitle)
+          doc.getConfirmationPanel.getPanelTitle.createTestWithText(panelTitle)
         }
 
         "must have the correct body" - {
-          doc.getConfirmationPanel.getPanelBody.createTestWithText(text = panelBody)
+          doc.getConfirmationPanel.getPanelBody.createTestWithText(panelBody)
         }
       }
 
-      doc.createTestsWithParagraphs(paragraphs = paragraphsList)
+      doc.createTestsWithParagraphs(paragraphsList)
 
-      "The final paragraph" - {
+      "must have a print this page link" - {
         doc.getMainContent
-          .getParagraphs()
-          .last
-          .createTestWithLink(
-            linkText = "submit a notification and certificate.",
-            destinationUrl = "hub-url/senior-accounting-officer"
-          )
-      }
-
-      doc.createTestsWithBulletPoints(bullets = bulletPointTexts)
-
-      "First bullet point" - {
-        doc.getMainContent
-          .select("li")
+          .select("a[onclick*=\"window.print\"]")
           .get(0)
           .createTestWithLink(
-            linkText = bulletPointTexts.head,
+            linkText = "Print this page",
             destinationUrl = "#"
           )
       }
 
-      "Second bullet point" - {
+      "Continue button" - {
         doc.getMainContent
-          .select("li")
-          .get(1)
-          .createTestWithLink(
-            linkText = bulletPointTexts.last,
-            destinationUrl = "#"
-          )
+          .select(".govuk-button-primary")
+          .get(0)
+          .createTestWithText("Continue")
       }
-
     }
   }
 }
@@ -101,17 +79,14 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 object RegistrationCompleteViewSpec {
   val pageTitle: String = "SAO Registration Confirmation"
 
-  val panelTitle: String = "Registration Complete"
+  val panelTitle: String = "Registration complete"
 
-  val panelBody: String = "Your reference ID REG12345"
+  val panelBody: String = "Your reference number REG12345"
 
   val paragraphsList: List[String] = List(
-    "Test Corp Ltd has successfully registered to report for Senior Accounting Officer Notification and Certificate service, on 17 January 2025 at 11:45am (GMT).",
-    "We have sent a confirmation email with your reference ID to al the contact you gave during registration.",
-    "If you need to keep a record of your registration",
-    "You can now log into your Senior Accounting Officer notification and certificate service account to submit a notification and certificate."
+    "We’ve sent a confirmation email to all the contacts you gave during registration.",
+    "Print this page if you want to keep a paper record of your registration.",
+    "You can now log in to submit a notification and certificate."
   )
-
-  val bulletPointTexts: List[String] = List("Print the page", "Download as PDF")
 
 }

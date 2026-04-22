@@ -17,7 +17,6 @@
 package controllers
 
 import controllers.actions.*
-import models.registration.CompanyDetails
 import models.registration.RegistrationCompleteDetails
 import pages.CompanyDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -25,7 +24,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
 
-import java.time.{Clock, ZonedDateTime}
+import java.time.Clock
 import javax.inject.Inject
 
 class RegistrationCompleteController @Inject() (
@@ -41,14 +40,12 @@ class RegistrationCompleteController @Inject() (
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     request.userAnswers.get(CompanyDetailsPage) match
-      case None                 => Redirect(routes.JourneyRecoveryController.onPageLoad())
-      case Some(companyDetails) =>
+      case None    => Redirect(routes.JourneyRecoveryController.onPageLoad())
+      case Some(_) =>
         Ok(
           view(
             RegistrationCompleteDetails(
-              companyName = companyDetails.companyName,
-              registrationId = "XMPLR0123456789",
-              registrationDateTime = ZonedDateTime.now(clock)
+              registrationId = "XMPLR0123456789"
             )
           )
         )
