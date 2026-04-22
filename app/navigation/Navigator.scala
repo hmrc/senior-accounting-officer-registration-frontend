@@ -29,8 +29,8 @@ class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
-    case ContactNamePage(contactType)  => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(contactType) =>
+    case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
+    case ContactEmailPage(contactType)       =>
       _ =>
         contactType match {
           case First  => routes.ContactHaveYouAddedAllController.onPageLoad(First)

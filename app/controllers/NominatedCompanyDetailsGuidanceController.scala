@@ -23,20 +23,20 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.NominatedCompanyDetailsGuidanceView
 
-class NominatedCompanyDetailsGuidanceController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       identify: IdentifierAction,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: NominatedCompanyDetailsGuidanceView
-                                     ) extends FrontendBaseController with I18nSupport {
+class NominatedCompanyDetailsGuidanceController @Inject() (
+    override val messagesApi: MessagesApi,
+    identify: IdentifierAction,
+    val controllerComponents: MessagesControllerComponents,
+    view: NominatedCompanyDetailsGuidanceView
+) extends FrontendBaseController
+    with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify {
-    implicit request =>
-      Ok(view())
+  def onPageLoad: Action[AnyContent] = identify { implicit request =>
+    Ok(view())
   }
 
-  def continue: Action[AnyContent] = identify {
-    implicit request =>
-      Redirect(routes.GrsController.start())
+  def continue: Action[AnyContent] = identify { implicit request =>
+    println("April was here")
+    Redirect(routes.GrsController.start())
   }
 }

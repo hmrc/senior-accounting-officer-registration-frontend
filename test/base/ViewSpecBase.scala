@@ -589,8 +589,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
 
     def createTestsWithLargeCaption(
-                                caption: String
-                              )(using pos: Position): Unit = {
+        caption: String
+    )(using pos: Position): Unit = {
       createTestWithCountOfElement(
         selector = "span.govuk-caption-l",
         count = 1,

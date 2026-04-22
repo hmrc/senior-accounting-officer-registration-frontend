@@ -37,7 +37,11 @@ class NavigatorSpec extends SpecBase {
 
       "when the user is in the add nominated company details journey" - {
         "must go from nominated company guidance page to GRS stubs" in {
-          navigator.nextPage(NominatedCompanyDetailsGuidancePage, NormalMode, UserAnswers("id")) mustBe routes.GrsController.start()
+          navigator.nextPage(
+            NominatedCompanyDetailsGuidancePage,
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe routes.GrsController.start()
         }
       }
 

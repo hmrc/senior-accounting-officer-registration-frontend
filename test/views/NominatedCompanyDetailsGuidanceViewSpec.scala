@@ -50,14 +50,15 @@ class NominatedCompanyDetailsGuidanceViewSpec extends ViewSpecBase[NominatedComp
 
     doc.createTestsWithSubmissionButton(
       action = controllers.routes.NominatedCompanyDetailsGuidanceController.continue(),
-      buttonText = submitButtonText)
+      buttonText = submitButtonText
+    )
   }
 }
 
 object NominatedCompanyDetailsGuidanceViewSpec {
-  val pageHeading = "Provide your nominated company details"
-  val pageTitle = "Company Details"
-  val caption: String = "Nominated company details"
+  val pageHeading                  = "Provide your nominated company details"
+  val pageTitle                    = "Company Details"
+  val caption: String              = "Nominated company details"
   val paragraphTexts: List[String] = List(
     "You’ll need to enter the nominated company’s details so we can confirm your company and link it to the correct HMRC records.",
     "You’ll be asked to provide your:",
@@ -69,7 +70,8 @@ object NominatedCompanyDetailsGuidanceViewSpec {
     "Unique Taxpayer Reference (UTR)"
   )
 
-  val pageInsetText: String = "If your organisation is not registered with Companies House, nominate a company in your group with a CRN to register. If no company in your group has a CRN, contact HMRC using your usual compliance contact or existing support channels."
+  val pageInsetText: String =
+    "If your organisation is not registered with Companies House, nominate a company in your group with a CRN to register. If no company in your group has a CRN, contact HMRC using your usual compliance contact or existing support channels."
 
   val submitButtonText: String = "Continue"
 }

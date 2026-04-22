@@ -57,4 +57,4 @@ GET         /contact-details/check-your-answers                controllers.Conta
 POST        /contact-details/check-your-answers                controllers.ContactCheckYourAnswersController.saveAndContinue()
 
 GET        /nominatedCompanyDetailsGuidance                       controllers.NominatedCompanyDetailsGuidanceController.onPageLoad()
-GET        /nominatedCompanyDetailsGuidance                       controllers.NominatedCompanyDetailsGuidanceController.continue()
+POST       /nominatedCompanyDetailsGuidance                       controllers.NominatedCompanyDetailsGuidanceController.continue()
