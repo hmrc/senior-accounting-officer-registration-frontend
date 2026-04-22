@@ -36,7 +36,6 @@ class NominatedCompanyDetailsGuidanceController @Inject() (
   }
 
   def continue: Action[AnyContent] = identify { implicit request =>
-    println("April was here")
     Redirect(routes.GrsController.start())
   }
 }
