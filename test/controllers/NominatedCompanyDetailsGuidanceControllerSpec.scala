@@ -40,5 +40,18 @@ class NominatedCompanyDetailsGuidanceControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view()(using request, messages(application)).toString
       }
     }
+
+    "must redirect to the GRS controller for a POST" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.NominatedCompanyDetailsGuidanceController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).get mustEqual routes.GrsController.start().url
+      }
+    }
   }
 }

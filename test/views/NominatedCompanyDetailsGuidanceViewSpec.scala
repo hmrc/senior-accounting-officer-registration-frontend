@@ -49,9 +49,11 @@ class NominatedCompanyDetailsGuidanceViewSpec extends ViewSpecBase[NominatedComp
     doc.createTestsWithOrWithoutError(hasError = false)
 
     doc.createTestsWithSubmissionButton(
-      action = controllers.routes.NominatedCompanyDetailsGuidanceController.continue(),
+      action = controllers.routes.NominatedCompanyDetailsGuidanceController.onSubmit(),
       buttonText = submitButtonText
     )
+
+    doc.createTestsWithBulletPoints(bulletPointTexts)
   }
 }
 

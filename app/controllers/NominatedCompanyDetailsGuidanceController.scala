@@ -17,6 +17,10 @@
 package controllers
 
 import controllers.actions.*
+import models.NormalMode
+import navigation.Navigator
+import pages.{GrsStubPage, NominatedCompanyDetailsGuidancePage}
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -35,7 +39,7 @@ class NominatedCompanyDetailsGuidanceController @Inject() (
     Ok(view())
   }
 
-  def continue: Action[AnyContent] = identify { implicit request =>
+  def onSubmit: Action[AnyContent] = identify { implicit request =>
     Redirect(routes.GrsController.start())
   }
 }

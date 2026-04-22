@@ -27,24 +27,23 @@
     <span class="govuk-caption-l">@messages("nominatedCompanyDetailsGuidance.caption")</span>
     <h1 class="govuk-heading-l">@messages("nominatedCompanyDetailsGuidance.heading")</h1>
 
-    <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.p1")</p>
-    <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.p2")</p>
+    <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.paragraph1")</p>
+    <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.paragraph2")</p>
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("nominatedCompanyDetailsGuidance.b1")</li>
-        <li>@messages("nominatedCompanyDetailsGuidance.b2")</li>
+        <li>@messages("nominatedCompanyDetailsGuidance.bulletPoint1")</li>
+        <li>@messages("nominatedCompanyDetailsGuidance.bulletPoint2")</li>
     </ul>
 
-    <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.p3")</p>
+    <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.paragraph3")</p>
 
     <div class="govuk-inset-text">
         @messages("nominatedCompanyDetailsGuidance.inset.text")
     </div>
 
-    @formHelper(action = routes.NominatedCompanyDetailsGuidanceController.continue()) {
+    @formHelper(action = routes.NominatedCompanyDetailsGuidanceController.onSubmit()) {
         @govukButton(
-        ButtonViewModel(messages("site.continue").toText).withAttribute("id", "submit")
+            ButtonViewModel(messages("site.continue").toText).withAttribute("id", "submit")
         )
     }
-
 }
