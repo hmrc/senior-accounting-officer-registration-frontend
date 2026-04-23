@@ -55,6 +55,7 @@ class GrsController @Inject() (
     } yield {
       r.status match {
         case CREATED =>
+          println("APRIL")
           Try(Json.parse(r.body).as[NewJourneyResponse]).toEither
             .map(response => SeeOther(response.journeyStartUrl))
             .left

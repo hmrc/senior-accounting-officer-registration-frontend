@@ -44,7 +44,7 @@ class GrsConnector @Inject (appConfig: AppConfig, http: HttpClientV2)(using
 
     val url: String =
       if appConfig.stubGrs then {
-        s"${appConfig.grsStubsBaseUrl}${_root_.controllers.testonly.routes.GrsStubsController.startGrs()}"
+        s"${appConfig.grsStubsBaseUrl}${_root_.controllers.testonly.routes.GrsStubsController.startGrs().url}"
       } else {
         s"${appConfig.grsBaseUrl}/incorporated-entity-identification/api/limited-company-journey"
       }
