@@ -19,24 +19,18 @@ package controllers
 import controllers.actions.*
 import models.{NormalMode, UserAnswers}
 import navigation.Navigator
-import pages.{GrsStubPage, NominatedCompanyDetailsGuidancePage}
-import play.api.data.Form
-
+import pages.NominatedCompanyDetailsGuidancePage
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.NominatedCompanyDetailsGuidanceView
 
-import scala.concurrent.Future
-
 class NominatedCompanyDetailsGuidanceController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     val controllerComponents: MessagesControllerComponents,
     view: NominatedCompanyDetailsGuidanceView,
-    getData: DataRetrievalAction,
-    requireData: DataRequiredAction,
     navigator: Navigator
 ) extends FrontendBaseController
     with I18nSupport {
@@ -45,8 +39,7 @@ class NominatedCompanyDetailsGuidanceController @Inject() (
     Ok(view())
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-//    Redirect(routes.GrsController.start())
-    Redirect(navigator.nextPage(NominatedCompanyDetailsGuidancePage, NormalMode, request.userAnswers))
+  def onSubmit: Action[AnyContent] = identify { implicit request =>
+    Redirect(navigator.nextPage(NominatedCompanyDetailsGuidancePage, NormalMode, UserAnswers(request.userId)))
   }
 }
