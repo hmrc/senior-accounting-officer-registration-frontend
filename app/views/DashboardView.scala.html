@@ -31,7 +31,7 @@
     <ul class="govuk-task-list">
         @row(
             linkText = messages("registration.dashboard.row.company"),
-            href = routes.GrsController.start(),
+            href = routes.NominatedCompanyDetailsGuidanceController.onPageLoad(),
             statusIdName = "company-details",
             status = currentStage.companyDetailsStatus
         )
