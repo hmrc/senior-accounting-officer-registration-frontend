@@ -9,3 +9,17 @@
 .js-enabled .js-visible {
   display: inline-block !important;
 }
+
+@media print {
+  .govuk-panel--confirmation,
+  .govuk-heading-m,
+  .govuk-body {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #print-link,
+  .govuk-button-primary {
+    display: none;
+  }
+}
