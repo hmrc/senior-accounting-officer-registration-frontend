@@ -31,9 +31,9 @@ class Navigator @Inject() () {
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
     case ContactEmailPage(contactType)       => _ => routes.ContactCheckYourAnswersController.onPageLoad(contactType)
-    case ContactCheckYourAnswersPage(contactType) => 
+    case ContactCheckYourAnswersPage(contactType) =>
       userAnswers =>
-        if userAnswers.get(ContactCheckYourAnswersPage(contactType)) == First then {
+        if contactType == First then {
           routes.ContactHaveYouAddedAllController.onPageLoad(First)
         } else routes.IndexController.onPageLoad()
     case ContactHaveYouAddedAllPage(First) =>
