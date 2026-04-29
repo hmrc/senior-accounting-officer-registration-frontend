@@ -44,6 +44,7 @@
     </p>
     <script @CSPNonce.attr>
         document.getElementById('print-page-link').addEventListener('click', function() {
+            event.preventDefault();
             window.print();
         })
     </script>
