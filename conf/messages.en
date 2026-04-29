@@ -111,7 +111,8 @@ contactHaveYouAddedAll.checkYourAnswersLabel = Have you added all the contacts y
 contactHaveYouAddedAll.error.required = Select contactHaveYouAddedAll
 contactHaveYouAddedAll.change.hidden = ContactHaveYouAddedAll
 
-contactCheckYourAnswers.title = Check your answers
+contactCheckYourAnswers.title.first  = First contact details
+contactCheckYourAnswers.title.second = Second contact details
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Save and Continue
 

@@ -30,16 +30,16 @@ class Navigator @Inject() () {
   private val normalRoutes: Page => UserAnswers => Call = {
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(contactType)       =>
-      _ =>
-        contactType match {
-          case First  => routes.ContactHaveYouAddedAllController.onPageLoad(First)
-          case Second => routes.ContactCheckYourAnswersController.onPageLoad()
-        }
+    case ContactEmailPage(contactType)       => _ => routes.ContactCheckYourAnswersController.onPageLoad(contactType)
+    case ContactCheckYourAnswersPage(contactType) => 
+      userAnswers =>
+        if userAnswers.get(ContactCheckYourAnswersPage(contactType)) == First then {
+          routes.ContactHaveYouAddedAllController.onPageLoad(First)
+        } else routes.IndexController.onPageLoad()
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
-          routes.ContactCheckYourAnswersController.onPageLoad()
+          routes.IndexController.onPageLoad()
         } else {
           routes.ContactNameController.onPageLoad(
             Second,
@@ -50,7 +50,7 @@ class Navigator @Inject() () {
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.ContactCheckYourAnswersController.onPageLoad()
+    _ => routes.ContactCheckYourAnswersController.onPageLoad(First)
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

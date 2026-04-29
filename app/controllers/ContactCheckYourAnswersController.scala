@@ -18,8 +18,9 @@ package controllers
 
 import controllers.actions.*
 import forms.ContactCheckYourAnswersFormProvider
-import models.ContactInfo
-import pages.ContactsPage
+import models.{ContactInfo, ContactType, NormalMode}
+import navigation.Navigator
+import pages.{ContactCheckYourAnswersPage, ContactsPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,7 +31,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactCheckYourAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
-
 import javax.inject.Inject
 
 class ContactCheckYourAnswersController @Inject() (
@@ -43,22 +43,23 @@ class ContactCheckYourAnswersController @Inject() (
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
     service: ContactCheckYourAnswersService,
-    sessionRepository: SessionRepository
+    sessionRepository: SessionRepository,
+    navigator: Navigator
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   val form: Form[List[ContactInfo]] = formProvider()
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) {
+  def onPageLoad(contactType: ContactType): Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) {
     implicit request =>
       val contactInfos = service.getContactInfos(request.userAnswers)
       if contactInfos.isEmpty
       then Redirect(routes.JourneyRecoveryController.onPageLoad())
-      else Ok(view(contactInfos))
+      else Ok(view(contactInfos, contactType))
   }
 
-  def saveAndContinue: Action[AnyContent] =
+  def saveAndContinue(contactType: ContactType): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen blockConfirmedContacts) async { implicit request =>
       form
         .bindFromRequest()
@@ -71,10 +72,10 @@ class ContactCheckYourAnswersController @Inject() (
             if service.getContactInfos(request.userAnswers) == dataReceived then
               for {
                 updatedUserAnswers <- Future
-                  .fromTry(request.userAnswers.set(ContactsPage, dataReceived))
+                  .fromTry(request.userAnswers.set(ContactCheckYourAnswersPage(contactType), dataReceived))
                 _ <- sessionRepository.set(updatedUserAnswers)
               } yield {
-                Redirect(routes.IndexController.onPageLoad())
+                Redirect(navigator.nextPage(ContactCheckYourAnswersPage(contactType), NormalMode, updatedUserAnswers))
               }
             else Future.failed(BadRequestException("The ContactCheckYourAnswersForm submitted is out of date"))
         )
