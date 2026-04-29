@@ -26,13 +26,13 @@
 
 @layout(pageTitle = titleNoForm(messages(s"contactCheckYourAnswers.title.${contactType.messageKey}"))) {
 
+    <span class="govuk-caption-m">@messages(s"contactCheckYourAnswers.title.${contactType.messageKey}")</span>
     <h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
     @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinue(contactType)) {
         @for((contact, index) <- contacts.zipWithIndex) {
-            <h2 class="govuk-heading-s">@contactType(index) contact details</h2>
             @govukSummaryList(SummaryListViewModel(rows = Seq(
-                ContactNameSummary.row(contactType(index), contact.name),
-                ContactEmailSummary.row(contactType(index), contact.email),
+                ContactNameSummary.row(contactType, contact.name),
+                ContactEmailSummary.row(contactType, contact.email),
             )))
             <input type="hidden" name="contacts[@index].name" value="@contact.name"/>
             <input type="hidden" name="contacts[@index].email" value="@contact.email"/>
@@ -41,12 +41,5 @@
         @govukButton(
             ButtonViewModel(messages("contactCheckYourAnswers.continue").toText).withAttribute("id", "submit")
         )
-    }
-}
-
-@contactType(index: Int) = @{
-    index match {
-        case 0 => ContactType.First
-        case _ => ContactType.Second
     }
 }
