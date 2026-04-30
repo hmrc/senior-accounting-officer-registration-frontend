@@ -9,7 +9,7 @@ import utils.DateTimeFormats.dateTimeFormat
 import viewmodels.govuk.summarylist.*
 import viewmodels.converters.*
 
-object $className$Summary  {
+object $className$Summary {
 
   def row(answers: UserAnswers)(using messages: Messages): Option[SummaryListRow] =
     answers.get($className$Page).map {
