@@ -24,15 +24,14 @@ import play.api.data.Forms.{list, mapping}
 import javax.inject.Inject
 
 class ContactCheckYourAnswersFormProvider @Inject() extends Mappings {
-  def apply(): Form[List[ContactInfo]] =
+  def apply(): Form[ContactInfo] =
     Form(
       mapping(
-        "contacts" -> list(
+        "contacts" ->
           mapping(
             "name"  -> text(),
             "email" -> text()
           )(ContactInfo.apply)(o => Some(Tuple.fromProductTyped(o)))
-        )
       )(identity)(Some(_))
     )
 }

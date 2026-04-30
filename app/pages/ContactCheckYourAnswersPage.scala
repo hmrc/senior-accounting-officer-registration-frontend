@@ -19,7 +19,7 @@ package pages
 import models.{ContactInfo, ContactType}
 import play.api.libs.json.JsPath
 
-case class ContactCheckYourAnswersPage (contactType: ContactType) extends QuestionPage[List[ContactInfo]] {
+case class ContactCheckYourAnswersPage (contactType: ContactType) extends QuestionPage[ContactInfo] {
 
   override def path: JsPath = JsPath \ contactType.toMongoPath \ "contactCheckYourAnswers"
 

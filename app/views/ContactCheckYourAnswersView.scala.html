@@ -22,21 +22,18 @@
   govukSummaryList: GovukSummaryList
 )
 
-@(contacts: List[ContactInfo], contactType: ContactType)(using request: Request[?], messages: Messages)
+@(contact: ContactInfo, contactType: ContactType)(using request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages(s"contactCheckYourAnswers.title.${contactType.messageKey}"))) {
 
     <span class="govuk-caption-l">@messages(s"contactCheckYourAnswers.title.${contactType.messageKey}")</span>
     <h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
     @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinue(contactType)) {
-        @for((contact, index) <- contacts.zipWithIndex) {
-            @govukSummaryList(SummaryListViewModel(rows = Seq(
-                ContactNameSummary.row(contactType, contact.name),
-                ContactEmailSummary.row(contactType, contact.email),
-            )))
-            <input type="hidden" name="contacts[@index].name" value="@contact.name"/>
-            <input type="hidden" name="contacts[@index].email" value="@contact.email"/>
-        }
+
+        @govukSummaryList(SummaryListViewModel(rows = Seq(
+            ContactNameSummary.row(contactType, contact.name),
+            ContactEmailSummary.row(contactType, contact.email),
+        )))
 
         @govukButton(
             ButtonViewModel(messages("contactCheckYourAnswers.continue").toText).withAttribute("id", "submit")

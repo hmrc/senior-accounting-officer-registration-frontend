@@ -49,14 +49,14 @@ class ContactCheckYourAnswersController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form: Form[List[ContactInfo]] = formProvider()
+  val form: Form[ContactInfo] = formProvider()
 
   def onPageLoad(contactType: ContactType): Action[AnyContent] = (identify andThen getData andThen requireData andThen blockConfirmedContacts) {
     implicit request =>
-      val contactInfos = service.getContactInfos(request.userAnswers)
-      if contactInfos.isEmpty
-      then Redirect(routes.JourneyRecoveryController.onPageLoad())
-      else Ok(view(contactInfos, contactType))
+      service.getContactInfo(request.userAnswers, contactType) match {
+        case Some(answers) => Ok(view(answers, contactType))
+        case None => Redirect(routes.JourneyRecoveryController.onPageLoad())
+      }
   }
 
   def saveAndContinue(contactType: ContactType): Action[AnyContent] =

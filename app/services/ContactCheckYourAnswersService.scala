@@ -31,7 +31,7 @@ class ContactCheckYourAnswersService {
     }.toList
   }
 
-  private[services] def getContactInfo(userAnswers: UserAnswers, contactType: ContactType): Option[ContactInfo] =
+  def getContactInfo(userAnswers: UserAnswers, contactType: ContactType): Option[ContactInfo] =
     for {
       name  <- userAnswers.get(ContactNamePage(contactType))
       email <- userAnswers.get(ContactEmailPage(contactType))
