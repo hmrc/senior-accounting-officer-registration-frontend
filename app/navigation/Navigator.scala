@@ -33,9 +33,10 @@ class Navigator @Inject() () {
     case ContactEmailPage(contactType)       => _ => routes.ContactCheckYourAnswersController.onPageLoad(contactType)
     case ContactCheckYourAnswersPage(contactType) =>
       userAnswers =>
-        if contactType == First then {
-          routes.ContactHaveYouAddedAllController.onPageLoad(First)
-        } else routes.IndexController.onPageLoad()
+        contactType match {
+          case First => routes.ContactHaveYouAddedAllController.onPageLoad(First)
+          case Second => routes.IndexController.onPageLoad()
+        }
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
@@ -49,8 +50,18 @@ class Navigator @Inject() () {
     case _ => _ => routes.IndexController.onPageLoad()
   }
 
-  private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.ContactCheckYourAnswersController.onPageLoad(First)
+  private val checkRouteMap: Page => UserAnswers => Call = {
+    case ContactNamePage(contactType) => _ =>
+      contactType match {
+        case First => routes.ContactCheckYourAnswersController.onPageLoad(First)
+        case Second => routes.ContactCheckYourAnswersController.onPageLoad(Second)
+      }
+    case ContactEmailPage(contactType) => _ =>
+      contactType match {
+        case First => routes.ContactCheckYourAnswersController.onPageLoad(First)
+        case Second => routes.ContactCheckYourAnswersController.onPageLoad(Second)
+      }
+    case _ => _ => routes.IndexController.onPageLoad()
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

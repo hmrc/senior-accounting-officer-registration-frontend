@@ -61,23 +61,26 @@ class ContactCheckYourAnswersController @Inject() (
 
   def saveAndContinue(contactType: ContactType): Action[AnyContent] =
     (identify andThen getData andThen requireData andThen blockConfirmedContacts) async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          _ =>
-            Future.failed(
-              BadRequestException("invalid ContactCheckYourAnswersForm submitted")
-            ),
-          dataReceived =>
-            if service.getContactInfos(request.userAnswers) == dataReceived then
-              for {
-                updatedUserAnswers <- Future
-                  .fromTry(request.userAnswers.set(ContactCheckYourAnswersPage(contactType), dataReceived))
-                _ <- sessionRepository.set(updatedUserAnswers)
-              } yield {
-                Redirect(navigator.nextPage(ContactCheckYourAnswersPage(contactType), NormalMode, updatedUserAnswers))
-              }
-            else Future.failed(BadRequestException("The ContactCheckYourAnswersForm submitted is out of date"))
-        )
+      service.getContactInfo(request.userAnswers, contactType) match {
+        case Some(contactInfo) =>
+          val contacts: List[ContactInfo] = contactType match {
+            case ContactType.First =>
+              println("Inside save and cont: first")
+              List(contactInfo)
+            case ContactType.Second =>
+              println("Inside save and cont: second")
+              service.getContactInfo(request.userAnswers, ContactType.First).toList :+ contactInfo
+          }
+          for {
+            updatedUserAnswers <-
+              println("Inside save and cont: for")
+              Future.fromTry(request.userAnswers.set(ContactsPage, contacts))
+            _ <- sessionRepository.set(updatedUserAnswers)
+          } yield {
+            println("Inside save and cont: yield")
+            Redirect(navigator.nextPage(ContactCheckYourAnswersPage(contactType), NormalMode, updatedUserAnswers))
+          }
+        case None => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      }
     }
 }

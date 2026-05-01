@@ -17,7 +17,7 @@
 package controllers.actions
 
 import controllers.routes
-import models.ContactInfo
+import models.{ContactInfo, ContactType}
 import models.requests.DataRequest
 import pages.ContactsPage
 import play.api.mvc.ActionFilter
@@ -26,7 +26,6 @@ import play.api.mvc.Results.Redirect
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-
 import javax.inject.Inject
 
 class BlockConfirmedContactsFilter @Inject() (override implicit val executionContext: ExecutionContext)
