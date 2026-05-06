@@ -43,18 +43,21 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 
         val dl = doc.getMainContent.getElementsByTag("dl")
 
-        "must show correct heading for first contact table" in {
-          val previousElement     = dl.get(0).previousElementSibling()
-          val previousElementText = previousElement.text()
-          val previousElementTag  = previousElement.tag().toString
+        "must show correct caption for contact type" in {
+          val caption         = doc.select(".govuk-caption-l")
+          val expectedCaption = s"$contactType contact details"
 
-          withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-            previousElementTag mustBe "h2"
+          withClue("expected one caption:\n") {
+            caption.size() mustBe 1
           }
 
-          withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
-            previousElementText mustBe firstContactHeading
+          withClue(s"expected caption '$expectedCaption' but found '${caption.text()}'\n") {
+            caption.text() mustBe expectedCaption
           }
+        }
+
+        "must test value for contact table" in {
+          validateContactDetailsTable(dl, 0, contactType.toString.toLowerCase, contacts)
         }
 
         "must show 1 contact table" in {
@@ -140,9 +143,6 @@ object ContactCheckYourAnswersViewSpec {
   val pageHeading: String = "Check your answers"
 
 //  val caption = s"$ContactType contact details"
-
-  val firstContactHeading: String  = "First contact details"
-  val secondContactHeading: String = "Second contact details"
 
   val firstContact: ContactInfo  = ContactInfo("name1", "email1")
   val secondContact: ContactInfo = ContactInfo("name2", "email2")
