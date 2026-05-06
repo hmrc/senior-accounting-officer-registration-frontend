@@ -19,4 +19,4 @@ package pages
 import models.{ContactInfo, ContactType}
 import play.api.libs.json.JsPath
 
-case class ContactCheckYourAnswersPage (contactType: ContactType) extends Page
+case class ContactCheckYourAnswersPage(contactType: ContactType) extends Page

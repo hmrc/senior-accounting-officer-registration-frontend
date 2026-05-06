@@ -32,10 +32,16 @@ class Navigator @Inject() () {
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
     case ContactEmailPage(contactType)       => _ => routes.ContactCheckYourAnswersController.onPageLoad(contactType)
     case ContactCheckYourAnswersPage(contactType) =>
-      userAnswers =>
+      _ =>
         contactType match {
-          case First => routes.ContactHaveYouAddedAllController.onPageLoad(First)
-          case Second => routes.IndexController.onPageLoad()
+          case First => {
+            println("Inside Nav: first")
+            routes.ContactHaveYouAddedAllController.onPageLoad(First)
+          }
+          case Second => {
+            println("Inside Nav: second")
+            routes.IndexController.onPageLoad()
+          }
         }
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
@@ -47,20 +53,26 @@ class Navigator @Inject() () {
             NormalMode
           )
         }
-    case _ => _ => routes.IndexController.onPageLoad()
+    case _ =>
+      _ => {
+        println("Inside Nav: wildcard")
+        routes.IndexController.onPageLoad()
+      }
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
-    case ContactNamePage(contactType) => _ =>
-      contactType match {
-        case First => routes.ContactCheckYourAnswersController.onPageLoad(First)
-        case Second => routes.ContactCheckYourAnswersController.onPageLoad(Second)
-      }
-    case ContactEmailPage(contactType) => _ =>
-      contactType match {
-        case First => routes.ContactCheckYourAnswersController.onPageLoad(First)
-        case Second => routes.ContactCheckYourAnswersController.onPageLoad(Second)
-      }
+    case ContactNamePage(contactType) =>
+      _ =>
+        contactType match {
+          case First  => routes.ContactCheckYourAnswersController.onPageLoad(First)
+          case Second => routes.ContactCheckYourAnswersController.onPageLoad(Second)
+        }
+    case ContactEmailPage(contactType) =>
+      _ =>
+        contactType match {
+          case First  => routes.ContactCheckYourAnswersController.onPageLoad(First)
+          case Second => routes.ContactCheckYourAnswersController.onPageLoad(Second)
+        }
     case _ => _ => routes.IndexController.onPageLoad()
   }
 

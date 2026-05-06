@@ -17,6 +17,7 @@
 package controllers.actions
 
 import controllers.routes
+import models.ContactType.First
 import models.{ContactInfo, ContactType}
 import models.requests.DataRequest
 import pages.ContactsPage
@@ -35,7 +36,10 @@ class BlockConfirmedContactsFilter @Inject() (override implicit val executionCon
       request.userAnswers
         .get(ContactsPage)
         .collect {
-          case list if list.nonEmpty => Redirect(routes.IndexController.onPageLoad())
+          case list if list.nonEmpty => {
+            println("Inside Block: nonempty redirect")
+            Redirect(routes.IndexController.onPageLoad())
+          }
         }
     )
 }

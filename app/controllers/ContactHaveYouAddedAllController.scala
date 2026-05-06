@@ -40,7 +40,6 @@ class ContactHaveYouAddedAllController @Inject() (
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
-    blockConfirmedContacts: BlockConfirmedContactsFilter,
     formProvider: ContactHaveYouAddedAllFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactHaveYouAddedAllView
@@ -51,7 +50,8 @@ class ContactHaveYouAddedAllController @Inject() (
   val form: Form[ContactHaveYouAddedAll] = formProvider()
 
   def onPageLoad(contactType: ContactType): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen blockConfirmedContacts) { implicit request =>
+    (identify andThen getData andThen requireData) { implicit request =>
+      println("Inside HaveYouAddedAll: onPageLoad")
       val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(contactType)) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -61,7 +61,7 @@ class ContactHaveYouAddedAllController @Inject() (
     }
 
   def onSubmit(contactType: ContactType): Action[AnyContent] =
-    (identify andThen getData andThen requireData andThen blockConfirmedContacts).async { implicit request =>
+    (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

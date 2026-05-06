@@ -17,7 +17,7 @@
 package views
 
 import base.ViewSpecBase
-import models.ContactInfo
+import models.{ContactInfo, ContactType}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.jsoup.select.Elements
@@ -28,174 +28,110 @@ import views.html.ContactCheckYourAnswersView
 class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswersView] {
 
   "ContactCheckYourAnswersView" - {
+    ContactType.values.foreach { contactType =>
+      s"When contact type is $contactType and one contact is saved, must generate a view" - {
+        val contacts      = firstContact
+        val doc: Document = Jsoup.parse(SUT(contacts, contactType).toString)
 
-    "When exactly one contact, must generate a view" - {
-      val contacts      = List(firstContact)
-      val doc: Document = Jsoup.parse(SUT(contacts).toString)
+        doc.createTestsWithStandardPageElements(
+          pageTitle = s"$contactType contact details",
+          pageHeading = pageHeading,
+          showBackLink = true,
+          showIsThisPageNotWorkingProperlyLink = true,
+          hasError = false
+        )
 
-      doc.createTestsWithStandardPageElements(
-        pageTitle = pageHeading,
-        pageHeading = pageHeading,
-        showBackLink = true,
-        showIsThisPageNotWorkingProperlyLink = true,
-        hasError = false
-      )
+        val dl = doc.getMainContent.getElementsByTag("dl")
 
-      val dl = doc.getMainContent.getElementsByTag("dl")
+        "must show correct heading for first contact table" in {
+          val previousElement     = dl.get(0).previousElementSibling()
+          val previousElementText = previousElement.text()
+          val previousElementTag  = previousElement.tag().toString
 
-      "must show correct heading for first contact table" in {
-        val previousElement     = dl.get(0).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
+          withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
+            previousElementTag mustBe "h2"
+          }
 
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
+          withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
+            previousElementText mustBe firstContactHeading
+          }
         }
 
-        withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe firstContactHeading
+        "must show 1 contact table" in {
+          dl.size() mustBe 1
         }
+
+        doc.createTestsWithSubmissionButton(
+          action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(contactType),
+          buttonText = submitButtonText
+        )
+
       }
-
-      "must test value for one contact table" in {
-        validateContactDetailsTable(dl, 0, "first", contacts.head)
-      }
-
-      "must show 1 contact table" in {
-        dl.size() mustBe 1
-      }
-
-      doc.createTestsWithSubmissionButton(
-        action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        buttonText = submitButtonText
-      )
-
     }
 
-    "When exactly two contacts, must generate a view" - {
-      val contacts      = List(firstContact, secondContact)
-      val doc: Document = Jsoup.parse(SUT(contacts).toString)
-
-      doc.createTestsWithStandardPageElements(
-        pageTitle = pageHeading,
-        pageHeading = pageHeading,
-        showBackLink = true,
-        showIsThisPageNotWorkingProperlyLink = true,
-        hasError = false
+    def validateContactDetailsTable(
+        dl: Elements,
+        tableIndex: Int,
+        contactNumber: String,
+        contactInfo: ContactInfo
+    ): Assertion = {
+      val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
+      rows.size() mustBe 2
+      validateRow(
+        row = rows.get(0),
+        keyText = "Full name",
+        valueText = contactInfo.name,
+        actionText = "Change",
+        actionHiddenText = "change the full name",
+        actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-name"
       )
 
-      val dl = doc.getMainContent.getElementsByTag("dl")
-
-      "must show correct heading for first contact table" in {
-        val previousElement     = dl.get(0).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
-
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
-        }
-
-        withClue(s"expected heading '$firstContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe firstContactHeading
-        }
-      }
-
-      "must test values for first contact table" in {
-        validateContactDetailsTable(dl, 0, "first", contacts.head)
-      }
-
-      "must show correct heading for second contact table" in {
-        val previousElement     = dl.get(1).previousElementSibling()
-        val previousElementText = previousElement.text()
-        val previousElementTag  = previousElement.tag().toString
-
-        withClue(s"expected heading tag h2 but found '$previousElementTag'\n") {
-          previousElementTag mustBe "h2"
-        }
-
-        withClue(s"expected heading '$secondContactHeading' but found '$previousElementText'\n") {
-          previousElementText mustBe secondContactHeading
-        }
-      }
-
-      "must test values for second contact table" in {
-        validateContactDetailsTable(dl, 1, "second", contacts.last)
-      }
-
-      "must show 2 contact tables" in {
-        dl.size() mustBe 2
-      }
-
-      doc.createTestsWithSubmissionButton(
-        action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(),
-        buttonText = submitButtonText
+      validateRow(
+        row = rows.get(1),
+        keyText = "Email address",
+        valueText = contactInfo.email,
+        actionText = "Change",
+        actionHiddenText = "change the email address",
+        actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
       )
 
     }
-  }
 
-  def validateContactDetailsTable(
-      dl: Elements,
-      tableIndex: Int,
-      contactNumber: String,
-      contactInfo: ContactInfo
-  ): Assertion = {
-    val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
-    rows.size() mustBe 2
-    validateRow(
-      row = rows.get(0),
-      keyText = "Full name",
-      valueText = contactInfo.name,
-      actionText = "Change",
-      actionHiddenText = "change the full name",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-name"
-    )
+    def validateRow(
+        row: Element,
+        keyText: String,
+        valueText: String,
+        actionText: String,
+        actionHiddenText: String,
+        actionHref: String
+    ): Assertion = {
+      val key = row.select("dt.govuk-summary-list__key")
+      key.size() mustBe 1
+      withClue("row keyText mismatch:\n") {
+        key.get(0).text() mustBe keyText
+      }
 
-    validateRow(
-      row = rows.get(1),
-      keyText = "Email address",
-      valueText = contactInfo.email,
-      actionText = "Change",
-      actionHiddenText = "change the email address",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
-    )
+      val value = row.select("dd.govuk-summary-list__value")
+      value.size() mustBe 1
+      withClue("row valueText mismatch:\n") {
+        value.get(0).text() mustBe valueText
+      }
 
-  }
+      val action = row.select("dd.govuk-summary-list__actions")
+      action.size() mustBe 1
 
-  def validateRow(
-      row: Element,
-      keyText: String,
-      valueText: String,
-      actionText: String,
-      actionHiddenText: String,
-      actionHref: String
-  ): Assertion = {
-    val key = row.select("dt.govuk-summary-list__key")
-    key.size() mustBe 1
-    withClue("row keyText mismatch:\n") {
-      key.get(0).text() mustBe keyText
-    }
-
-    val value = row.select("dd.govuk-summary-list__value")
-    value.size() mustBe 1
-    withClue("row valueText mismatch:\n") {
-      value.get(0).text() mustBe valueText
-    }
-
-    val action = row.select("dd.govuk-summary-list__actions")
-    action.size() mustBe 1
-
-    val linkText = action.get(0).select("a")
-    linkText.size() mustBe 1
-    withClue("row actionHref mismatch:\n") {
-      linkText.get(0).attr("href") mustBe actionHref
-    }
-    withClue("row actionHiddenText mismatch:\n") {
-      linkText.get(0).select("span.govuk-visually-hidden").text() mustBe actionHiddenText
-    }
-    linkText.get(0).select("span.govuk-visually-hidden").remove()
-    withClue("row actionText mismatch:\n") {
-      linkText.get(0).text() mustBe actionText
+      val linkText = action.get(0).select("a")
+      linkText.size() mustBe 1
+      withClue("row actionHref mismatch:\n") {
+        linkText.get(0).attr("href") mustBe actionHref
+      }
+      withClue("row actionHiddenText mismatch:\n") {
+        linkText.get(0).select("span.govuk-visually-hidden").text() mustBe actionHiddenText
+      }
+      linkText.get(0).select("span.govuk-visually-hidden").remove()
+      withClue("row actionText mismatch:\n") {
+        linkText.get(0).text() mustBe actionText
+      }
     }
   }
 }
@@ -203,11 +139,13 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 object ContactCheckYourAnswersViewSpec {
   val pageHeading: String = "Check your answers"
 
+//  val caption = s"$ContactType contact details"
+
   val firstContactHeading: String  = "First contact details"
   val secondContactHeading: String = "Second contact details"
 
   val firstContact: ContactInfo  = ContactInfo("name1", "email1")
   val secondContact: ContactInfo = ContactInfo("name2", "email2")
 
-  val submitButtonText: String = "Save and Continue"
+  val submitButtonText: String = "Continue"
 }

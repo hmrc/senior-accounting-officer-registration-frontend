@@ -114,7 +114,7 @@ contactHaveYouAddedAll.change.hidden = ContactHaveYouAddedAll
 contactCheckYourAnswers.title.first  = First contact details
 contactCheckYourAnswers.title.second = Second contact details
 contactCheckYourAnswers.heading = Check your answers
-contactCheckYourAnswers.continue = Save and Continue
+contactCheckYourAnswers.continue = Continue
 
 nominatedCompanyDetailsGuidance.title = Company Details
 nominatedCompanyDetailsGuidance.heading = Provide your nominated company details
