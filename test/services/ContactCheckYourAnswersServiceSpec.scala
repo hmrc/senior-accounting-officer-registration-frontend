@@ -25,82 +25,7 @@ import services.ContactCheckYourAnswersServiceSpec.*
 class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSuite {
   val SUT: ContactCheckYourAnswersService = app.injector.instanceOf[ContactCheckYourAnswersService]
 
-//  "ContactCheckYourAnswersService.getContactInfos" - {
-//    ContactType.values.foreach(contactType => {
-//      "given no user answers" - {
-//        "then return empty list" in {
-//          val userAnswers = emptyUserAnswers
-//          val result = SUT.getContactInfos(userAnswers)
-//          result mustBe List.empty
-//        }
-//      }
-//      "given userAnswers has a complete set of first contact info" - {
-//        "then return a list with one contact info" in {
-//          val userAnswers = emptyUserAnswers
-//            .updateContact(ContactType.First, "name", "email")
-//          val result = SUT.getContactInfos(userAnswers)
-//          result mustBe List(ContactInfo("name", "email"))
-//        }
-//      }
-//      "given userAnswers has a complete set of first & second contact info" - {
-//        "when the user answer for `haveYouAnsweredAllContact(First)` is no" - {
-//          "then return a list with first and second contact info" in {
-//            val userAnswers = emptyUserAnswers
-//              .updateContact(ContactType.First, "name", "email")
-//              .updateContact(ContactType.First, haveYouAddedAllContacts = false)
-//              .updateContact(ContactType.Second, "name2", "email2")
-//
-//            val result = SUT.getContactInfos(userAnswers)
-//            result mustBe List(
-//              ContactInfo("name", "email"),
-//              ContactInfo("name2", "email2")
-//            )
-//          }
-//        }
-//        "when the user answer for `haveYouAnsweredAllContact(First)` is yes" - {
-//          "then return a list with only the first contact info" in {
-//            val userAnswers = emptyUserAnswers
-//              .updateContact(ContactType.First, "name", "email")
-//              .updateContact(ContactType.First, haveYouAddedAllContacts = true)
-//              .updateContact(ContactType.Second, "name2", "email2")
-//
-//            val result = SUT.getContactInfos(userAnswers)
-//            result mustBe List(
-//              ContactInfo("name", "email")
-//            )
-//          }
-//        }
-//        "when the user answer for `haveYouAnsweredAllContact(First)` is empty" - {
-//          "then return a list with only the first contact info" in {
-//            val userAnswers = emptyUserAnswers
-//              .updateContact(ContactType.First, "name", "email")
-//              .updateContact(ContactType.Second, "name2", "email2")
-//
-//            val result = SUT.getContactInfos(userAnswers)
-//            result mustBe List(
-//              ContactInfo("name", "email")
-//            )
-//          }
-//        }
-//        "when the user answer for `haveYouAnsweredAllContact(Second)` is empty" - {
-//          "then return a list with the first & second contact info" in {
-//            val userAnswers = emptyUserAnswers
-//              .updateContact(ContactType.First, "name", "email")
-//              .updateContact(ContactType.First, haveYouAddedAllContacts = false)
-//              .updateContact(ContactType.Second, "name2", "email2")
-//
-//            val result = SUT.getContactInfos(userAnswers)
-//            result mustBe List(
-//              ContactInfo("name", "email"),
-//              ContactInfo("name2", "email2")
-//            )
-//          }
-//        }
-//      }
-//    }
-//  }
-
-  "ContactCheckYourAnswersService.GetContactInfo" - {
+  "ContactCheckYourAnswersService.getContactInfo" - {
 
     ContactType.values.foreach(contactType => {
 
@@ -136,18 +61,6 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
 
 object ContactCheckYourAnswersServiceSpec {
   extension (userAnswers: UserAnswers) {
-    def updateContact(
-        contactType: ContactType.First.type | ContactType.Second.type,
-        haveYouAddedAllContacts: Boolean
-    ): UserAnswers = {
-      userAnswers
-        .set(
-          ContactHaveYouAddedAllPage(contactType),
-          if haveYouAddedAllContacts then ContactHaveYouAddedAll.Yes else ContactHaveYouAddedAll.No
-        )
-        .get
-    }
-
     def updateContact(
         contactType: ContactType,
         name: String,

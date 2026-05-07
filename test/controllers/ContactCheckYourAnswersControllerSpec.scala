@@ -19,11 +19,13 @@ package controllers
 import base.SpecBase
 import models.ContactType.{First, Second}
 import models.{ContactInfo, ContactType, UserAnswers}
-import org.mockito.ArgumentMatchers.eq as meq
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.{any, eq as meq}
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
@@ -31,7 +33,8 @@ import services.ContactCheckYourAnswersService
 import views.html.ContactCheckYourAnswersView
 
 class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
-  val testUserAnswers: UserAnswers = emptyUserAnswers
+  def onwardRoute: Call            = Call("GET", "/foo")
+  val testUserAnswers: UserAnswers = userAnswersWithConfirmedContacts
 
   override protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     super
@@ -43,10 +46,9 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
 
   "ContactCheckYourAnswers Controller" - {
     "when ContactType is First" - {
-
       "onPageLoad endpoint:" - {
         "must return OK and the correct view for a GET" in {
-          val testContactInfo                    = ContactInfo("", "")
+          val testContactInfo                    = ContactInfo("name", "email")
           val application                        = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
           val view                               = application.injector.instanceOf[ContactCheckYourAnswersView]
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
@@ -66,9 +68,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to journey recovery when no contacts found" in {
-          val application                        = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfo(meq(testUserAnswers), meq(First))).thenReturn(None)
+          val application = applicationBuilder(userAnswers = None).build()
 
           running(application) {
             val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad(First).url)
@@ -81,31 +81,24 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       }
 
       "saveAndContinue endpoint:" - {
-//        "must redirect to contact have you added all controller when record saved" in {
-//          val testContactInfo                    = List(ContactInfo("name", "email"))
-//          val application                        = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-//          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-//          when(mockContactCheckYourAnswersService.getContactInfo(meq(testUserAnswers), meq(First)))
-//            .thenReturn(Some(testContactInfo))
-//
-//          running(application) {
-//            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue(First).url)
-//            //Do I need to put a body??
-////            .withBody(
-////              "contacts[0].name"  -> "name",
-////              "contacts[0].email" -> "email"
-////            )
-//            val result  = route(application, request).value
-//
-//            status(result) mustEqual SEE_OTHER
-//            redirectLocation(result) mustEqual Some(routes.ContactHaveYouAddedAllController.onPageLoad(First).url)
-//          }
-//        }
+        "must redirect to the next page for a POST" in {
+
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
+            .build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue(First).url)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual onwardRoute.url
+          }
+        }
 
         "must redirect to journey recovery when no contacts found" in {
-          val application                        = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfo(meq(testUserAnswers), meq(First))).thenReturn(None)
+          val application = applicationBuilder(userAnswers = None).build()
 
           running(application) {
             val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue(First).url)
@@ -121,7 +114,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     "when ContactType is Second" - {
       "onPageLoad endpoint:" - {
         "must return OK and the correct view for a GET" in {
-          val testContactInfo                    = ContactInfo("", "")
+          val testContactInfo                    = ContactInfo("name", "email")
           val application                        = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
           val view                               = application.injector.instanceOf[ContactCheckYourAnswersView]
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
@@ -141,9 +134,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to journey recovery when no contacts found" in {
-          val application                        = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfo(meq(testUserAnswers), meq(Second))).thenReturn(None)
+          val application = applicationBuilder(userAnswers = None).build()
 
           running(application) {
             val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad(Second).url)
@@ -156,12 +147,24 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
       }
 
       "saveAndContinue endpoint:" - {
-        "must redirect to index page when second record is saved" in {}
+        "must redirect to the next page for a POST" in {
+
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
+            .build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue(Second).url)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual onwardRoute.url
+          }
+        }
 
         "must redirect to journey recovery when no contacts found" in {
-          val application                        = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfo(meq(testUserAnswers), meq(Second))).thenReturn(None)
+          val application = applicationBuilder(userAnswers = None).build()
 
           running(application) {
             val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue(Second).url)

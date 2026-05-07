@@ -44,7 +44,7 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
   "ContactName Controller" - {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
-        lazy val contactNameRoute = routes.ContactNameController.onPageLoad(contactType, NormalMode).url
+        lazy val contactNameRoute     = routes.ContactNameController.onPageLoad(contactType, NormalMode).url
         lazy val contactNamePostRoute = routes.ContactNameController.onSubmit(contactType, NormalMode).url
         "must return OK and the correct view for a GET" in {
           val request     = FakeRequest(GET, contactNameRoute)

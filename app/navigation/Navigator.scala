@@ -34,14 +34,10 @@ class Navigator @Inject() () {
     case ContactCheckYourAnswersPage(contactType) =>
       _ =>
         contactType match {
-          case First => {
-            println("Inside Nav: first")
+          case First =>
             routes.ContactHaveYouAddedAllController.onPageLoad(First)
-          }
-          case Second => {
-            println("Inside Nav: second")
+          case Second =>
             routes.IndexController.onPageLoad()
-          }
         }
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
@@ -55,7 +51,6 @@ class Navigator @Inject() () {
         }
     case _ =>
       _ => {
-        println("Inside Nav: wildcard")
         routes.IndexController.onPageLoad()
       }
   }

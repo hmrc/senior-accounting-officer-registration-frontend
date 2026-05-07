@@ -41,6 +41,10 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
           hasError = false
         )
 
+        doc.createTestsWithLargeCaption(
+          caption = s"$contactType contact details"
+        )
+
         val dl = doc.getMainContent.getElementsByTag("dl")
 
         "must show correct caption for contact type" in {
@@ -140,12 +144,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
 }
 
 object ContactCheckYourAnswersViewSpec {
-  val pageHeading: String = "Check your answers"
-
-//  val caption = s"$ContactType contact details"
-
-  val firstContact: ContactInfo  = ContactInfo("name1", "email1")
-  val secondContact: ContactInfo = ContactInfo("name2", "email2")
-
-  val submitButtonText: String = "Continue"
+  val pageHeading: String       = "Check your answers"
+  val firstContact: ContactInfo = ContactInfo("name1", "email1")
+  val submitButtonText: String  = "Continue"
 }

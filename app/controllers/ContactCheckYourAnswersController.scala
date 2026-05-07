@@ -20,17 +20,14 @@ import controllers.actions.*
 import forms.ContactCheckYourAnswersFormProvider
 import models.{ContactInfo, ContactType, NormalMode}
 import navigation.Navigator
-import pages.{ContactCheckYourAnswersPage, ContactsPage}
+import pages.ContactCheckYourAnswersPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import services.ContactCheckYourAnswersService
-import uk.gov.hmrc.http.BadRequestException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactCheckYourAnswersView
-
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import javax.inject.Inject
 
 class ContactCheckYourAnswersController @Inject() (
@@ -42,7 +39,6 @@ class ContactCheckYourAnswersController @Inject() (
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
     service: ContactCheckYourAnswersService,
-    sessionRepository: SessionRepository,
     navigator: Navigator
 )(using ExecutionContext)
     extends FrontendBaseController
@@ -52,7 +48,6 @@ class ContactCheckYourAnswersController @Inject() (
 
   def onPageLoad(contactType: ContactType): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      println("Inside onPageLoad")
       service.getContactInfo(request.userAnswers, contactType) match {
         case Some(answers) => Ok(view(answers, contactType))
         case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
@@ -60,23 +55,7 @@ class ContactCheckYourAnswersController @Inject() (
   }
 
   def saveAndContinue(contactType: ContactType): Action[AnyContent] =
-    (identify andThen getData andThen requireData) async { implicit request =>
-      service.getContactInfo(request.userAnswers, contactType) match {
-        case Some(contactInfo) =>
-          val contacts: List[ContactInfo] = contactType match {
-            case ContactType.First =>
-              List(contactInfo)
-            case ContactType.Second =>
-              service.getContactInfo(request.userAnswers, ContactType.First).toList :+ contactInfo
-          }
-          for {
-            updatedUserAnswers <-
-              Future.fromTry(request.userAnswers.set(ContactsPage, contacts))
-            _ <- sessionRepository.set(updatedUserAnswers)
-          } yield {
-            Redirect(navigator.nextPage(ContactCheckYourAnswersPage(contactType), NormalMode, updatedUserAnswers))
-          }
-        case None => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-      }
+    (identify andThen getData andThen requireData) { implicit request =>
+      Redirect(navigator.nextPage(ContactCheckYourAnswersPage(contactType), NormalMode, request.userAnswers))
     }
 }
