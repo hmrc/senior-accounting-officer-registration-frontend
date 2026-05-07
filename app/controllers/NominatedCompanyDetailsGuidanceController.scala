@@ -20,11 +20,12 @@ import controllers.actions.*
 import models.{NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.NominatedCompanyDetailsGuidancePage
-import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.NominatedCompanyDetailsGuidanceView
+
+import javax.inject.Inject
 
 class NominatedCompanyDetailsGuidanceController @Inject() (
     override val messagesApi: MessagesApi,

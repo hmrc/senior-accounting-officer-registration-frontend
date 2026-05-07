@@ -30,11 +30,8 @@ class $className$Controller @Inject()(
     implicit request =>
 
       val form = formProvider()
-      
-      val preparedForm = request.userAnswers.get($className$Page) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+
+      val preparedForm = request.userAnswers.get($className$Page).fold(form)(form.fill)
 
       Ok(view(preparedForm, mode))
   }
@@ -43,7 +40,7 @@ class $className$Controller @Inject()(
     implicit request =>
 
       val form = formProvider()
-      
+
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),

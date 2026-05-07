@@ -22,7 +22,7 @@
 
 @()(using request: Request[?], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("contactDetailsGuidance.title"))) {
+@layout(showBackLink = false, pageTitle = titleNoForm(messages("contactDetailsGuidance.title"))) {
 
   <span class="govuk-caption-m">@messages("contactDetailsGuidance.caption")</span>
   <h1 class="govuk-heading-l">@messages("contactDetailsGuidance.heading")</h1>

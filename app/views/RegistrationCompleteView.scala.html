@@ -16,6 +16,7 @@
 
 @import models.registration.RegistrationCompleteDetails
 @import _root_.config.AppConfig
+@import views.html.helper.CSPNonce
 
 @this(
     layout: templates.Layout,
@@ -37,16 +38,22 @@
 
     <p class="govuk-body">@messages("registration.complete.p1")</p>
     <p class="govuk-body">
-        <a class="govuk-link" href="#" onclick="window.print()">
+        <a class="govuk-link" id="print-page-link" href="#">
             @messages("registration.complete.print")
-        </a> @messages("registration.complete.p2")</p>
-
+        </a> @messages("registration.complete.p2")
+    </p>
+    <script @CSPNonce.attr>
+        document.getElementById('print-page-link').addEventListener('click', function() {
+            event.preventDefault();
+            window.print();
+        })
+    </script>
 
     <h2 class="govuk-heading-m">@messages("registration.complete.h2")</h2>
     <p class="govuk-body">@messages("registration.complete.p3")</p>
 
 
-    <a href="@config.hubUrl/senior-accounting-officer" class="govuk-button govuk-button-primary" data-module="govuk-button">
+    <a href="@config.hubUrl/senior-accounting-officer" id="submit" class="govuk-button govuk-button-primary" data-module="govuk-button">
         @messages("registration.complete.continue")
     </a>
 

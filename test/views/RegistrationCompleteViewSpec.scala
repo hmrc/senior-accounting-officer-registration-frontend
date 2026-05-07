@@ -58,8 +58,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
       "must have a print this page link" - {
         doc.getMainContent
-          .select("a[onclick*=\"window.print\"]")
-          .get(0)
+          .getElementById("print-page-link")
           .createTestWithLink(
             linkText = "Print this page",
             destinationUrl = "#"
