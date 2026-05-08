@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,9 @@
  * limitations under the License.
  */
 
-package forms
+package pages
 
-import forms.mappings.Mappings
-import models.ContactInfo
-import play.api.data.Form
-import play.api.data.Forms.{list, mapping}
+import models.{ContactInfo, ContactType}
+import play.api.libs.json.JsPath
 
-import javax.inject.Inject
-
-class ContactCheckYourAnswersFormProvider @Inject() extends Mappings {
-  def apply(): Form[ContactInfo] =
-    Form(
-      mapping(
-        "contacts" ->
-          mapping(
-            "name"  -> text(),
-            "email" -> text()
-          )(ContactInfo.apply)(o => Some(Tuple.fromProductTyped(o)))
-      )(identity)(Some(_))
-    )
-}
+case class ContactCheckYourAnswersPage(contactType: ContactType) extends Page

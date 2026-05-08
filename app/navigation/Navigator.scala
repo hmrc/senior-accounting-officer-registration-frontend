@@ -30,27 +30,45 @@ class Navigator @Inject() () {
   private val normalRoutes: Page => UserAnswers => Call = {
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(contactType)       =>
+    case ContactEmailPage(contactType)       => _ => routes.ContactCheckYourAnswersController.onPageLoad(contactType)
+    case ContactCheckYourAnswersPage(contactType) =>
       _ =>
         contactType match {
-          case First  => routes.ContactHaveYouAddedAllController.onPageLoad(First)
-          case Second => routes.ContactCheckYourAnswersController.onPageLoad()
+          case First =>
+            routes.ContactHaveYouAddedAllController.onPageLoad(First)
+          case Second =>
+            routes.IndexController.onPageLoad()
         }
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
-          routes.ContactCheckYourAnswersController.onPageLoad()
+          routes.IndexController.onPageLoad()
         } else {
           routes.ContactNameController.onPageLoad(
             Second,
             NormalMode
           )
         }
-    case _ => _ => routes.IndexController.onPageLoad()
+    case _ =>
+      _ => {
+        routes.IndexController.onPageLoad()
+      }
   }
 
-  private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.ContactCheckYourAnswersController.onPageLoad()
+  private val checkRouteMap: Page => UserAnswers => Call = {
+    case ContactNamePage(contactType) =>
+      _ =>
+        contactType match {
+          case First  => routes.ContactCheckYourAnswersController.onPageLoad(First)
+          case Second => routes.ContactCheckYourAnswersController.onPageLoad(Second)
+        }
+    case ContactEmailPage(contactType) =>
+      _ =>
+        contactType match {
+          case First  => routes.ContactCheckYourAnswersController.onPageLoad(First)
+          case Second => routes.ContactCheckYourAnswersController.onPageLoad(Second)
+        }
+    case _ => _ => routes.IndexController.onPageLoad()
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

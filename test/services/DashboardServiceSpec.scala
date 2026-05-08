@@ -25,7 +25,7 @@ import pages.{CompanyDetailsPage, ContactsPage}
 class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite {
   val SUT: DashboardService              = app.injector.instanceOf[DashboardService]
   val testCompanyDetails: CompanyDetails = CompanyDetails("", "", "", "")
-  val testContactInfo: List[ContactInfo] = Nil
+  val testContactInfo: ContactInfo       = ContactInfo("", "")
 
   "DashboardService.deriveCurrentStage when" - {
     "there are no userAnswers must return CompanyDetails" in {

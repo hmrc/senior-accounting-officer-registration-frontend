@@ -47,13 +47,26 @@ class NavigatorSpec extends SpecBase {
 
       "when the user is in the add first contact details journey" - {
         "must go from contact name to contact email" in {
-          navigator.nextPage(ContactNamePage(First), NormalMode, UserAnswers("id")) mustBe routes.ContactEmailController
+          navigator.nextPage(
+            ContactNamePage(First),
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe routes.ContactEmailController
             .onPageLoad(First, NormalMode)
         }
 
-        "must go from contact email to add another" in {
+        "must go from contact email to check your answers for first contact" in {
           navigator.nextPage(
             ContactEmailPage(First),
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe routes.ContactCheckYourAnswersController
+            .onPageLoad(First)
+        }
+
+        "must go from check your answers for first contact to add another page" in {
+          navigator.nextPage(
+            ContactCheckYourAnswersPage(First),
             NormalMode,
             UserAnswers("id")
           ) mustBe routes.ContactHaveYouAddedAllController
@@ -61,12 +74,12 @@ class NavigatorSpec extends SpecBase {
         }
 
         "on add another page" - {
-          "when the user answers Yes must go to contact check your answers" in {
+          "when the user answers Yes must go to index page" in {
             navigator.nextPage(
               ContactHaveYouAddedAllPage(First),
               NormalMode,
               UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
-            ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
+            ) mustBe routes.IndexController.onPageLoad()
           }
           "when the user answers No must go to 2nd contact name" in {
             navigator.nextPage(
@@ -89,24 +102,63 @@ class NavigatorSpec extends SpecBase {
             .onPageLoad(Second, NormalMode)
         }
 
-        "must go from contact email to review page" in {
+        "must go from contact email to check your answers page for second contact" in {
           navigator.nextPage(
             ContactEmailPage(Second),
             NormalMode,
             UserAnswers("id")
           ) mustBe routes.ContactCheckYourAnswersController
-            .onPageLoad()
+            .onPageLoad(Second)
+        }
+
+        "must go from check your answers page for second contact to index page" in {
+          navigator.nextPage(
+            ContactCheckYourAnswersPage(Second),
+            NormalMode,
+            UserAnswers("id")
+          ) mustBe routes.IndexController.onPageLoad()
         }
       }
     }
 
     "in Check mode" - {
+      "when the user is in the add first contact details journey" - {
+        "must go from first contact name page to contact check your answers page for first contact" in {
+          navigator.nextPage(
+            ContactNamePage(First),
+            CheckMode,
+            UserAnswers("id")
+          ) mustBe routes.ContactCheckYourAnswersController
+            .onPageLoad(First)
+        }
 
-      "must go from a non-existant page in the edit route map to ContactCheckYourAnswers" in {
+        "must go from first contact email page to contact check your answers page for first contact" in {
+          navigator.nextPage(
+            ContactEmailPage(First),
+            CheckMode,
+            UserAnswers("id")
+          ) mustBe routes.ContactCheckYourAnswersController
+            .onPageLoad(First)
+        }
+      }
+      "when the user is in the add second contact details journey" - {
+        "must go from second contact name page to contact check your answers page for second contact" in {
+          navigator.nextPage(
+            ContactNamePage(Second),
+            CheckMode,
+            UserAnswers("id")
+          ) mustBe routes.ContactCheckYourAnswersController
+            .onPageLoad(Second)
+        }
 
-        case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.ContactCheckYourAnswersController
-          .onPageLoad()
+        "must go from second contact email page to contact check your answers page for second contact" in {
+          navigator.nextPage(
+            ContactEmailPage(Second),
+            CheckMode,
+            UserAnswers("id")
+          ) mustBe routes.ContactCheckYourAnswersController
+            .onPageLoad(Second)
+        }
       }
     }
   }

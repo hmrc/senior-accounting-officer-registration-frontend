@@ -41,7 +41,7 @@ trait SpecBase
   val userAnswersId: String                         = "id"
   def emptyUserAnswers: UserAnswers                 = UserAnswers(userAnswersId)
   def userAnswersWithConfirmedContacts: UserAnswers = UserAnswers(id = userAnswersId)
-    .set(ContactsPage, List(ContactInfo("name", "email")))
+    .set(ContactsPage, ContactInfo("name", "email"))
     .success
     .value
 
