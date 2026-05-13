@@ -16,7 +16,6 @@
 
 package pages
 
-import models.{ContactInfo, ContactType}
-import play.api.libs.json.JsPath
+import models.ContactType
 
 case class ContactCheckYourAnswersPage(contactType: ContactType) extends Page

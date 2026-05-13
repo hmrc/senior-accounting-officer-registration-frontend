@@ -27,7 +27,9 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ContactCheckYourAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactCheckYourAnswersView
+
 import scala.concurrent.ExecutionContext
+
 import javax.inject.Inject
 
 class ContactCheckYourAnswersController @Inject() (
