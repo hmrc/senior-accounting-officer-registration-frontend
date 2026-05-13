@@ -16,9 +16,9 @@
 
 package services
 
+import models.*
 import models.ContactType.{First, Second}
-import models.{ContactHaveYouAddedAll, ContactType, DashboardStage, UserAnswers}
-import pages.{CompanyDetailsPage, ContactEmailPage, ContactHaveYouAddedAllPage, ContactNamePage, ContactsPage}
+import pages.*
 
 class DashboardService {
 
@@ -33,22 +33,24 @@ class DashboardService {
         } yield DashboardStage.Submission).merge
       )
 
-  def getContact(userAnswers: UserAnswers, contactType: ContactType) =
+  def getContact(userAnswers: UserAnswers, contactType: ContactType): Option[(String, String)] =
     for {
-      name <- userAnswers.get(ContactNamePage(contactType))
+      name  <- userAnswers.get(ContactNamePage(contactType))
       email <- userAnswers.get(ContactEmailPage(contactType))
     } yield (name, email)
 
   def contactsCompleted(userAnswers: UserAnswers): Boolean = {
-    val firstContact = getContact(userAnswers, First)
+    val firstContact  = getContact(userAnswers, First)
     def secondContact = getContact(userAnswers, Second)
     secondContact match {
       case Some(value) =>
         firstContact.foldLeft(
-        userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes))((_,_) => secondContact.isDefined)
+          userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes)
+        )((_, _) => secondContact.isDefined)
       case None =>
         firstContact.foldLeft(
-        userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes))((_,_) => true)
+          userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes)
+        )((_, _) => true)
     }
   }
 }

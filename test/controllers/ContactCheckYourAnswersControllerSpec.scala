@@ -20,7 +20,7 @@ import base.SpecBase
 import models.ContactType.{First, Second}
 import models.{ContactInfo, ContactType, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.{any, eq as meq}
+import org.mockito.ArgumentMatchers.eq as meq
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
