@@ -17,16 +17,29 @@
 package services
 
 import base.SpecBase
+import models.*
 import models.ContactType.{First, Second}
 import models.registration.CompanyDetails
-import models.{ContactHaveYouAddedAll, ContactInfo, DashboardStage}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*
+
+import scala.util.Try
 
 class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite {
   val SUT: DashboardService              = app.injector.instanceOf[DashboardService]
   val testCompanyDetails: CompanyDetails = CompanyDetails("", "", "", "")
   val testContactInfo: ContactInfo       = ContactInfo("", "")
+  val firstNameOnly: Try[UserAnswers]    =
+    emptyUserAnswers.set(CompanyDetailsPage, testCompanyDetails).get.set(ContactNamePage(First), "testName")
+  val firstNameAndEmailOnly: Try[UserAnswers] = firstNameOnly.get.set(ContactEmailPage(First), "testname@testemail.com")
+  val firstContactComplete: Try[UserAnswers]  =
+    firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes)
+  val firstContactAndSecondName: Try[UserAnswers] = firstNameAndEmailOnly.get
+    .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
+    .get
+    .set(ContactNamePage(Second), "testName2")
+  val firstAndSecondContactComplete: Try[UserAnswers] =
+    firstContactAndSecondName.get.set(ContactEmailPage(Second), "testname2@testemail.com")
 
   "DashboardService.deriveCurrentStage when" - {
     "there are no userAnswers must return CompanyDetails" in {
@@ -46,73 +59,23 @@ class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite {
       }
 
       "and only first name is entered, must return ContactsInfo" in {
-        SUT.deriveCurrentStage(
-          emptyUserAnswers
-            .set(CompanyDetailsPage, testCompanyDetails)
-            .get
-            .set(ContactNamePage(First), "testName")
-            .toOption
-        ) mustBe DashboardStage.ContactsInfo
+        SUT.deriveCurrentStage(firstNameOnly.toOption) mustBe DashboardStage.ContactsInfo
       }
 
       "and only first name and email are entered, must return ContactsInfo" in {
-        SUT.deriveCurrentStage(
-          emptyUserAnswers
-            .set(CompanyDetailsPage, testCompanyDetails)
-            .get
-            .set(ContactNamePage(First), "testName")
-            .get
-            .set(ContactEmailPage(First), "testname@testemail.com")
-            .toOption
-        ) mustBe DashboardStage.ContactsInfo
+        SUT.deriveCurrentStage(firstNameAndEmailOnly.toOption) mustBe DashboardStage.ContactsInfo
       }
 
       "and first name and email are entered, yes is selected on 'ContactHaveYouAddedAll', must return Submission" in {
-        SUT.deriveCurrentStage(
-          emptyUserAnswers
-            .set(CompanyDetailsPage, testCompanyDetails)
-            .get
-            .set(ContactNamePage(First), "testName")
-            .get
-            .set(ContactEmailPage(First), "testname@testemail.com")
-            .get
-            .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes)
-            .toOption
-        ) mustBe DashboardStage.Submission
+        SUT.deriveCurrentStage(firstContactComplete.toOption) mustBe DashboardStage.Submission
       }
 
       "and completed first contact details, no is selected on 'ContactHaveYouAddedAll', only a second name is entered, must return ContactsInfo" in {
-        SUT.deriveCurrentStage(
-          emptyUserAnswers
-            .set(CompanyDetailsPage, testCompanyDetails)
-            .get
-            .set(ContactNamePage(First), "testName")
-            .get
-            .set(ContactEmailPage(First), "testname@testemail.com")
-            .get
-            .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
-            .get
-            .set(ContactNamePage(Second), "testName2")
-            .toOption
-        ) mustBe DashboardStage.ContactsInfo
+        SUT.deriveCurrentStage(firstContactAndSecondName.toOption) mustBe DashboardStage.ContactsInfo
       }
 
       "and completed first contact details, no is selected on 'ContactHaveYouAddedAll', a second name and email are entered, must return Submission" in {
-        SUT.deriveCurrentStage(
-          emptyUserAnswers
-            .set(CompanyDetailsPage, testCompanyDetails)
-            .get
-            .set(ContactNamePage(First), "testName")
-            .get
-            .set(ContactEmailPage(First), "testname@testemail.com")
-            .get
-            .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
-            .get
-            .set(ContactNamePage(Second), "testName2")
-            .get
-            .set(ContactEmailPage(Second), "testname2@testemail.com")
-            .toOption
-        ) mustBe DashboardStage.Submission
+        SUT.deriveCurrentStage(firstAndSecondContactComplete.toOption) mustBe DashboardStage.Submission
       }
     }
   }
