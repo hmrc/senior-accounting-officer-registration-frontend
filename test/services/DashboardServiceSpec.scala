@@ -19,9 +19,9 @@ package services
 import base.SpecBase
 import models.ContactType.{First, Second}
 import models.registration.CompanyDetails
-import models.{ContactHaveYouAddedAll, ContactInfo, DashboardStage, UserAnswers}
+import models.{ContactHaveYouAddedAll, ContactInfo, DashboardStage}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import pages.{CompanyDetailsPage, ContactEmailPage, ContactHaveYouAddedAllPage, ContactNamePage, ContactsPage}
+import pages.*
 
 class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite {
   val SUT: DashboardService              = app.injector.instanceOf[DashboardService]

@@ -40,17 +40,20 @@ class DashboardService {
     } yield (name, email)
 
   def contactsCompleted(userAnswers: UserAnswers): Boolean = {
-    val firstContact  = getContact(userAnswers, First)
+    val firstContact = getContact(userAnswers, First)
+
     def secondContact = getContact(userAnswers, Second)
-    secondContact match {
-      case Some(value) =>
-        firstContact.foldLeft(
-          userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes)
-        )((_, _) => secondContact.isDefined)
-      case None =>
+
+    userAnswers.get(ContactHaveYouAddedAllPage(First)) match {
+      case Some(ContactHaveYouAddedAll.Yes) =>
         firstContact.foldLeft(
           userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes)
         )((_, _) => true)
+      case Some(ContactHaveYouAddedAll.No) =>
+        firstContact.foldLeft(
+          userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes)
+        )((_, _) => secondContact.isDefined)
+      case None => false
     }
   }
 }
