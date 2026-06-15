@@ -17,6 +17,8 @@
 package controllers.testonly
 
 import base.SpecBase
+import controllers.testonly.GrsStubsController.*
+import controllers.testonly.GrsStubsControllerSpec.*
 import models.grs.create.NewJourneyResponse
 import models.grs.retrieve.CompanyDetails
 import org.scalatest.matchers.{BePropertyMatchResult, BePropertyMatcher}
@@ -28,8 +30,6 @@ import play.api.test.Helpers.*
 import views.html.testonly.StubGrsView
 
 import java.util.UUID
-
-import GrsStubsControllerSpec.*
 
 class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
 
@@ -60,13 +60,17 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
       val view = app.injector.instanceOf[StubGrsView]
 
       status(result) mustEqual OK
-      contentAsString(result) mustBe view(testJourneyId)(using request, messages(app)).toString
+      contentAsString(result) mustBe view(GrsResponseConfig.form, testJourneyId)(using request, messages(app)).toString
     }
   }
 
   "GrsStubsController.postStubGrs" - {
     "must return 303 to the callback url" in {
       val request = FakeRequest(POST, controllers.testonly.routes.GrsStubsController.postStubGrs(testJourneyId).url)
+        .withFormUrlEncodedBody(
+          "status" -> "200",
+          "body"   -> GrsResponseConfig.default200.body
+        )
 
       val result = route(app, request).value
 

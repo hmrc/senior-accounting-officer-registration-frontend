@@ -15,18 +15,34 @@
  *@
 
 @import controllers.testonly.routes
+@import controllers.testonly.GrsStubsController.*
 
 @this(
     layout: templates.Layout,
     govukButton: GovukButton,
+    govukInput: GovukInput,
+    govukTextarea: GovukTextarea,
     formHelper: FormWithCSRF
 )
-
-@(journeyId: String)(using request: Request[?], messages: Messages)
+@(form: Form[GrsResponseConfig], journeyId: String)(using request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm("GRS Stubs")) {
     <h1 class="govuk-heading-l">GRS Stubs</h1>
     @formHelper(action = routes.GrsStubsController.postStubGrs(journeyId)) {
+        @govukInput(
+          InputViewModel(
+              field = form("status"),
+              label = LabelViewModel("Status".toText)
+          ).asNumeric()
+        )
+
+        @govukTextarea(
+            TextareaViewModel(
+                field = form("body"),
+                label = LabelViewModel("Body".toText)
+            )
+        )
+
         @govukButton(
             ButtonViewModel("Stub response".toText).withAttribute("id", "submit")
         )
