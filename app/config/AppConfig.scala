@@ -74,6 +74,12 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
   def stubGrs: Boolean              = isEnabled(StubGrs)
   def grsAllowsRelativeUrl: Boolean = isEnabled(GrsAllowRelativeUrl)
 
+  val etmpSubscriptionUrl: String =
+    s"${servicesConfig.baseUrl("etmp-subscription-api")}${configuration.get[String]("microservice.services.etmp-subscription-api.path")}"
+
+  val etmpSubscriptionAuthorizationToken: String =
+    configuration.get[String]("microservice.services.etmp-subscription-api.authorization-token")
+
 }
 
 object AppConfig {

@@ -24,6 +24,8 @@ GET         /registration-complete                             controllers.Regis
 GET         /business-match                                    controllers.GrsController.start()
 GET         /business-match/result                             controllers.GrsController.callBack(journeyId: String)
 
+POST        /sign-up                                           controllers.SignUpController.signUp()
+
 GET         /contact-details                                   controllers.ContactDetailsGuidanceController.onPageLoad()
 POST        /contact-details                                   controllers.ContactDetailsGuidanceController.continue()
 
