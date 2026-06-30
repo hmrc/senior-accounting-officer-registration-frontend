@@ -57,7 +57,7 @@ class EnrolmentStoreStubConnector @Inject() (
 
   private def groupExists(groupId: String)(using HeaderCarrier): Future[Boolean] =
     http
-      .get(URI(s"${appConfig.enrolmentStoreStubBaseUrl}/enrolment-store-stub/data/group/$groupId").toURL)
+      .get(url"${appConfig.enrolmentStoreStubBaseUrl}/enrolment-store-stub/data/group/$groupId")
       .execute[HttpResponse]
       .map {
         case response if response.status == OK        => true
