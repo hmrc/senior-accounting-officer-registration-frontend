@@ -20,10 +20,13 @@ import base.SpecBase
 import config.AppConfig
 import connectors.EnrolmentStoreStubConnector
 import controllers.testonly.StubEnrolmentControllerSpec.*
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.bind
 import play.api.libs.json.JsObject
 import play.api.mvc.*
 import play.api.test.FakeRequest
@@ -35,89 +38,62 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class StubEnrolmentControllerSpec extends SpecBase with MockitoSugar {
+class StubEnrolmentControllerSpec extends SpecBase with GuiceOneAppPerSuite with MockitoSugar {
+
+  private val authConnector               = mock[AuthConnector]
+  private val enrolmentStoreStubConnector = mock[EnrolmentStoreStubConnector]
+
+  override def fakeApplication(): Application =
+    applicationBuilder()
+      .configure(Map("application.router" -> "testOnlyDoNotUseInAppConf.Routes"))
+      .overrides(
+        bind[AuthConnector].toInstance(authConnector),
+        bind[EnrolmentStoreStubConnector].toInstance(enrolmentStoreStubConnector)
+      )
+      .build()
 
   "StubEnrolmentController.stubEnrolment" - {
 
     "must redirect unauthenticated users to auth wizard with a continue URL back to the test-only route" in {
-      val application =
-        applicationBuilder()
-          .configure(Map("application.router" -> "testOnlyDoNotUseInAppConf.Routes"))
-          .overrides(inject.bind[AuthConnector].toInstance(new FailingAuthConnector(new MissingBearerToken)))
-          .build()
+      mockAuth(Future.failed(new MissingBearerToken))
 
-      running(application) {
-        val request = FakeRequest(GET, controllers.testonly.routes.StubEnrolmentController.stubEnrolment().url)
-        val result  = route(application, request).value
+      val request = FakeRequest(GET, controllers.testonly.routes.StubEnrolmentController.stubEnrolment().url)
+      val result  = route(app, request).value
 
-        val appConfig = application.injector.instanceOf[AppConfig]
+      val appConfig = app.injector.instanceOf[AppConfig]
 
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result).value must startWith(appConfig.loginUrl)
-        redirectLocation(result).value must include(
-          "continue=http%3A%2F%2Flocalhost%3A10057%2Fsenior-accounting-officer%2Fregistration%2Ftest-only%2Fstub-enrolment"
-        )
-      }
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).value must startWith(appConfig.loginUrl)
+      redirectLocation(result).value must include(
+        "continue=http%3A%2F%2Flocalhost%3A10057%2Fsenior-accounting-officer%2Fregistration%2Ftest-only%2Fstub-enrolment"
+      )
     }
 
     "must configure enrolment-store-stub and redirect authenticated users to the registration start" in {
-      val enrolmentStoreStubConnector = mock[EnrolmentStoreStubConnector]
-      val application                 =
-        applicationBuilder()
-          .configure(Map("application.router" -> "testOnlyDoNotUseInAppConf.Routes"))
-          .overrides(
-            inject.bind[AuthConnector].toInstance(new SuccessfulAuthConnector),
-            inject.bind[EnrolmentStoreStubConnector].toInstance(enrolmentStoreStubConnector)
-          )
-          .build()
+      mockAuth(successfulAuthResponse)
+      when(enrolmentStoreStubConnector.upsertGroupPersona(any(), any())(using any()))
+        .thenReturn(Future.successful(true))
 
-      running(application) {
-        when(enrolmentStoreStubConnector.upsertGroupPersona(any(), any())(using any()))
-          .thenReturn(Future.successful(true))
+      val request = FakeRequest(GET, controllers.testonly.routes.StubEnrolmentController.stubEnrolment().url)
+      val result  = route(app, request).value
 
-        val request = FakeRequest(GET, controllers.testonly.routes.StubEnrolmentController.stubEnrolment().url)
-        val result  = route(application, request).value
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).value mustBe controllers.routes.IndexController.onPageLoad().url
 
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe controllers.routes.IndexController.onPageLoad().url
-
-        verify(enrolmentStoreStubConnector).upsertGroupPersona(
-          argThat[String](_ == s"sao-registration-$testProviderId"),
-          argThat[JsObject] { json =>
-            (json \ "groupId").as[String] mustBe s"sao-registration-$testProviderId"
-            (json \ "affinityGroup").as[String] mustBe "Organisation"
-            (json \ "users" \ 0 \ "credId").as[String] mustBe testProviderId
-            (json \ "enrolments" \ 0 \ "serviceName").as[String] mustBe "HMRC-DSAO-ORG"
-            (json \ "enrolments" \ 0 \ "identifiers" \ 0 \ "key").as[String] mustBe "UTR"
-            (json \ "enrolments" \ 0 \ "state").as[String] mustBe "Activated"
-            (json \ "enrolments" \ 0 \ "enrolmentType").as[String] mustBe "principal"
-            (json \ "enrolments" \ 0 \ "assignedUserCreds" \ 0).as[String] mustBe testProviderId
-            true
-          }
-        )(using any())
-      }
+      val (groupId, persona) = captureUpsert()
+      groupId mustBe testGroupId
+      assertDsaoPersona(persona)
     }
 
     "must return InternalServerError when enrolment-store-stub configuration fails" in {
-      val enrolmentStoreStubConnector = mock[EnrolmentStoreStubConnector]
-      val application                 =
-        applicationBuilder()
-          .configure(Map("application.router" -> "testOnlyDoNotUseInAppConf.Routes"))
-          .overrides(
-            inject.bind[AuthConnector].toInstance(new SuccessfulAuthConnector),
-            inject.bind[EnrolmentStoreStubConnector].toInstance(enrolmentStoreStubConnector)
-          )
-          .build()
+      mockAuth(successfulAuthResponse)
+      when(enrolmentStoreStubConnector.upsertGroupPersona(any(), any())(using any()))
+        .thenReturn(Future.successful(false))
 
-      running(application) {
-        when(enrolmentStoreStubConnector.upsertGroupPersona(any(), any())(using any()))
-          .thenReturn(Future.successful(false))
+      val request = FakeRequest(GET, controllers.testonly.routes.StubEnrolmentController.stubEnrolment().url)
+      val result  = route(app, request).value
 
-        val request = FakeRequest(GET, controllers.testonly.routes.StubEnrolmentController.stubEnrolment().url)
-        val result  = route(application, request).value
-
-        status(result) mustBe INTERNAL_SERVER_ERROR
-      }
+      status(result) mustBe INTERNAL_SERVER_ERROR
     }
 
     "must not resolve from the production router" in {
@@ -135,26 +111,38 @@ class StubEnrolmentControllerSpec extends SpecBase with MockitoSugar {
       }
     }
   }
+
+  def mockAuth(response: Future[Any]): Unit =
+    when(authConnector.authorise(any[Predicate], any[Retrieval[Any]])(using any[HeaderCarrier], any[ExecutionContext]))
+      .thenReturn(response)
+
+  def captureUpsert(): (String, JsObject) = {
+    val groupIdCaptor = ArgumentCaptor.forClass(classOf[String])
+    val personaCaptor = ArgumentCaptor.forClass(classOf[JsObject])
+
+    verify(enrolmentStoreStubConnector).upsertGroupPersona(groupIdCaptor.capture(), personaCaptor.capture())(using
+      any()
+    )
+
+    groupIdCaptor.getValue -> personaCaptor.getValue
+  }
+
+  def assertDsaoPersona(json: JsObject): Unit = {
+    (json \ "groupId").as[String] mustBe testGroupId
+    (json \ "affinityGroup").as[String] mustBe "Organisation"
+    (json \ "users" \ 0 \ "credId").as[String] mustBe testProviderId
+    (json \ "enrolments" \ 0 \ "serviceName").as[String] mustBe "HMRC-DSAO-ORG"
+    (json \ "enrolments" \ 0 \ "identifiers" \ 0 \ "key").as[String] mustBe "UTR"
+    (json \ "enrolments" \ 0 \ "state").as[String] mustBe "Activated"
+    (json \ "enrolments" \ 0 \ "enrolmentType").as[String] mustBe "principal"
+    (json \ "enrolments" \ 0 \ "assignedUserCreds" \ 0).as[String] mustBe testProviderId
+  }
 }
 
 object StubEnrolmentControllerSpec {
   val testProviderId: String = "test-provider-id"
+  val testGroupId: String    = s"sao-registration-$testProviderId"
 
-  class SuccessfulAuthConnector extends AuthConnector {
-    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(using
-        hc: HeaderCarrier,
-        ec: ExecutionContext
-    ): Future[A] =
-      Future.successful(
-        new ~(Some("internal-id"), Some(Credentials(testProviderId, "GovernmentGateway"))).asInstanceOf[A]
-      )
-  }
-
-  class FailingAuthConnector(exceptionToReturn: Throwable) extends AuthConnector {
-    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(using
-        hc: HeaderCarrier,
-        ec: ExecutionContext
-    ): Future[A] =
-      Future.failed(exceptionToReturn)
-  }
+  val successfulAuthResponse: Future[Any] =
+    Future.successful(new ~(Some("internal-id"), Some(Credentials(testProviderId, "GovernmentGateway"))))
 }
