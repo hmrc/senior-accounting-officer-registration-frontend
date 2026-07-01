@@ -28,7 +28,6 @@ import utils.FrontendHeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import java.net.URI
 import javax.inject.Inject
 
 class EnrolmentStoreStubConnector @Inject() (
@@ -46,9 +45,9 @@ class EnrolmentStoreStubConnector @Inject() (
 
       val response =
         if exists then {
-          http.put(URI(url).toURL).withBody(persona).execute[HttpResponse]
+          http.put(url"$url").withBody(persona).execute[HttpResponse]
         } else {
-          http.post(URI(url).toURL).withBody(persona).execute[HttpResponse]
+          http.post(url"$url").withBody(persona).execute[HttpResponse]
         }
 
       response.map(_.status == NO_CONTENT)
