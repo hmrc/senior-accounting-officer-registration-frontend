@@ -54,7 +54,7 @@ class StubEnrolmentController @Inject() (
           val groupId = s"sao-registration-${credentials.providerId}"
 
           enrolmentStoreStubConnector.upsertGroupPersona(groupId, groupPersona(groupId, credentials)).map {
-            case true  => SeeOther(controllers.routes.IndexController.onPageLoad().url)
+            case true  => Redirect(controllers.routes.IndexController.onPageLoad())
             case false => InternalServerError("Unable to configure enrolment-store-stub")
           }
         case _ =>
