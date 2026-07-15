@@ -42,7 +42,7 @@ class GrsService @Inject() (
       businessVerificationCheck = false,
       deskProServiceId = appConfig.contactFormServiceIdentifier,
       signOutUrl = appConfig.prependHost(controllers.auth.routes.AuthController.signOut()),
-      regime = "VATC", // TODO confirm
+      regime = "DSAO",
       accessibilityUrl = accessibilityStatementConfig.url.get,
       labels = ServiceLabels(en = messagesApi.preferred(Seq(Lang("en"))).messages("service.name"))
     )
