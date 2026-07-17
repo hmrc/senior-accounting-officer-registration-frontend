@@ -46,7 +46,7 @@ class GrsServiceSpec extends SpecBase with GuiceOneAppPerSuite with EitherValues
         businessVerificationCheck = false,
         deskProServiceId = "senior-accounting-officer-registration-frontend",
         signOutUrl = "http://localhost:10057/senior-accounting-officer/registration/account/sign-out-survey",
-        regime = "VATC",
+        regime = "DSAO",
         accessibilityUrl =
           "http://localhost:12346/accessibility-statement/senior-accounting-officer/registration?referrerUrl=%2F&useServiceNavigation",
         labels = ServiceLabels(en = "Senior Accounting Officer notification and certificate")
@@ -62,7 +62,7 @@ class GrsServiceSpec extends SpecBase with GuiceOneAppPerSuite with EitherValues
         businessVerificationCheck = false,
         deskProServiceId = "senior-accounting-officer-registration-frontend",
         signOutUrl = "/senior-accounting-officer/registration/account/sign-out-survey",
-        regime = "VATC",
+        regime = "DSAO",
         accessibilityUrl =
           "/accessibility-statement/senior-accounting-officer/registration?referrerUrl=%2F&useServiceNavigation",
         labels = ServiceLabels(en = "Senior Accounting Officer notification and certificate")
