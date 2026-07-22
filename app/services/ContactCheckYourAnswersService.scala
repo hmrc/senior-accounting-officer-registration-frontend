@@ -17,6 +17,7 @@
 package services
 
 import models.*
+import models.ContactType.{First, Second}
 import pages.*
 
 class ContactCheckYourAnswersService {
@@ -26,4 +27,12 @@ class ContactCheckYourAnswersService {
       name  <- userAnswers.get(ContactNamePage(contactType))
       email <- userAnswers.get(ContactEmailPage(contactType))
     } yield ContactInfo(name, email)
+
+  def getContacts(userAnswers: UserAnswers): List[ContactInfo] =
+    List(
+      getContactInfo(userAnswers = userAnswers, contactType = First),
+      getContactInfo(userAnswers = userAnswers, contactType = Second).filter { _ =>
+        userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.No)
+      }
+    ).flatten
 }

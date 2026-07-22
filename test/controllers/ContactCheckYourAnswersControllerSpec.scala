@@ -34,7 +34,7 @@ import views.html.ContactCheckYourAnswersView
 
 class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute: Call            = Call("GET", "/foo")
-  val testUserAnswers: UserAnswers = userAnswersWithConfirmedContacts
+  val testUserAnswers: UserAnswers = emptyUserAnswers
 
   override protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     super

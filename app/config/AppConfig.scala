@@ -72,6 +72,7 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
   val grsBaseUrl: String                = servicesConfig.baseUrl("incorporated-entity-identification-frontend")
   val grsStubsBaseUrl: String           = servicesConfig.baseUrl("incorporated-entity-identification-frontend-stubs")
   val enrolmentStoreStubBaseUrl: String = servicesConfig.baseUrl("enrolment-store-stub")
+  val protectedServiceBaseUrl: String   = servicesConfig.baseUrl("senior-accounting-officer-registration")
   def stubGrs: Boolean                  = isEnabled(StubGrs)
   def grsAllowsRelativeUrl: Boolean     = isEnabled(GrsAllowRelativeUrl)
 

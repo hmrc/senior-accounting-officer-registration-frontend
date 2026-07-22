@@ -18,7 +18,6 @@ package controllers
 
 import controllers.actions.*
 import models.registration.RegistrationCompleteDetails
-import pages.CompanyDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -29,25 +28,20 @@ import javax.inject.Inject
 
 class RegistrationCompleteController @Inject() (
     override val messagesApi: MessagesApi,
-    identify: IdentifierAction,
-    getData: DataRetrievalAction,
-    requireData: DataRequiredAction,
+    requireEnrolment: EnrolmentRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     view: RegistrationCompleteView,
     clock: Clock
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get(CompanyDetailsPage) match
-      case None    => Redirect(routes.JourneyRecoveryController.onPageLoad())
-      case Some(_) =>
-        Ok(
-          view(
-            RegistrationCompleteDetails(
-              registrationId = "XMPLR0123456789"
-            )
-          )
+  def onPageLoad: Action[AnyContent] = requireEnrolment { implicit request =>
+    Ok(
+      view(
+        RegistrationCompleteDetails(
+          registrationId = request.subscriptionId
         )
+      )
+    )
   }
 }
