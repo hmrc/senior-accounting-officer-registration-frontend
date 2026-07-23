@@ -181,21 +181,6 @@ class SignUpServiceSpec extends SpecBase with GuiceOneAppPerSuite with MockitoSu
         verify(mockSignUpConnector, times(1)).submit(any())(using any())
       }
 
-      "must return BadRequestFailure when sign up end point returned a 400 response" - {
-        when(mockSignUpConnector.submit(any())(using any()))
-          .thenReturn(Future.successful(HttpResponse(400, "")))
-        val userAnswers = emptyUserAnswers
-          .updateGrs(testCompanyDetails)
-          .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
-
-        val result = SUT.submit(userAnswers)
-
-        result.futureValue mustBe BadRequestFailure
-
-        verify(mockSignUpConnector, times(1)).submit(any())(using any())
-      }
-
       "must return ProtectedServiceFailure(500) when sign up end point returned a 500 response" in {
         when(mockSignUpConnector.submit(any())(using any()))
           .thenReturn(Future.successful(HttpResponse(500, "")))

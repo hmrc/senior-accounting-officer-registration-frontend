@@ -43,7 +43,7 @@ class SignUpService @Inject() (
   private def mapRequest(userAnswers: UserAnswers): Option[SignUpRequest] =
     for {
       companyDetails <- userAnswers.get(CompanyDetailsPage)
-      contact        <- getContacts(userAnswers)
+      contacts       <- getContacts(userAnswers)
     } yield SignUpRequest(
       etmpSafeId = companyDetails.registeredBusinessPartnerId,
       nominatedCompany = NominatedCompany(
@@ -51,7 +51,7 @@ class SignUpService @Inject() (
         crn = companyDetails.companyNumber,
         utr = companyDetails.ctUtr
       ),
-      contacts = contact
+      contacts = contacts
     )
 
   private def getContacts(userAnswers: UserAnswers): Option[List[Contact]] =
