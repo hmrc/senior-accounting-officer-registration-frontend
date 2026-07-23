@@ -42,14 +42,20 @@ final class EnrolmentRequiredActionImpl @Inject() (
 
   override def invokeBlock[A](request: Request[A], block: EnroledRequest[A] => Future[Result]): Future[Result] = {
     given hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-    authorised().retrieve(Retrievals.allEnrolments) {
-      _.enrolments
-        .collectFirst { case Enrolment("HMRC-DSAO-ORG", EnrolmentIdentifier(_, subscriptionId) :: Nil, _, _) =>
-          block(EnroledRequest(request, subscriptionId))
-        }
-        .getOrElse(throw new UnauthorizedException("No active HMRC-DSAO-ORG enrolment"))
-    } recover { case _: NoActiveSession =>
-      Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
-    }
+    authorised()
+      .retrieve(Retrievals.allEnrolments) { enrolments =>
+        {
+          for {
+            enrolment  <- enrolments.enrolments.find(_.key == "HMRC-DSAO-ORG")
+            identifier <- enrolment.getIdentifier("EtmpSubscriptionId")
+          } yield block(EnroledRequest(request, identifier.value))
+        }.getOrElse(Future.failed(new UnauthorizedException("No active HMRC-DSAO-ORG enrolment")))
+      }
+      .recoverWith { case _: NoActiveSession =>
+        Future.successful(
+          Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+        )
+      }
   }
+
 }

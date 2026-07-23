@@ -61,7 +61,7 @@ class SignUpService @Inject() (
         .map(info => Contact(name = info.name, email = info.email, status = "valid", language = "en-GB"))
     ).filter(_.nonEmpty)
 
-  private def callSignUp(request: SignUpRequest)(using HeaderCarrier) =
+  private def callSignUp(request: SignUpRequest)(using HeaderCarrier): Future[SignUpResult] =
     signupConnector.submit(request).map {
       case HttpResponse(200, body, _) =>
         Try(Json.parse(body).as[SignUpResponse]).fold(
