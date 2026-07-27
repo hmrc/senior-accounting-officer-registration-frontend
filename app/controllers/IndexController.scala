@@ -59,7 +59,7 @@ class IndexController @Inject() (
       _        <- repository
         .clear(request.userId)
         .recover { case NonFatal(e) =>
-          logger.warn("[PostSignUp][CLEAR_MONGO_FAIL]")
+          logger.warn("[PostSignUp][CLEAR_MONGO_FAIL]", e)
           false
         }
     } yield response
