@@ -18,6 +18,8 @@ package services
 
 import base.SpecBase
 import models.*
+import models.ContactHaveYouAddedAll.{No, Yes}
+import models.ContactType.First
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*
 import services.ContactCheckYourAnswersServiceSpec.*
@@ -57,6 +59,53 @@ class ContactCheckYourAnswersServiceSpec extends SpecBase with GuiceOneAppPerSui
       }
     })
   }
+
+  "ContactCheckYourAnswersService.getContacts" - {
+
+    "when userAnswer has both contact info" - {
+      "and the user answered there are two contacts must return both contacts" in {
+        val userAnswers = emptyUserAnswers
+          .updateContact(ContactType.First, "name1", "email1")
+          .updateContactHaveYouAddedAll(No)
+          .updateContact(ContactType.Second, "name2", "email2")
+
+        val result = SUT.getContacts(userAnswers)
+
+        result mustBe List(
+          ContactInfo("name1", "email1"),
+          ContactInfo("name2", "email2")
+        )
+      }
+
+      "but the user answered there is only one contact must return only the first contact" in {
+        val userAnswers = emptyUserAnswers
+          .updateContact(ContactType.First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+          .updateContact(ContactType.Second, "name2", "email2")
+
+        val result = SUT.getContacts(userAnswers)
+
+        result mustBe List(
+          ContactInfo("name1", "email1")
+        )
+      }
+    }
+
+    "when userAnswer only has one contact info" - {
+      "must return the contact" in {
+        val userAnswers = emptyUserAnswers
+          .updateContact(ContactType.First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+
+        val result = SUT.getContacts(userAnswers)
+
+        result mustBe List(
+          ContactInfo("name1", "email1")
+        )
+      }
+    }
+  }
+
 }
 
 object ContactCheckYourAnswersServiceSpec {
@@ -65,14 +114,14 @@ object ContactCheckYourAnswersServiceSpec {
         contactType: ContactType,
         name: String,
         email: String
-    ): UserAnswers = {
+    ): UserAnswers =
       updateContact(contactType, Some(name), Some(email))
-    }
+
     def updateContact(
         contactType: ContactType,
         name: Option[String],
         email: Option[String]
-    ): UserAnswers = {
+    ): UserAnswers =
       List(name, email).zipWithIndex
         .foldLeft(userAnswers)((accumulator, configs) => {
           configs match {
@@ -81,6 +130,8 @@ object ContactCheckYourAnswersServiceSpec {
             case _                => accumulator
           }
         })
-    }
+
+    def updateContactHaveYouAddedAll(value: ContactHaveYouAddedAll): UserAnswers =
+      userAnswers.set(ContactHaveYouAddedAllPage(First), value).get
   }
 }

@@ -84,7 +84,7 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
               )
           case Submission =>
             doc.createTestsWithSubmissionButton(
-              action = controllers.routes.IndexController.continue(),
+              action = controllers.routes.IndexController.submit(),
               buttonText = submitButtonText
             )
         }

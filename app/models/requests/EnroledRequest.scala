@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package pages
+package models.requests
 
-import models.ContactInfo
-import play.api.libs.json.JsPath
+import play.api.mvc.{Request, WrappedRequest}
 
-case object ContactsPage extends QuestionPage[ContactInfo] {
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "contacts"
-}
+case class EnroledRequest[A](request: Request[A], subscriptionId: String) extends WrappedRequest[A](request)

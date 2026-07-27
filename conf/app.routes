@@ -17,9 +17,9 @@ GET         /account/signed-out                                controllers.auth.
 GET         /unauthorised                                      controllers.UnauthorisedController.onPageLoad()
 
 GET         /                                                  controllers.IndexController.onPageLoad()
-POST        /                                                  controllers.IndexController.continue()
+POST        /                                                  controllers.IndexController.submit()
 
-GET         /registration-complete                             controllers.RegistrationCompleteController.onPageLoad()
+GET         /registration-complete                             controllers.RegistrationCompleteController.onPageLoad
 
 GET         /business-match                                    controllers.GrsController.start()
 GET         /business-match/result                             controllers.GrsController.callBack(journeyId: String)

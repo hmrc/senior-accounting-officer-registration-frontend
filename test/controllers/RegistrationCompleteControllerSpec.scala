@@ -17,42 +17,44 @@
 package controllers
 
 import base.SpecBase
-import models.UserAnswers
-import models.registration.CompanyDetails
+import controllers.RegistrationCompleteControllerSpec.*
+import controllers.actions.EnrolmentRequiredAction
 import models.registration.RegistrationCompleteDetails
-import pages.CompanyDetailsPage
+import models.requests.EnroledRequest
+import org.apache.pekko.stream.testkit.NoMaterializer
 import play.api.inject.bind
-import play.api.test.FakeRequest
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.*
 import play.api.test.Helpers.*
+import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.http.UnauthorizedException
 import views.html.RegistrationCompleteView
 
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneId
-import java.time.{LocalDateTime, ZoneOffset}
+import scala.annotation.targetName
+import scala.concurrent.{ExecutionContext, Future}
+
+import java.time.*
 
 class RegistrationCompleteControllerSpec extends SpecBase {
 
+  @targetName("enroledApplicationBuilder")
+  def applicationBuilder(enrolment: Option[String]): GuiceApplicationBuilder =
+    super
+      .applicationBuilder(userAnswers = None)
+      .overrides(
+        bind[EnrolmentRequiredAction]
+          .toInstance(new FakeEnrolmentRequiredAction(enrolment))
+      )
+
+  lazy val registrationCompleteRoute: String = routes.RegistrationCompleteController.onPageLoad.url
+
   "RegistrationComplete Controller" - {
-    lazy val registrationCompleteRoute = routes.RegistrationCompleteController.onPageLoad().url
 
     "must return OK and the correct view for a GET when company details are available and host is not localhost" in {
 
-      val userAnswersWithCompanyDetails =
-        UserAnswers(id = "id")
-          .set(
-            CompanyDetailsPage,
-            CompanyDetails(
-              companyName = "ABC Ltd",
-              companyNumber = "number",
-              ctUtr = "ctUtr",
-              registeredBusinessPartnerId = "registeredBusinessPartnerId"
-            )
-          )
-          .success
-          .value
+      val testRegistrationId = "XMPLR0123456789"
 
-      val application = applicationBuilder(userAnswers = Some(userAnswersWithCompanyDetails))
+      val application = applicationBuilder(enrolment = Some(testRegistrationId))
         .configure(Map("hub-frontend.host" -> "xyz"))
         .overrides(bind[Clock].to[MockClock])
         .build()
@@ -63,7 +65,7 @@ class RegistrationCompleteControllerSpec extends SpecBase {
         val view    = application.injector.instanceOf[RegistrationCompleteView]
 
         val registrationData = RegistrationCompleteDetails(
-          registrationId = "XMPLR0123456789"
+          registrationId = testRegistrationId
         )
 
         status(result) mustEqual OK
@@ -73,27 +75,31 @@ class RegistrationCompleteControllerSpec extends SpecBase {
         ).toString
       }
     }
-
-    "must redirect to the journey recovery view for a GET when company details are not available" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, registrationCompleteRoute)
-        val result  = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
   }
 }
 
-class MockClock extends Clock {
-  override def instant(): Instant = {
-    LocalDateTime.of(2025, 1, 17, 11, 30).toInstant(ZoneOffset.UTC)
+object RegistrationCompleteControllerSpec {
+
+  class MockClock extends Clock {
+    override def instant(): Instant = {
+      LocalDateTime.of(2025, 1, 17, 11, 30).toInstant(ZoneOffset.UTC)
+    }
+
+    override def withZone(zone: ZoneId): Clock = ???
+
+    override def getZone(): ZoneId = ZoneOffset.UTC
   }
 
-  override def withZone(zone: ZoneId): Clock = ???
+  class FakeEnrolmentRequiredAction(enrolment: Option[String]) extends EnrolmentRequiredAction {
+    override def invokeBlock[A](request: Request[A], block: EnroledRequest[A] => Future[Result]): Future[Result] =
+      enrolment match {
+        case Some(subscriptionId) => block(EnroledRequest(request, subscriptionId))
+        case _                    => Future.failed(new UnauthorizedException("No active HMRC-DSAO-ORG enrolment"))
+      }
 
-  override def getZone(): ZoneId = ZoneOffset.UTC
+    override def parser: BodyParser[AnyContent] = Helpers.stubPlayBodyParsers(NoMaterializer).default
+
+    override protected def executionContext: ExecutionContext = ExecutionContext.global
+  }
+
 }
