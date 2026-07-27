@@ -87,7 +87,7 @@ class StubEnrolmentController @Inject() (
       "enrolments" -> Json.arr(
         Json.obj(
           "serviceName"           -> "HMRC-DSAO-ORG",
-          "identifiers"           -> Json.arr(Json.obj("key" -> "UTR", "value" -> "1234567890")),
+          "identifiers"           -> Json.arr(Json.obj("key" -> "EtmpSubscriptionId", "value" -> "1234567890")),
           "enrolmentFriendlyName" -> "HMRC DSAO Enrolment",
           "assignedUserCreds"     -> Json.arr(credentials.providerId),
           "state"                 -> "Activated",
