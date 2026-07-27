@@ -132,7 +132,7 @@ class StubEnrolmentControllerSpec extends SpecBase with GuiceOneAppPerSuite with
     (json \ "affinityGroup").as[String] mustBe "Organisation"
     (json \ "users" \ 0 \ "credId").as[String] mustBe testProviderId
     (json \ "enrolments" \ 0 \ "serviceName").as[String] mustBe "HMRC-DSAO-ORG"
-    (json \ "enrolments" \ 0 \ "identifiers" \ 0 \ "key").as[String] mustBe "UTR"
+    (json \ "enrolments" \ 0 \ "identifiers" \ 0 \ "key").as[String] mustBe "EtmpSubscriptionId"
     (json \ "enrolments" \ 0 \ "state").as[String] mustBe "Activated"
     (json \ "enrolments" \ 0 \ "enrolmentType").as[String] mustBe "principal"
     (json \ "enrolments" \ 0 \ "assignedUserCreds" \ 0).as[String] mustBe testProviderId
