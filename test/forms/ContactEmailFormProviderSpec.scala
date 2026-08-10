@@ -26,7 +26,7 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
   val formatKey   = "contactEmail.error.format"
   val maxLength   = 50
 
-  val emailRegex = """^.+[@].+[.].+$"""
+  val emailRegex = """^([a-zA-Z0-9.!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*)$"""
 
   val form = new ContactEmailFormProvider()()
 

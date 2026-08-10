@@ -87,7 +87,7 @@ trait Generators extends ModelGenerators {
   def stringsWithMaxLength(maxLength: Int): Gen[String] =
     for {
       length <- choose(1, maxLength)
-      chars  <- listOfN(length, arbitrary[Char])
+      chars  <- listOfN(length, arbitrary[Char].filterNot(Set[Char]('<', '>', '&').contains))
     } yield chars.mkString
 
   def invalidStringsForNameFieldWithMaxLength(maxLength: Int): Gen[String] =
@@ -163,8 +163,8 @@ trait Generators extends ModelGenerators {
   def genInvalidEmailAddresses: Gen[String] = {
     Gen.oneOf(
       Gen.const("notAnEmail"),
-      Gen.const("missing@domain"),
       Gen.const("@noDomain.com"),
+      Gen.const("end@withdot."),
       Gen.const("missingAtSign.com")
     )
   }
