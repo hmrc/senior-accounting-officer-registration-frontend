@@ -16,14 +16,13 @@
 
 package forms
 
+import forms.ContactEmailFormProvider.emailRegex
 import forms.mappings.Mappings
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ContactEmailFormProvider @Inject() extends Mappings {
-
-  val emailRegex = """^.+[@].+[.].+$"""
 
   def apply(): Form[String] =
     Form(
@@ -32,4 +31,9 @@ class ContactEmailFormProvider @Inject() extends Mappings {
         .verifying(regexp(emailRegex, "contactEmail.error.format"))
     )
 
+}
+
+object ContactEmailFormProvider {
+  // to align with email service https://github.com/hmrc/email/blob/main/app/uk/gov/hmrc/email/emailaddress/EmailAddress.scala#L28C1-L36C6
+  val emailRegex = """^([a-zA-Z0-9.!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*)$"""
 }
