@@ -84,10 +84,10 @@ trait Generators extends ModelGenerators {
   def nonEmptyString: Gen[String] =
     arbitrary[String] suchThat (_.nonEmpty)
 
-  def stringsWithMaxLength(maxLength: Int): Gen[String] =
+  def stringsWithMaxLength(maxLength: Int, exclude: Set[Char] = Set.empty): Gen[String] =
     for {
       length <- choose(1, maxLength)
-      chars  <- listOfN(length, arbitrary[Char].filterNot(Set[Char]('<', '>', '&').contains))
+      chars  <- listOfN(length, arbitrary[Char].filterNot(exclude.contains))
     } yield chars.mkString
 
   def invalidStringsForNameFieldWithMaxLength(maxLength: Int): Gen[String] =
