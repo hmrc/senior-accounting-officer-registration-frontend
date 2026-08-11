@@ -35,7 +35,7 @@ class ContactNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form = form,
       fieldName = fieldName,
-      generator = stringsWithMaxLength(maxLength)
+      generator = stringsWithMaxLength(maxLength, exclude = specialChars)
     )
 
     behave like fieldThatBindsInvalidData(
