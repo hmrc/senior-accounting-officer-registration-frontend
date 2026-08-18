@@ -11,3 +11,6 @@ POST       /grs-stub/:journeyid               controllers.testonly.GrsStubsContr
 GET        /grs-stub/journey/:journeyid       controllers.testonly.GrsStubsController.getGrs(journeyid)
 
 GET        /simulate-error/:errorType         controllers.testonly.AlertTestController.simulateError(errorType: String)
+
+GET        /send-email                        controllers.testonly.SendEmailController.get()
+POST       /send-email                        controllers.testonly.SendEmailController.send()
