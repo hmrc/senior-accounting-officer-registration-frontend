@@ -50,7 +50,9 @@ class SendEmailController @Inject() (
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     field("email") match {
-      case None        => Future.successful(BadRequest(sendEmailView(Some("Enter an email address."))))
+      case None => Future.successful(BadRequest(sendEmailView(Some("Enter an email address."))))
+      case Some(email) if !email.contains("@") =>
+        Future.successful(BadRequest(sendEmailView(Some("Enter a valid email address."))))
       case Some(email) =>
         val params    = Seq("email" -> email) ++ field("name").map("name" -> _)
         val query     = params.map((key, value) => s"$key=${encode(value)}").mkString("&")
