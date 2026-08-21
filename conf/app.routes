@@ -61,3 +61,9 @@ POST        /contact-details/second/check-your-answers                controller
 
 GET        /nominated-company-details-guidance                 controllers.NominatedCompanyDetailsGuidanceController.onPageLoad()
 POST       /nominated-company-details-guidance                 controllers.NominatedCompanyDetailsGuidanceController.onSubmit()
+
+GET        /cannot-access-service                             controllers.CannotAccessServiceController.onPageLoad()
+
+GET        /agent-cannot-access-service                       controllers.AgentCannotAccessServiceController.onPageLoad()
+
+GET        /already-registered                                controllers.AlreadyRegisteredController.onPageLoad()

@@ -63,6 +63,71 @@ class AuthActionISpec extends ISpecBase {
       }
     }
 
+    "the user has an Individual affinity group must" - {
+      "respond with a 303 to the cannot access service kick-out page" in {
+        MockAuthHelper.mockAuthIndividual()
+
+        val response =
+          wsClient
+            .url(targetUrl)
+            .withFollowRedirects(false)
+            .withHttpHeaders(
+              HeaderNames.COOKIE -> SessionCookieBaker.bakeSessionCookie(authSession),
+              "Csrf-Token"       -> "nocheck"
+            )
+            .get()
+            .futureValue
+
+        MockAuthHelper.verifyAuthWasCalled()
+        response.status mustBe Status.SEE_OTHER
+        response.headers("Location").head mustBe controllers.routes.CannotAccessServiceController.onPageLoad().url
+      }
+    }
+
+    "the user has an Agent affinity group must" - {
+      "respond with a 303 to the agent cannot access service kick-out page" in {
+        MockAuthHelper.mockAuthAgent()
+
+        val response =
+          wsClient
+            .url(targetUrl)
+            .withFollowRedirects(false)
+            .withHttpHeaders(
+              HeaderNames.COOKIE -> SessionCookieBaker.bakeSessionCookie(authSession),
+              "Csrf-Token"       -> "nocheck"
+            )
+            .get()
+            .futureValue
+
+        MockAuthHelper.verifyAuthWasCalled()
+        response.status mustBe Status.SEE_OTHER
+        response.headers("Location").head mustBe controllers.routes.AgentCannotAccessServiceController
+          .onPageLoad()
+          .url
+      }
+    }
+
+    "the user already holds the DSAO enrolment must" - {
+      "respond with a 303 to the already registered kick-out page" in {
+        MockAuthHelper.mockAuthAlreadyEnroled()
+
+        val response =
+          wsClient
+            .url(targetUrl)
+            .withFollowRedirects(false)
+            .withHttpHeaders(
+              HeaderNames.COOKIE -> SessionCookieBaker.bakeSessionCookie(authSession),
+              "Csrf-Token"       -> "nocheck"
+            )
+            .get()
+            .futureValue
+
+        MockAuthHelper.verifyAuthWasCalled()
+        response.status mustBe Status.SEE_OTHER
+        response.headers("Location").head mustBe controllers.routes.AlreadyRegisteredController.onPageLoad().url
+      }
+    }
+
     "Auth did not respond with the required retrievals must" - {
       "respond with a 500" in {
         MockAuthHelper.mockAuthNoId()

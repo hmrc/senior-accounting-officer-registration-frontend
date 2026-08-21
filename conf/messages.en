@@ -125,3 +125,18 @@ nominatedCompanyDetailsGuidance.bulletPoint1 = Company Registration Number (CRN)
 nominatedCompanyDetailsGuidance.bulletPoint2 = Unique Taxpayer Reference (UTR)
 nominatedCompanyDetailsGuidance.paragraph3 = These details must match Companies House records. If they do not, you will not be able to register for the service.
 nominatedCompanyDetailsGuidance.inset.text = If your organisation is not registered with Companies House, nominate a company in your group with a CRN to register. If no company in your group has a CRN, contact HMRC using your usual compliance contact or existing support channels.
+cannotAccessService.title = You cannot access this service
+cannotAccessService.heading = You cannot access this service
+cannotAccessService.individual.paragraph1 = You’ve signed in with an individual account. Only administrators of an organisation account can register to use this service.
+cannotAccessService.individual.paragraph2 = If the group still needs to register, {0}.
+cannotAccessService.individual.signIn.linkText = sign in to Government Gateway with an organisation account
+cannotAccessService.findOutMore.linkText = Find out more about who can use this service
+
+agentCannotAccessService.paragraph1 = You’ve signed in using an agent services Government Gateway user ID. Agents must not register or use the SAO service.
+agentCannotAccessService.paragraph2 = Only authorised members in a company, with an organisation account can register to use this service.
+
+alreadyRegistered.title = Your company has already registered for this service
+alreadyRegistered.heading = Your company has already registered for this service
+alreadyRegistered.paragraph1 = You can find a link to the Senior Accounting Officer notification and certificate service on your HMRC {0}. From there you can manage your account and make a submission.
+alreadyRegistered.businessTaxAccount.linkText = business tax account (opens in new tab)
+alreadyRegistered.paragraph2 = Log in using your organisation Government Gateway ID.

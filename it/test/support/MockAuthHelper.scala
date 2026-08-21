@@ -33,7 +33,60 @@ object MockAuthHelper {
           aResponse()
             .withHeader("content-type", "application/json")
             .withBody(s"""{
-                | "internalId": "$testId"
+                | "internalId": "$testId",
+                | "affinityGroup": "Organisation",
+                | "allEnrolments" : []
+                |}""".stripMargin)
+            .withStatus(200)
+        )
+    )
+
+  def mockAuthIndividual(): StubMapping =
+    stubFor(
+      post(urlEqualTo(authoriseUri))
+        .willReturn(
+          aResponse()
+            .withHeader("content-type", "application/json")
+            .withBody(s"""{
+                | "internalId": "$testId",
+                | "affinityGroup": "Individual",
+                | "allEnrolments" : []
+                |}""".stripMargin)
+            .withStatus(200)
+        )
+    )
+
+  def mockAuthAgent(): StubMapping =
+    stubFor(
+      post(urlEqualTo(authoriseUri))
+        .willReturn(
+          aResponse()
+            .withHeader("content-type", "application/json")
+            .withBody(s"""{
+                | "internalId": "$testId",
+                | "affinityGroup": "Agent",
+                | "allEnrolments" : []
+                |}""".stripMargin)
+            .withStatus(200)
+        )
+    )
+
+  def mockAuthAlreadyEnroled(): StubMapping =
+    stubFor(
+      post(urlEqualTo(authoriseUri))
+        .willReturn(
+          aResponse()
+            .withHeader("content-type", "application/json")
+            .withBody(s"""{
+                | "internalId": "$testId",
+                | "affinityGroup": "Organisation",
+                | "allEnrolments" : [{
+                |   "key":"HMRC-DSAO-ORG",
+                |   "identifiers": [{
+                |     "key":"EtmpSubscriptionId",
+                |     "value": "$testSubscriptionId"
+                |   }]
+                | }]
                 |}""".stripMargin)
             .withStatus(200)
         )
