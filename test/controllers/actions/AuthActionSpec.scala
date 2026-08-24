@@ -19,13 +19,14 @@ package controllers.actions
 import base.SpecBase
 import com.google.inject.Inject
 import config.AppConfig
+import controllers.actions.AuthenticatedIdentifierAction.DsaoEnrolmentKey
 import controllers.routes
 import play.api.mvc.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.Retrieval
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,6 +37,12 @@ class AuthActionSpec extends SpecBase {
   class Harness(authAction: IdentifierAction) {
     def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
   }
+
+  private def retrievals(affinityGroup: AffinityGroup, enrolmentKeys: String*) =
+    new ~(
+      new ~(Some("internalId"), Some(affinityGroup)),
+      Enrolments(enrolmentKeys.map(key => Enrolment(key)).toSet)
+    )
 
   "Auth Action" - {
 
@@ -183,6 +190,124 @@ class AuthActionSpec extends SpecBase {
       }
     }
 
+    "the user has an Individual affinity group" - {
+
+      "must redirect the user to the cannot access service kick-out page" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[AppConfig]
+
+          val authAction = new FrontendAuthenticatedIdentifierAction(
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Individual)),
+            appConfig,
+            bodyParsers
+          )
+          val controller = new Harness(authAction)
+          val result     = controller.onPageLoad()(FakeRequest())
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.CannotAccessServiceController.onPageLoad().url)
+        }
+      }
+    }
+
+    "the user has an Agent affinity group" - {
+
+      "must redirect the user to the agent cannot access service kick-out page" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[AppConfig]
+
+          val authAction = new FrontendAuthenticatedIdentifierAction(
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Agent)),
+            appConfig,
+            bodyParsers
+          )
+          val controller = new Harness(authAction)
+          val result     = controller.onPageLoad()(FakeRequest())
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.AgentCannotAccessServiceController.onPageLoad().url)
+        }
+      }
+    }
+
+    "the user has an Organisation affinity group" - {
+
+      "must let the user through to the requested page" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[AppConfig]
+
+          val authAction = new FrontendAuthenticatedIdentifierAction(
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation)),
+            appConfig,
+            bodyParsers
+          )
+          val controller = new Harness(authAction)
+          val result     = controller.onPageLoad()(FakeRequest())
+
+          status(result) mustBe OK
+        }
+      }
+    }
+
+    "the user already holds the DSAO enrolment" - {
+
+      "must redirect the user to the already registered kick-out page" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[AppConfig]
+
+          val authAction = new FrontendAuthenticatedIdentifierAction(
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, DsaoEnrolmentKey)),
+            appConfig,
+            bodyParsers
+          )
+          val controller = new Harness(authAction)
+          val result     = controller.onPageLoad()(FakeRequest())
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.AlreadyRegisteredController.onPageLoad().url)
+        }
+      }
+    }
+
+    "the user holds an enrolment other than DSAO" - {
+
+      "must let the user through" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[AppConfig]
+
+          val authAction = new FrontendAuthenticatedIdentifierAction(
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, "IR-SA")),
+            appConfig,
+            bodyParsers
+          )
+          val controller = new Harness(authAction)
+          val result     = controller.onPageLoad()(FakeRequest())
+
+          status(result) mustBe OK
+        }
+      }
+    }
+
     "the user has an unsupported credential role" - {
 
       "must redirect the user to the unauthorised page" in {
@@ -207,6 +332,16 @@ class AuthActionSpec extends SpecBase {
       }
     }
   }
+}
+
+class FakeSuccessfulAuthConnector[T] @Inject() (retrievalToReturn: T) extends AuthConnector {
+  val serviceUrl: String = ""
+
+  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(using
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+  ): Future[A] =
+    Future.successful(retrievalToReturn.asInstanceOf[A])
 }
 
 class FakeFailingAuthConnector @Inject() (exceptionToReturn: Throwable) extends AuthConnector {

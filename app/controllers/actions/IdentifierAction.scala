@@ -18,12 +18,14 @@ package controllers.actions
 
 import com.google.inject.Inject
 import config.AppConfig
+import controllers.actions.AuthenticatedIdentifierAction.DsaoEnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
 import play.api.mvc.*
 import play.api.mvc.Results.*
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -66,10 +68,19 @@ abstract class AuthenticatedIdentifierAction(
         HeaderCarrierConverter.fromRequest(request)
       }
 
-    authorised().retrieve(Retrievals.internalId) {
-      _.map { internalId =>
-        block(IdentifierRequest(request, internalId))
-      }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+    authorised().retrieve(Retrievals.internalId and Retrievals.affinityGroup and Retrievals.allEnrolments) {
+      case _ ~ Some(AffinityGroup.Individual) ~ _ =>
+        Future.successful(Redirect(routes.CannotAccessServiceController.onPageLoad()))
+      case _ ~ Some(AffinityGroup.Agent) ~ _ =>
+        Future.successful(Redirect(routes.AgentCannotAccessServiceController.onPageLoad()))
+      case _ ~ _ ~ enrolments if isAlreadyRegistered(enrolments) =>
+        Future.successful(Redirect(routes.AlreadyRegisteredController.onPageLoad()))
+      case internalId ~ _ ~ _ =>
+        internalId
+          .map { id =>
+            block(IdentifierRequest(request, id))
+          }
+          .getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
     } recover {
       case _: NoActiveSession =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
@@ -77,6 +88,13 @@ abstract class AuthenticatedIdentifierAction(
         Redirect(routes.UnauthorisedController.onPageLoad())
     }
   }
+
+  private def isAlreadyRegistered(enrolments: Enrolments): Boolean =
+    enrolments.enrolments.exists(_.key == DsaoEnrolmentKey)
+}
+
+object AuthenticatedIdentifierAction {
+  val DsaoEnrolmentKey = "HMRC-DSAO-ORG"
 }
 
 class SessionIdentifierAction @Inject() (

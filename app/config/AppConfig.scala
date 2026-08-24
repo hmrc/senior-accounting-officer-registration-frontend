@@ -52,6 +52,14 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
   val loginContinueUrl: String = configuration.get[String]("urls.loginContinue").removeTrailingPathSeparator
   val signOutUrl: String       = configuration.get[String]("urls.signOut").removeTrailingPathSeparator
 
+  val organisationSignInUrl: String =
+    configuration.get[String]("urls.organisationSignIn").removeTrailingPathSeparator
+  val whoCanUseServiceUrl: String =
+    configuration.get[String]("urls.whoCanUseService").removeTrailingPathSeparator
+
+  val businessTaxAccountUrl: String =
+    configuration.get[String]("urls.businessTaxAccount").removeTrailingPathSeparator
+
   private val exitSurveyBaseUrl: String =
     configuration.get[String]("feedback-frontend.host").removeTrailingPathSeparator
   val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/$contactFormServiceIdentifier"
