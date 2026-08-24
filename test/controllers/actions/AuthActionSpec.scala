@@ -18,10 +18,9 @@ package controllers.actions
 
 import base.SpecBase
 import com.google.inject.Inject
-import config.{AppConfig, FeatureToggleSupport}
-import controllers.actions.AuthenticatedIdentifierAction.{DsaoEnrolmentKey, IrSaEnrolmentKey}
+import config.AppConfig
+import controllers.actions.AuthenticatedIdentifierAction.DsaoEnrolmentKey
 import controllers.routes
-import models.config.FeatureToggle.EacdOnboarded
 import play.api.mvc.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -33,7 +32,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionSpec extends SpecBase with FeatureToggleSupport {
+class AuthActionSpec extends SpecBase {
 
   class Harness(authAction: IdentifierAction) {
     def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
@@ -286,43 +285,18 @@ class AuthActionSpec extends SpecBase with FeatureToggleSupport {
       }
     }
 
-    "the user holds the IR-SA enrolment" - {
+    "the user holds an enrolment other than DSAO" - {
 
-      "must redirect the user to the already registered kick-out page while EACD onboarding is not complete" in {
-
-        val application = applicationBuilder(userAnswers = None).build()
-
-        running(application) {
-          disable(EacdOnboarded)
-
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[AppConfig]
-
-          val authAction = new FrontendAuthenticatedIdentifierAction(
-            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, IrSaEnrolmentKey)),
-            appConfig,
-            bodyParsers
-          )
-          val controller = new Harness(authAction)
-          val result     = controller.onPageLoad()(FakeRequest())
-
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.AlreadyRegisteredController.onPageLoad().url)
-        }
-      }
-
-      "must let the user through once EACD onboarding is complete" in {
+      "must let the user through" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
-          enable(EacdOnboarded)
-
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[AppConfig]
 
           val authAction = new FrontendAuthenticatedIdentifierAction(
-            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, IrSaEnrolmentKey)),
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, "IR-SA")),
             appConfig,
             bodyParsers
           )
@@ -330,8 +304,6 @@ class AuthActionSpec extends SpecBase with FeatureToggleSupport {
           val result     = controller.onPageLoad()(FakeRequest())
 
           status(result) mustBe OK
-
-          disable(EacdOnboarded)
         }
       }
     }

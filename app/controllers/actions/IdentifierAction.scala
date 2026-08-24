@@ -18,7 +18,7 @@ package controllers.actions
 
 import com.google.inject.Inject
 import config.AppConfig
-import controllers.actions.AuthenticatedIdentifierAction.{DsaoEnrolmentKey, IrSaEnrolmentKey}
+import controllers.actions.AuthenticatedIdentifierAction.DsaoEnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
 import play.api.mvc.*
@@ -89,17 +89,12 @@ abstract class AuthenticatedIdentifierAction(
     }
   }
 
-  private def isAlreadyRegistered(enrolments: Enrolments): Boolean = {
-    val registeredEnrolmentKeys =
-      if config.eacdOnboarded then Set(DsaoEnrolmentKey) else Set(DsaoEnrolmentKey, IrSaEnrolmentKey)
-
-    enrolments.enrolments.exists(enrolment => registeredEnrolmentKeys.contains(enrolment.key))
-  }
+  private def isAlreadyRegistered(enrolments: Enrolments): Boolean =
+    enrolments.enrolments.exists(_.key == DsaoEnrolmentKey)
 }
 
 object AuthenticatedIdentifierAction {
   val DsaoEnrolmentKey = "HMRC-DSAO-ORG"
-  val IrSaEnrolmentKey = "IR-SA"
 }
 
 class SessionIdentifierAction @Inject() (

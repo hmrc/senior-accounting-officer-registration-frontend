@@ -27,8 +27,6 @@ enum FeatureToggle(val key: String, val name: String) {
 
   case StubGrs             extends FeatureToggle("stubGrs", "Stub GRS")
   case GrsAllowRelativeUrl extends FeatureToggle("grsAllowsRelativeUrl", "GRS Allows Relative URL")
-  // TODO SAOD-829: remove once EACD onboarding is complete and IR-SA is no longer a proxy for HMRC-DSAO-ORG
-  case EacdOnboarded extends FeatureToggle("eacdOnboarded", "EACD Onboarding Complete")
 }
 
 object FeatureToggle extends FeatureConfigSupport {
