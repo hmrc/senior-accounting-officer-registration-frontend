@@ -37,7 +37,7 @@ class AlreadyRegisteredViewSpec extends ViewSpecBase[AlreadyRegisteredView] {
       pageHeading = pageHeading,
       showBackLink = false,
       showIsThisPageNotWorkingProperlyLink = true,
-      hasError = true
+      hasError = false
     )
 
     doc.createTestsWithOrWithoutError(hasError = false)

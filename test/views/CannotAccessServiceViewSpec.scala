@@ -37,7 +37,7 @@ class CannotAccessServiceViewSpec extends ViewSpecBase[CannotAccessServiceView] 
       pageHeading = pageHeading,
       showBackLink = false,
       showIsThisPageNotWorkingProperlyLink = true,
-      hasError = true
+      hasError = false
     )
 
     doc.createTestsWithOrWithoutError(hasError = false)
