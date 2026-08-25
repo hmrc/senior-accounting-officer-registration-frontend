@@ -37,7 +37,7 @@ class AgentCannotAccessServiceViewSpec extends ViewSpecBase[AgentCannotAccessSer
       pageHeading = pageHeading,
       showBackLink = false,
       showIsThisPageNotWorkingProperlyLink = true,
-      hasError = true
+      hasError = false
     )
 
     doc.createTestsWithOrWithoutError(hasError = false)
