@@ -111,10 +111,15 @@ contactHaveYouAddedAll.checkYourAnswersLabel = Have you added all the contacts y
 contactHaveYouAddedAll.error.required = Select contactHaveYouAddedAll
 contactHaveYouAddedAll.change.hidden = whether you have added all the contacts you need
 
-contactCheckYourAnswers.title = Contact details
-contactCheckYourAnswers.caption = Contact details
+contactCheckYourAnswers.title.first  = First contact details
+contactCheckYourAnswers.title.second = Second contact details
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Continue
+
+contactsCheckYourAnswers.title = Contact details
+contactsCheckYourAnswers.caption = Contact details
+contactsCheckYourAnswers.heading = Check your answers
+contactsCheckYourAnswers.continue = Continue
 
 nominatedCompanyDetailsGuidance.title = Company Details
 nominatedCompanyDetailsGuidance.heading = Provide your nominated company details

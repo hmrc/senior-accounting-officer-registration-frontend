@@ -16,15 +16,16 @@
 
 package controllers
 
+import config.AppConfig
 import controllers.actions.*
-import models.{ContactsCheckYourAnswers, NormalMode}
+import models.{ContactType, NormalMode}
 import navigation.Navigator
-import pages.ContactCheckYourAnswersPage
+import pages.{ContactCheckYourAnswersPage, ContactsCheckYourAnswersPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ContactCheckYourAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ContactCheckYourAnswersView
+import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
 
 import scala.concurrent.ExecutionContext
 
@@ -32,26 +33,44 @@ import javax.inject.Inject
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
+    appConfig: AppConfig,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     view: ContactCheckYourAnswersView,
+    newView: ContactsCheckYourAnswersView,
     service: ContactCheckYourAnswersService,
     navigator: Navigator
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    service.getContactsForCheckYourAnswers(request.userAnswers) match {
-      case Some(answers) => Ok(view(answers))
-      case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
-    }
+  def onPageLoad(contactType: ContactType): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      service.getContactInfo(request.userAnswers, contactType) match {
+        case Some(answers) => Ok(view(answers, contactType))
+        case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
+      }
   }
 
-  def saveAndContinue(): Action[AnyContent] =
+  def saveAndContinue(contactType: ContactType): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      Redirect(navigator.nextPage(ContactCheckYourAnswersPage, NormalMode, request.userAnswers))
+      Redirect(navigator.nextPage(ContactCheckYourAnswersPage(contactType), NormalMode, request.userAnswers))
+    }
+
+  def onPageLoadNew(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    if !appConfig.contactFlowReshuffleEnabled then {
+      Redirect(routes.JourneyRecoveryController.onPageLoad())
+    } else
+      service.getContactsForCheckYourAnswers(request.userAnswers) match {
+        case Some(answers) => Ok(newView(answers))
+        case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
+      }
+  }
+
+  def saveAndContinueNew(): Action[AnyContent] =
+    (identify andThen getData andThen requireData) { implicit request =>
+      Redirect(navigator.nextPage(ContactsCheckYourAnswersPage, NormalMode, request.userAnswers))
     }
 }

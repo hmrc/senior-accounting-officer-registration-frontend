@@ -16,4 +16,6 @@
 
 package pages
 
-case object ContactCheckYourAnswersPage extends Page
+import models.ContactType
+
+case class ContactCheckYourAnswersPage(contactType: ContactType) extends Page
