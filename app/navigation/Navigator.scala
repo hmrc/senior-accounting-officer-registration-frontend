@@ -75,9 +75,9 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
   private val reshuffledNormalRoutes: Page => UserAnswers => Call = {
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(First)             => _ => routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
-    case ContactEmailPage(Second)            => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-    case ContactsCheckYourAnswersPage        => _ => routes.IndexController.onPageLoad()
+    case ContactEmailPage(First)           => _ => routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
+    case ContactEmailPage(Second)          => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+    case ContactsCheckYourAnswersPage      => _ => routes.IndexController.onPageLoad()
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
@@ -90,8 +90,8 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
   }
 
   private val reshuffledCheckRoutes: Page => UserAnswers => Call = {
-    case ContactNamePage(_)  => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-    case ContactEmailPage(_) => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+    case ContactNamePage(_)                => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+    case ContactEmailPage(_)               => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         userAnswers.get(ContactHaveYouAddedAllPage(First)) match {
@@ -112,9 +112,9 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
     if isEnabled(ContactFlowReshuffle) then ContactFlow.Reshuffled else ContactFlow.Legacy
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = (currentFlow, mode) match {
-    case (ContactFlow.Legacy, NormalMode)      => legacyNormalRoutes(page)(userAnswers)
-    case (ContactFlow.Legacy, CheckMode)       => legacyCheckRoutes(page)(userAnswers)
-    case (ContactFlow.Reshuffled, NormalMode)  => reshuffledNormalRoutes(page)(userAnswers)
-    case (ContactFlow.Reshuffled, CheckMode)   => reshuffledCheckRoutes(page)(userAnswers)
+    case (ContactFlow.Legacy, NormalMode)     => legacyNormalRoutes(page)(userAnswers)
+    case (ContactFlow.Legacy, CheckMode)      => legacyCheckRoutes(page)(userAnswers)
+    case (ContactFlow.Reshuffled, NormalMode) => reshuffledNormalRoutes(page)(userAnswers)
+    case (ContactFlow.Reshuffled, CheckMode)  => reshuffledCheckRoutes(page)(userAnswers)
   }
 }

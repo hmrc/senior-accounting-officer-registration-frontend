@@ -30,10 +30,10 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
     extends FeatureConfigSupport {
   given Configuration = configuration
 
-  val host: String    = configuration.get[String]("host").removeTrailingPathSeparator()
+  val host: String    = configuration.get[String]("host").removeTrailingPathSeparator
   val appName: String = configuration.get[String]("appName")
 
-  private val contactHost = configuration.get[String]("contact-frontend.host").removeTrailingPathSeparator()
+  private val contactHost = configuration.get[String]("contact-frontend.host").removeTrailingPathSeparator
   val contactFormServiceIdentifier: String = configuration.get[String]("serviceId")
 
   def feedbackUrl(using request: RequestHeader): String =
@@ -48,9 +48,9 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
         configuration.get[String](key)
       )
 
-  val loginUrl: String         = configuration.get[String]("urls.login").removeTrailingPathSeparator()
-  val loginContinueUrl: String = configuration.get[String]("urls.loginContinue").removeTrailingPathSeparator()
-  val signOutUrl: String       = configuration.get[String]("urls.signOut").removeTrailingPathSeparator()
+  val loginUrl: String         = configuration.get[String]("urls.login").removeTrailingPathSeparator
+  val loginContinueUrl: String = configuration.get[String]("urls.loginContinue").removeTrailingPathSeparator
+  val signOutUrl: String       = configuration.get[String]("urls.signOut").removeTrailingPathSeparator
 
   val organisationSignInUrl: String =
     configuration.get[String]("urls.organisationSignIn").removeTrailingPathSeparator
@@ -61,7 +61,7 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
     configuration.get[String]("urls.businessTaxAccount").removeTrailingPathSeparator
 
   private val exitSurveyBaseUrl: String =
-    configuration.get[String]("feedback-frontend.host").removeTrailingPathSeparator()
+    configuration.get[String]("feedback-frontend.host").removeTrailingPathSeparator
   val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/$contactFormServiceIdentifier"
 
   val languageTranslationEnabled: Boolean =
@@ -91,7 +91,7 @@ object AppConfig {
   private val pathSeparator: String = "/"
 
   extension (str: String) {
-    def removeTrailingPathSeparator(): String = str.replaceAll(pathSeparator + "$", "")
+    def removeTrailingPathSeparator: String = str.replaceAll(pathSeparator + "$", "")
   }
 
   extension (appConfig: AppConfig) {
