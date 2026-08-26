@@ -106,14 +106,33 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       actionHiddenText: String,
       actionHref: String
   ): Assertion = {
-    row.select("dt.govuk-summary-list__key").text() mustBe keyText
-    row.select("dd.govuk-summary-list__value").text() mustBe valueText
+    val key = row.select("dt.govuk-summary-list__key")
+    key.size() mustBe 1
+    withClue("row keyText mismatch:\n") {
+      key.get(0).text() mustBe keyText
+    }
 
-    val linkText = row.select("dd.govuk-summary-list__actions a")
-    linkText.attr("href") mustBe actionHref
-    linkText.select("span.govuk-visually-hidden").text() mustBe actionHiddenText
-    linkText.select("span.govuk-visually-hidden").remove()
-    linkText.text() mustBe actionText
+    val value = row.select("dd.govuk-summary-list__value")
+    value.size() mustBe 1
+    withClue("row valueText mismatch:\n") {
+      value.get(0).text() mustBe valueText
+    }
+
+    val action = row.select("dd.govuk-summary-list__actions")
+    action.size() mustBe 1
+
+    val linkText = action.get(0).select("a")
+    linkText.size() mustBe 1
+    withClue("row actionHref mismatch:\n") {
+      linkText.get(0).attr("href") mustBe actionHref
+    }
+    withClue("row actionHiddenText mismatch:\n") {
+      linkText.get(0).select("span.govuk-visually-hidden").text() mustBe actionHiddenText
+    }
+    linkText.get(0).select("span.govuk-visually-hidden").remove()
+    withClue("row actionText mismatch:\n") {
+      linkText.get(0).text() mustBe actionText
+    }
   }
 }
 
