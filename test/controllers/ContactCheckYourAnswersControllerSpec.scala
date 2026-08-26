@@ -61,7 +61,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
             .thenReturn(Some(testContactInfo))
 
           running(application) {
-            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad(First).url)
+            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadLegacy(First).url)
             val result  = route(application, request).value
 
             status(result) mustEqual OK
@@ -76,7 +76,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = None).build()
 
           running(application) {
-            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad(First).url)
+            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadLegacy(First).url)
             val result  = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
@@ -92,7 +92,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
             .build()
 
           running(application) {
-            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue(First).url)
+            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinueLegacy(First).url)
             val result  = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
@@ -103,7 +103,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "new flow when feature switch is on" - {
-      "onPageLoadNew endpoint:" - {
+      "onPageLoadReshuffled endpoint:" - {
         "must return OK and the correct combined view for a GET" in {
           val application = applicationBuilder(userAnswers = Some(testUserAnswers))
             .configure("features.contactFlowReshuffle" -> true)
@@ -114,7 +114,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
             .thenReturn(Some(testContacts))
 
           running(application) {
-            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadNew().url)
+            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadReshuffled().url)
             val result  = route(application, request).value
 
             status(result) mustEqual OK
@@ -126,7 +126,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
           val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
 
           running(application) {
-            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadNew().url)
+            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadReshuffled().url)
             val result  = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
@@ -135,7 +135,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "saveAndContinueNew endpoint:" - {
+      "saveAndContinueReshuffled endpoint:" - {
         "must redirect to the next page for a POST" in {
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .configure("features.contactFlowReshuffle" -> true)
@@ -143,7 +143,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
             .build()
 
           running(application) {
-            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinueNew().url)
+            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinueReshuffled().url)
             val result  = route(application, request).value
 
             status(result) mustEqual SEE_OTHER

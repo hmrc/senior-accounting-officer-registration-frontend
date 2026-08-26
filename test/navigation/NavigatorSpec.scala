@@ -41,7 +41,7 @@ class NavigatorSpec extends SpecBase {
           ContactEmailPage(First),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad(First)
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(First)
       }
 
       "must go from first contact CYA to add another page" in {
@@ -57,7 +57,7 @@ class NavigatorSpec extends SpecBase {
           ContactEmailPage(Second),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad(Second)
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(Second)
       }
 
       "must go from second contact CYA to index" in {
@@ -75,7 +75,7 @@ class NavigatorSpec extends SpecBase {
           ContactNamePage(First),
           CheckMode,
           UserAnswers("id")
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad(First)
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(First)
       }
 
       "must return second contact email changes to second contact CYA" in {
@@ -83,7 +83,7 @@ class NavigatorSpec extends SpecBase {
           ContactEmailPage(Second),
           CheckMode,
           UserAnswers("id")
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad(Second)
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(Second)
       }
     }
 
@@ -101,7 +101,7 @@ class NavigatorSpec extends SpecBase {
           ContactHaveYouAddedAllPage(First),
           NormalMode,
           UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadNew()
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
       }
 
       "must go from second contact email to combined CYA" in {
@@ -109,7 +109,7 @@ class NavigatorSpec extends SpecBase {
           ContactEmailPage(Second),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadNew()
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
       }
 
       "must go from combined CYA to index" in {
@@ -127,7 +127,7 @@ class NavigatorSpec extends SpecBase {
           ContactEmailPage(First),
           CheckMode,
           UserAnswers("id")
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadNew()
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
       }
 
       "must return add another yes to combined CYA" in {
@@ -135,7 +135,7 @@ class NavigatorSpec extends SpecBase {
           ContactHaveYouAddedAllPage(First),
           CheckMode,
           UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadNew()
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
       }
 
       "must return add another no with existing second contact to combined CYA" in {
@@ -149,7 +149,7 @@ class NavigatorSpec extends SpecBase {
             .get
             .set(ContactEmailPage(Second), "email")
             .get
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadNew()
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
       }
 
       "must return add another no without second contact to second contact name" in {

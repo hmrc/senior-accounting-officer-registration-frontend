@@ -38,38 +38,38 @@ class ContactCheckYourAnswersController @Inject() (
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    view: ContactCheckYourAnswersView,
-    newView: ContactsCheckYourAnswersView,
+    legacyView: ContactCheckYourAnswersView,
+    reshuffledView: ContactsCheckYourAnswersView,
     service: ContactCheckYourAnswersService,
     navigator: Navigator
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(contactType: ContactType): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoadLegacy(contactType: ContactType): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       service.getContactInfo(request.userAnswers, contactType) match {
-        case Some(answers) => Ok(view(answers, contactType))
+        case Some(answers) => Ok(legacyView(answers, contactType))
         case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
   }
 
-  def saveAndContinue(contactType: ContactType): Action[AnyContent] =
+  def saveAndContinueLegacy(contactType: ContactType): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       Redirect(navigator.nextPage(ContactCheckYourAnswersPage(contactType), NormalMode, request.userAnswers))
     }
 
-  def onPageLoadNew(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoadReshuffled(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     if !appConfig.contactFlowReshuffleEnabled then {
       Redirect(routes.JourneyRecoveryController.onPageLoad())
     } else
       service.getContactsForCheckYourAnswers(request.userAnswers) match {
-        case Some(answers) => Ok(newView(answers))
+        case Some(answers) => Ok(reshuffledView(answers))
         case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
   }
 
-  def saveAndContinueNew(): Action[AnyContent] =
+  def saveAndContinueReshuffled(): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       Redirect(navigator.nextPage(ContactsCheckYourAnswersPage, NormalMode, request.userAnswers))
     }

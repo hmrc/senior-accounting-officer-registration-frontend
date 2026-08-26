@@ -64,7 +64,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         }
 
         doc.createTestsWithSubmissionButton(
-          action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(contactType),
+          action = controllers.routes.ContactCheckYourAnswersController.saveAndContinueLegacy(contactType),
           buttonText = submitButtonText
         )
       }

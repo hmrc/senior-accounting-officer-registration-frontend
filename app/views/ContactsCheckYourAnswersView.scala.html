@@ -28,7 +28,7 @@
 
     <span class="govuk-caption-l">@messages("contactsCheckYourAnswers.caption")</span>
     <h1 class="govuk-heading-l">@messages("contactsCheckYourAnswers.heading")</h1>
-    @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinueNew()) {
+    @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinueReshuffled()) {
 
         @govukSummaryList(SummaryListViewModel(rows =
             Seq(
