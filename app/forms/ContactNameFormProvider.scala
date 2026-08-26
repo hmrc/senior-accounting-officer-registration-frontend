@@ -29,7 +29,7 @@ class ContactNameFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text(s"contactName.error.required")
+      "value" -> text("contactName.error.required")
         .verifying(maxLength(105, "contactName.error.length"))
         .verifying(
           "contactName.error.invalidChars",
