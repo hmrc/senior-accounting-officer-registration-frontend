@@ -70,12 +70,12 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
 
     createTestWithErrorMessageAssertion(
       key = lengthKey,
-      message = "The email address you enter must be 254 characters or less"
+      message = "Email address must be 254 characters or less"
     )
 
     createTestWithErrorMessageAssertion(
       key = formatKey,
-      message = "Enter an email address in the correct format, like name@example.com"
+      message = "Email address must be in the correct format, like name@example.com"
     )
   }
 }
