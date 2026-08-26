@@ -35,9 +35,9 @@
 
     <p class="govuk-body">@messages("cannotAccessService.individual.paragraph1")</p>
 
-    <p class="govuk-body">@Html(messages("cannotAccessService.individual.paragraph2", organisationSignInLink))</p>
+<p class="govuk-body">
+    <a href="@appConfig.whoCanUseServiceUrl" class="govuk-link">@messages("cannotAccessService.findOutMore.linkText")</a>
+</p>
 
-    <p class="govuk-body">
-        <a href="@appConfig.whoCanUseServiceUrl" class="govuk-link">@messages("cannotAccessService.findOutMore.linkText")</a>
-    </p>
+    <p class="govuk-body">@Html(messages("cannotAccessService.individual.paragraph2", organisationSignInLink))</p>
 }
