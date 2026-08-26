@@ -62,8 +62,7 @@ class ContactNameFormProviderSpec extends StringFieldBehaviours {
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
       key = requiredKey,
-      message =
-        """Enter the name of the person or team we can contact"""
+      message = """Enter the name of the person or team we can contact"""
     )
 
     createTestWithErrorMessageAssertion(
