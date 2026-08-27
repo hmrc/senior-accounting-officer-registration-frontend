@@ -137,8 +137,8 @@ cannotAccessService.individual.paragraph2 = If the group still needs to register
 cannotAccessService.individual.signIn.linkText = sign in to Government Gateway with an organisation account
 cannotAccessService.findOutMore.linkText = Find out more about who can use this service
 
-agentCannotAccessService.paragraph1 = You’ve signed in using an agent services Government Gateway user ID. Agents must not register or use the SAO service.
-agentCannotAccessService.paragraph2 = Only authorised members in a company, with an organisation account can register to use this service.
+agentCannotAccessService.paragraph1 = You''ve signed in using an agent services Government Gateway user ID. Agents must not register or use the Senior Accounting Officer notification and certificate service.
+agentCannotAccessService.paragraph2 = Only authorised members in a company with an organisation account can register to use this service.
 
 alreadyRegistered.title = Your company has already registered for this service
 alreadyRegistered.heading = Your company has already registered for this service
