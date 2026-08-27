@@ -77,7 +77,7 @@ class GrsService @Inject() (
             registeredBusinessPartnerId = id
           )
         )
-      case _ => Left(new InternalServerException("Unable to convert company details"))
+      case status => Left(new InternalServerException(s"Unexpected registration status $status"))
     }
 
 }

@@ -28,6 +28,7 @@ import play.api.libs.json.Json
 import play.api.mvc.*
 import repositories.SessionRepository
 import services.GrsService
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -58,10 +59,10 @@ class GrsController @Inject() (
           Try(Json.parse(r.body).as[NewJourneyResponse]).toEither
             .map(response => SeeOther(response.journeyStartUrl))
             .left
-            .map(_ => InternalServerError("Malformatted start journey response from GRS"))
+            .map(_ => throw InternalServerException("Malformatted start journey response from GRS"))
             .merge
         case code =>
-          InternalServerError(
+          throw InternalServerException(
             s"Invalid start journey response from GRS, status=$code body=${r.body}, requestBody=${Json.toJson(grsStartRequest)}"
           )
       }
@@ -71,10 +72,15 @@ class GrsController @Inject() (
   def callBack(journeyId: String): Action[AnyContent] = (identify andThen getData) async { implicit request =>
     val flow: EitherT[Future, Result, Result] = for {
       grsCompanyDetails <- EitherT(grsConnector.retrieve(journeyId))
-        .leftMap(_ => InternalServerError("Failure response from GRS"))
+        .leftMap(_ => throw InternalServerException("Failure response from GRS"))
+        .map {
+          case details if !details.identifiersMatch =>
+            throw InternalServerException("Unexpected GRS returned identifiersMatch=false")
+          case details => details
+        }
       companyDetails <- EitherT
         .fromEither[Future](grsMappingService.map(grsCompanyDetails))
-        .leftMap(_ => InternalServerError("Invalid data from GRS"))
+        .leftMap(e => throw e)
       updatedAnswer <- EitherT
         .fromEither[Future](
           request.userAnswers
@@ -82,10 +88,10 @@ class GrsController @Inject() (
             .set(CompanyDetailsPage, companyDetails)
             .toEither
         )
-        .leftMap(_ => InternalServerError("Failed to set Session data"))
+        .leftMap(_ => throw InternalServerException("Failed to set Session data"))
       _ <- EitherT
         .right(sessionRepository.set(updatedAnswer))
-        .leftMap(_ => InternalServerError("Failed to update Session repository"))
+        .leftMap(_ => throw InternalServerException("Failed to update Session repository"))
     } yield Redirect(routes.IndexController.onPageLoad())
 
     flow.merge

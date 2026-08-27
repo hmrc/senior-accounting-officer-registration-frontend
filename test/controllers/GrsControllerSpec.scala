@@ -17,11 +17,12 @@
 package controllers
 
 import base.SpecBase
+import config.AppConfig
 import connectors.GrsConnector
 import controllers.GrsControllerSpec.*
 import models.UserAnswers
-import models.grs.retrieve.Registration.Registered
-import models.grs.retrieve.{CompanyDetails as GrsCompanyDetails, CompanyProfile}
+import models.grs.retrieve.Registration.*
+import models.grs.retrieve.{CompanyDetails as GrsCompanyDetails, *}
 import models.registration.CompanyDetails
 import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.*
@@ -32,7 +33,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.hmrcfrontend.config.AccessibilityStatementConfig
+import uk.gov.hmrc.http.{HttpResponse, InternalServerException}
 import utils.IdentifierGenerator
 
 import scala.concurrent.Future
@@ -85,7 +87,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "when GRS returns a 201 with an invalid json must return InternalServerError" in {
+      "when GRS returns a 201 with an invalid json must throw InternalServerException" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -96,43 +98,56 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             Future.successful(HttpResponse(status = CREATED))
           )
 
-          val result = route(application, request).value
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          err.message mustBe "Malformatted start journey response from GRS"
         }
       }
 
-      "when GRS returns a 404 must return InternalServerError" in {
+      "when GRS returns a 404 must throw InternalServerException" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
-          val grsConnector = application.injector.instanceOf[GrsConnector]
-          val request      = FakeRequest(GET, routes.GrsController.start().url)
+          val appHost                   = application.injector.instanceOf[AppConfig].host
+          val grsConnector              = application.injector.instanceOf[GrsConnector]
+          val request                   = FakeRequest(GET, routes.GrsController.start().url)
+          val accessibilityStatementUrl = application.injector.instanceOf[AccessibilityStatementConfig].url(request).get
 
           when(grsConnector.start(any())(using any())).thenReturn(
             Future.successful(HttpResponse(status = NOT_FOUND))
           )
 
-          val result = route(application, request).value
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          err.message mustBe s"""Invalid start journey response from GRS, status=404 body=, requestBody={"continueUrl":"$appHost/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"$appHost/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"$accessibilityStatementUrl","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
         }
       }
 
-      "when GRS returns a 500 must return InternalServerError" in {
+      "when GRS returns a 500 must throw InternalServerException" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
-          val grsConnector = application.injector.instanceOf[GrsConnector]
-          val request      = FakeRequest(GET, routes.GrsController.start().url)
+          val appHost                   = application.injector.instanceOf[AppConfig].host
+          val grsConnector              = application.injector.instanceOf[GrsConnector]
+          val request                   = FakeRequest(GET, routes.GrsController.start().url)
+          val accessibilityStatementUrl = application.injector.instanceOf[AccessibilityStatementConfig].url(request).get
 
           when(grsConnector.start(any())(using any())).thenReturn(
             Future.successful(HttpResponse(status = INTERNAL_SERVER_ERROR))
           )
 
-          val result = route(application, request).value
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          err.message mustBe s"""Invalid start journey response from GRS, status=500 body=, requestBody={"continueUrl":"$appHost/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"$appHost/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"$accessibilityStatementUrl","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
         }
       }
 
@@ -141,6 +156,73 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
 
   "GrsController.callBack" - {
     val journeyId = UUID.randomUUID().toString
+
+    "must throw InternalServerException" - {
+
+      "when GRS connector returns a response model that contains identifiersMatch=false " in {
+        val answer      = UserAnswers(id = UUID.randomUUID().toString)
+        val application = applicationBuilder(userAnswers = Some(answer)).build()
+
+        running(application) {
+          val grsConnector = application.injector.instanceOf[GrsConnector]
+
+          when(grsConnector.retrieve(any())(using any())).thenReturn(
+            Future.successful(Right(responseWithIdentifierMatchFalse))
+          )
+
+          val request = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
+
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
+
+          err.message mustBe "Unexpected GRS returned identifiersMatch=false"
+        }
+      }
+
+      "when GRS connector returns a response model that contains a REGISTRATION_FAILED status" in {
+        val answer      = UserAnswers(id = UUID.randomUUID().toString)
+        val application = applicationBuilder(userAnswers = Some(answer)).build()
+
+        running(application) {
+          val grsConnector = application.injector.instanceOf[GrsConnector]
+          val request      = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
+
+          when(grsConnector.retrieve(any())(using any())).thenReturn(
+            Future.successful(Right(responseWithRegistrationFailed))
+          )
+
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
+
+          err.message mustBe "Unexpected registration status RegistrationFailed(List(Failure(test code,test reason)))"
+        }
+      }
+
+      "when GRS connector returns a response model that contains a REGISTRATION_NOT_CALLED status" in {
+        val answer      = UserAnswers(id = UUID.randomUUID().toString)
+        val application = applicationBuilder(userAnswers = Some(answer)).build()
+
+        running(application) {
+          val grsConnector = application.injector.instanceOf[GrsConnector]
+          val request      = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
+
+          when(grsConnector.retrieve(any())(using any())).thenReturn(
+            Future.successful(Right(responseWithRegistrationNotCalled))
+          )
+
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
+
+          err.message mustBe "Unexpected registration status RegistrationNotCalled"
+        }
+      }
+    }
 
     "when there are no user answers must store a new user answers with the sanitised company details in mongo then redirect to registration dashboard" in {
       val application = applicationBuilder(userAnswers = None).build()
@@ -211,7 +293,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "when GRS connector returns Left(None) response must return InternalServerError" in {
+      "when GRS connector returns Left(None) response must throw InternalServerException" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -223,13 +305,16 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
 
           val request = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
 
-          val result = route(application, request).value
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          err.message mustBe "Failure response from GRS"
         }
       }
 
-      "when GRS connector returns Left(Exception) response must return InternalServerError" in {
+      "when GRS connector returns Left(Exception) response must throw InternalServerException" in {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -241,9 +326,12 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
 
           val request = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
 
-          val result = route(application, request).value
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          err.message mustBe "Failure response from GRS"
         }
       }
 
@@ -270,5 +358,13 @@ object GrsControllerSpec {
     businessVerification = None,
     registration = Registered(registeredBusinessPartnerId = testRegisteredBusinessPartnerId)
   )
+
+  val responseWithIdentifierMatchFalse: GrsCompanyDetails = validGrsCompanyDetails.copy(identifiersMatch = false)
+
+  val responseWithRegistrationFailed: GrsCompanyDetails =
+    validGrsCompanyDetails.copy(registration = RegistrationFailed(List(Failure("test code", "test reason"))))
+
+  val responseWithRegistrationNotCalled: GrsCompanyDetails =
+    validGrsCompanyDetails.copy(registration = RegistrationNotCalled)
 
 }
