@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-package navigation
+package pages
 
-import models.{Mode, UserAnswers}
-import pages.*
-import play.api.Configuration
-import play.api.mvc.Call
-
-class FakeNavigator(desiredRoute: Call) extends Navigator(Configuration.empty) {
-
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
-}
+case object ContactsCheckYourAnswersPage extends Page

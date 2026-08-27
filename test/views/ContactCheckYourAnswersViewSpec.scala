@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
   "ContactCheckYourAnswersView" - {
     ContactType.values.foreach { contactType =>
       s"When contact type is $contactType and one contact is saved, must generate a view" - {
-        val contacts      = firstContact
-        val doc: Document = Jsoup.parse(SUT(contacts, contactType).toString)
+        val contact       = firstContact
+        val doc: Document = Jsoup.parse(SUT(contact, contactType).toString)
 
         doc.createTestsWithStandardPageElements(
           pageTitle = s"$contactType contact details",
@@ -51,17 +51,12 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
           val caption         = doc.select(".govuk-caption-l")
           val expectedCaption = s"$contactType contact details"
 
-          withClue("expected one caption:\n") {
-            caption.size() mustBe 1
-          }
-
-          withClue(s"expected caption '$expectedCaption' but found '${caption.text()}'\n") {
-            caption.text() mustBe expectedCaption
-          }
+          caption.size() mustBe 1
+          caption.text() mustBe expectedCaption
         }
 
         "must test value for contact table" in {
-          validateContactDetailsTable(dl, 0, contactType.toString.toLowerCase, contacts)
+          validateContactDetailsTable(dl, 0, contactType.toString.toLowerCase, contact)
         }
 
         "must show 1 contact table" in {
@@ -69,76 +64,74 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
         }
 
         doc.createTestsWithSubmissionButton(
-          action = controllers.routes.ContactCheckYourAnswersController.saveAndContinue(contactType),
+          action = controllers.routes.ContactCheckYourAnswersController.saveAndContinueLegacy(contactType),
           buttonText = submitButtonText
         )
-
       }
     }
+  }
 
-    def validateContactDetailsTable(
-        dl: Elements,
-        tableIndex: Int,
-        contactNumber: String,
-        contactInfo: ContactInfo
-    ): Assertion = {
-      val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
-      rows.size() mustBe 2
-      validateRow(
-        row = rows.get(0),
-        keyText = "Full name",
-        valueText = contactInfo.name,
-        actionText = "Change",
-        actionHiddenText = "change the full name",
-        actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-name"
-      )
+  private def validateContactDetailsTable(
+      dl: Elements,
+      tableIndex: Int,
+      contactNumber: String,
+      contactInfo: ContactInfo
+  ): Assertion = {
+    val rows = dl.get(tableIndex).select("div.govuk-summary-list__row")
+    rows.size() mustBe 2
+    validateRow(
+      row = rows.get(0),
+      keyText = "Full name",
+      valueText = contactInfo.name,
+      actionText = "Change",
+      actionHiddenText = "change the full name",
+      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-name"
+    )
 
-      validateRow(
-        row = rows.get(1),
-        keyText = "Email address",
-        valueText = contactInfo.email,
-        actionText = "Change",
-        actionHiddenText = "change the email address",
-        actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
-      )
+    validateRow(
+      row = rows.get(1),
+      keyText = "Email address",
+      valueText = contactInfo.email,
+      actionText = "Change",
+      actionHiddenText = "change the email address",
+      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
+    )
+  }
 
+  private def validateRow(
+      row: Element,
+      keyText: String,
+      valueText: String,
+      actionText: String,
+      actionHiddenText: String,
+      actionHref: String
+  ): Assertion = {
+    val key = row.select("dt.govuk-summary-list__key")
+    key.size() mustBe 1
+    withClue("row keyText mismatch:\n") {
+      key.get(0).text() mustBe keyText
     }
 
-    def validateRow(
-        row: Element,
-        keyText: String,
-        valueText: String,
-        actionText: String,
-        actionHiddenText: String,
-        actionHref: String
-    ): Assertion = {
-      val key = row.select("dt.govuk-summary-list__key")
-      key.size() mustBe 1
-      withClue("row keyText mismatch:\n") {
-        key.get(0).text() mustBe keyText
-      }
+    val value = row.select("dd.govuk-summary-list__value")
+    value.size() mustBe 1
+    withClue("row valueText mismatch:\n") {
+      value.get(0).text() mustBe valueText
+    }
 
-      val value = row.select("dd.govuk-summary-list__value")
-      value.size() mustBe 1
-      withClue("row valueText mismatch:\n") {
-        value.get(0).text() mustBe valueText
-      }
+    val action = row.select("dd.govuk-summary-list__actions")
+    action.size() mustBe 1
 
-      val action = row.select("dd.govuk-summary-list__actions")
-      action.size() mustBe 1
-
-      val linkText = action.get(0).select("a")
-      linkText.size() mustBe 1
-      withClue("row actionHref mismatch:\n") {
-        linkText.get(0).attr("href") mustBe actionHref
-      }
-      withClue("row actionHiddenText mismatch:\n") {
-        linkText.get(0).select("span.govuk-visually-hidden").text() mustBe actionHiddenText
-      }
-      linkText.get(0).select("span.govuk-visually-hidden").remove()
-      withClue("row actionText mismatch:\n") {
-        linkText.get(0).text() mustBe actionText
-      }
+    val linkText = action.get(0).select("a")
+    linkText.size() mustBe 1
+    withClue("row actionHref mismatch:\n") {
+      linkText.get(0).attr("href") mustBe actionHref
+    }
+    withClue("row actionHiddenText mismatch:\n") {
+      linkText.get(0).select("span.govuk-visually-hidden").text() mustBe actionHiddenText
+    }
+    linkText.get(0).select("span.govuk-visually-hidden").remove()
+    withClue("row actionText mismatch:\n") {
+      linkText.get(0).text() mustBe actionText
     }
   }
 }

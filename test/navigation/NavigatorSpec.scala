@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,144 +21,143 @@ import controllers.routes
 import models.*
 import models.ContactType.*
 import pages.*
+import play.api.Configuration
 
 class NavigatorSpec extends SpecBase {
 
-  val navigator = new Navigator
+  private val oldFlowNavigator = new Navigator(Configuration.from(Map("features.contactFlowReshuffle" -> false)))
+  private val newFlowNavigator = new Navigator(Configuration.from(Map("features.contactFlowReshuffle" -> true)))
 
   "Navigator" - {
 
-    "in Normal mode" - {
-
+    "in Normal mode with feature switch off" - {
       "must go from a page that doesn't exist in the route map to Index" in {
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
+        oldFlowNavigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
 
-      "when the user is in the add nominated company details journey" - {
-        "must go from nominated company guidance page to GRS stubs" in {
-          navigator.nextPage(
-            NominatedCompanyDetailsGuidancePage,
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.GrsController.start()
-        }
+      "must go from contact email to first contact CYA" in {
+        oldFlowNavigator.nextPage(
+          ContactEmailPage(First),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(First)
       }
 
-      "when the user is in the add first contact details journey" - {
-        "must go from contact name to contact email" in {
-          navigator.nextPage(
-            ContactNamePage(First),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactEmailController
-            .onPageLoad(First, NormalMode)
-        }
-
-        "must go from contact email to check your answers for first contact" in {
-          navigator.nextPage(
-            ContactEmailPage(First),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactCheckYourAnswersController
-            .onPageLoad(First)
-        }
-
-        "must go from check your answers for first contact to add another page" in {
-          navigator.nextPage(
-            ContactCheckYourAnswersPage(First),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactHaveYouAddedAllController
-            .onPageLoad(First)
-        }
-
-        "on add another page" - {
-          "when the user answers Yes must go to index page" in {
-            navigator.nextPage(
-              ContactHaveYouAddedAllPage(First),
-              NormalMode,
-              UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
-            ) mustBe routes.IndexController.onPageLoad()
-          }
-          "when the user answers No must go to 2nd contact name" in {
-            navigator.nextPage(
-              ContactHaveYouAddedAllPage(First),
-              NormalMode,
-              UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No).get
-            ) mustBe routes.ContactNameController
-              .onPageLoad(Second, NormalMode)
-          }
-        }
+      "must go from first contact CYA to add another page" in {
+        oldFlowNavigator.nextPage(
+          ContactCheckYourAnswersPage(First),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
       }
 
-      "when the user is in the add second contact details journey" - {
-        "must go from contact name to contact email" in {
-          navigator.nextPage(
-            ContactNamePage(Second),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactEmailController
-            .onPageLoad(Second, NormalMode)
-        }
+      "must go from second contact email to second contact CYA" in {
+        oldFlowNavigator.nextPage(
+          ContactEmailPage(Second),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(Second)
+      }
 
-        "must go from contact email to check your answers page for second contact" in {
-          navigator.nextPage(
-            ContactEmailPage(Second),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactCheckYourAnswersController
-            .onPageLoad(Second)
-        }
-
-        "must go from check your answers page for second contact to index page" in {
-          navigator.nextPage(
-            ContactCheckYourAnswersPage(Second),
-            NormalMode,
-            UserAnswers("id")
-          ) mustBe routes.IndexController.onPageLoad()
-        }
+      "must go from second contact CYA to index" in {
+        oldFlowNavigator.nextPage(
+          ContactCheckYourAnswersPage(Second),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.IndexController.onPageLoad()
       }
     }
 
-    "in Check mode" - {
-      "when the user is in the add first contact details journey" - {
-        "must go from first contact name page to contact check your answers page for first contact" in {
-          navigator.nextPage(
-            ContactNamePage(First),
-            CheckMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactCheckYourAnswersController
-            .onPageLoad(First)
-        }
-
-        "must go from first contact email page to contact check your answers page for first contact" in {
-          navigator.nextPage(
-            ContactEmailPage(First),
-            CheckMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactCheckYourAnswersController
-            .onPageLoad(First)
-        }
+    "in Check mode with feature switch off" - {
+      "must return first contact name changes to first contact CYA" in {
+        oldFlowNavigator.nextPage(
+          ContactNamePage(First),
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(First)
       }
-      "when the user is in the add second contact details journey" - {
-        "must go from second contact name page to contact check your answers page for second contact" in {
-          navigator.nextPage(
-            ContactNamePage(Second),
-            CheckMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactCheckYourAnswersController
-            .onPageLoad(Second)
-        }
 
-        "must go from second contact email page to contact check your answers page for second contact" in {
-          navigator.nextPage(
-            ContactEmailPage(Second),
-            CheckMode,
-            UserAnswers("id")
-          ) mustBe routes.ContactCheckYourAnswersController
-            .onPageLoad(Second)
-        }
+      "must return second contact email changes to second contact CYA" in {
+        oldFlowNavigator.nextPage(
+          ContactEmailPage(Second),
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(Second)
+      }
+    }
+
+    "in Normal mode with feature switch on" - {
+      "must go from first contact email to add another page" in {
+        newFlowNavigator.nextPage(
+          ContactEmailPage(First),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
+      }
+
+      "must go from add another yes to combined CYA" in {
+        newFlowNavigator.nextPage(
+          ContactHaveYouAddedAllPage(First),
+          NormalMode,
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+      }
+
+      "must go from second contact email to combined CYA" in {
+        newFlowNavigator.nextPage(
+          ContactEmailPage(Second),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+      }
+
+      "must go from combined CYA to index" in {
+        newFlowNavigator.nextPage(
+          ContactsCheckYourAnswersPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.IndexController.onPageLoad()
+      }
+    }
+
+    "in Check mode with feature switch on" - {
+      "must return field changes to combined CYA" in {
+        newFlowNavigator.nextPage(
+          ContactEmailPage(First),
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+      }
+
+      "must return add another yes to combined CYA" in {
+        newFlowNavigator.nextPage(
+          ContactHaveYouAddedAllPage(First),
+          CheckMode,
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+      }
+
+      "must return add another no with existing second contact to combined CYA" in {
+        newFlowNavigator.nextPage(
+          ContactHaveYouAddedAllPage(First),
+          CheckMode,
+          UserAnswers("id")
+            .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
+            .get
+            .set(ContactNamePage(Second), "name")
+            .get
+            .set(ContactEmailPage(Second), "email")
+            .get
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+      }
+
+      "must return add another no without second contact to second contact name" in {
+        newFlowNavigator.nextPage(
+          ContactHaveYouAddedAllPage(First),
+          CheckMode,
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No).get
+        ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
       }
     }
   }

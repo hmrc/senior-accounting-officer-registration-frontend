@@ -108,13 +108,18 @@ contactHaveYouAddedAll.hint = Provide more than one contact if possible, in case
 contactHaveYouAddedAll.yes = Yes
 contactHaveYouAddedAll.no = No, add another contact
 contactHaveYouAddedAll.checkYourAnswersLabel = Have you added all the contacts you need?
+contactHaveYouAddedAll.change.hidden = whether you have added all the contacts you need
 contactHaveYouAddedAll.error.required = Select yes if you would like to add another contact
-contactHaveYouAddedAll.change.hidden = ContactHaveYouAddedAll
 
 contactCheckYourAnswers.title.first  = First contact details
 contactCheckYourAnswers.title.second = Second contact details
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Continue
+
+contactsCheckYourAnswers.title = Contact details
+contactsCheckYourAnswers.caption = Contact details
+contactsCheckYourAnswers.heading = Check your answers
+contactsCheckYourAnswers.continue = Continue
 
 nominatedCompanyDetailsGuidance.title = Company Details
 nominatedCompanyDetailsGuidance.heading = Provide your nominated company details

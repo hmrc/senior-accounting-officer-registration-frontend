@@ -28,7 +28,7 @@
 
     <span class="govuk-caption-l">@messages(s"contactCheckYourAnswers.title.${contactType.messageKey}")</span>
     <h1 class="govuk-heading-l">@messages("contactCheckYourAnswers.heading")</h1>
-    @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinue(contactType)) {
+    @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinueLegacy(contactType)) {
 
         @govukSummaryList(SummaryListViewModel(rows = Seq(
             ContactNameSummary.row(contactType, contact.name),
