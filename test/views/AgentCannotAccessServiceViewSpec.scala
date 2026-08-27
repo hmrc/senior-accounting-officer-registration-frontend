@@ -60,8 +60,8 @@ object AgentCannotAccessServiceViewSpec {
   val pageHeading = "You cannot access this service"
   val pageTitle   = "You cannot access this service"
   val paragraph1  =
-    "You’ve signed in using an agent services Government Gateway user ID. Agents must not register or use the SAO service."
+    "You’ve signed in using an agent services Government Gateway user ID. Agents must not register or use the Senior Accounting Officer notification and certificate service."
   val paragraph2 =
-    "Only authorised members in a company, with an organisation account can register to use this service."
+    "Only authorised members in a company with an organisation account can register to use this service."
   val findOutMoreLinkText = "Find out more about who can use this service"
 }
