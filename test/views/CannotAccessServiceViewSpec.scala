@@ -42,12 +42,12 @@ class CannotAccessServiceViewSpec extends ViewSpecBase[CannotAccessServiceView] 
 
     doc.createTestsWithOrWithoutError(hasError = false)
 
-    doc.createTestsWithParagraphs(Seq(paragraph1, paragraph2, findOutMoreLinkText))
+    doc.createTestsWithParagraphs(Seq(paragraph1, findOutMoreLinkText, paragraph2))
 
     "the sign in link" - {
       doc
         .getParagraphs()
-        .toSeq(1)
+        .toSeq(2)
         .createTestWithLink(
           linkText = signInLinkText,
           destinationUrl = appConfig.organisationSignInUrl
@@ -57,7 +57,7 @@ class CannotAccessServiceViewSpec extends ViewSpecBase[CannotAccessServiceView] 
     "the find out more link" - {
       doc
         .getParagraphs()
-        .toSeq(2)
+        .toSeq(1)
         .createTestWithLink(
           linkText = findOutMoreLinkText,
           destinationUrl = appConfig.whoCanUseServiceUrl
@@ -72,6 +72,6 @@ object CannotAccessServiceViewSpec {
   val paragraph1  =
     "You’ve signed in with an individual account. Only administrators of an organisation account can register to use this service."
   val signInLinkText      = "sign in to Government Gateway with an organisation account"
-  val paragraph2: String  = s"If the group still needs to register, $signInLinkText."
+  val paragraph2: String  = s"If you still need to register, $signInLinkText."
   val findOutMoreLinkText = "Find out more about who can use this service"
 }
