@@ -24,7 +24,6 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ContactNamePage
-import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -39,11 +38,11 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute: Call = Call("GET", "/foo")
 
   val formProvider       = new ContactNameFormProvider()
-  val form: Form[String] = formProvider()
 
   "ContactName Controller" - {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
+        lazy val form                 = formProvider(contactType)
         lazy val contactNameRoute     = routes.ContactNameController.onPageLoad(contactType, NormalMode).url
         lazy val contactNamePostRoute = routes.ContactNameController.onSubmit(contactType, NormalMode).url
         "must return OK and the correct view for a GET" in {
@@ -104,9 +103,13 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must return a Bad Request and errors when invalid data is submitted" in {
-          val boundForm = form.bind(Map("value" -> ""))
+          val invalidInput = contactType match {
+            case ContactType.First  => ""
+            case ContactType.Second => ""
+          }
+          val boundForm = form.bind(Map("value" -> invalidInput))
           val request   = FakeRequest(POST, contactNamePostRoute)
-            .withFormUrlEncodedBody(("value", ""))
+            .withFormUrlEncodedBody(("value", invalidInput))
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
           val view        = application.injector.instanceOf[ContactNameView]
           val controller  = application.injector.instanceOf[ContactNameController]
@@ -145,6 +148,27 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+          }
+        }
+
+        "must return a Bad Request for first contact when invalid characters are submitted" in {
+          if contactType == ContactType.First then {
+            val request = FakeRequest(POST, contactNamePostRoute)
+              .withFormUrlEncodedBody(("value", "bad&name\""))
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+            val view        = application.injector.instanceOf[ContactNameView]
+            val controller  = application.injector.instanceOf[ContactNameController]
+
+            running(application) {
+              val result = controller.onSubmit(contactType, NormalMode)(request)
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(
+                form.bind(Map("value" -> "bad&name\"")),
+                contactType,
+                NormalMode
+              )(using request, messages(application)).toString
+            }
           }
         }
       }

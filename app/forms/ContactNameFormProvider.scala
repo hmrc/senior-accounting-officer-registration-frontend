@@ -17,6 +17,8 @@
 package forms
 
 import forms.mappings.Mappings
+import models.ContactType
+import models.ContactType.First
 import play.api.data.Form
 
 import scala.util.matching.Regex
@@ -25,15 +27,28 @@ import javax.inject.Inject
 
 class ContactNameFormProvider @Inject() extends Mappings {
 
-  val illegalCharsRegex: Regex = """[<>"]""".r
+  private val legacyIllegalCharsRegex: Regex      = """[<>"&]""".r
+  private val firstContactIllegalCharsRegex: Regex = """[<>"]""".r
 
-  def apply(): Form[String] =
-    Form(
-      "value" -> text("contactName.error.required")
-        .verifying(maxLength(105, "contactName.error.length"))
-        .verifying(
-          "contactName.error.invalidChars",
-          name => illegalCharsRegex.findFirstIn(name).isEmpty
+  def apply(contactType: ContactType): Form[String] =
+    contactType match {
+      case First =>
+        Form(
+          "value" -> text("contactName.error.required.first")
+            .verifying(maxLength(105, "contactName.error.length.first"))
+            .verifying(
+              "contactName.error.invalidChars.first",
+              name => firstContactIllegalCharsRegex.findFirstIn(name).isEmpty
+            )
         )
-    )
+      case _ =>
+        Form(
+          "value" -> text("contactName.error.required")
+            .verifying(maxLength(50, "contactName.error.length"))
+            .verifying(
+              "contactName.error.invalidChars",
+              name => legacyIllegalCharsRegex.findFirstIn(name).isEmpty
+            )
+        )
+    }
 }

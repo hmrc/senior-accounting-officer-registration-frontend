@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,62 +17,120 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
+import models.ContactType.{First, Second}
 import play.api.data.FormError
 
 class ContactNameFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey     = "contactName.error.required"
-  val lengthKey       = "contactName.error.length"
-  val invalidCharsKey = "contactName.error.invalidChars"
-  val maxLength       = 105
+  private val firstRequiredKey     = "contactName.error.required.first"
+  private val firstLengthKey       = "contactName.error.length.first"
+  private val firstInvalidCharsKey = "contactName.error.invalidChars.first"
+  private val firstMaxLength       = 105
 
-  val form = new ContactNameFormProvider()()
+  private val secondRequiredKey     = "contactName.error.required"
+  private val secondLengthKey       = "contactName.error.length"
+  private val secondInvalidCharsKey = "contactName.error.invalidChars"
+  private val secondMaxLength       = 50
 
-  ".value" - {
+  private val firstForm  = new ContactNameFormProvider()(First)
+  private val secondForm = new ContactNameFormProvider()(Second)
 
+  ".value for first contact" - {
     val fieldName = "value"
 
     behave like fieldThatBindsValidData(
-      form = form,
+      form = firstForm,
       fieldName = fieldName,
-      generator = stringsWithMaxLength(maxLength, exclude = specialChars)
-    )
-
-    behave like fieldThatBindsInvalidData(
-      form = form,
-      fieldName = fieldName,
-      generator = invalidStringsForNameFieldWithMaxLength(maxLength),
-      requiredError = FormError(fieldName, invalidCharsKey)
+      generator = stringsWithMaxLength(firstMaxLength, exclude = Set('<', '>', '"'))
     )
 
     behave like fieldWithMaxLength(
-      form,
+      firstForm,
       fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      maxLength = firstMaxLength,
+      lengthError = FormError(fieldName, firstLengthKey, Seq(firstMaxLength))
     )
 
     behave like mandatoryField(
-      form,
+      firstForm,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, firstRequiredKey)
+    )
+
+    "must not bind invalid characters <, > and \"" in {
+      List("<", ">", "\"", "test<name", "test>name", """test"name""").foreach { input =>
+        val result = firstForm.bind(Map(fieldName -> input))
+        result.errors.toList must contain(FormError(fieldName, firstInvalidCharsKey))
+      }
+    }
+
+    "must allow & for first contact" in {
+      val result = firstForm.bind(Map(fieldName -> "Tax & Accounting"))
+      result.errors mustBe empty
+      result.value mustBe Some("Tax & Accounting")
+    }
+  }
+
+  ".value for second contact" - {
+    val fieldName = "value"
+
+    behave like fieldThatBindsValidData(
+      form = secondForm,
+      fieldName = fieldName,
+      generator = stringsWithMaxLength(secondMaxLength, exclude = specialChars)
+    )
+
+    behave like fieldThatBindsInvalidData(
+      form = secondForm,
+      fieldName = fieldName,
+      generator = invalidStringsForNameFieldWithMaxLength(secondMaxLength),
+      requiredError = FormError(fieldName, secondInvalidCharsKey)
+    )
+
+    behave like fieldWithMaxLength(
+      secondForm,
+      fieldName,
+      maxLength = secondMaxLength,
+      lengthError = FormError(fieldName, secondLengthKey, Seq(secondMaxLength))
+    )
+
+    behave like mandatoryField(
+      secondForm,
+      fieldName,
+      requiredError = FormError(fieldName, secondRequiredKey)
     )
   }
 
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
-      key = requiredKey,
+      key = firstRequiredKey,
       message = "Enter the name of the person or team we can contact"
     )
 
     createTestWithErrorMessageAssertion(
-      key = lengthKey,
+      key = firstLengthKey,
       message = "Name of the person or team must be 105 characters or less"
     )
 
     createTestWithErrorMessageAssertion(
-      key = invalidCharsKey,
+      key = firstInvalidCharsKey,
       message = "Name of the person or team must not include <, >, or \""
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = secondRequiredKey,
+      message =
+        """Enter the name of the person or team who can deal with enquiries about the company’s tax accounting arrangements."""
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = secondLengthKey,
+      message = "Name of the person or team must be 50 characters or less"
+    )
+
+    createTestWithErrorMessageAssertion(
+      key = secondInvalidCharsKey,
+      message = "The name you enter must not include the following characters <, >, \" or &"
     )
   }
 }

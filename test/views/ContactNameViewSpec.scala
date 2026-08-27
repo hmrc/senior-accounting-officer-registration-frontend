@@ -36,14 +36,17 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
           s"must generate a view for $contactType contact in $mode" - {
             "when there are no prior data for the page" - {
               val doc: Document =
-                Jsoup.parse(SUT(formProvider(), contactType, mode).toString)
+                Jsoup.parse(SUT(formProvider(contactType), contactType, mode).toString)
 
               doc.createTestsWithStandardPageElements(
                 pageTitle = contactType match {
                   case First  => pageTitleFirst
                   case Second => pageTitleSecond
                 },
-                pageHeading = pageHeading,
+                pageHeading = contactType match {
+                  case First  => firstPageHeading
+                  case Second => secondPageHeading
+                },
                 showBackLink = true,
                 showIsThisPageNotWorkingProperlyLink = true,
                 hasError = false
@@ -58,7 +61,10 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
               doc.createTestsWithASingleTextInput(
                 name = "value",
-                label = pageHeading,
+                label = contactType match {
+                  case First  => firstPageHeading
+                  case Second => secondPageHeading
+                },
                 value = "",
                 hint = Some(expectedHints),
                 hasError = false
@@ -72,14 +78,17 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
             "when there exists prior data for the page" - {
               val doc: Document =
-                Jsoup.parse(SUT(formProvider().bind(Map("value" -> testInputValue)), contactType, mode).toString)
+                Jsoup.parse(SUT(formProvider(contactType).bind(Map("value" -> testInputValue)), contactType, mode).toString)
 
               doc.createTestsWithStandardPageElements(
                 pageTitle = contactType match {
                   case First  => pageTitleFirst
                   case Second => pageTitleSecond
                 },
-                pageHeading = pageHeading,
+                pageHeading = contactType match {
+                  case First  => firstPageHeading
+                  case Second => secondPageHeading
+                },
                 showBackLink = true,
                 showIsThisPageNotWorkingProperlyLink = true,
                 hasError = false
@@ -94,7 +103,10 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
               doc.createTestsWithASingleTextInput(
                 name = "value",
-                label = pageHeading,
+                label = contactType match {
+                  case First  => firstPageHeading
+                  case Second => secondPageHeading
+                },
                 value = testInputValue,
                 hint = Some(expectedHints),
                 hasError = false
@@ -108,14 +120,17 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
             "when the page is errored" - {
               val doc: Document =
-                Jsoup.parse(SUT(formProvider().withError("value", "broken"), contactType, mode).toString)
+                Jsoup.parse(SUT(formProvider(contactType).withError("value", "broken"), contactType, mode).toString)
 
               doc.createTestsWithStandardPageElements(
                 pageTitle = contactType match {
                   case First  => pageTitleFirst
                   case Second => pageTitleSecond
                 },
-                pageHeading = pageHeading,
+                pageHeading = contactType match {
+                  case First  => firstPageHeading
+                  case Second => secondPageHeading
+                },
                 showBackLink = true,
                 showIsThisPageNotWorkingProperlyLink = true,
                 hasError = true
@@ -130,7 +145,10 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
               doc.createTestsWithASingleTextInput(
                 name = "value",
-                label = pageHeading,
+                label = contactType match {
+                  case First  => firstPageHeading
+                  case Second => secondPageHeading
+                },
                 value = "",
                 hint = Some(expectedHints),
                 hasError = true
@@ -149,7 +167,8 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 }
 
 object ContactNameViewSpec {
-  val pageHeading: String = "What is the name of the person or team to keep on record?"
+  val firstPageHeading: String  = "What is the name of the person or team we can contact?"
+  val secondPageHeading: String = "What is the name of the person or team to keep on record?"
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"

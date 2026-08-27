@@ -21,7 +21,6 @@ import forms.ContactNameFormProvider
 import models.{ContactType, Mode}
 import navigation.Navigator
 import pages.ContactNamePage
-import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -46,10 +45,9 @@ class ContactNameController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form: Form[String] = formProvider()
-
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
+      val form = formProvider(contactType)
       val preparedForm = request.userAnswers.get(ContactNamePage(contactType)) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -60,6 +58,7 @@ class ContactNameController @Inject() (
 
   def onSubmit(contactType: ContactType, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
+      val form = formProvider(contactType)
       form
         .bindFromRequest()
         .fold(

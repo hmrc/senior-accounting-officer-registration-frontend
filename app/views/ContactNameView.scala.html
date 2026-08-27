@@ -37,7 +37,11 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("contactName.heading").toText).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(
+                    messages(
+                        if contactType == ContactType.First then "contactName.heading.first" else "contactName.heading"
+                    ).toText
+                ).asPageHeading(LabelSize.Large)
             )
             .withHint(HintViewModel(messages("contactName.hint").toText))
             .withWidth(Full)
