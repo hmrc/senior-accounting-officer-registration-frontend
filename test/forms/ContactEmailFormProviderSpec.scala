@@ -24,7 +24,7 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
   val requiredKey = "contactEmail.error.required"
   val lengthKey   = "contactEmail.error.length"
   val formatKey   = "contactEmail.error.format"
-  val maxLength   = 50
+  val maxLength   = 254
 
   val emailRegex = """^([a-zA-Z0-9.!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*)$"""
 
@@ -65,17 +65,17 @@ class ContactEmailFormProviderSpec extends StringFieldBehaviours {
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
       key = requiredKey,
-      message = "Enter the email address of the person or team"
+      message = "Enter the email address of a person or team"
     )
 
     createTestWithErrorMessageAssertion(
       key = lengthKey,
-      message = "The email address you enter must be 50 characters or less"
+      message = "Email address must be 254 characters or less"
     )
 
     createTestWithErrorMessageAssertion(
       key = formatKey,
-      message = "Enter an email address in the correct format, like name@example.com"
+      message = "Email address must be in the correct format, like name@example.com"
     )
   }
 }
