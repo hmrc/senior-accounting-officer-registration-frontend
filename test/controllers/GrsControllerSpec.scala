@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import config.AppConfig
 import connectors.GrsConnector
 import controllers.GrsControllerSpec.*
 import models.UserAnswers
@@ -32,6 +33,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
+import uk.gov.hmrc.hmrcfrontend.config.AccessibilityStatementConfig
 import uk.gov.hmrc.http.{HttpResponse, InternalServerException}
 import utils.IdentifierGenerator
 
@@ -109,8 +111,10 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
-          val grsConnector = application.injector.instanceOf[GrsConnector]
-          val request      = FakeRequest(GET, routes.GrsController.start().url)
+          val appHost                   = application.injector.instanceOf[AppConfig].host
+          val grsConnector              = application.injector.instanceOf[GrsConnector]
+          val request                   = FakeRequest(GET, routes.GrsController.start().url)
+          val accessibilityStatementUrl = application.injector.instanceOf[AccessibilityStatementConfig].url(request).get
 
           when(grsConnector.start(any())(using any())).thenReturn(
             Future.successful(HttpResponse(status = NOT_FOUND))
@@ -121,7 +125,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe """Invalid start journey response from GRS, status=404 body=, requestBody={"continueUrl":"http://localhost:10057/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"http://localhost:10057/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"http://localhost:12346/accessibility-statement/senior-accounting-officer/registration?referrerUrl=%2Fsenior-accounting-officer%2Fregistration%2Fbusiness-match&useServiceNavigation","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
+          err.message mustBe s"""Invalid start journey response from GRS, status=404 body=, requestBody={"continueUrl":"$appHost/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"$appHost/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"$accessibilityStatementUrl","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
         }
       }
 
@@ -129,8 +133,10 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
-          val grsConnector = application.injector.instanceOf[GrsConnector]
-          val request      = FakeRequest(GET, routes.GrsController.start().url)
+          val appHost                   = application.injector.instanceOf[AppConfig].host
+          val grsConnector              = application.injector.instanceOf[GrsConnector]
+          val request                   = FakeRequest(GET, routes.GrsController.start().url)
+          val accessibilityStatementUrl = application.injector.instanceOf[AccessibilityStatementConfig].url(request).get
 
           when(grsConnector.start(any())(using any())).thenReturn(
             Future.successful(HttpResponse(status = INTERNAL_SERVER_ERROR))
@@ -141,7 +147,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe """Invalid start journey response from GRS, status=500 body=, requestBody={"continueUrl":"http://localhost:10057/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"http://localhost:10057/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"http://localhost:12346/accessibility-statement/senior-accounting-officer/registration?referrerUrl=%2Fsenior-accounting-officer%2Fregistration%2Fbusiness-match&useServiceNavigation","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
+          err.message mustBe s"""Invalid start journey response from GRS, status=500 body=, requestBody={"continueUrl":"$appHost/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"$appHost/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"$accessibilityStatementUrl","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
         }
       }
 
@@ -151,9 +157,9 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
   "GrsController.callBack" - {
     val journeyId = UUID.randomUUID().toString
 
-    "when" - {
+    "must throw InternalServerException" - {
 
-      "GRS returns a 201 with an json that contains identifiersMatch=false must throw InternalServerException" in {
+      "when GRS connector returns a response model that contains identifiersMatch=false " in {
         val answer      = UserAnswers(id = UUID.randomUUID().toString)
         val application = applicationBuilder(userAnswers = Some(answer)).build()
 
@@ -175,7 +181,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "GRS returns a 201 with an json that contains a REGISTRATION_FAILED status must throw InternalServerException" in {
+      "when GRS connector returns a response model that contains a REGISTRATION_FAILED status" in {
         val answer      = UserAnswers(id = UUID.randomUUID().toString)
         val application = applicationBuilder(userAnswers = Some(answer)).build()
 
@@ -196,7 +202,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "GRS returns a 201 with an json that contains a REGISTRATION_NOT_CALLED status must throw InternalServerException" in {
+      "when GRS connector returns a response model that contains a REGISTRATION_NOT_CALLED status" in {
         val answer      = UserAnswers(id = UUID.randomUUID().toString)
         val application = applicationBuilder(userAnswers = Some(answer)).build()
 
