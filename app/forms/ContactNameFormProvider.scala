@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class ContactNameFormProvider @Inject() extends Mappings {
 
-  private val legacyIllegalCharsRegex: Regex      = """[<>"&]""".r
+  private val legacyIllegalCharsRegex: Regex       = """[<>"&]""".r
   private val firstContactIllegalCharsRegex: Regex = """[<>"]""".r
 
   def apply(contactType: ContactType): Form[String] =

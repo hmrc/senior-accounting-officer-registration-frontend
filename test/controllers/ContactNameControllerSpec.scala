@@ -37,7 +37,7 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider       = new ContactNameFormProvider()
+  val formProvider = new ContactNameFormProvider()
 
   "ContactName Controller" - {
     ContactType.values.foreach { contactType =>

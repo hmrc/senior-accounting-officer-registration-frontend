@@ -100,9 +100,9 @@ contactEmail.title.third  = Third contact details
 contactEmail.heading = What is their email address?
 contactEmail.hint = We’ll only use this to contact them about the company’s submission.
 contactEmail.checkYourAnswersLabel = Email address
-contactEmail.error.required = Enter the email address of the person or team
-contactEmail.error.length = The email address you enter must be 50 characters or less
-contactEmail.error.format = Enter an email address in the correct format, like name@example.com
+contactEmail.error.required = Enter the email address of a person or team
+contactEmail.error.length = Email address must be 254 characters or less
+contactEmail.error.format = Email address must be in the correct format, like name@example.com
 contactEmail.change.first.hidden = change the email address
 contactEmail.change.second.hidden = change the email address
 
@@ -112,7 +112,7 @@ contactHaveYouAddedAll.hint = Provide more than one contact if possible, in case
 contactHaveYouAddedAll.yes = Yes
 contactHaveYouAddedAll.no = No, add another contact
 contactHaveYouAddedAll.checkYourAnswersLabel = Have you added all the contacts you need?
-contactHaveYouAddedAll.error.required = Select contactHaveYouAddedAll
+contactHaveYouAddedAll.error.required = Select yes if you would like to add another contact
 contactHaveYouAddedAll.change.hidden = whether you have added all the contacts you need
 
 contactCheckYourAnswers.title.first  = First contact details

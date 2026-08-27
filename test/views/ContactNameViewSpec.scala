@@ -78,7 +78,9 @@ class ContactNameViewSpec extends ViewSpecBase[ContactNameView] {
 
             "when there exists prior data for the page" - {
               val doc: Document =
-                Jsoup.parse(SUT(formProvider(contactType).bind(Map("value" -> testInputValue)), contactType, mode).toString)
+                Jsoup.parse(
+                  SUT(formProvider(contactType).bind(Map("value" -> testInputValue)), contactType, mode).toString
+                )
 
               doc.createTestsWithStandardPageElements(
                 pageTitle = contactType match {
