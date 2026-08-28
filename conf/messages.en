@@ -107,7 +107,7 @@ contactHaveYouAddedAll.heading = Have you added all the contacts you need?
 contactHaveYouAddedAll.hint = Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details.
 contactHaveYouAddedAll.yes = Yes
 contactHaveYouAddedAll.no = No, add another contact
-contactHaveYouAddedAll.checkYourAnswersLabel = Have you added all the contacts you need?
+contactHaveYouAddedAll.checkYourAnswersLabel = Do you want to add another contact?
 contactHaveYouAddedAll.change.hidden = whether you have added all the contacts you need
 contactHaveYouAddedAll.error.required = Select yes if you would like to add another contact
 
