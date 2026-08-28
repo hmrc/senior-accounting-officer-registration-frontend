@@ -133,7 +133,7 @@ nominatedCompanyDetailsGuidance.inset.text = If your organisation is not registe
 cannotAccessService.title = You cannot access this service
 cannotAccessService.heading = You cannot access this service
 cannotAccessService.individual.paragraph1 = You’ve signed in with an individual account. Only administrators of an organisation account can register to use this service.
-cannotAccessService.individual.paragraph2 = If the group still needs to register, {0}.
+cannotAccessService.individual.paragraph2 = If you still need to register, {0}.
 cannotAccessService.individual.signIn.linkText = sign in to Government Gateway with an organisation account
 cannotAccessService.findOutMore.linkText = Find out more about who can use this service
 
