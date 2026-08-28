@@ -30,19 +30,20 @@
     <h1 class="govuk-heading-l">@messages("contactsCheckYourAnswers.heading")</h1>
     @formHelper(action = routes.ContactCheckYourAnswersController.saveAndContinueReshuffled()) {
 
-        @govukSummaryList(SummaryListViewModel(rows =
-            Seq(
-                ContactNameSummary.row(ContactType.First, contacts.firstContact.name),
-                ContactEmailSummary.row(ContactType.First, contacts.firstContact.email)
-            ) ++ contacts.secondContact.fold(Seq.empty)(contact =>
-                Seq(
-                    ContactNameSummary.row(ContactType.Second, contact.name),
-                    ContactEmailSummary.row(ContactType.Second, contact.email)
-                )
-            ) ++ Seq(
-                ContactHaveYouAddedAllSummary.row(contacts.contactHaveYouAddedAll)
-            )
-        ))
+        <h2 class="govuk-heading-m">@messages("contact.first.caption")</h2>
+        @govukSummaryList(SummaryListViewModel(rows = Seq(
+            ContactNameSummary.row(ContactType.First, contacts.firstContact.name),
+            ContactEmailSummary.row(ContactType.First, contacts.firstContact.email),
+            ContactHaveYouAddedAllSummary.row(contacts.contactHaveYouAddedAll)
+        )))
+
+        @contacts.secondContact.map { contact =>
+            <h2 class="govuk-heading-m">@messages("contact.second.caption")</h2>
+            @govukSummaryList(SummaryListViewModel(rows = Seq(
+                ContactNameSummary.row(ContactType.Second, contact.name),
+                ContactEmailSummary.row(ContactType.Second, contact.email)
+            )))
+        }
 
         @govukButton(
             ButtonViewModel(messages("contactsCheckYourAnswers.continue").toText).withAttribute("id", "submit")

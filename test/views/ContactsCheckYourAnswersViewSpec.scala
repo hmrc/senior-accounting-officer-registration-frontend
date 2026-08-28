@@ -19,7 +19,7 @@ package views
 import base.ViewSpecBase
 import models.{ContactHaveYouAddedAll, ContactInfo, ContactsCheckYourAnswers}
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
+import org.jsoup.nodes.{Document, Element}
 import org.scalatest.Assertion
 import views.ContactsCheckYourAnswersViewSpec.*
 import views.html.ContactsCheckYourAnswersView
@@ -38,15 +38,18 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
       doc.getMainContent.select("a.govuk-link.hmrc-report-technical-issue").text() mustBe
         "Is this page not working properly? (opens in new tab)"
       doc.select(".govuk-caption-l").text() mustBe pageTitle
-      validateSummary(
+      validateSectionHeadings(doc, List("First contact details"))
+      validateSummaries(
         doc,
-        expectedRows = List(
-          ("Full name", "name1", "/senior-accounting-officer/registration/contact-details/first/change-name"),
-          ("Email address", "email1", "/senior-accounting-officer/registration/contact-details/first/change-email"),
-          (
-            "Have you added all the contacts you need?",
-            "Yes",
-            "/senior-accounting-officer/registration/contact-details/first/change-add-another"
+        expectedSections = List(
+          List(
+            ("Full name", "name1", "/senior-accounting-officer/registration/contact-details/first/change-name"),
+            ("Email address", "email1", "/senior-accounting-officer/registration/contact-details/first/change-email"),
+            (
+              "Do you want to add another contact?",
+              "Yes",
+              "/senior-accounting-officer/registration/contact-details/first/change-add-another"
+            )
           )
         )
       )
@@ -60,29 +63,51 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
     "must generate a view for two contacts" in {
       val doc: Document = Jsoup.parse(SUT(twoContactAnswers).toString)
 
-      validateSummary(
+      validateSectionHeadings(doc, List("First contact details", "Second contact details"))
+      validateSummaries(
         doc,
-        expectedRows = List(
-          ("Full name", "name1", "/senior-accounting-officer/registration/contact-details/first/change-name"),
-          ("Email address", "email1", "/senior-accounting-officer/registration/contact-details/first/change-email"),
-          ("Full name", "name2", "/senior-accounting-officer/registration/contact-details/second/change-name"),
-          ("Email address", "email2", "/senior-accounting-officer/registration/contact-details/second/change-email"),
-          (
-            "Have you added all the contacts you need?",
-            "No, add another contact",
-            "/senior-accounting-officer/registration/contact-details/first/change-add-another"
+        expectedSections = List(
+          List(
+            ("Full name", "name1", "/senior-accounting-officer/registration/contact-details/first/change-name"),
+            ("Email address", "email1", "/senior-accounting-officer/registration/contact-details/first/change-email"),
+            (
+              "Do you want to add another contact?",
+              "No, add another contact",
+              "/senior-accounting-officer/registration/contact-details/first/change-add-another"
+            )
+          ),
+          List(
+            ("Full name", "name2", "/senior-accounting-officer/registration/contact-details/second/change-name"),
+            ("Email address", "email2", "/senior-accounting-officer/registration/contact-details/second/change-email")
           )
         )
       )
     }
   }
 
-  private def validateSummary(doc: Document, expectedRows: List[(String, String, String)]): Assertion = {
-    val rows = doc.getMainContent.select("div.govuk-summary-list__row")
+  private def validateSectionHeadings(doc: Document, expectedHeadings: List[String]): Assertion = {
+    doc.getMainContent.select("h2.govuk-heading-m").eachText().asScala.toList mustBe expectedHeadings
+  }
+
+  private def validateSummaries(
+      doc: Document,
+      expectedSections: List[List[(String, String, String)]]
+  ): Assertion = {
+    val summaries = doc.getMainContent.select("dl.govuk-summary-list")
+    summaries.size() mustBe expectedSections.size
+
+    summaries.asScala.zip(expectedSections).foreach { case (summary, expectedRows) =>
+      validateSummary(summary, expectedRows)
+    }
+
+    succeed
+  }
+
+  private def validateSummary(summary: Element, expectedRows: List[(String, String, String)]): Assertion = {
+    val rows = summary.select("div.govuk-summary-list__row")
     rows.size() mustBe expectedRows.size
 
-    rows.asScala.zipWithIndex.foreach { case (row, index) =>
-      val (expectedKey, expectedValue, expectedHref) = expectedRows(index)
+    rows.asScala.zip(expectedRows).foreach { case (row, (expectedKey, expectedValue, expectedHref)) =>
       row.select("dt.govuk-summary-list__key").text() mustBe expectedKey
       row.select("dd.govuk-summary-list__value").text() mustBe expectedValue
       row.select("dd.govuk-summary-list__actions a").attr("href") mustBe expectedHref
