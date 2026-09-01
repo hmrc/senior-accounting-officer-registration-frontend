@@ -72,6 +72,6 @@ object CannotAccessServiceViewSpec {
   val paragraph1  =
     "You’ve signed in with an individual account. Only administrators of an organisation account can register to use this service."
   val signInLinkText      = "sign in to Government Gateway with an organisation account"
-  val paragraph2: String  = s"If you still need to register, $signInLinkText."
+  val paragraph2: String  = s"If you still need to register, $signInLinkText"
   val findOutMoreLinkText = "Find out more about who can use this service"
 }
