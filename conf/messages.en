@@ -148,6 +148,6 @@ alreadyRegistered.paragraph2 = Log in using your organisation Government Gateway
 
 standardUserCannotAccessService.title = You cannot access this service
 standardUserCannotAccessService.heading = You cannot access this service
-standardUserCannotAccessService.paragraph1 = You’ve signed in using your organisation Government Gateway ID with a standard user role. Only users with an administrator role can use this service.
-standardUserCannotAccessService.paragraph2 = If you need to register, {0} that has the Administrator role, or ask an administrator to add you as a team member with the Administrator role.
+standardUserCannotAccessService.paragraph1 = You’ve signed in using your organisation Government Gateway ID as an assistant with a standard user role. Only users with an administrator role can use this service.
+standardUserCannotAccessService.paragraph2 = If you need to register, {0} that has the administrator role, or ask an administrator to add you as a team member with the administrator role
 standardUserCannotAccessService.signIn.linkText = sign in using an organisation Government Gateway ID
