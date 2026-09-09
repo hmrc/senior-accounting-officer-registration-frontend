@@ -75,4 +75,4 @@ GET        /agent-cannot-access-service                       controllers.AgentC
 
 GET        /already-registered                                controllers.AlreadyRegisteredController.onPageLoad()
 
-GET        /standardUserCannotAccessService                   controllers.StandardUserCannotAccessServiceController.onPageLoad()
+GET        /standard-user-cannot-access-service                   controllers.StandardUserCannotAccessServiceController.onPageLoad()
