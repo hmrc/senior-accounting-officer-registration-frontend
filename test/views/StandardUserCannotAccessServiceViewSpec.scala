@@ -20,9 +20,8 @@ import base.ViewSpecBase
 import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.Messages
-import views.html.StandardUserCannotAccessServiceView
 import views.StandardUserCannotAccessServiceViewSpec.*
+import views.html.StandardUserCannotAccessServiceView
 
 class StandardUserCannotAccessServiceViewSpec extends ViewSpecBase[StandardUserCannotAccessServiceView] {
 
@@ -40,7 +39,6 @@ class StandardUserCannotAccessServiceViewSpec extends ViewSpecBase[StandardUserC
       showIsThisPageNotWorkingProperlyLink = true,
       hasError = false
     )
-    
 
     doc.createTestsWithOrWithoutError(hasError = false)
 
@@ -60,9 +58,10 @@ class StandardUserCannotAccessServiceViewSpec extends ViewSpecBase[StandardUserC
 
 object StandardUserCannotAccessServiceViewSpec {
   val pageHeading = "You cannot access this service"
-  val pageTitle = "You cannot access this service"
-  val paragraph1 =
+  val pageTitle   = "You cannot access this service"
+  val paragraph1  =
     """You’ve signed in using your organisation Government Gateway ID with a standard user role. Only users with an administrator role can use this service"""
-  val signInLinkText = "sign in using an organisation Government Gateway ID"
-  val paragraph2: String = s"If you need to register, $signInLinkText that has the Administrator role, or ask an administrator to add you as a team member with the administrator role."
+  val signInLinkText     = "sign in using an organisation Government Gateway ID"
+  val paragraph2: String =
+    s"If you need to register, $signInLinkText that has the Administrator role, or ask an administrator to add you as a team member with the administrator role."
 }

@@ -40,8 +40,7 @@ class AuthActionSpec extends SpecBase {
 
   private def retrievals(affinityGroup: AffinityGroup, credentialRole: CredentialRole, enrolmentKeys: String*) =
     new ~(
-      new ~(
-        new ~(Some("internalId"), Some(affinityGroup)), Some(credentialRole)),
+      new ~(new ~(Some("internalId"), Some(affinityGroup)), Some(credentialRole)),
       Enrolments(enrolmentKeys.map(key => Enrolment(key)).toSet)
     )
 
@@ -193,7 +192,7 @@ class AuthActionSpec extends SpecBase {
 
     "the user has an Individual affinity group" - {
 
-       "must redirect the user to the cannot access service kick-out page" in {
+      "must redirect the user to the cannot access service kick-out page" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -247,7 +246,7 @@ class AuthActionSpec extends SpecBase {
 
           running(application) {
             val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-            val appConfig = application.injector.instanceOf[AppConfig]
+            val appConfig   = application.injector.instanceOf[AppConfig]
 
             val authAction = new FrontendAuthenticatedIdentifierAction(
               new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, User)),
@@ -255,7 +254,7 @@ class AuthActionSpec extends SpecBase {
               bodyParsers
             )
             val controller = new Harness(authAction)
-            val result = controller.onPageLoad()(FakeRequest())
+            val result     = controller.onPageLoad()(FakeRequest())
 
             status(result) mustBe OK
           }
@@ -269,7 +268,7 @@ class AuthActionSpec extends SpecBase {
 
           running(application) {
             val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-            val appConfig = application.injector.instanceOf[AppConfig]
+            val appConfig   = application.injector.instanceOf[AppConfig]
 
             val authAction = new FrontendAuthenticatedIdentifierAction(
               new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, Assistant)),
@@ -277,14 +276,13 @@ class AuthActionSpec extends SpecBase {
               bodyParsers
             )
             val controller = new Harness(authAction)
-            val result = controller.onPageLoad()(FakeRequest())
+            val result     = controller.onPageLoad()(FakeRequest())
 
             status(result) mustBe SEE_OTHER
             redirectLocation(result) mustBe Some(routes.StandardUserCannotAccessServiceController.onPageLoad().url)
           }
         }
       }
-
 
     }
 
