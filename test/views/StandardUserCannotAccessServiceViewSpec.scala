@@ -63,5 +63,5 @@ object StandardUserCannotAccessServiceViewSpec {
     """You’ve signed in using your organisation Government Gateway ID as an assistant with a standard user role. Only users with an administrator role can use this service."""
   val signInLinkText     = "sign in using an organisation Government Gateway ID"
   val paragraph2: String =
-    s"If you need to register, $signInLinkText hat has the administrator role, or ask an administrator to add you as a team member with the administrator role"
+    s"If you need to register, $signInLinkText that has the administrator role, or ask an administrator to add you as a team member with the administrator role"
 }
