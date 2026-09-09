@@ -107,6 +107,27 @@ class AuthActionISpec extends ISpecBase {
       }
     }
 
+    "the user has an Organisation affinity group with Assistant credential role must" - {
+      "respond with a 303 to the cannot access service kick-out page" in {
+        MockAuthHelper.mockAuthStandardUser()
+
+        val response =
+          wsClient
+            .url(targetUrl)
+            .withFollowRedirects(false)
+            .withHttpHeaders(
+              HeaderNames.COOKIE -> SessionCookieBaker.bakeSessionCookie(authSession),
+              "Csrf-Token" -> "nocheck"
+            )
+            .get()
+            .futureValue
+
+        MockAuthHelper.verifyAuthWasCalled()
+        response.status mustBe Status.SEE_OTHER
+        response.headers("Location").head mustBe controllers.routes.StandardUserCannotAccessServiceController.onPageLoad().url
+      }
+    }
+
     "the user already holds the DSAO enrolment must" - {
       "respond with a 303 to the already registered kick-out page" in {
         MockAuthHelper.mockAuthAlreadyEnroled()

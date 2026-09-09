@@ -145,3 +145,9 @@ alreadyRegistered.heading = Your company has already registered for this service
 alreadyRegistered.paragraph1 = You can find a link to the Senior Accounting Officer notification and certificate service on your HMRC {0}. From there you can manage your account and make a submission.
 alreadyRegistered.businessTaxAccount.linkText = business tax account (opens in new tab)
 alreadyRegistered.paragraph2 = Log in using your organisation Government Gateway ID.
+
+standardUserCannotAccessService.title = You cannot access this service
+standardUserCannotAccessService.heading = You cannot access this service
+standardUserCannotAccessService.paragraph1 = You’ve signed in using your organisation Government Gateway ID with a standard user role. Only users with an administrator role can use this service
+standardUserCannotAccessService.paragraph2 = If you need to register, {0} that has the Administrator role, or ask an administrator to add you as a team member with the administrator role.
+standardUserCannotAccessService.signIn.linkText = sign in using an organisation Government Gateway ID

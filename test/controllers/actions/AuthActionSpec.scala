@@ -38,9 +38,10 @@ class AuthActionSpec extends SpecBase {
     def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
   }
 
-  private def retrievals(affinityGroup: AffinityGroup, enrolmentKeys: String*) =
+  private def retrievals(affinityGroup: AffinityGroup, credentialRole: CredentialRole, enrolmentKeys: String*) =
     new ~(
-      new ~(Some("internalId"), Some(affinityGroup)),
+      new ~(
+        new ~(Some("internalId"), Some(affinityGroup)), Some(credentialRole)),
       Enrolments(enrolmentKeys.map(key => Enrolment(key)).toSet)
     )
 
@@ -192,7 +193,7 @@ class AuthActionSpec extends SpecBase {
 
     "the user has an Individual affinity group" - {
 
-      "must redirect the user to the cannot access service kick-out page" in {
+       "must redirect the user to the cannot access service kick-out page" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -201,7 +202,7 @@ class AuthActionSpec extends SpecBase {
           val appConfig   = application.injector.instanceOf[AppConfig]
 
           val authAction = new FrontendAuthenticatedIdentifierAction(
-            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Individual)),
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Individual, User)),
             appConfig,
             bodyParsers
           )
@@ -225,7 +226,7 @@ class AuthActionSpec extends SpecBase {
           val appConfig   = application.injector.instanceOf[AppConfig]
 
           val authAction = new FrontendAuthenticatedIdentifierAction(
-            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Agent)),
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Agent, User)),
             appConfig,
             bodyParsers
           )
@@ -239,26 +240,52 @@ class AuthActionSpec extends SpecBase {
     }
 
     "the user has an Organisation affinity group" - {
+      "with credential role User" - {
+        "must let the user through to the requested page" in {
 
-      "must let the user through to the requested page" in {
+          val application = applicationBuilder(userAnswers = None).build()
 
-        val application = applicationBuilder(userAnswers = None).build()
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+            val appConfig = application.injector.instanceOf[AppConfig]
 
-        running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[AppConfig]
+            val authAction = new FrontendAuthenticatedIdentifierAction(
+              new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, User)),
+              appConfig,
+              bodyParsers
+            )
+            val controller = new Harness(authAction)
+            val result = controller.onPageLoad()(FakeRequest())
 
-          val authAction = new FrontendAuthenticatedIdentifierAction(
-            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation)),
-            appConfig,
-            bodyParsers
-          )
-          val controller = new Harness(authAction)
-          val result     = controller.onPageLoad()(FakeRequest())
-
-          status(result) mustBe OK
+            status(result) mustBe OK
+          }
         }
       }
+
+      "with credential role Assistant" - {
+        "must redirect the user to the already registered kick-out page" in {
+
+          val application = applicationBuilder(userAnswers = None).build()
+
+          running(application) {
+            val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+            val appConfig = application.injector.instanceOf[AppConfig]
+
+            val authAction = new FrontendAuthenticatedIdentifierAction(
+              new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, Assistant)),
+              appConfig,
+              bodyParsers
+            )
+            val controller = new Harness(authAction)
+            val result = controller.onPageLoad()(FakeRequest())
+
+            status(result) mustBe SEE_OTHER
+            redirectLocation(result) mustBe Some(routes.StandardUserCannotAccessServiceController.onPageLoad().url)
+          }
+        }
+      }
+
+
     }
 
     "the user already holds the DSAO enrolment" - {
@@ -272,7 +299,7 @@ class AuthActionSpec extends SpecBase {
           val appConfig   = application.injector.instanceOf[AppConfig]
 
           val authAction = new FrontendAuthenticatedIdentifierAction(
-            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, DsaoEnrolmentKey)),
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, User, DsaoEnrolmentKey)),
             appConfig,
             bodyParsers
           )
@@ -296,7 +323,7 @@ class AuthActionSpec extends SpecBase {
           val appConfig   = application.injector.instanceOf[AppConfig]
 
           val authAction = new FrontendAuthenticatedIdentifierAction(
-            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, "IR-SA")),
+            new FakeSuccessfulAuthConnector(retrievals(AffinityGroup.Organisation, User, "IR-SA")),
             appConfig,
             bodyParsers
           )
