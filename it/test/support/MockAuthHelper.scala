@@ -35,12 +35,13 @@ object MockAuthHelper {
             .withBody(s"""{
                 | "internalId": "$testId",
                 | "affinityGroup": "Organisation",
+                | "credentialRole": "User",
                 | "allEnrolments" : []
                 |}""".stripMargin)
             .withStatus(200)
         )
     )
-
+  
   def mockAuthIndividual(): StubMapping =
     stubFor(
       post(urlEqualTo(authoriseUri))
@@ -67,6 +68,23 @@ object MockAuthHelper {
                 | "affinityGroup": "Agent",
                 | "allEnrolments" : []
                 |}""".stripMargin)
+            .withStatus(200)
+        )
+    )
+
+  def mockAuthStandardUser(): StubMapping =
+    stubFor(
+      post(urlEqualTo(authoriseUri))
+        .willReturn(
+          aResponse()
+            .withHeader("content-type", "application/json")
+            .withBody(
+              s"""{
+                 | "internalId": "$testId",
+                 | "affinityGroup": "Organisation",
+                 | "credentialRole": "Assistant",
+                 | "allEnrolments" : []
+                 |}""".stripMargin)
             .withStatus(200)
         )
     )

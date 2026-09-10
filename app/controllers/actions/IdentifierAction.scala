@@ -68,14 +68,18 @@ abstract class AuthenticatedIdentifierAction(
         HeaderCarrierConverter.fromRequest(request)
       }
 
-    authorised().retrieve(Retrievals.internalId and Retrievals.affinityGroup and Retrievals.allEnrolments) {
-      case _ ~ Some(AffinityGroup.Individual) ~ _ =>
+    authorised().retrieve(
+      Retrievals.internalId and Retrievals.affinityGroup and Retrievals.credentialRole and Retrievals.allEnrolments
+    ) {
+      case _ ~ Some(AffinityGroup.Individual) ~ _ ~ _ =>
         Future.successful(Redirect(routes.CannotAccessServiceController.onPageLoad()))
-      case _ ~ Some(AffinityGroup.Agent) ~ _ =>
+      case _ ~ Some(AffinityGroup.Agent) ~ _ ~ _ =>
         Future.successful(Redirect(routes.AgentCannotAccessServiceController.onPageLoad()))
-      case _ ~ _ ~ enrolments if isAlreadyRegistered(enrolments) =>
+      case _ ~ Some(AffinityGroup.Organisation) ~ Some(Assistant) ~ _ =>
+        Future.successful(Redirect(routes.StandardUserCannotAccessServiceController.onPageLoad()))
+      case _ ~ _ ~ _ ~ enrolments if isAlreadyRegistered(enrolments) =>
         Future.successful(Redirect(routes.AlreadyRegisteredController.onPageLoad()))
-      case internalId ~ _ ~ _ =>
+      case internalId ~ _ ~ _ ~ _ =>
         internalId
           .map { id =>
             block(IdentifierRequest(request, id))
