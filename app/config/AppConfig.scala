@@ -85,6 +85,8 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
   def grsAllowsRelativeUrl: Boolean        = isEnabled(GrsAllowRelativeUrl)
   def contactFlowReshuffleEnabled: Boolean = isEnabled(ContactFlowReshuffle)
 
+  def privateBetaModeEnabled: Boolean = isEnabled(PrivateBeta)
+  def privateBetaPassword: String     = configuration.get[String]("private-beta.password")
 }
 
 object AppConfig {

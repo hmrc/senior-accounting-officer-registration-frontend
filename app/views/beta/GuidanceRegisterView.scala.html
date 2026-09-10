@@ -1,0 +1,135 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this(
+        layout: views.html.beta.GovUkLayout,
+        govukButton: GovukButton
+)
+
+@()(using request: Request[?], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("guidance.title")), showBackLink = false) {
+   <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l">Guidance</span>
+    <h1 class="govuk-heading-l">@messages("guidance.heading")</h1>
+    <p class="govuk-body">
+     Find out how to register to submit your Senior Accounting Officer (SAO) notification and certificate online.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+     <!-- MAIN COLUMN -->
+    <h2 class="govuk-heading-m">Contents</h2>
+    <ul class="govuk-list">
+     <li>
+      <a class="govuk-link" href="#who-must-use-this-service">Who must use this service</a>
+     </li>
+     <li>
+      <a class="govuk-link" href="#who-should-register">Who should register</a>
+     </li>
+     <li>
+      <a class="govuk-link" href="#what-will-you-need-to-register">What you will need to register</a>
+     </li>
+     <li>
+      <a class="govuk-link" href="#what-happens-next">What happens next</a>
+     </li>
+    </ul>
+
+     <!-- WHO MUST USE THIS SERVICE -->
+    <h2 class="govuk-heading-m" id="who-must-use-this-service">
+     Who must use this service
+    </h2>
+    <p class="govuk-body">
+     A company must use this service if in its previous financial year it:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+     <li>was incorporated in the UK</li>
+     <li>had a turnover of more than £200 million or</li>
+     <li>had a balance sheet total of more than £2 billion</li>
+    </ul>
+    <p class="govuk-body">These are known as qualifying companies under the SAO regime.</p>
+    <p class="govuk-body">If a company does not meet these requirements on its own, it may still be a qualifying company. This applies if, when combined with other UK companies in its group, its turnover is more than £200 million or its balance sheet total is more than £2 billion.</p>
+    <p class="govuk-body">Read more about aggregation of turnover in the HMRC <a class="govuk-link" href="https://www.gov.uk/hmrc-internal-manuals/senior-accounting-officers-guidance" target="_blank" rel="noreferrer noopener">Senior Accounting Officer internal manual (opens in new tab)</a></p>
+
+     <!-- WHO SHOULD REGISTER-->
+    <h2 class="govuk-heading-m" id="who-should-register">
+     Who should register
+    </h2>
+    <p class="govuk-body">Anyone from your organisation can register to use this service, including the SAO.</p>
+
+    <h3 class="govuk-heading-s">Choosing a company to register</h3>
+    <p class="govuk-body">You may nominate one UK company in your organisation to create an account. The nominated company will use the account to submit notifications and certificates for the qualifying companies.</p>
+
+    <h3 class="govuk-heading-s">Organisations with more than one SAO</h3>
+    <p class="govuk-body">If your organisation has more than one SAO, you can either register once for all SAOs or separately for each SAO.</p>
+
+
+    <div class="govuk-inset-text">
+     Example: If your organisation has 3 SAOs, you can register once and manage all 3 submissions within a single SAO account, or register separately for each one.
+    </div>
+
+
+    <p class="govuk-body">
+     Read more examples in the HMRC <a href="https://www.gov.uk/hmrc-internal-manuals/senior-accounting-officers-guidance" target="_blank" rel="noreferrer noopener">Senior Accounting Officer internal manual (opens in new tab)</a>
+    </p>
+
+     <!-- WHAT YOU WILL NEED TO REGISTER -->
+    <h2 class="govuk-heading-m" id="what-will-you-need-to-register">
+     What you will need to register
+    </h2>
+    <p class="govuk-body">To register, you need to provide the:</p>
+    <ul class="govuk-list govuk-list--bullet">
+     <li>nominated company name</li>
+     <li>Company Registration Number (CRN)</li>
+     <li>Unique Taxpayer Reference (UTR)</li>
+     <li>contact details of the person authorised to make the submission</li>
+     <li>
+      organisation Government Gateway ID (not an individual or agent account).
+     </li>
+    </ul>
+    <p class="govuk-body">You can register and access the SAO service through your HMRC Business Tax Account (BTA).</p>
+    <p class="govuk-body">If you do not have an organisation <a href="#">Government Gateway ID</a> or HMRC
+     <a href="#">Business Tax Account (opens in new tab)</a>, you'll need to set one up first.
+    </p>
+
+     <!-- START NOW-->
+
+
+
+    <a href="@routes.IndexController.onPageLoad().url" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button" data-govuk-button-init="">
+     Start now
+     <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
+     </svg>
+    </a>
+
+     <!-- WHAT HAPPENS NEXT -->
+    <h2 class="govuk-heading-m" id="what-happens-next">What happens next</h2>
+    <p class="govuk-body">You can find a link to the digital SAO service on your HMRC business tax account. From there you can manage your account and make a submission.</p>
+    <p class="govuk-body">Read about how to<a href="#"> submit a Senior Accounting Officer notification and certificate (opens in new tab).</a>
+    </p>
+   </div>
+    <!-- SIDE COLUMN -->
+   <div class="govuk-grid-column-one-third">
+    <h2 class="govuk-heading-m">Related content</h2>
+    <p class="govuk-body">
+     <a href="@controllers.beta.routes.GuidanceSubmitController.onPageLoad().url" target="_blank" rel="noreferrer noopener">Submit your Senior Accounting Officer notification and certificate (opens in new tab)</a>
+    </p>
+    <h2 class="govuk-heading-s">Collection</h2>
+    <p class="govuk-body">
+     <a href="@controllers.beta.routes.GuidanceCollectionController.onPageLoad().url">Senior Accounting Officer: detailed information</a>
+    </p>
+   </div>
+
+}

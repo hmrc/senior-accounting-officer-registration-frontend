@@ -1,3 +1,4 @@
 # Add all the application routes to the app.routes file
 ->         /senior-accounting-officer/registration                    app.Routes
+->         /senior-accounting-officer/private-beta                    beta.Routes
 ->         /                                                          health.Routes

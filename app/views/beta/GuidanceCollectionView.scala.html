@@ -1,0 +1,80 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this(
+        layout: views.html.beta.GovUkLayout,
+        govukButton: GovukButton
+)
+
+@()(using request: Request[?], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("guidanceCollection.title")), showBackLink = false) {
+
+ <div class="govuk-grid-column-two-thirds">
+  <span class="govuk-caption-l">Guidance</span>
+  <h1 class="govuk-heading-l">@messages("guidanceCollection.heading")</h1>
+
+  <p class="govuk-body">Guidance on the Senior Accounting Officer (SAO) regime, including how to register and submit SAO information to HMRC.</p>
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+   <!-- MAIN COLUMN -->
+  <h2 class="govuk-heading-l">Contents</h2>
+  <ul class="govuk-list">
+   <li>
+    <a class="govuk-link" href="#sao-regime">SAO regime</a>
+   </li>
+   <li>
+    <a class="govuk-link" href="#guidance">Guidance</a>
+   </li>
+   <li>
+    <a class="govuk-link" href="#hmrc-manual">HMRC manual</a>
+   </li>
+   <li><a class="govuk-link" href="#webinars">Webinars</a></li>
+  </ul>
+
+   <!-- SAO REGIME -->
+  <h2 class="govuk-heading-m" id="sao-regime">
+   SAO regime
+  </h2>
+  <p class="govuk-body">The SAO regime applies to large UK companies and groups. It requires qualifying companies, under the Finance Act 2009, to appoint an SAO who is responsible for ensuring the company has appropriate tax accounting arrangements.</p>
+  <p class="govuk-body">Each year, companies must tell HMRC who their SAO was and submit a certificate confirming whether those arrangements were in place.</p>
+
+   <!-- GUIDANCE -->
+  <h2 class="govuk-heading-m" id="guidance">Guidance</h2>
+  <p class="govuk-body">These guidance pages will help customers who fall under the SAO regime to register and submit a notification and certificate using the digital service.
+  </p><p class="govuk-body"><a href="@controllers.beta.routes.GuidanceRegisterController.onPageLoad().url" class="govuk-link govuk-link--no-visited-state">Register to submit your Senior Accounting Officer notification and certificate</a></p>
+  <p class="govuk-body"><a href="@controllers.beta.routes.GuidanceSubmitController.onPageLoad().url" class="govuk-link govuk-link--no-visited-state">Submit your Senior Accounting Officer notification and certificate</a></p>
+
+   <!-- HMRC MANUAL  -->
+  <h2 class="govuk-heading-m" id="hmrc-manual">
+   HMRC manual
+  </h2>
+  <p class="govuk-body">Legal and technical guidance for HMRC staff and tax professionals on the Senior Accounting Officer regime.</p>
+  <p class="govuk-body"><a href="https://www.gov.uk/hmrc-internal-manuals/senior-accounting-officers-guidance" class="govuk-link govuk-link--no-visited-state">Senior Accounting Officer Guidance - HMRC internal manual</a></p>
+   <!-- WEBINARS -->
+  <h2 class="govuk-heading-m" id="webinars">
+   Webinars
+  </h2>
+  <p class="govuk-body">Our webinars are aimed at businesses that must comply with the Senior Accounting Officer regime. They will also support external agents or firms  that provide advice on SAO compliance for those businesses.</p>
+  <p class="govuk-body">The first took place on 19 May 2026 and covered:</p>
+  <ul class="govuk-list govuk-list--bullet">
+   <li>why SAO is going digital</li>
+   <li>the benefits of the digital service</li>
+   <li>how to prepare for a digital submission</li>
+  </ul>
+  <p class="govuk-body"><a href="#">HMRC email updates, videos and webinars for tax agents and advisers</a></p>
+
+ </div>
+}

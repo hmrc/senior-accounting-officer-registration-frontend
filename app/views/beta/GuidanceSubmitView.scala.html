@@ -1,0 +1,115 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this(
+        layout: views.html.beta.GovUkLayout,
+        govukButton: GovukButton
+)
+
+@()(using request: Request[?], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("guidanceSubmit.title")), showBackLink = false) {
+
+
+ <div class="govuk-grid-column-two-thirds">
+  <span class="govuk-caption-l">Guidance</span>
+  <h1 class="govuk-heading-l">@messages("guidanceSubmit.heading")</h1>
+  <p>
+   Find out how to submit your Senior Accounting Officer (SAO) notification and certificate online.
+  </p>
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+   <!-- MAIN COLUMN -->
+  <p>Contents</p>
+  <ul class="govuk-list">
+   <li>
+    <a class="govuk-link" href="#when-to-submit">When to submit</a>
+   </li>
+   <li>
+    <a class="govuk-link" href="#what-happens-late">What happens if you submit late</a>
+   </li>
+   <li>
+    <a class="govuk-link" href="#what-you-need">What you will need</a>
+   </li>
+   <li><a class="govuk-link" href="#how-to-submit">How to submit a notification and certificate</a></li>
+  </ul>
+
+   <!-- WHEN TO SUBMIT -->
+  <h2 class="govuk-heading-m" id="when-to-submit">
+   When to submit
+  </h2>
+  <p class="govuk-body">
+   After the financial year ends, you must submit a notification and a certificate, including for dormant or liquidated companies.
+  </p>
+  <p class="govuk-body">
+   The deadline is:
+  </p>
+  <ul class="govuk-list govuk-list--bullet">
+   <li>6 months after the end of the financial year for public limited companies</li>
+   <li>9 months after the end of the financial year for other companies</li>
+  </ul>
+
+   <!-- WHAT HAPPENS IF YOU SUBMIT LATE -->
+  <h2 class="govuk-heading-m" id="what-happens-late">What happens if you submit late</h2>
+  <p class="govuk-body">An SAO may be charged a £5,000 penalty if a certificate is late, missing, or contains careless or deliberate inaccuracies. A group may also be charged £5,000 if it does not notify HMRC of the SAO for the financial year before the deadline.</p>
+  <h3 class="govuk-heading-s">More information</h3>
+  <p class="govuk-body">
+   For detailed information about penalties you can read the <a href="#">Senior Accounting Officer internal manual.</a>.
+  </p>
+
+   <!-- WHAT YOU WILL NEED  -->
+  <h2 class="govuk-heading-m" id="what-you-need">
+   What you will need
+  </h2>
+  <p class="govuk-body">Before you can make a submission, you will need to have <a href="@controllers.beta.routes.GuidanceRegisterController.onPageLoad().url" target="_blank" rel="noreferrer noopener">completed your registration for the Senior Accounting Officer digital service (opens in a new tab)</a></p>
+  <p class="govuk-body">Additionally, after you have registered, you can access the service by logging into your HMRC business tax account to make your submission.</p>
+   <!-- HOW TO SUBMIT A NOTIFICATION AND CERTIFICATE -->
+  <h2 class="govuk-heading-m" id="how-to-submit">
+   How to submit a notification and certificate
+  </h2>
+  <p class="govuk-body">To make a submission you will need to:</p>
+  <ul class="govuk-list govuk-list--bullet">
+   <li>sign into the SAO service to submit your notification and certificate</li>
+   <li>download and complete a submission template</li>
+   <li>list all companies the SAO was responsible for during the financial year</li>
+   <li>provide the SAO details and confirm whether each company has a qualified or unqualified certificate</li>
+  </ul>
+  <p class="govuk-body">You must be the SAO or be authorised by the SAO to make a submission.</p>
+  <p class="govuk-body">If you choose to submit for more than one SAO, you can complete a separate submission for each SAO through the same account.</p>
+   <!-- START -->
+
+
+
+  <a href="gateway/beta-gg-sign-in.html" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button" data-govuk-button-init="">
+   Sign in
+   <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
+   </svg>
+  </a>
+
+ </div>
+
+ <div class="govuk-grid-column-one-third">
+  <h2 class="govuk-heading-m">Related content</h2>
+  <p class="govuk-body">
+   <a href="@controllers.beta.routes.GuidanceRegisterController.onPageLoad().url">Register to submit your Senior Accounting Officer notification and certificate</a>
+  </p>
+  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+  <h2 class="govuk-heading-s">Collection</h2>
+  <p class="govuk-body">
+   <a href="@controllers.beta.routes.GuidanceCollectionController.onPageLoad().url">Senior Accounting Officer: detailed information</a>
+  </p>
+ </div>
+}
