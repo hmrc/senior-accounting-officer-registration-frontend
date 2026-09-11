@@ -21,6 +21,7 @@ import config.AppConfig
 import controllers.actions.AuthenticatedIdentifierAction.DsaoEnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
+import play.api.Logging
 import play.api.mvc.*
 import play.api.mvc.Results.*
 import uk.gov.hmrc.auth.core.*
@@ -30,10 +31,36 @@ import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
 
 trait IdentifierAction
     extends ActionBuilder[IdentifierRequest, AnyContent]
     with ActionFunction[Request, IdentifierRequest]
+
+class SignOutIdentifierAction @Inject() (
+    override val authConnector: AuthConnector,
+    config: AppConfig,
+    bodyParsers: PlayBodyParsers
+)(using override val executionContext: ExecutionContext)
+    extends IdentifierAction
+    with AuthorisedFunctions
+    with Logging {
+
+  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
+    given hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
+    authorised().retrieve(Retrievals.internalId) {
+      case Some(id) => block(IdentifierRequest(request, id))
+      case None     => throw new UnauthorizedException("Unable to retrieve internal Id")
+    } recover { case NonFatal(e) =>
+      logger.warn("Calling auth has resulted in an exception", e)
+      Redirect(config.signOutUrl, Map("continue" -> Seq(controllers.auth.routes.SignedOutController.onPageLoad().url)))
+    }
+  }
+
+  override val parser: BodyParser[AnyContent] = bodyParsers.default
+
+}
 
 final class FrontendAuthenticatedIdentifierAction @Inject() (
     override val authConnector: AuthConnector,
