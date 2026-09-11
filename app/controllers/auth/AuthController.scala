@@ -17,7 +17,7 @@
 package controllers.auth
 
 import config.AppConfig
-import controllers.actions.IdentifierAction
+import controllers.actions.SignOutIdentifierAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -31,7 +31,7 @@ class AuthController @Inject() (
     val controllerComponents: MessagesControllerComponents,
     config: AppConfig,
     sessionRepository: SessionRepository,
-    identify: IdentifierAction
+    identify: SignOutIdentifierAction
 )(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {

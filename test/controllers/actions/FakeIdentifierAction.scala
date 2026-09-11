@@ -16,23 +16,24 @@
 
 package controllers.actions
 
+import config.AppConfig
 import models.requests.IdentifierRequest
 import play.api.mvc.*
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.Inject
 
-class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers)
-    extends IdentifierAction
+class FakeIdentifierAction @Inject() (
+    authConnector: AuthConnector,
+    appConfig: AppConfig,
+    bodyParsers: PlayBodyParsers
+)(using ExecutionContext)
+    extends SignOutIdentifierAction(authConnector, appConfig, bodyParsers)
     with ApiAuthenticatedIdentifierAction {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
     block(IdentifierRequest(request, "id"))
 
-  override def parser: BodyParser[AnyContent] =
-    bodyParsers.default
-
-  override protected def executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
 }
