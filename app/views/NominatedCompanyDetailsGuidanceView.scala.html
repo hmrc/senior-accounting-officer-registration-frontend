@@ -21,7 +21,7 @@
 )
 
 @()(using request: Request[?], messages: Messages)
-
+val emailTag = "messages("nominatedCompanyDetailsGuidance.email")"
 @layout(pageTitle = titleNoForm(messages("nominatedCompanyDetailsGuidance.title"))) {
 
     <span class="govuk-caption-l">@messages("nominatedCompanyDetailsGuidance.caption")</span>
@@ -37,13 +37,19 @@
 
     <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.paragraph3")</p>
 
-    <div class="govuk-inset-text">
-        @messages("nominatedCompanyDetailsGuidance.inset.text")
-    </div>
+    <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.paragraph4")</p>
+
+    <p class="govuk-body">@email_paragraph(messages("nominatedCompanyDetailsGuidance.paragraph5"), messages("nominatedCompanyDetailsGuidance.email"))</p>
 
     @formHelper(action = routes.NominatedCompanyDetailsGuidanceController.onSubmit()) {
         @govukButton(
             ButtonViewModel(messages("site.continue").toText).withAttribute("id", "submit")
         )
     }
+}
+
+@email_paragraph(paragraph: String, emailPlaceholder: String) = @{
+    val processed = s"""<a href="mailto:$emailPlaceholder">$emailPlaceholder</a>"""
+    val email_paragraph = paragraph.replace("{0}", processed)
+    Html(email_paragraph)
 }

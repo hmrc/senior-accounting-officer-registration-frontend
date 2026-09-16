@@ -26,19 +26,23 @@
 
 @layout(pageTitle = title(form, messages("contactHaveYouAddedAll.title"))) {
 
+    <span class="govuk-caption-m">@messages("contactHaveYouAddedAll.caption")</span>
     @formHelper(action = routes.ContactHaveYouAddedAllController.onSubmit(contactType, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        <h1 class="govuk-heading-l">@messages("contactHaveYouAddedAll.heading")</h1>
+        <p class="govuk-body" >@messages("contactHaveYouAddedAll.hint")</p>
+        @* @HintViewModel(@messages("contactHaveYouAddedAll.hint").toText) *@
+
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("contactHaveYouAddedAll.heading").toText).asPageHeading(LegendSize.Large),
+                legend = LegendViewModel(messages("contactHaveYouAddedAll.subheading").toText).asPageHeading(LegendSize.Medium),
                 items  = ContactHaveYouAddedAll.options
-            )
-            .withHint(HintViewModel(messages("contactHaveYouAddedAll.hint").toText))
+            ).inline()
         )
 
         @govukButton(

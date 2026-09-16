@@ -44,8 +44,8 @@ unauthorised.heading = You can’t access this service with this account
 registration.dashboard.title = Register your nominated company
 registration.dashboard.heading = Register your nominated company
 
-registration.dashboard.p1 = Register the nominated UK company that will submit the SAO notification and certificate on behalf of all companies the SAO is responsible for.
-registration.dashboard.p2 = You only need to register once for your group. If your group has more than one SAO, you can use the same account to submit notifications and certificates for all SAOs, or register again to create a separate account.
+registration.dashboard.p1 = Choose the UK company that will submit SAO notifications and certificates for all the companies in your group. This is called your nominated company.
+registration.dashboard.p2 = You only need to register once for your group. If your group has more than one SAO, you can either use the same account for all SAOs or register separately to create a different account for each one.
 
 registration.dashboard.row.company = Enter your nominated company details
 registration.dashboard.row.contacts = Enter your contact details
@@ -68,12 +68,12 @@ registration.complete.continue = Continue
 
 contactDetailsGuidance.title = Contact details
 contactDetailsGuidance.caption = Contact details
-contactDetailsGuidance.heading = Provide contact details for the company
-contactDetailsGuidance.p1 = You need to give us the contact details of the person or team responsible for submitting the company’s notification and certificate.
+contactDetailsGuidance.heading = Provide contact details for your nominated company
+contactDetailsGuidance.p1 = You need to provide the contact details of the person or team who will submit your company’s SAO notification and certificate.
 contactDetailsGuidance.p2 = We’ll use these details to:
-contactDetailsGuidance.b1 = contact the right person if we have questions about the company’s tax accounting arrangements
-contactDetailsGuidance.b2 = send confirmation when the notification and certificate have been submitted
-contactDetailsGuidance.p3 = You can provide details for up to 2 contacts. For each contact, you’ll need to enter their full name and email address.
+contactDetailsGuidance.b1 = contact you if we have any questions about your SAO submission
+contactDetailsGuidance.b2 = send you confirmation when your registration is complete and when you submit your notification and certificate
+contactDetailsGuidance.p3 = You can add up to 2 contacts. For each one, provide their full name and email address.
 
 contact.first.caption = First contact details
 contact.second.caption = Second contact details
@@ -81,8 +81,8 @@ contact.second.caption = Second contact details
 contactName.title.first  = First contact details
 contactName.title.second = Second contact details
 contactName.title.third  = Third contact details
-contactName.heading = What is the name of the person or team to keep on record?
-contactName.hint = For example, ‘Ashley Smith or Tax team’.
+contactName.heading = What is the name of the person or team we can contact?
+contactName.hint = For example, ‘Ashley Smith’ or ‘Tax team’
 contactName.checkYourAnswersLabel = Full name
 contactName.error.required = Enter the name of the person or team we can contact
 contactName.error.length = Name of the person or team must be 105 characters or less
@@ -93,8 +93,8 @@ contactName.change.second.hidden = change the full name
 contactEmail.title.first  = First contact details
 contactEmail.title.second = Second contact details
 contactEmail.title.third  = Third contact details
-contactEmail.heading = What is their email address?
-contactEmail.hint = We’ll only use this to contact them about the company’s submission.
+contactEmail.heading = What is the email address for this contact?
+contactEmail.hint = We’ll use this to send confirmations and contact this person about the submission if needed
 contactEmail.checkYourAnswersLabel = Email address
 contactEmail.error.required = Enter the email address of a person or team
 contactEmail.error.length = Email address must be 254 characters or less
@@ -103,10 +103,12 @@ contactEmail.change.first.hidden = change the email address
 contactEmail.change.second.hidden = change the email address
 
 contactHaveYouAddedAll.title = First contact details
-contactHaveYouAddedAll.heading = Have you added all the contacts you need?
-contactHaveYouAddedAll.hint = Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details.
+contactHaveYouAddedAll.caption = Contact details
+contactHaveYouAddedAll.heading = Add another contact
+contactHaveYouAddedAll.hint = You can add up to 2 contacts. A second contact means we can still email you if we cannot reach the first.
+contactHaveYouAddedAll.subheading = Do you want to add another contact?
 contactHaveYouAddedAll.yes = Yes
-contactHaveYouAddedAll.no = No, add another contact
+contactHaveYouAddedAll.no = No
 contactHaveYouAddedAll.checkYourAnswersLabel = Do you want to add another contact?
 contactHaveYouAddedAll.change.hidden = whether you have added all the contacts you need
 contactHaveYouAddedAll.error.required = Select yes if you would like to add another contact
@@ -122,14 +124,20 @@ contactsCheckYourAnswers.heading = Check your answers
 contactsCheckYourAnswers.continue = Continue
 
 nominatedCompanyDetailsGuidance.title = Company Details
-nominatedCompanyDetailsGuidance.heading = Provide your nominated company details
+nominatedCompanyDetailsGuidance.heading = What you need to start your registration
 nominatedCompanyDetailsGuidance.caption = Nominated company details
-nominatedCompanyDetailsGuidance.paragraph1 = You’ll need to enter the nominated company’s details so we can confirm your company and link it to the correct HMRC records.
-nominatedCompanyDetailsGuidance.paragraph2 = You’ll be asked to provide your:
+nominatedCompanyDetailsGuidance.paragraph1 = You must have the following details ready to continue. We’ll use them to confirm your nominated company.
+nominatedCompanyDetailsGuidance.paragraph2 = You’ll need to provide:
 nominatedCompanyDetailsGuidance.bulletPoint1 = Company Registration Number (CRN)
 nominatedCompanyDetailsGuidance.bulletPoint2 = Unique Taxpayer Reference (UTR)
-nominatedCompanyDetailsGuidance.paragraph3 = These details must match Companies House records. If they do not, you will not be able to register for the service.
+nominatedCompanyDetailsGuidance.paragraph3 = The details you enter must match Companies House records. If they do not match, you cannot complete your registration.
+
+nominatedCompanyDetailsGuidance.paragraph4 = If your nominated company does not have a CRN, register using another company in your organisation that has one.
+nominatedCompanyDetailsGuidance.paragraph5 = If no company in your organisation has a CRN, contact your Customer Compliance Manager if you have one or email {0} for support.
+nominatedCompanyDetailsGuidance.email = wmbc.saomailbox@hmrc.gov.uk
+
 nominatedCompanyDetailsGuidance.inset.text = If your organisation is not registered with Companies House, nominate a company in your group with a CRN to register. If no company in your group has a CRN, contact HMRC using your usual compliance contact or existing support channels.
+
 cannotAccessService.title = You cannot access this service
 cannotAccessService.heading = You cannot access this service
 cannotAccessService.individual.paragraph1 = You’ve signed in with an individual account. Only administrators of an organisation account can register to use this service.

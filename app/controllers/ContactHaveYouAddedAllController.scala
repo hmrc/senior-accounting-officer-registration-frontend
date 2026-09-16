@@ -21,7 +21,7 @@ import forms.ContactHaveYouAddedAllFormProvider
 import models.ContactHaveYouAddedAll
 import models.{ContactType, Mode}
 import navigation.Navigator
-import pages.ContactHaveYouAddedAllPage
+import pages.{AddAnotherContactPage, ContactHaveYouAddedAllPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,7 +30,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactHaveYouAddedAllView
 
 import scala.concurrent.{ExecutionContext, Future}
-
 import javax.inject.Inject
 
 class ContactHaveYouAddedAllController @Inject() (
@@ -67,9 +66,9 @@ class ContactHaveYouAddedAllController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, contactType, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ContactHaveYouAddedAllPage(contactType), value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(AddAnotherContactPage(contactType), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ContactHaveYouAddedAllPage(contactType), mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(AddAnotherContactPage(contactType), mode, updatedAnswers))
         )
     }
 }

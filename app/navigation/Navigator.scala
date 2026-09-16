@@ -76,8 +76,21 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
     case ContactEmailPage(First)           => _ => routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
-    case ContactEmailPage(Second)          => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+    case ContactEmailPage(Second)          => _ => {
+      println("test:::")
+      routes.ContactCheckYourAnswersController.saveAndContinueReshuffled()
+    }
     case ContactsCheckYourAnswersPage      => _ => routes.IndexController.onPageLoad()
+    case AddAnotherContactPage(First) =>
+      userAnswers =>
+        println("TEST:::")
+//        routes.ContactNameController.onPageLoad(Second, NormalMode)
+        println(userAnswers.get(AddAnotherContactPage(First)))
+        if userAnswers.get(AddAnotherContactPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
+          routes.ContactNameController.onPageLoad(Second, NormalMode)
+        } else {
+          routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+        }
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
@@ -114,7 +127,9 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = (currentFlow, mode) match {
     case (ContactFlow.Legacy, NormalMode)     => legacyNormalRoutes(page)(userAnswers)
     case (ContactFlow.Legacy, CheckMode)      => legacyCheckRoutes(page)(userAnswers)
-    case (ContactFlow.Reshuffled, NormalMode) => reshuffledNormalRoutes(page)(userAnswers)
+    case (ContactFlow.Reshuffled, NormalMode) =>
+      println("next page: reshuffled")
+      reshuffledNormalRoutes(page)(userAnswers)
     case (ContactFlow.Reshuffled, CheckMode)  => reshuffledCheckRoutes(page)(userAnswers)
   }
 }
