@@ -25,11 +25,6 @@ enum ContactHaveYouAddedAll(override val toString: String) {
   case No  extends ContactHaveYouAddedAll("no")
 }
 
-//enum AddAnotherContactPage(override val toString: String) {
-//  case Yes extends AddAnotherContactPage("yes")
-//  case No  extends AddAnotherContactPage("no")
-//}
-
 object ContactHaveYouAddedAll extends Enumerable.Implicits[ContactHaveYouAddedAll] {
 
   override def members: Array[ContactHaveYouAddedAll] = ContactHaveYouAddedAll.values

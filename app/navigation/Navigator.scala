@@ -76,26 +76,14 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
     case ContactEmailPage(First)           => _ => routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
-    case ContactEmailPage(Second)          => _ => {
-      routes.ContactCheckYourAnswersController.saveAndContinueReshuffled()
-    }
+    case ContactEmailPage(Second)          => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
     case ContactsCheckYourAnswersPage      => _ => routes.IndexController.onPageLoad()
-    case AddAnotherContactPage(First) =>
-      userAnswers =>
-        println("TEST:::")
-//        routes.ContactNameController.onPageLoad(Second, NormalMode)
-        println(userAnswers.get(AddAnotherContactPage(First)))
-        if userAnswers.get(AddAnotherContactPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
-          routes.ContactNameController.onPageLoad(Second, NormalMode)
-        } else {
-          routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-        }
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
-          routes.ContactNameController.onPageLoad(Second, NormalMode)
-        } else {
           routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+        } else {
+          routes.ContactNameController.onPageLoad(Second, NormalMode)
         }
     case _ =>
       _ => routes.IndexController.onPageLoad()

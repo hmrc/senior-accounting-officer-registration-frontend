@@ -16,64 +16,34 @@
 
 package services
 
-import config.AppConfig
-import models.ContactHaveYouAddedAll.No
+import models.*
 import models.ContactType.{First, Second}
-import models.{ContactHaveYouAddedAll, ContactInfo, ContactType, ContactsCheckYourAnswers, UserAnswers}
 import pages.*
 
-import javax.inject.Inject
+class ContactCheckYourAnswersService {
 
-class ContactCheckYourAnswersService @Inject() (appConfig: AppConfig) {
-
-  def getContactInfo(userAnswers: UserAnswers, contactType: ContactType): Option[ContactInfo] = {
+  def getContactInfo(userAnswers: UserAnswers, contactType: ContactType): Option[ContactInfo] =
     for {
       name  <- userAnswers.get(ContactNamePage(contactType))
       email <- userAnswers.get(ContactEmailPage(contactType))
     } yield ContactInfo(name, email)
 
-
-  }
-
-  def getContactsForCheckYourAnswersReshuffled(userAnswers: UserAnswers): Option[ContactsCheckYourAnswers] = {
+  def getContactsForCheckYourAnswers(userAnswers: UserAnswers): Option[ContactsCheckYourAnswers] =
     for {
-      firstContact <- getContactInfo(userAnswers = userAnswers, contactType = First)
-      addAnotherContact <- userAnswers.get(AddAnotherContactPage(First))
-      secondContact = addAnotherContact match {
-        case ContactHaveYouAddedAll.No => None
-        case ContactHaveYouAddedAll.Yes => getContactInfo(userAnswers = userAnswers, contactType = Second)
+      firstContact        <- getContactInfo(userAnswers, First)
+      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First))
+      secondContact = contactHaveAddedAll match {
+        case ContactHaveYouAddedAll.Yes => None
+        case ContactHaveYouAddedAll.No  => getContactInfo(userAnswers, Second)
       }
-    } yield ContactsCheckYourAnswers(firstContact, None, addAnotherContact)
-
-  }
-
-  def getContactsForCheckYourAnswers(userAnswers: UserAnswers): Option[ContactsCheckYourAnswers] = {
-//    if (appConfig.contactFlowReshuffleEnabled) {
-//     for {
-//       firstContact <- getContactInfo(userAnswers = userAnswers, contactType = First)
-//       addAnotherContact <- userAnswers.get(AddAnotherContactPage(First))
-//       addAnotherContact match {
-//                                        case AddAnotherContactPage.Yes =>
-//                                      }
-//     }
-//    } else {
-      for {
-        firstContact <- getContactInfo(userAnswers, First)
-        contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First))
-        secondContact = contactHaveAddedAll match {
-          case ContactHaveYouAddedAll.Yes => None
-          case ContactHaveYouAddedAll.No => getContactInfo(userAnswers, Second)
-        }
-        if contactHaveAddedAll != ContactHaveYouAddedAll.No || secondContact.isDefined
-      } yield ContactsCheckYourAnswers(firstContact, secondContact, contactHaveAddedAll)
-
-    }
+      if contactHaveAddedAll != ContactHaveYouAddedAll.No || secondContact.isDefined
+    } yield ContactsCheckYourAnswers(firstContact, secondContact, contactHaveAddedAll)
 
   def getContacts(userAnswers: UserAnswers): List[ContactInfo] =
     List(
       getContactInfo(userAnswers = userAnswers, contactType = First),
       getContactInfo(userAnswers = userAnswers, contactType = Second).filter { _ =>
-        userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes)
+        userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.No)
       }
     ).flatten
 }
