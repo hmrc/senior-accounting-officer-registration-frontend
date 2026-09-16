@@ -60,7 +60,6 @@ class ContactNameController @Inject() (
 
   def onSubmit(contactType: ContactType, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
-      println("COntactTYpe:::")
       form
         .bindFromRequest()
         .fold(

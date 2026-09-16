@@ -60,21 +60,17 @@ class ContactCheckYourAnswersController @Inject() (
     }
 
   def onPageLoadReshuffled(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    println("on page load reshuffle:::")
     if !appConfig.contactFlowReshuffleEnabled then {
       Redirect(routes.JourneyRecoveryController.onPageLoad())
     } else
-      service.getContactsForCheckYourAnswersReshuffled(request.userAnswers) match {
+      service.getContactsForCheckYourAnswers(request.userAnswers) match {
         case Some(answers) => Ok(reshuffledView(answers))
         case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
   }
 
-  def saveAndContinueReshuffled(): Action[AnyContent] = {
+  def saveAndContinueReshuffled(): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      println("save and continue:::")
-      println(request)
       Redirect(navigator.nextPage(ContactsCheckYourAnswersPage, NormalMode, request.userAnswers))
     }
-  }
 }
