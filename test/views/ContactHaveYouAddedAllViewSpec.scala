@@ -40,13 +40,15 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         hasError = false
       )
 
-      doc.createTestMustShowHint(pageHint)
+      doc.createTestsWithParagraphs(List(pageHint))
+
+      doc.createTestWithSubheading(subheading = subheading)
 
       doc.createTestsWithRadioButtons(
         name = "value",
         radios = List(
           radio(value = "yes", label = "Yes"),
-          radio(value = "no", label = "No, add another contact")
+          radio(value = "no", label = "No")
         ),
         isChecked = None,
         hasError = false
@@ -70,13 +72,15 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         hasError = true
       )
 
-      doc.createTestMustShowHint(pageHint)
+      doc.createTestWithParagraph(pageHint)
+
+      doc.createTestWithSubheading(subheading = subheading)
 
       doc.createTestsWithRadioButtons(
         name = "value",
         radios = List(
           radio(value = "yes", label = "Yes"),
-          radio(value = "no", label = "No, add another contact")
+          radio(value = "no", label = "No")
         ),
         isChecked = None,
         hasError = true
@@ -89,11 +93,32 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
 
     }
   }
+  extension (doc: Document) {
+    def createTestWithSubheading(subheading: String): Unit = {
+      val subheadings = doc.select("p+h2")
+      "must display the correct subheading" in {
+        subheadings.get(0).text() mustBe subheading
+        subheadings.size() mustBe 1
+      }
+    }
+
+    def createTestWithParagraph(pageHint: String): Unit = {
+      val paragraphs = doc.select("h1 + p")
+      println(paragraphs)
+      "must display the correct paragraph in the error form" in {
+        paragraphs.get(0).text() mustBe pageHint
+        paragraphs.size() mustBe 1
+      }
+    }
+  }
 }
 
 object ContactHaveYouAddedAllViewSpec {
-  val pageTitle: String   = "First contact details"
-  val pageHeading: String = "Have you added all the contacts you need?"
-  val pageHint: String    =
-    "Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details."
+  val pageHeading: String = "Add another contact"
+  val pageCaption: String = "Contact details"
+  val pageTitle: String   = s"$pageHeading - $pageCaption"
+  val pageHint: String    = {
+    "You can add up to 2 contacts. A second contact means we can still email you if we cannot reach the first."
+  }
+  val subheading: String = "Do you want to add another contact?"
 }

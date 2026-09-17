@@ -21,8 +21,7 @@
 )
 
 @()(using request: Request[?], messages: Messages)
-val emailTag = "messages("nominatedCompanyDetailsGuidance.email")"
-@layout(pageTitle = titleNoForm(messages("nominatedCompanyDetailsGuidance.title"))) {
+@layout(pageTitle = titleNoForm(messages("nominatedCompanyDetailsGuidance.heading"), Some(messages("nominatedCompanyDetailsGuidance.caption")))) {
 
     <span class="govuk-caption-l">@messages("nominatedCompanyDetailsGuidance.caption")</span>
     <h1 class="govuk-heading-l">@messages("nominatedCompanyDetailsGuidance.heading")</h1>
@@ -39,7 +38,7 @@ val emailTag = "messages("nominatedCompanyDetailsGuidance.email")"
 
     <p class="govuk-body">@messages("nominatedCompanyDetailsGuidance.paragraph4")</p>
 
-    <p class="govuk-body">@email_paragraph(messages("nominatedCompanyDetailsGuidance.paragraph5"), messages("nominatedCompanyDetailsGuidance.email"))</p>
+    <p class="govuk-body">@emailParagraph(messages("nominatedCompanyDetailsGuidance.paragraph5"), messages("nominatedCompanyDetailsGuidance.email"))</p>
 
     @formHelper(action = routes.NominatedCompanyDetailsGuidanceController.onSubmit()) {
         @govukButton(
@@ -48,8 +47,7 @@ val emailTag = "messages("nominatedCompanyDetailsGuidance.email")"
     }
 }
 
-@email_paragraph(paragraph: String, emailPlaceholder: String) = @{
-    val processed = s"""<a href="mailto:$emailPlaceholder">$emailPlaceholder</a>"""
-    val email_paragraph = paragraph.replace("{0}", processed)
+@emailParagraph(paragraph: String, email: String) = @{
+    val email_paragraph = paragraph.replace("{0}", s"""<a class="govuk-link" href="mailto:$email">$email</a>""")
     Html(email_paragraph)
 }

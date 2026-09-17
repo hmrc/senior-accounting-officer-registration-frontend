@@ -28,9 +28,9 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
     val doc: Document = Jsoup.parse(SUT().toString)
 
     doc.createTestsWithStandardPageElements(
-      pageTitle = caption,
+      pageTitle = pageTitle,
       pageHeading = pageHeading,
-      showBackLink = false,
+      showBackLink = true,
       showIsThisPageNotWorkingProperlyLink = true,
       hasError = false
     )
@@ -51,19 +51,21 @@ class ContactDetailsGuidanceViewSpec extends ViewSpecBase[ContactDetailsGuidance
 }
 
 object ContactDetailsGuidanceViewSpec {
-  val pageHeading: String = "Provide contact details for the company"
+  val pageHeading: String = "Provide contact details for your nominated company"
 
   val caption: String = "Contact details"
 
+  val pageTitle: String = s"$pageHeading - $caption"
+
   val paragraphTexts: List[String] = List(
-    "You need to give us the contact details of the person or team responsible for submitting the company’s notification and certificate.",
+    "You need to provide the contact details of the person or team who will submit your company’s SAO notification and certificate.",
     "We’ll use these details to:",
-    "You can provide details for up to 2 contacts. For each contact, you’ll need to enter their full name and email address."
+    "You can add up to 2 contacts. For each one, provide their full name and email address."
   )
 
   val bulletPointTexts: List[String] = List(
-    "contact the right person if we have questions about the company’s tax accounting arrangements",
-    "send confirmation when the notification and certificate have been submitted"
+    "contact you if we have any questions about your SAO submission",
+    "send you confirmation when your registration is complete and when you submit your notification and certificate"
   )
 
   val submitButtonText: String = "Continue"

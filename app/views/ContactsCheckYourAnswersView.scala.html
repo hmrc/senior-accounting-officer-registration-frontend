@@ -24,7 +24,7 @@
 
 @(contacts: ContactsCheckYourAnswers)(using request: Request[?], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("contactsCheckYourAnswers.title"))) {
+@layout(pageTitle = titleNoForm(messages("contactsCheckYourAnswers.heading"), Some(messages("contactsCheckYourAnswers.caption")))) {
 
     <span class="govuk-caption-l">@messages("contactsCheckYourAnswers.caption")</span>
     <h1 class="govuk-heading-l">@messages("contactsCheckYourAnswers.heading")</h1>

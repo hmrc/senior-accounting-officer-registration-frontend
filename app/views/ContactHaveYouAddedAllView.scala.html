@@ -24,7 +24,7 @@
 
 @(form: Form[?], contactType: ContactType, mode: Mode)(using request: Request[?], messages: Messages)
 
-@layout(pageTitle = title(form, messages("contactHaveYouAddedAll.title"))) {
+@layout(pageTitle = title(form, messages("contactHaveYouAddedAll.heading"), Some(messages("contactHaveYouAddedAll.caption")))) {
 
     <span class="govuk-caption-m">@messages("contactHaveYouAddedAll.caption")</span>
     @formHelper(action = routes.ContactHaveYouAddedAllController.onSubmit(contactType, mode), Symbol("autoComplete") -> "off") {
@@ -34,13 +34,12 @@
         }
 
         <h1 class="govuk-heading-l">@messages("contactHaveYouAddedAll.heading")</h1>
-        <p class="govuk-body" >@messages("contactHaveYouAddedAll.hint")</p>
-        @* @HintViewModel(@messages("contactHaveYouAddedAll.hint").toText) *@
-
+        <p class="govuk-body">@messages("contactHaveYouAddedAll.hint")</p>
+        <h2 class="govuk-heading-m">@messages("contactHaveYouAddedAll.subheading")</h2>
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("contactHaveYouAddedAll.subheading").toText).asPageHeading(LegendSize.Medium),
+                legend = LegendViewModel("".toText),
                 items  = ContactHaveYouAddedAll.options
             ).inline()
         )

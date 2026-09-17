@@ -38,12 +38,10 @@ class NominatedCompanyDetailsGuidanceViewSpec extends ViewSpecBase[NominatedComp
     )
 
     doc.createTestsWithLargeCaption(
-      caption = caption
+      caption = pageCaption
     )
 
     doc.createTestsWithParagraphs(paragraphs = paragraphTexts)
-
-    doc.createTestForInsetText(pageInsetText)
 
     doc.createTestsWithOrWithoutError(hasError = false)
 
@@ -57,22 +55,21 @@ class NominatedCompanyDetailsGuidanceViewSpec extends ViewSpecBase[NominatedComp
 }
 
 object NominatedCompanyDetailsGuidanceViewSpec {
-  val pageHeading                  = "Provide your nominated company details"
-  val pageTitle                    = "Company Details"
-  val caption: String              = "Nominated company details"
+  val pageHeading                  = "What you need to start your registration"
+  val pageCaption: String          = "Nominated company details"
+  val pageTitle: String            = s"$pageHeading - $pageCaption"
   val paragraphTexts: List[String] = List(
-    "You’ll need to enter the nominated company’s details so we can confirm your company and link it to the correct HMRC records.",
-    "You’ll be asked to provide your:",
-    "These details must match Companies House records. If they do not, you will not be able to register for the service."
+    "You must have the following details ready to continue. We’ll use them to confirm your nominated company.",
+    "You’ll need to provide:",
+    "The details you enter must match Companies House records. If they do not match, you cannot complete your registration.",
+    "If your nominated company does not have a CRN, register using another company in your organisation that has one.",
+    "If no company in your organisation has a CRN, contact your Customer Compliance Manager if you have one or email wmbc.saomailbox@hmrc.gov.uk for support."
   )
 
   val bulletPointTexts: List[String] = List(
     "Company Registration Number (CRN)",
     "Unique Taxpayer Reference (UTR)"
   )
-
-  val pageInsetText: String =
-    "If your organisation is not registered with Companies House, nominate a company in your group with a CRN to register. If no company in your group has a CRN, contact HMRC using your usual compliance contact or existing support channels."
 
   val submitButtonText: String = "Continue"
 }

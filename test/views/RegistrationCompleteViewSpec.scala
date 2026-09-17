@@ -37,7 +37,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
       val doc: Document = Jsoup.parse(SUT(registrationCompleteDetails).toString)
 
       doc.createTestsWithStandardPageElements(
-        pageTitle = pageTitle,
+        pageTitle = panelTitle,
         pageHeading = panelTitle,
         showBackLink = false,
         showIsThisPageNotWorkingProperlyLink = true,
@@ -65,6 +65,15 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           )
       }
 
+      "must have a 'go to your account homepage' link" - {
+        doc.getMainContent
+          .getElementById("homepage-link")
+          .createTestWithLink(
+            linkText = "go to your account homepage",
+            destinationUrl = "#"
+          )
+      }
+
       "Continue button" - {
         doc.getMainContent
           .select(".govuk-button-primary")
@@ -76,7 +85,6 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 }
 
 object RegistrationCompleteViewSpec {
-  val pageTitle: String = "SAO Registration Confirmation"
 
   val panelTitle: String = "Registration complete"
 
@@ -85,7 +93,7 @@ object RegistrationCompleteViewSpec {
   val paragraphsList: List[String] = List(
     "We’ve sent a confirmation email to all the contacts you gave during registration.",
     "Print this page if you want to keep a paper record of your registration.",
-    "You can now log in to submit a notification and certificate."
+    "You can now go to your account homepage to submit a notification and certificate."
   )
 
 }

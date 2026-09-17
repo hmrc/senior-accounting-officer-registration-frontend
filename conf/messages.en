@@ -44,8 +44,8 @@ unauthorised.heading = You can’t access this service with this account
 registration.dashboard.title = Register your nominated company
 registration.dashboard.heading = Register your nominated company
 
-registration.dashboard.p1 = Choose the UK company that will submit SAO notifications and certificates for all the companies in your group. This is called your nominated company.
-registration.dashboard.p2 = You only need to register once for your group. If your group has more than one SAO, you can either use the same account for all SAOs or register separately to create a different account for each one.
+registration.dashboard.p1 = Choose the UK company that will submit SAO notifications and certificates for the companies in your organisation. This is called your nominated company.
+registration.dashboard.p2 = You only need to register once for your organisation. If your organisation has more than one SAO, you can use the same account for all SAOs or register separately to create a different account for each one.
 
 registration.dashboard.row.company = Enter your nominated company details
 registration.dashboard.row.contacts = Enter your contact details
@@ -56,17 +56,16 @@ registration.dashboard.row.status.completed = Completed
 
 registration.dashboard.submit = Submit your registration
 
-registration.complete.title = SAO Registration Confirmation
 registration.complete.heading = Registration complete
 registration.complete.referenceNumberPrefix = Your reference number
 registration.complete.p1 = We’ve sent a confirmation email to all the contacts you gave during registration.
 registration.complete.p2 = if you want to keep a paper record of your registration.
 registration.complete.h2 = What happens next
-registration.complete.p3 = You can now log in to submit a notification and certificate.
+registration.complete.p3 = You can now {0} to submit a notification and certificate.
+registration.complete.homepageLink = go to your account homepage
 registration.complete.print = Print this page
 registration.complete.continue = Continue
 
-contactDetailsGuidance.title = Contact details
 contactDetailsGuidance.caption = Contact details
 contactDetailsGuidance.heading = Provide contact details for your nominated company
 contactDetailsGuidance.p1 = You need to provide the contact details of the person or team who will submit your company’s SAO notification and certificate.
@@ -78,9 +77,6 @@ contactDetailsGuidance.p3 = You can add up to 2 contacts. For each one, provide 
 contact.first.caption = First contact details
 contact.second.caption = Second contact details
 
-contactName.title.first  = First contact details
-contactName.title.second = Second contact details
-contactName.title.third  = Third contact details
 contactName.heading = What is the name of the person or team we can contact?
 contactName.hint = For example, ‘Ashley Smith’ or ‘Tax team’
 contactName.checkYourAnswersLabel = Full name
@@ -94,7 +90,7 @@ contactEmail.title.first  = First contact details
 contactEmail.title.second = Second contact details
 contactEmail.title.third  = Third contact details
 contactEmail.heading = What is the email address for this contact?
-contactEmail.hint = We’ll use this to send confirmations and contact this person about the submission if needed
+contactEmail.hint = We’ll use this to send confirmations and contact this person about the submission if needed.
 contactEmail.checkYourAnswersLabel = Email address
 contactEmail.error.required = Enter the email address of a person or team
 contactEmail.error.length = Email address must be 254 characters or less
@@ -118,12 +114,11 @@ contactCheckYourAnswers.title.second = Second contact details
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Continue
 
-contactsCheckYourAnswers.title = Contact details
-contactsCheckYourAnswers.caption = Contact details
+contactsCheckYourAnswers.caption = First contact details
 contactsCheckYourAnswers.heading = Check your answers
 contactsCheckYourAnswers.continue = Continue
 
-nominatedCompanyDetailsGuidance.title = Company Details
+nominatedCompanyDetailsGuidance.title = Provide contact details for your nominated company
 nominatedCompanyDetailsGuidance.heading = What you need to start your registration
 nominatedCompanyDetailsGuidance.caption = Nominated company details
 nominatedCompanyDetailsGuidance.paragraph1 = You must have the following details ready to continue. We’ll use them to confirm your nominated company.
