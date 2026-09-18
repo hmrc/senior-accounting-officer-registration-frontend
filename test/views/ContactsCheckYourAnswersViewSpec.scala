@@ -37,7 +37,7 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
       doc.getElementsByClass("govuk-back-link").size() mustBe 1
       doc.getMainContent.select("a.govuk-link.hmrc-report-technical-issue").text() mustBe
         "Is this page not working properly? (opens in new tab)"
-      doc.select(".govuk-caption-l").text() mustBe pageTitle
+      doc.select(".govuk-caption-l").text() mustBe pageCaption
       validateSectionHeadings(doc, List("First contact details"))
       validateSummaries(
         doc,
@@ -72,7 +72,7 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
             ("Email address", "email1", "/senior-accounting-officer/registration/contact-details/first/change-email"),
             (
               "Do you want to add another contact?",
-              "No, add another contact",
+              "No",
               "/senior-accounting-officer/registration/contact-details/first/change-add-another"
             )
           ),
@@ -118,8 +118,9 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
 }
 
 object ContactsCheckYourAnswersViewSpec {
-  val pageTitle: String        = "Contact details"
   val pageHeading: String      = "Check your answers"
+  val pageCaption: String      = "First contact details"
+  val pageTitle: String        = s"${pageHeading} - ${pageCaption}"
   val submitButtonText: String = "Continue"
 
   val oneContactAnswers: ContactsCheckYourAnswers = ContactsCheckYourAnswers(

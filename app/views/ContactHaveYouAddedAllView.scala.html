@@ -24,21 +24,25 @@
 
 @(form: Form[?], contactType: ContactType, mode: Mode)(using request: Request[?], messages: Messages)
 
-@layout(pageTitle = title(form, messages("contactHaveYouAddedAll.title"))) {
+@layout(pageTitle = title(form, messages("contactHaveYouAddedAll.heading"), Some(messages("contactHaveYouAddedAll.caption")))) {
 
+    <span class="govuk-caption-m">@messages("contactHaveYouAddedAll.caption")</span>
     @formHelper(action = routes.ContactHaveYouAddedAllController.onSubmit(contactType, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        <h1 class="govuk-heading-l">@messages("contactHaveYouAddedAll.heading")</h1>
+        <p class="govuk-body">@messages("contactHaveYouAddedAll.hint")</p>
+
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("contactHaveYouAddedAll.heading").toText).asPageHeading(LegendSize.Large),
+                legend = LegendViewModel(HtmlContent(s"""<h2 class="govuk-heading-m">${messages("contactHaveYouAddedAll.subheading")}</h2>""")),
                 items  = ContactHaveYouAddedAll.options
-            )
-            .withHint(HintViewModel(messages("contactHaveYouAddedAll.hint").toText))
+
+            ).inline()
         )
 
         @govukButton(
