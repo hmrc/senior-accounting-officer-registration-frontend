@@ -77,7 +77,7 @@ class PrivateBetaGuardFilterISpec extends ISpecBase with FeatureToggleSupport wi
 
           val response =
             wsClient
-              .url(s"$baseUrl/senior-accounting-officer/private-beta")
+              .url(s"$baseUrl/senior-accounting-officer/registration/private-beta")
               .withHttpHeaders(
                 HeaderNames.COOKIE -> bakeSessionCookie(authSession),
                 "Csrf-Token"       -> "nocheck"
