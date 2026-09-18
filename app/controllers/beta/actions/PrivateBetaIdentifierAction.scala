@@ -59,7 +59,7 @@ class PrivateBetaIdentifierActionImpl @Inject() (
       case _: NoActiveSession =>
         Redirect(
           config.loginUrl,
-          Map("continue" -> Seq(config.loginContinueUrl.replace("registration", "private-beta")))
+          Map("continue" -> Seq(s"${config.loginContinueUrl}/private-beta"))
         )
       case _: AuthorisationException =>
         Redirect(routes.UnauthorisedController.onPageLoad())

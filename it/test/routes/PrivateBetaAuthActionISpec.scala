@@ -26,7 +26,7 @@ class PrivateBetaAuthActionISpec extends ISpecBase {
   override def additionalConfigs: Map[String, Any] = Map("features.private-beta" -> "true")
 
   val appConfig = app.injector.instanceOf[AppConfig]
-  val targetUrl = s"$baseUrl/senior-accounting-officer/private-beta"
+  val targetUrl = s"$baseUrl/senior-accounting-officer/registration/private-beta"
 
   "An endpoint with Private Beta Auth Action when" - {
     "Auth is missing must" - {
@@ -43,7 +43,7 @@ class PrivateBetaAuthActionISpec extends ISpecBase {
         response.status mustBe Status.SEE_OTHER
         response
           .headers("Location")
-          .head mustBe s"${appConfig.loginUrl}?continue=http%3A%2F%2Flocalhost%3A10057%2Fsenior-accounting-officer%2Fprivate-beta"
+          .head mustBe s"${appConfig.loginUrl}?continue=http%3A%2F%2Flocalhost%3A10057%2Fsenior-accounting-officer%2Fregistration%2Fprivate-beta"
       }
     }
 
