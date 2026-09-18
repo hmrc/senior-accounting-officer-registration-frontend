@@ -44,4 +44,5 @@ class RegistrationCompleteController @Inject() (
       )
     )
   }
+
 }

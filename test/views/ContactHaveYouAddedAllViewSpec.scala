@@ -58,7 +58,6 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First, NormalMode),
         buttonText = "Continue"
       )
-
     }
 
     "when the page is errored" - {
@@ -90,12 +89,11 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First, NormalMode),
         buttonText = "Continue"
       )
-
     }
   }
   extension (doc: Document) {
     def createTestWithSubheading(subheading: String): Unit = {
-      val subheadings = doc.select("p+h2")
+      val subheadings = doc.select("legend > h2")
       "must display the correct subheading" in {
         subheadings.get(0).text() mustBe subheading
         subheadings.size() mustBe 1
@@ -104,7 +102,6 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
 
     def createTestWithParagraph(pageHint: String): Unit = {
       val paragraphs = doc.select("h1 + p")
-      println(paragraphs)
       "must display the correct paragraph in the error form" in {
         paragraphs.get(0).text() mustBe pageHint
         paragraphs.size() mustBe 1

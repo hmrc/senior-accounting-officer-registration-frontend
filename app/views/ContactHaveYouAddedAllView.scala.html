@@ -35,12 +35,13 @@
 
         <h1 class="govuk-heading-l">@messages("contactHaveYouAddedAll.heading")</h1>
         <p class="govuk-body">@messages("contactHaveYouAddedAll.hint")</p>
-        <h2 class="govuk-heading-m">@messages("contactHaveYouAddedAll.subheading")</h2>
+
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel("".toText),
+                legend = LegendViewModel(HtmlContent(s"""<h2 class="govuk-heading-m">${messages("contactHaveYouAddedAll.subheading")}</h2>""")),
                 items  = ContactHaveYouAddedAll.options
+
             ).inline()
         )
 

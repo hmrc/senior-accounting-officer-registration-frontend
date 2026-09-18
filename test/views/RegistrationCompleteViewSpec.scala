@@ -70,7 +70,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
           .getElementById("homepage-link")
           .createTestWithLink(
             linkText = "go to your account homepage",
-            destinationUrl = "#"
+            destinationUrl = "hub-url/senior-accounting-officer"
           )
       }
 
