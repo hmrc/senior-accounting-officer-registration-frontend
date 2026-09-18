@@ -1,0 +1,10 @@
+# private beta specific routes
+
++noPrivateBetaGuard
+GET        /                             controllers.beta.BetaLoginController.onPageLoad()
++noPrivateBetaGuard
+POST       /                             controllers.beta.BetaLoginController.onSubmit()
+
+GET        /guidance                     controllers.beta.GuidanceCollectionController.onPageLoad()
+GET        /guidance/register            controllers.beta.GuidanceRegisterController.onPageLoad()
+GET        /guidance/submit              controllers.beta.GuidanceSubmitController.onPageLoad()

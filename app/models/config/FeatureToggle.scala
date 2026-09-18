@@ -28,6 +28,7 @@ enum FeatureToggle(val key: String, val name: String) {
   case StubGrs              extends FeatureToggle("stubGrs", "Stub GRS")
   case GrsAllowRelativeUrl  extends FeatureToggle("grsAllowsRelativeUrl", "GRS Allows Relative URL")
   case ContactFlowReshuffle extends FeatureToggle("contactFlowReshuffle", "Contact Flow Reshuffle")
+  case PrivateBeta          extends FeatureToggle("private-beta", "Enable Private Beta Mode")
 }
 
 object FeatureToggle extends FeatureConfigSupport {

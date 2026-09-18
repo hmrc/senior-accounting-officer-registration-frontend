@@ -151,3 +151,19 @@ standardUserCannotAccessService.heading = You cannot access this service
 standardUserCannotAccessService.paragraph1 = You’ve signed in using your organisation Government Gateway ID as an assistant with a standard user role. Only users with an administrator role can use this service.
 standardUserCannotAccessService.paragraph2 = If you need to register, {0} that has the administrator role, or ask an administrator to add you as a team member with the administrator role
 standardUserCannotAccessService.signIn.linkText = sign in using an organisation Government Gateway ID
+
+
+########## private beta only content
+
+betaLogin.title = Enter Senior Accounting Officer notification and certificate private beta password
+betaLogin.heading = Enter Senior Accounting Officer notification and certificate private beta password
+betaLogin.error.passwordMismatch = The password is not correct
+
+guidance.title = Register to submit your Senior Accounting Officer notification and certificate
+guidance.heading = Register to submit your Senior Accounting Officer notification and certificate
+
+guidanceCollection.title = Senior Accounting Officer: detailed information
+guidanceCollection.heading = Senior Accounting Officer: detailed information
+
+guidanceSubmit.title = Submit your Senior Accounting Officer notification and certificate
+guidanceSubmit.heading = Submit your Senior Accounting Officer notification and certificate

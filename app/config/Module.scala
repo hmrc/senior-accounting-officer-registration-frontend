@@ -18,6 +18,7 @@ package config
 
 import com.google.inject.AbstractModule
 import controllers.actions.*
+import controllers.beta.actions.{PrivateBetaIdentifierAction, PrivateBetaIdentifierActionImpl}
 
 import java.time.{Clock, ZoneOffset}
 
@@ -33,5 +34,7 @@ class Module extends AbstractModule {
     bind(classOf[ApiAuthenticatedIdentifierAction]).to(classOf[ApiAuthenticatedIdentifierActionImpl]).asEagerSingleton()
 
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
+
+    bind(classOf[PrivateBetaIdentifierAction]).to(classOf[PrivateBetaIdentifierActionImpl]).asEagerSingleton()
   }
 }
