@@ -150,15 +150,16 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
 }
 
 object ContactEmailViewSpec {
-  val pageHeading: String = "What is their email address?"
+  val pageHeading: String = "What is the email address for this contact?"
 
   val contactTypeFirstCaption: String  = "First contact details"
   val contactTypeSecondCaption: String = "Second contact details"
 
-  val pageTitleFirst: String  = "First contact details"
-  val pageTitleSecond: String = "Second contact details"
+  val pageTitleFirst: String  = s"$pageHeading - $contactTypeFirstCaption"
+  val pageTitleSecond: String = s"$pageHeading - $contactTypeSecondCaption"
 
-  val expectedHints: String  = "We’ll only use this to contact them about the company’s submission."
+  val expectedHints: String =
+    "We’ll use this to send confirmations and contact this person about the submission if needed."
   val testInputValue: String = "test@example.com"
 
   val submitButtonText: String = "Continue"

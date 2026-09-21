@@ -25,7 +25,7 @@
 
 @(details: RegistrationCompleteDetails)(using request: Request[?], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("registration.complete.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("registration.complete.heading")), showBackLink = false) {
 
     <div class="govuk-panel govuk-panel--confirmation">
         <h1 class="govuk-panel__title">
@@ -50,11 +50,15 @@
     </script>
 
     <h2 class="govuk-heading-m">@messages("registration.complete.h2")</h2>
-    <p class="govuk-body">@messages("registration.complete.p3")</p>
+    <p class="govuk-body">@linkParagraph(messages("registration.complete.p3"), messages("registration.complete.homepageLink"))</p>
 
 
     <a href="@config.hubUrl/senior-accounting-officer" id="submit" class="govuk-button govuk-button-primary" data-module="govuk-button">
         @messages("registration.complete.continue")
     </a>
 
+}
+@linkParagraph(template_paragraph: String, link: String) = @{
+    val paragraph = template_paragraph.replace("{0}", s"""<a class="govuk-link" id="homepage-link" href="${config.hubUrl}/senior-accounting-officer">$link</a>""")
+    Html(paragraph)
 }

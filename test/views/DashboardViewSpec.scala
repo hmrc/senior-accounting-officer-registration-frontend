@@ -33,7 +33,7 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
         val doc: Document = Jsoup.parse(SUT(stage).toString)
 
         doc.createTestsWithStandardPageElements(
-          pageTitle = pageHeading,
+          pageTitle = pageTitle,
           pageHeading = pageHeading,
           showBackLink = false,
           showIsThisPageNotWorkingProperlyLink = true,
@@ -96,13 +96,14 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
 
 object DashboardViewSpec {
   val pageHeading: String                  = "Register your nominated company"
+  val pageTitle: String                    = pageHeading
   val enterNominatedCompanyDetailsLinkText = "Enter your nominated company details"
   val enterNominatedCompanyDetailsLinkUrl = "/senior-accounting-officer/registration/nominated-company-details-guidance"
   val enterYourContactDetailsLinkText     = "Enter your contact details"
   val enterYourContactDetailsLinkUrl      = "/senior-accounting-officer/registration/contact-details"
   val paragraphs: List[String]            = List(
-    "Register the nominated UK company that will submit the SAO notification and certificate on behalf of all companies the SAO is responsible for.",
-    "You only need to register once for your group. If your group has more than one SAO, you can use the same account to submit notifications and certificates for all SAOs, or register again to create a separate account."
+    "Choose the UK company that will submit SAO notifications and certificates for the companies in your organisation. This is called your nominated company.",
+    "You only need to register once for your organisation. If your organisation has more than one SAO, you can use the same account for all SAOs or register separately to create a different account for each one."
   )
 
   val submitButtonText: String = "Submit your registration"
