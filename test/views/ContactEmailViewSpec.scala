@@ -60,7 +60,10 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 name = "value",
                 label = pageHeading,
                 value = "",
-                hint = Some(expectedHints),
+                hint = contactType match {
+                  case First  => Some(expectedFirstContactHint)
+                  case Second => Some(expectedSecondContactHint)
+                },
                 hasError = false
               )
 
@@ -97,7 +100,10 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 name = "value",
                 label = pageHeading,
                 value = testInputValue,
-                hint = Some(expectedHints),
+                hint = contactType match {
+                  case First  => Some(expectedFirstContactHint)
+                  case Second => Some(expectedSecondContactHint)
+                },
                 hasError = false
               )
 
@@ -133,7 +139,10 @@ class ContactEmailViewSpec extends ViewSpecBase[ContactEmailView] {
                 name = "value",
                 label = pageHeading,
                 value = "",
-                hint = Some(expectedHints),
+                hint = contactType match {
+                  case First  => Some(expectedFirstContactHint)
+                  case Second => Some(expectedSecondContactHint)
+                },
                 hasError = true
               )
 
@@ -158,8 +167,12 @@ object ContactEmailViewSpec {
   val pageTitleFirst: String  = s"$pageHeading - $contactTypeFirstCaption"
   val pageTitleSecond: String = s"$pageHeading - $contactTypeSecondCaption"
 
-  val expectedHints: String =
+  val expectedFirstContactHint: String =
     "We’ll use this to send confirmations and contact this person about the submission if needed."
+
+  val expectedSecondContactHint: String =
+    "We’ll use this address to send confirmations and contact this person about the submission if needed"
+
   val testInputValue: String = "test@example.com"
 
   val submitButtonText: String = "Continue"

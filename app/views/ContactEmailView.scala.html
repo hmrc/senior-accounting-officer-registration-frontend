@@ -41,7 +41,7 @@
                 label = LabelViewModel(messages("contactEmail.heading").toText).asPageHeading(LabelSize.Large)
             )
             .asEmail()
-            .withHint(HintViewModel(messages("contactEmail.hint").toText))
+            .withHint(HintViewModel(messages(s"contactEmail.${contactType.messageKey}.hint").toText))
             .withWidth(Full)
         )
 

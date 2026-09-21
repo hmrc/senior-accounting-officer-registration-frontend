@@ -119,7 +119,7 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
 
 object ContactsCheckYourAnswersViewSpec {
   val pageHeading: String      = "Check your answers"
-  val pageCaption: String      = "First contact details"
+  val pageCaption: String      = "Contact details"
   val pageTitle: String        = s"${pageHeading} - ${pageCaption}"
   val submitButtonText: String = "Continue"
 

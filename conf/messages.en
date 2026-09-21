@@ -90,7 +90,8 @@ contactEmail.title.first  = First contact details
 contactEmail.title.second = Second contact details
 contactEmail.title.third  = Third contact details
 contactEmail.heading = What is the email address for this contact?
-contactEmail.hint = We’ll use this to send confirmations and contact this person about the submission if needed.
+contactEmail.first.hint = We’ll use this to send confirmations and contact this person about the submission if needed.
+contactEmail.second.hint = We’ll use this address to send confirmations and contact this person about the submission if needed
 contactEmail.checkYourAnswersLabel = Email address
 contactEmail.error.required = Enter the email address of a person or team
 contactEmail.error.length = Email address must be 254 characters or less
@@ -114,7 +115,7 @@ contactCheckYourAnswers.title.second = Second contact details
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Continue
 
-contactsCheckYourAnswers.caption = First contact details
+contactsCheckYourAnswers.caption = Contact details
 contactsCheckYourAnswers.heading = Check your answers
 contactsCheckYourAnswers.continue = Continue
 
