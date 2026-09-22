@@ -16,28 +16,52 @@
 
 package services
 
-import models.*
+import config.AppConfig
+import models.{config, *}
 import models.ContactType.{First, Second}
 import pages.*
 
-class DashboardService {
+import javax.inject.Inject
+import scala.util.Left
 
-  def deriveCurrentStage(userAnswers: Option[UserAnswers]): DashboardStage =
+class DashboardService @Inject() (appConfig: AppConfig) {
+
+  def deriveCurrentStage(userAnswers: Option[UserAnswers]): DashboardStage = {
+    val isCompletedFn = if (appConfig.contactFlowReshuffleEnabled) then contactsCompletedReshuffled else contactsCompleted
     userAnswers
       .fold(DashboardStage.CompanyDetails)(answers =>
         (for {
           hasCompanyDetails <- answers
             .get(CompanyDetailsPage)
             .toRight(left = DashboardStage.CompanyDetails)
-          _ <- if !contactsCompleted(answers) then Left(DashboardStage.ContactsInfo) else Right(())
+
+          _ <- if isCompletedFn(answers) then Right(()) else Left(DashboardStage.ContactsInfo)
         } yield DashboardStage.Submission).merge
       )
+  }
 
   def getContact(userAnswers: UserAnswers, contactType: ContactType): Option[(String, String)] =
     for {
       name  <- userAnswers.get(ContactNamePage(contactType))
       email <- userAnswers.get(ContactEmailPage(contactType))
     } yield (name, email)
+
+  def contactsCompletedReshuffled(userAnswers: UserAnswers): Boolean = {
+    val firstContact = getContact(userAnswers, First)
+    def secondContact = getContact(userAnswers, Second)
+
+    userAnswers.get(ContactHaveYouAddedAllPage(First)) match {
+      case Some(ContactHaveYouAddedAll.Yes) => {
+        secondContact.isDefined
+      }
+
+      case Some(ContactHaveYouAddedAll.No) => {
+        true
+      }
+      case None => false
+    }
+
+  }
 
   def contactsCompleted(userAnswers: UserAnswers): Boolean = {
     val firstContact = getContact(userAnswers, First)

@@ -110,7 +110,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
             .build()
           val view                               = application.injector.instanceOf[ContactsCheckYourAnswersView]
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactsForCheckYourAnswers(meq(testUserAnswers)))
+          when(mockContactCheckYourAnswersService.getContactsForCheckYourAnswersReshuffled(meq(testUserAnswers)))
             .thenReturn(Some(testContacts))
 
           running(application) {

@@ -58,6 +58,16 @@ class ContactHaveYouAddedAllController @Inject() (
 
       Ok(view(preparedForm, contactType, mode))
     }
+    
+  def onPageLoadReshuffled(mode: Mode):Action[AnyContent] = 
+    (identify andThen getData andThen requireData) { implicit request =>
+      val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(ContactType.First)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, ContactType.First, mode))
+  }
 
   def onSubmit(contactType: ContactType, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>

@@ -96,12 +96,12 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
       }
 
-      "must go from add another yes to combined CYA" in {
+      "must go from add another yes to second contact name" in {
         newFlowNavigator.nextPage(
           ContactHaveYouAddedAllPage(First),
           NormalMode,
           UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+        ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
       }
 
       "must go from second contact email to combined CYA" in {
