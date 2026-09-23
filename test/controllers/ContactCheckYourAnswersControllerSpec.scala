@@ -17,8 +17,10 @@
 package controllers
 
 import base.SpecBase
-import models.*
+import config.FeatureToggleSupport
+import models.{config, *}
 import models.ContactType.First
+import models.config.FeatureToggle.ContactFlowReshuffle
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.eq as meq
 import org.mockito.Mockito.*
@@ -32,7 +34,7 @@ import repositories.SessionRepository
 import services.ContactCheckYourAnswersService
 import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
 
-class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
+class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar with FeatureToggleSupport {
   def onwardRoute: Call                      = Call("GET", "/foo")
   val testUserAnswers: UserAnswers           = emptyUserAnswers
   val testContacts: ContactsCheckYourAnswers = ContactsCheckYourAnswers(
@@ -51,6 +53,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
 
   "ContactCheckYourAnswers Controller" - {
     "legacy flow when feature switch is off" - {
+      disable(ContactFlowReshuffle)
       "onPageLoad endpoint:" - {
         "must return OK and the correct view for a GET" in {
           val testContactInfo                    = ContactInfo("name", "email")
@@ -103,6 +106,7 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "new flow when feature switch is on" - {
+      enable(ContactFlowReshuffle)
       "onPageLoadReshuffled endpoint:" - {
         "must return OK and the correct combined view for a GET" in {
           val application = applicationBuilder(userAnswers = Some(testUserAnswers))
@@ -123,6 +127,8 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar {
         }
 
         "must redirect to journey recovery when feature switch is off" in {
+
+          disable(ContactFlowReshuffle)
           val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
 
           running(application) {

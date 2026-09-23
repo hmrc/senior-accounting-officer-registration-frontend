@@ -17,13 +17,16 @@
 package navigation
 
 import base.SpecBase
+import config.FeatureToggleSupport
 import controllers.routes
-import models.*
+import models.{config, *}
 import models.ContactType.*
+import models.config.FeatureToggle
+import models.config.FeatureToggle.ContactFlowReshuffle
 import pages.*
 import play.api.Configuration
 
-class NavigatorSpec extends SpecBase {
+class NavigatorSpec extends SpecBase with FeatureToggleSupport {
 
   private val oldFlowNavigator = new Navigator(Configuration.from(Map("features.contactFlowReshuffle" -> false)))
   private val newFlowNavigator = new Navigator(Configuration.from(Map("features.contactFlowReshuffle" -> true)))
@@ -31,6 +34,7 @@ class NavigatorSpec extends SpecBase {
   "Navigator" - {
 
     "in Normal mode with feature switch off" - {
+      disable(ContactFlowReshuffle)
       "must go from a page that doesn't exist in the route map to Index" in {
         case object UnknownPage extends Page
         oldFlowNavigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
@@ -70,6 +74,7 @@ class NavigatorSpec extends SpecBase {
     }
 
     "in Check mode with feature switch off" - {
+      disable(ContactFlowReshuffle)
       "must return first contact name changes to first contact CYA" in {
         oldFlowNavigator.nextPage(
           ContactNamePage(First),
@@ -88,6 +93,7 @@ class NavigatorSpec extends SpecBase {
     }
 
     "in Normal mode with feature switch on" - {
+      enable(ContactFlowReshuffle)
       "must go from first contact email to add another page" in {
         newFlowNavigator.nextPage(
           ContactEmailPage(First),
@@ -122,6 +128,7 @@ class NavigatorSpec extends SpecBase {
     }
 
     "in Check mode with feature switch on" - {
+      enable(ContactFlowReshuffle)
       "must return field changes to combined CYA" in {
         newFlowNavigator.nextPage(
           ContactEmailPage(First),
