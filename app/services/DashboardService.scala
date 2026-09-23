@@ -17,17 +17,18 @@
 package services
 
 import config.AppConfig
-import models.{config, *}
+import models.*
 import models.ContactType.{First, Second}
 import pages.*
 
-import javax.inject.Inject
 import scala.util.Left
+
+import javax.inject.Inject
 
 class DashboardService @Inject() (appConfig: AppConfig) {
 
   def deriveCurrentStage(userAnswers: Option[UserAnswers]): DashboardStage = {
-    val isCompletedFn = if (appConfig.contactFlowReshuffleEnabled) then contactsCompletedReshuffled else contactsCompleted
+    val isCompletedFn = if appConfig.contactFlowReshuffleEnabled then contactsCompletedReshuffled else contactsCompleted
     userAnswers
       .fold(DashboardStage.CompanyDetails)(answers =>
         (for {
@@ -47,7 +48,7 @@ class DashboardService @Inject() (appConfig: AppConfig) {
     } yield (name, email)
 
   def contactsCompletedReshuffled(userAnswers: UserAnswers): Boolean = {
-    val firstContact = getContact(userAnswers, First)
+    getContact(userAnswers, First)
     def secondContact = getContact(userAnswers, Second)
 
     userAnswers.get(ContactHaveYouAddedAllPage(First)) match {

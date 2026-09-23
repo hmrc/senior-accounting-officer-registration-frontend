@@ -17,12 +17,11 @@
 package services
 
 import base.SpecBase
-import config.AppConfig
 import config.FeatureToggleSupport
-import models.{config, *}
 import models.ContactType.{First, Second}
 import models.config.FeatureToggle.ContactFlowReshuffle
 import models.registration.CompanyDetails
+import models.{config, *}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*
@@ -38,7 +37,7 @@ class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite with Featur
   val firstNameAndEmailOnly: Try[UserAnswers] = firstNameOnly.get.set(ContactEmailPage(First), "testname@testemail.com")
   val firstContactComplete: Try[UserAnswers]  =
     firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes)
-  val firstContactCompleteReshuffled: Try[UserAnswers]  =
+  val firstContactCompleteReshuffled: Try[UserAnswers] =
     firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
   val firstContactAndSecondName: Try[UserAnswers] = firstNameAndEmailOnly.get
     .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
@@ -54,7 +53,6 @@ class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite with Featur
   val firstAndSecondContactCompleteReshuffled: Try[UserAnswers] = {
     firstContactAndSecondNameReshuffled.get.set(ContactEmailPage(Second), "testname2@testemail.com")
   }
-
 
   override def beforeEach(): Unit = {
     disable(ContactFlowReshuffle)

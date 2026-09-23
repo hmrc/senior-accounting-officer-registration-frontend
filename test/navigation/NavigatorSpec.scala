@@ -19,29 +19,36 @@ package navigation
 import base.SpecBase
 import config.FeatureToggleSupport
 import controllers.routes
-import models.{config, *}
 import models.ContactType.*
 import models.config.FeatureToggle
 import models.config.FeatureToggle.ContactFlowReshuffle
+import models.{config, *}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*
-import play.api.Configuration
 
-class NavigatorSpec extends SpecBase with FeatureToggleSupport {
+class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAfterEach with GuiceOneAppPerSuite {
 
-  private val oldFlowNavigator = new Navigator(Configuration.from(Map("features.contactFlowReshuffle" -> false)))
-  private val newFlowNavigator = new Navigator(Configuration.from(Map("features.contactFlowReshuffle" -> true)))
+  private val navigator = app.injector.instanceOf[Navigator]
+
+  override def beforeEach(): Unit = {
+    disable(ContactFlowReshuffle)
+  }
+
+  override def afterEach(): Unit = {
+    disable(ContactFlowReshuffle)
+  }
 
   "Navigator" - {
 
     "in Normal mode with feature switch off" - {
-      disable(ContactFlowReshuffle)
       "must go from a page that doesn't exist in the route map to Index" in {
         case object UnknownPage extends Page
-        oldFlowNavigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
+        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
 
       "must go from contact email to first contact CYA" in {
-        oldFlowNavigator.nextPage(
+        navigator.nextPage(
           ContactEmailPage(First),
           NormalMode,
           UserAnswers("id")
@@ -49,7 +56,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must go from first contact CYA to add another page" in {
-        oldFlowNavigator.nextPage(
+        navigator.nextPage(
           ContactCheckYourAnswersPage(First),
           NormalMode,
           UserAnswers("id")
@@ -57,7 +64,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must go from second contact email to second contact CYA" in {
-        oldFlowNavigator.nextPage(
+        navigator.nextPage(
           ContactEmailPage(Second),
           NormalMode,
           UserAnswers("id")
@@ -65,7 +72,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must go from second contact CYA to index" in {
-        oldFlowNavigator.nextPage(
+        navigator.nextPage(
           ContactCheckYourAnswersPage(Second),
           NormalMode,
           UserAnswers("id")
@@ -74,9 +81,8 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
     }
 
     "in Check mode with feature switch off" - {
-      disable(ContactFlowReshuffle)
       "must return first contact name changes to first contact CYA" in {
-        oldFlowNavigator.nextPage(
+        navigator.nextPage(
           ContactNamePage(First),
           CheckMode,
           UserAnswers("id")
@@ -84,7 +90,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must return second contact email changes to second contact CYA" in {
-        oldFlowNavigator.nextPage(
+        navigator.nextPage(
           ContactEmailPage(Second),
           CheckMode,
           UserAnswers("id")
@@ -93,9 +99,9 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
     }
 
     "in Normal mode with feature switch on" - {
-      enable(ContactFlowReshuffle)
       "must go from first contact email to add another page" in {
-        newFlowNavigator.nextPage(
+        enable(ContactFlowReshuffle)
+        navigator.nextPage(
           ContactEmailPage(First),
           NormalMode,
           UserAnswers("id")
@@ -103,7 +109,8 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must go from add another yes to second contact name" in {
-        newFlowNavigator.nextPage(
+        enable(ContactFlowReshuffle)
+        navigator.nextPage(
           ContactHaveYouAddedAllPage(First),
           NormalMode,
           UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
@@ -111,7 +118,8 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must go from second contact email to combined CYA" in {
-        newFlowNavigator.nextPage(
+        enable(ContactFlowReshuffle)
+        navigator.nextPage(
           ContactEmailPage(Second),
           NormalMode,
           UserAnswers("id")
@@ -119,7 +127,8 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must go from combined CYA to index" in {
-        newFlowNavigator.nextPage(
+        enable(ContactFlowReshuffle)
+        navigator.nextPage(
           ContactsCheckYourAnswersPage,
           NormalMode,
           UserAnswers("id")
@@ -128,9 +137,9 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
     }
 
     "in Check mode with feature switch on" - {
-      enable(ContactFlowReshuffle)
       "must return field changes to combined CYA" in {
-        newFlowNavigator.nextPage(
+        enable(ContactFlowReshuffle)
+        navigator.nextPage(
           ContactEmailPage(First),
           CheckMode,
           UserAnswers("id")
@@ -138,7 +147,8 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must return add another yes to combined CYA" in {
-        newFlowNavigator.nextPage(
+        enable(ContactFlowReshuffle)
+        navigator.nextPage(
           ContactHaveYouAddedAllPage(First),
           CheckMode,
           UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
@@ -146,7 +156,8 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must return add another no with existing second contact to combined CYA" in {
-        newFlowNavigator.nextPage(
+        enable(ContactFlowReshuffle)
+        navigator.nextPage(
           ContactHaveYouAddedAllPage(First),
           CheckMode,
           UserAnswers("id")
@@ -160,7 +171,8 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport {
       }
 
       "must return add another no without second contact to second contact name" in {
-        newFlowNavigator.nextPage(
+        enable(ContactFlowReshuffle)
+        navigator.nextPage(
           ContactHaveYouAddedAllPage(First),
           CheckMode,
           UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No).get

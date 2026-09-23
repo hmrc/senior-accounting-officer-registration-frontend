@@ -18,9 +18,9 @@ package controllers
 
 import base.SpecBase
 import config.FeatureToggleSupport
-import models.{config, *}
 import models.ContactType.First
 import models.config.FeatureToggle.ContactFlowReshuffle
+import models.{config, *}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.eq as meq
 import org.mockito.Mockito.*

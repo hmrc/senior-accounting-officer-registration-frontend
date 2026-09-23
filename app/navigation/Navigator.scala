@@ -75,7 +75,7 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
   private val reshuffledNormalRoutes: Page => UserAnswers => Call = {
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(First)           => _ => routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
+    case ContactEmailPage(First) => _ => routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
 //    case ContactEmailPage(First)               => _ => routes.ContactHaveYouAddedAllController.onPageLoadReshuffled()
     case ContactEmailPage(Second)          => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
     case ContactsCheckYourAnswersPage      => _ => routes.IndexController.onPageLoad()
