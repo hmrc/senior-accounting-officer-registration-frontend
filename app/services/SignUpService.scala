@@ -16,6 +16,7 @@
 
 package services
 
+import config.AppConfig
 import connectors.SignUpConnector
 import models.UserAnswers
 import models.registration.*
@@ -33,7 +34,8 @@ import javax.inject.Inject
 
 class SignUpService @Inject() (
     signupConnector: SignUpConnector,
-    contactService: ContactCheckYourAnswersService
+    contactService: ContactCheckYourAnswersService,
+    appConfig: AppConfig
 )(using ExecutionContext) {
 
   def submit(userAnswers: UserAnswers)(using HeaderCarrier): Future[SignUpResult] =
@@ -54,12 +56,16 @@ class SignUpService @Inject() (
       contacts = contacts
     )
 
-  private def getContacts(userAnswers: UserAnswers): Option[List[Contact]] =
-    Some(
+  private def getContacts(userAnswers: UserAnswers): Option[List[Contact]] = {
+    val contacts = if appConfig.contactFlowReshuffleEnabled then {
       contactService
-        .getContacts(userAnswers)
-        .map(info => Contact(name = info.name, email = info.email, status = "valid", language = "en-GB"))
-    ).filter(_.nonEmpty)
+        .getContactsForCheckYourAnswersReshuffled(userAnswers)
+        .map(answers => answers.firstContact :: answers.secondContact.toList)
+    } else {
+      Some(contactService.getContacts(userAnswers)).filter(_.nonEmpty)
+    }
+    contacts.map(_.map(info => Contact(name = info.name, email = info.email, status = "valid", language = "en-GB")))
+  }
 
   private def callSignUp(request: SignUpRequest)(using HeaderCarrier): Future[SignUpResult] =
     signupConnector.submit(request).map {

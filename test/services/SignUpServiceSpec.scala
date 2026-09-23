@@ -17,6 +17,8 @@
 package services
 
 import base.SpecBase
+import config.FeatureToggleSupport
+import models.config.FeatureToggle.ContactFlowReshuffle
 import connectors.SignUpConnector
 import models.ContactHaveYouAddedAll.{No, Yes}
 import models.ContactType.*
@@ -38,7 +40,12 @@ import scala.concurrent.Future
 
 import SignUpServiceSpec.*
 
-class SignUpServiceSpec extends SpecBase with GuiceOneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
+class SignUpServiceSpec
+    extends SpecBase
+    with GuiceOneAppPerSuite
+    with MockitoSugar
+    with BeforeAndAfterEach
+    with FeatureToggleSupport {
 
   val mockSignUpConnector: SignUpConnector = mock[SignUpConnector]
 
@@ -47,7 +54,52 @@ class SignUpServiceSpec extends SpecBase with GuiceOneAppPerSuite with MockitoSu
     .build()
 
   override def beforeEach(): Unit = {
+    disable(ContactFlowReshuffle)
     reset(mockSignUpConnector)
+  }
+
+  override def afterEach(): Unit = disable(ContactFlowReshuffle)
+
+  Seq(false, true).foreach { reshuffled =>
+    Seq(Yes, No).foreach { answer =>
+      s"submission with reshuffle=$reshuffled and answer=$answer must select the correct contacts" in {
+        if reshuffled then enable(ContactFlowReshuffle)
+        when(mockSignUpConnector.submit(any())(using any()))
+          .thenReturn(Future.successful(HttpResponse(200, """{"subscriptionId":"id"}""")))
+        val answers = emptyUserAnswers
+          .updateGrs(testCompanyDetails)
+          .updateContact(First, "name1", "email1")
+          .updateContactHaveYouAddedAll(answer)
+          .updateContact(Second, "name2", "email2")
+        val wantsSecond = if reshuffled then answer == Yes else answer == No
+        val contacts    = List(Contact("name1", "email1", "valid", "en-GB")) ++
+          (if wantsSecond then List(Contact("name2", "email2", "valid", "en-GB")) else Nil)
+
+        SUT.submit(answers).futureValue mustBe Success("id")
+        verify(mockSignUpConnector).submit(
+          meq(
+            SignUpRequest(
+              etmpSafeId = "registeredBusinessPartnerId",
+              nominatedCompany = NominatedCompany(name = "companyName", crn = "companyNumber", utr = "ctUtr"),
+              contacts = contacts
+            )
+          )
+        )(using any())
+      }
+    }
+  }
+
+  Seq((None, None), (Some("name2"), None), (None, Some("email2"))).foreach { (name, email) =>
+    s"reshuffled submission must reject incomplete second contact ($name, $email) when yes is selected" in {
+      enable(ContactFlowReshuffle)
+      val answers = emptyUserAnswers
+        .updateGrs(testCompanyDetails)
+        .updateContact(First, "name1", "email1")
+        .updateContactHaveYouAddedAll(Yes)
+        .updateContact(Second, name, email)
+      SUT.submit(answers).futureValue mustBe InsufficientUserAnswers
+      verifyNoInteractions(mockSignUpConnector)
+    }
   }
 
   def SUT: SignUpService = app.injector.instanceOf[SignUpService]

@@ -19,16 +19,16 @@ package controllers
 import config.AppConfig
 import controllers.actions.*
 import forms.ContactHaveYouAddedAllFormProvider
-import models.{AddAnotherContact, ContactHaveYouAddedAll, ContactType, Mode}
+import models.{ContactHaveYouAddedAll, ContactType, Mode}
 import navigation.Navigator
-import pages.{AddAnotherContactPage, ContactHaveYouAddedAllPage, QuestionPage}
+import pages.ContactHaveYouAddedAllPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ContactHaveYouAddedAllView
+import views.html.{ContactHaveYouAddedAllView, ContactHaveYouAddedAllLegacyView}
+import models.requests.DataRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.Inject
@@ -43,25 +43,30 @@ class ContactHaveYouAddedAllController @Inject() (
     requireData: DataRequiredAction,
     formProvider: ContactHaveYouAddedAllFormProvider,
     val controllerComponents: MessagesControllerComponents,
-    view: ContactHaveYouAddedAllView
+    view: ContactHaveYouAddedAllView,
+    legacyView: ContactHaveYouAddedAllLegacyView
 )(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form: Form[ContactHaveYouAddedAll] = formProvider()
-//  val form: Form[AddAnotherContact] = formProvider()
+  def form: Form[ContactHaveYouAddedAll] =
+    formProvider(
+      if appConfig.contactFlowReshuffleEnabled then "contactHaveYouAddedAll.error.required"
+      else "contactHaveYouAddedAll.legacy.error.required"
+    )
+
+  private def render(form: Form[ContactHaveYouAddedAll], contactType: ContactType, mode: Mode)(using DataRequest[?]) =
+    if appConfig.contactFlowReshuffleEnabled then view(form, contactType, mode)
+    else legacyView(form, contactType, mode)
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] = {
     (identify andThen getData andThen requireData) { implicit request =>
-
-//      val page = if (appConfig.contactFlowReshuffleEnabled) then AddAnotherContactPage else ContactHaveYouAddedAllPage
-//      val preparedForm = request.userAnswers.get(AddAnotherContactPage(contactType)) match {
       val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(contactType)) match {
-      case None        => form
+        case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, contactType, mode))
+      Ok(render(preparedForm, contactType, mode))
     }
   }
 
@@ -72,7 +77,7 @@ class ContactHaveYouAddedAllController @Inject() (
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, ContactType.First, mode))
+      Ok(render(preparedForm, ContactType.First, mode))
     }
 
   def onSubmit(contactType: ContactType, mode: Mode): Action[AnyContent] =
@@ -80,7 +85,7 @@ class ContactHaveYouAddedAllController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, contactType, mode))),
+          formWithErrors => Future.successful(BadRequest(render(formWithErrors, contactType, mode))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(ContactHaveYouAddedAllPage(contactType), value))
