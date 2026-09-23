@@ -110,7 +110,6 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar w
       "onPageLoadReshuffled endpoint:" - {
         "must return OK and the correct combined view for a GET" in {
           val application = applicationBuilder(userAnswers = Some(testUserAnswers))
-            .configure("features.contactFlowReshuffle" -> true)
             .build()
           val view                               = application.injector.instanceOf[ContactsCheckYourAnswersView]
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
@@ -144,7 +143,6 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar w
       "saveAndContinueReshuffled endpoint:" - {
         "must redirect to the next page for a POST" in {
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-            .configure("features.contactFlowReshuffle" -> true)
             .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
             .build()
 

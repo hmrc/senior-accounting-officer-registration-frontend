@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,21 @@
 
 package controllers
 
+import config.AppConfig
 import controllers.actions.*
 import forms.ContactHaveYouAddedAllFormProvider
-import models.ContactHaveYouAddedAll
-import models.{ContactType, Mode}
+import models.{AddAnotherContact, ContactHaveYouAddedAll, ContactType, Mode}
 import navigation.Navigator
-import pages.ContactHaveYouAddedAllPage
+import pages.{AddAnotherContactPage, ContactHaveYouAddedAllPage, QuestionPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactHaveYouAddedAllView
 
 import scala.concurrent.{ExecutionContext, Future}
-
 import javax.inject.Inject
 
 class ContactHaveYouAddedAllController @Inject() (
@@ -39,6 +39,7 @@ class ContactHaveYouAddedAllController @Inject() (
     navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
+    appConfig: AppConfig,
     requireData: DataRequiredAction,
     formProvider: ContactHaveYouAddedAllFormProvider,
     val controllerComponents: MessagesControllerComponents,
@@ -48,16 +49,21 @@ class ContactHaveYouAddedAllController @Inject() (
     with I18nSupport {
 
   val form: Form[ContactHaveYouAddedAll] = formProvider()
+//  val form: Form[AddAnotherContact] = formProvider()
 
-  def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
+  def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] = {
     (identify andThen getData andThen requireData) { implicit request =>
+
+//      val page = if (appConfig.contactFlowReshuffleEnabled) then AddAnotherContactPage else ContactHaveYouAddedAllPage
+//      val preparedForm = request.userAnswers.get(AddAnotherContactPage(contactType)) match {
       val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(contactType)) match {
-        case None        => form
+      case None        => form
         case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, contactType, mode))
     }
+  }
 
   def onPageLoadReshuffled(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>

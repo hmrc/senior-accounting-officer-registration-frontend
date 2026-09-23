@@ -66,9 +66,6 @@ POST        /contact-details/second/check-your-answers         controllers.Conta
 GET         /contact-details/check-your-answers                controllers.ContactCheckYourAnswersController.onPageLoadReshuffled()
 POST        /contact-details/check-your-answers                controllers.ContactCheckYourAnswersController.saveAndContinueReshuffled()
 
-GET /contact/reshuffled controllers.ContactHaveYouAddedAllController.onPageLoadReshuffled(mode: Mode = NormalMode)
-
-
 GET        /nominated-company-details-guidance                 controllers.NominatedCompanyDetailsGuidanceController.onPageLoad()
 POST       /nominated-company-details-guidance                 controllers.NominatedCompanyDetailsGuidanceController.onSubmit()
 

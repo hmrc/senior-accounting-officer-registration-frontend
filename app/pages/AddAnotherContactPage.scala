@@ -16,10 +16,10 @@
 
 package pages
 
-import models.{ContactHaveYouAddedAll, ContactType}
+import models.{AddAnotherContact, ContactHaveYouAddedAll, ContactType}
 import play.api.libs.json.JsPath
 
-case class AddAnotherContactPage(contactType: ContactType) extends QuestionPage[ContactHaveYouAddedAll] {
+case class AddAnotherContactPage(contactType: ContactType) extends QuestionPage[AddAnotherContact] {
 
   override def path: JsPath = JsPath \ contactType.toMongoPath \ "addAnotherContactPage"
 
