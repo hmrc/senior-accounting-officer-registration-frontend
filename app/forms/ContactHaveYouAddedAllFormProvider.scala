@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 class ContactHaveYouAddedAllFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ContactHaveYouAddedAll] =
+  def apply(requiredKey: String = "contactHaveYouAddedAll.error.required"): Form[ContactHaveYouAddedAll] =
     Form(
-      "value" -> enumerable[ContactHaveYouAddedAll]("contactHaveYouAddedAll.error.required")
+      "value" -> enumerable[ContactHaveYouAddedAll](requiredKey)
     )
 }

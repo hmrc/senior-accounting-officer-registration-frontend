@@ -14,35 +14,31 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth.*
-
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
+    govukRadios: GovukRadios,
     govukButton: GovukButton
 )
 
 @(form: Form[?], contactType: ContactType, mode: Mode)(using request: Request[?], messages: Messages)
 
-@layout(pageTitle = title(form, messages("contactEmail.heading"), Some(messages(s"contact.${contactType.messageKey}.caption")))) {
+@layout(pageTitle = title(form, messages("contactHaveYouAddedAll.legacy.title"))) {
 
-    <span class="govuk-caption-m">@messages(s"contact.${contactType.messageKey}.caption")</span>
-    @formHelper(action = routes.ContactEmailController.onSubmit(contactType, mode)) {
+    @formHelper(action = routes.ContactHaveYouAddedAllController.onSubmit(contactType, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("contactEmail.heading").toText).asPageHeading(LabelSize.Large)
+        @govukRadios(
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(messages("contactHaveYouAddedAll.legacy.heading").toText).asPageHeading(LegendSize.Large),
+                items  = ContactHaveYouAddedAll.options.map(item => item.copy(content = Text(messages(s"contactHaveYouAddedAll.legacy.${item.value.getOrElse("")}"))))
             )
-            .asEmail()
-            .withHint(HintViewModel(messages(s"contactEmail.${contactType.messageKey}.hint").toText))
-            .withWidth(Full)
+            .withHint(HintViewModel(messages("contactHaveYouAddedAll.legacy.hint").toText))
         )
 
         @govukButton(

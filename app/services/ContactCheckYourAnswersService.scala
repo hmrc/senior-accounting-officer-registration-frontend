@@ -39,6 +39,17 @@ class ContactCheckYourAnswersService {
       if contactHaveAddedAll != ContactHaveYouAddedAll.No || secondContact.isDefined
     } yield ContactsCheckYourAnswers(firstContact, secondContact, contactHaveAddedAll)
 
+  def getContactsForCheckYourAnswersReshuffled(userAnswers: UserAnswers): Option[ContactsCheckYourAnswers] =
+    for {
+      firstContact        <- getContactInfo(userAnswers, First)
+      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First))
+      secondContact = contactHaveAddedAll match {
+        case ContactHaveYouAddedAll.No  => None
+        case ContactHaveYouAddedAll.Yes => getContactInfo(userAnswers, Second)
+      }
+      if contactHaveAddedAll != ContactHaveYouAddedAll.Yes || secondContact.isDefined
+    } yield ContactsCheckYourAnswers(firstContact, secondContact, contactHaveAddedAll)
+
   def getContacts(userAnswers: UserAnswers): List[ContactInfo] =
     List(
       getContactInfo(userAnswers = userAnswers, contactType = First),

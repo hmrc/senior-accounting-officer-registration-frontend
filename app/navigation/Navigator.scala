@@ -80,7 +80,7 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
     case ContactsCheckYourAnswersPage      => _ => routes.IndexController.onPageLoad()
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
-        if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.Yes) then {
+        if userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.No) then {
           routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
         } else {
           routes.ContactNameController.onPageLoad(Second, NormalMode)
@@ -95,12 +95,12 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
     case ContactHaveYouAddedAllPage(First) =>
       userAnswers =>
         userAnswers.get(ContactHaveYouAddedAllPage(First)) match {
-          case Some(ContactHaveYouAddedAll.Yes) => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-          case Some(ContactHaveYouAddedAll.No)
+          case Some(ContactHaveYouAddedAll.No) => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+          case Some(ContactHaveYouAddedAll.Yes)
               if userAnswers.get(ContactNamePage(Second)).isDefined &&
                 userAnswers.get(ContactEmailPage(Second)).isDefined =>
             routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-          case Some(ContactHaveYouAddedAll.No) =>
+          case Some(ContactHaveYouAddedAll.Yes) =>
             routes.ContactNameController.onPageLoad(Second, NormalMode)
           case _ =>
             routes.IndexController.onPageLoad()

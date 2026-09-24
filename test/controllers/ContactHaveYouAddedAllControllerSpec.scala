@@ -16,12 +16,15 @@
 
 package controllers
 
+import _root_.config.FeatureToggleSupport
 import base.SpecBase
 import forms.ContactHaveYouAddedAllFormProvider
 import models.*
+import models.config.FeatureToggle.ContactFlowReshuffle
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ContactHaveYouAddedAllPage
 import play.api.data.Form
@@ -30,130 +33,165 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
-import views.html.ContactHaveYouAddedAllView
+import views.html.{ContactHaveYouAddedAllLegacyView, ContactHaveYouAddedAllView}
 
 import scala.concurrent.Future
 
-class ContactHaveYouAddedAllControllerSpec extends SpecBase with MockitoSugar {
+class ContactHaveYouAddedAllControllerSpec
+    extends SpecBase
+    with MockitoSugar
+    with FeatureToggleSupport
+    with BeforeAndAfterEach {
+
+  override def afterEach(): Unit = disable(ContactFlowReshuffle)
 
   def onwardRoute: Call = Call("GET", "/foo")
 
   val formProvider                       = new ContactHaveYouAddedAllFormProvider()
   val form: Form[ContactHaveYouAddedAll] = formProvider()
 
-  "ContactHaveYouAddedAll Controller" - {
-    List(ContactType.First, ContactType.Second).foreach { contactType =>
-      s"When the ContactType is $contactType" - {
-        lazy val contactHaveYouAddedAllRoute =
-          routes.ContactHaveYouAddedAllController.onPageLoad(contactType, NormalMode).url
-        "must return OK and the correct view for a GET" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-          running(application) {
-            val request = FakeRequest(GET, contactHaveYouAddedAllRoute)
-            val view    = application.injector.instanceOf[ContactHaveYouAddedAllView]
+  Seq(false, true).foreach { reshuffled =>
+    s"ContactHaveYouAddedAll Controller reshuffled=$reshuffled" - {
+      List(ContactType.First, ContactType.Second).foreach { contactType =>
+        s"When the ContactType is $contactType" - {
+          lazy val contactHaveYouAddedAllRoute =
+            routes.ContactHaveYouAddedAllController.onPageLoad(contactType, NormalMode).url
+          "must return OK and the correct view for a GET" in {
+            if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+            running(application) {
+              val request = FakeRequest(GET, contactHaveYouAddedAllRoute)
+              val view    = (form: Form[ContactHaveYouAddedAll], contactType: ContactType, mode: Mode) =>
+                if reshuffled then
+                  application.injector
+                    .instanceOf[ContactHaveYouAddedAllView]
+                    .apply(form, contactType, mode)(using request, messages(application))
+                else
+                  application.injector
+                    .instanceOf[ContactHaveYouAddedAllLegacyView]
+                    .apply(form, contactType, mode)(using request, messages(application))
 
-            val result = route(application, request).value
+              val result = route(application, request).value
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, contactType, NormalMode)(using
-              request,
-              messages(application)
-            ).toString
-          }
-        }
-
-        "must populate the view correctly on a GET when the question has previously been answered" in {
-          val userAnswers =
-            UserAnswers(userAnswersId)
-              .set(ContactHaveYouAddedAllPage(contactType), ContactHaveYouAddedAll.values.head)
-              .success
-              .value
-          val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-          running(application) {
-            val request = FakeRequest(GET, contactHaveYouAddedAllRoute)
-            val view    = application.injector.instanceOf[ContactHaveYouAddedAllView]
-
-            val result = route(application, request).value
-
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(
-              form.fill(ContactHaveYouAddedAll.values.head),
-              contactType,
-              NormalMode
-            )(using
-              request,
-              messages(application)
-            ).toString
-          }
-        }
-
-        "must redirect to the next page when valid data is submitted" in {
-          val mockSessionRepository = mock[SessionRepository]
-          when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-          val application =
-            applicationBuilder(userAnswers = Some(emptyUserAnswers))
-              .overrides(
-                bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-                bind[SessionRepository].toInstance(mockSessionRepository)
+              status(result) mustEqual OK
+              contentAsString(result) must include(
+                if reshuffled then "Do you want to add another contact?"
+                else "Have you added all the contacts you need?"
               )
-              .build()
-          running(application) {
-            val request =
-              FakeRequest(POST, contactHaveYouAddedAllRoute)
-                .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.values.head.toString))
-
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual onwardRoute.url
+              if !reshuffled then contentAsString(result) must include("No, add another contact")
+              contentAsString(result) mustEqual view(form, contactType, NormalMode).toString
+            }
           }
-        }
 
-        "must return a Bad Request and errors when invalid data is submitted" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-          running(application) {
-            val request =
-              FakeRequest(POST, contactHaveYouAddedAllRoute)
-                .withFormUrlEncodedBody(("value", "invalid value"))
-            val boundForm = form.bind(Map("value" -> "invalid value"))
-            val view      = application.injector.instanceOf[ContactHaveYouAddedAllView]
+          "must populate the view correctly on a GET when the question has previously been answered" in {
+            if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
+            val userAnswers =
+              UserAnswers(userAnswersId)
+                .set(ContactHaveYouAddedAllPage(contactType), ContactHaveYouAddedAll.values.head)
+                .success
+                .value
+            val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+            running(application) {
+              val request = FakeRequest(GET, contactHaveYouAddedAllRoute)
+              val view    = (form: Form[ContactHaveYouAddedAll], contactType: ContactType, mode: Mode) =>
+                if reshuffled then
+                  application.injector
+                    .instanceOf[ContactHaveYouAddedAllView]
+                    .apply(form, contactType, mode)(using request, messages(application))
+                else
+                  application.injector
+                    .instanceOf[ContactHaveYouAddedAllLegacyView]
+                    .apply(form, contactType, mode)(using request, messages(application))
 
-            val result = route(application, request).value
+              val result = route(application, request).value
 
-            status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, contactType, NormalMode)(using
-              request,
-              messages(application)
-            ).toString
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(
+                form.fill(ContactHaveYouAddedAll.values.head),
+                contactType,
+                NormalMode
+              ).toString
+            }
           }
-        }
 
-        "must redirect to Journey Recovery for a GET if no existing data is found" in {
-          val application = applicationBuilder(userAnswers = None).build()
-          running(application) {
-            val request = FakeRequest(GET, contactHaveYouAddedAllRoute)
+          "must redirect to the next page when valid data is submitted" in {
+            if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
+            val mockSessionRepository = mock[SessionRepository]
+            when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+            val application =
+              applicationBuilder(userAnswers = Some(emptyUserAnswers))
+                .overrides(
+                  bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+                  bind[SessionRepository].toInstance(mockSessionRepository)
+                )
+                .build()
+            running(application) {
+              val request =
+                FakeRequest(POST, contactHaveYouAddedAllRoute)
+                  .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.values.head.toString))
 
-            val result = route(application, request).value
+              val result = route(application, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual onwardRoute.url
+            }
           }
-        }
 
-        "redirect to Journey Recovery for a POST if no existing data is found" in {
-          val application = applicationBuilder(userAnswers = None).build()
-          running(application) {
-            val request =
-              FakeRequest(POST, contactHaveYouAddedAllRoute)
-                .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.values.head.toString))
+          "must return a Bad Request and errors when invalid data is submitted" in {
+            if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+            running(application) {
+              val request =
+                FakeRequest(POST, contactHaveYouAddedAllRoute)
+                  .withFormUrlEncodedBody(("value", "invalid value"))
+              val boundForm = form.bind(Map("value" -> "invalid value"))
+              val view      = (form: Form[ContactHaveYouAddedAll], contactType: ContactType, mode: Mode) =>
+                if reshuffled then
+                  application.injector
+                    .instanceOf[ContactHaveYouAddedAllView]
+                    .apply(form, contactType, mode)(using request, messages(application))
+                else
+                  application.injector
+                    .instanceOf[ContactHaveYouAddedAllLegacyView]
+                    .apply(form, contactType, mode)(using request, messages(application))
 
-            val result = route(application, request).value
+              val result = route(application, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, contactType, NormalMode).toString
+            }
+          }
+
+          "must redirect to Journey Recovery for a GET if no existing data is found" in {
+            if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
+            val application = applicationBuilder(userAnswers = None).build()
+            running(application) {
+              val request = FakeRequest(GET, contactHaveYouAddedAllRoute)
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+            }
+          }
+
+          "redirect to Journey Recovery for a POST if no existing data is found" in {
+            if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
+            val application = applicationBuilder(userAnswers = None).build()
+            running(application) {
+              val request =
+                FakeRequest(POST, contactHaveYouAddedAllRoute)
+                  .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.values.head.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+            }
           }
         }
       }
     }
   }
+
 }

@@ -90,7 +90,8 @@ contactEmail.title.first  = First contact details
 contactEmail.title.second = Second contact details
 contactEmail.title.third  = Third contact details
 contactEmail.heading = What is the email address for this contact?
-contactEmail.hint = We’ll use this to send confirmations and contact this person about the submission if needed.
+contactEmail.first.hint = We’ll use this to send confirmations and contact this person about the submission if needed.
+contactEmail.second.hint = We’ll use this address to send confirmations and contact this person about the submission if needed
 contactEmail.checkYourAnswersLabel = Email address
 contactEmail.error.required = Enter the email address of a person or team
 contactEmail.error.length = Email address must be 254 characters or less
@@ -109,12 +110,19 @@ contactHaveYouAddedAll.checkYourAnswersLabel = Do you want to add another contac
 contactHaveYouAddedAll.change.hidden = whether you have added all the contacts you need
 contactHaveYouAddedAll.error.required = Select yes if you would like to add another contact
 
+contactHaveYouAddedAll.legacy.title = First contact details
+contactHaveYouAddedAll.legacy.heading = Have you added all the contacts you need?
+contactHaveYouAddedAll.legacy.hint = Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details.
+contactHaveYouAddedAll.legacy.yes = Yes
+contactHaveYouAddedAll.legacy.no = No, add another contact
+contactHaveYouAddedAll.legacy.error.required = Select yes if you have added all the contacts you need
+
 contactCheckYourAnswers.title.first  = First contact details
 contactCheckYourAnswers.title.second = Second contact details
 contactCheckYourAnswers.heading = Check your answers
 contactCheckYourAnswers.continue = Continue
 
-contactsCheckYourAnswers.caption = First contact details
+contactsCheckYourAnswers.caption = Contact details
 contactsCheckYourAnswers.heading = Check your answers
 contactsCheckYourAnswers.continue = Continue
 
