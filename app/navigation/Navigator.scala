@@ -76,7 +76,6 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
     case NominatedCompanyDetailsGuidancePage => _ => routes.GrsController.start()
     case ContactNamePage(contactType)        => _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
     case ContactEmailPage(First) => _ => routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
-//    case ContactEmailPage(First)               => _ => routes.ContactHaveYouAddedAllController.onPageLoadReshuffled()
     case ContactEmailPage(Second)          => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
     case ContactsCheckYourAnswersPage      => _ => routes.IndexController.onPageLoad()
     case ContactHaveYouAddedAllPage(First) =>

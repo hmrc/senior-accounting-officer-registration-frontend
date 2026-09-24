@@ -60,8 +60,6 @@ class ContactCheckYourAnswersController @Inject() (
     }
 
   def onPageLoadReshuffled(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    println("abc:::")
-    println(appConfig.contactFlowReshuffleEnabled)
     if !appConfig.contactFlowReshuffleEnabled then {
       Redirect(routes.JourneyRecoveryController.onPageLoad())
     } else {
