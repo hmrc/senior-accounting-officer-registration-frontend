@@ -48,7 +48,7 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
             (
               "Do you want to add another contact?",
               "Yes",
-              "/senior-accounting-officer/registration/contact-details/first/change-add-another"
+              "/senior-accounting-officer/registration/contact-details/first/transaction-add-another"
             )
           )
         )
@@ -73,7 +73,7 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
             (
               "Do you want to add another contact?",
               "No",
-              "/senior-accounting-officer/registration/contact-details/first/change-add-another"
+              "/senior-accounting-officer/registration/contact-details/first/transaction-add-another"
             )
           ),
           List(

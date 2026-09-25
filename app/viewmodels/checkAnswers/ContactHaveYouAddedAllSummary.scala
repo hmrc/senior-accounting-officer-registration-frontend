@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, ContactHaveYouAddedAll, ContactType}
+import models.{TransactionMode, ContactHaveYouAddedAll, ContactType}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 object ContactHaveYouAddedAllSummary {
@@ -26,7 +26,7 @@ object ContactHaveYouAddedAllSummary {
     ContactSummaryRow.row(
       labelMessageKey = "contactHaveYouAddedAll.checkYourAnswersLabel",
       value = messages(s"contactHaveYouAddedAll.${value.toString}"),
-      changeUrl = routes.ContactHaveYouAddedAllController.onPageLoad(ContactType.First, CheckMode).url,
+      changeUrl = routes.ContactHaveYouAddedAllController.onPageLoad(ContactType.First, TransactionMode).url,
       hiddenTextMessageKey = "contactHaveYouAddedAll.change.hidden",
       testIdPrefix = "contact-have-you-added-all"
     )

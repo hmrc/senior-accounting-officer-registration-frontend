@@ -45,14 +45,14 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
       Seq(ContactHaveYouAddedAll.Yes, ContactHaveYouAddedAll.No).foreach { answer =>
         s"must route $answer independently in normal mode with reshuffle=$reshuffled" in {
           if reshuffled then enable(ContactFlowReshuffle)
-          val answers     = emptyUserAnswers.set(ContactHaveYouAddedAllPage(First), answer).get
+          val answers     = emptyUserAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), answer).get
           val wantsSecond =
             if reshuffled then answer == ContactHaveYouAddedAll.Yes else answer == ContactHaveYouAddedAll.No
           val expected =
             if wantsSecond then routes.ContactNameController.onPageLoad(Second, NormalMode)
             else if reshuffled then routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
             else routes.IndexController.onPageLoad()
-          navigator.nextPage(ContactHaveYouAddedAllPage(First), NormalMode, answers) mustBe expected
+          navigator.nextPage(ContactHaveYouAddedAllPage(First, NormalMode), NormalMode, answers) mustBe expected
         }
       }
     }
@@ -65,7 +65,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
 
       "must go from contact email to first contact CYA" in {
         navigator.nextPage(
-          ContactEmailPage(First),
+          ContactEmailPage(First, NormalMode),
           NormalMode,
           UserAnswers("id")
         ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(First)
@@ -81,7 +81,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
 
       "must go from second contact email to second contact CYA" in {
         navigator.nextPage(
-          ContactEmailPage(Second),
+          ContactEmailPage(Second, NormalMode),
           NormalMode,
           UserAnswers("id")
         ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(Second)
@@ -99,7 +99,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
     "in Check mode with feature switch off" - {
       "must return first contact name changes to first contact CYA" in {
         navigator.nextPage(
-          ContactNamePage(First),
+          ContactNamePage(First, NormalMode),
           CheckMode,
           UserAnswers("id")
         ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(First)
@@ -107,7 +107,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
 
       "must return second contact email changes to second contact CYA" in {
         navigator.nextPage(
-          ContactEmailPage(Second),
+          ContactEmailPage(Second, NormalMode),
           CheckMode,
           UserAnswers("id")
         ) mustBe routes.ContactCheckYourAnswersController.onPageLoadLegacy(Second)
@@ -118,7 +118,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
       "must go from first contact email to add another page" in {
         enable(ContactFlowReshuffle)
         navigator.nextPage(
-          ContactEmailPage(First),
+          ContactEmailPage(First, NormalMode),
           NormalMode,
           UserAnswers("id")
         ) mustBe routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
@@ -127,16 +127,16 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
       "must go from add another yes to second contact name" in {
         enable(ContactFlowReshuffle)
         navigator.nextPage(
-          ContactHaveYouAddedAllPage(First),
+          ContactHaveYouAddedAllPage(First, NormalMode),
           NormalMode,
-          UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes).get
         ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
       }
 
       "must go from second contact email to combined CYA" in {
         enable(ContactFlowReshuffle)
         navigator.nextPage(
-          ContactEmailPage(Second),
+          ContactEmailPage(Second, NormalMode),
           NormalMode,
           UserAnswers("id")
         ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
@@ -156,7 +156,7 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
       "must return field changes to combined CYA" in {
         enable(ContactFlowReshuffle)
         navigator.nextPage(
-          ContactEmailPage(First),
+          ContactEmailPage(First, NormalMode),
           CheckMode,
           UserAnswers("id")
         ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
@@ -165,36 +165,36 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
       "must return add another no to combined CYA" in {
         enable(ContactFlowReshuffle)
         navigator.nextPage(
-          ContactHaveYouAddedAllPage(First),
+          ContactHaveYouAddedAllPage(First, NormalMode),
           CheckMode,
-          UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No).get
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.No).get
         ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
       }
 
       "must return add another yes with existing second contact to combined CYA" in {
         enable(ContactFlowReshuffle)
         navigator.nextPage(
-          ContactHaveYouAddedAllPage(First),
+          ContactHaveYouAddedAllPage(First, NormalMode),
           CheckMode,
           UserAnswers("id")
-            .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes)
+            .set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes)
             .get
-            .set(ContactNamePage(Second), "name")
+            .set(ContactNamePage(Second, NormalMode), "name")
             .get
-            .set(ContactEmailPage(Second), "email")
+            .set(ContactEmailPage(Second, NormalMode), "email")
             .get
         ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
       }
 
-      Seq(ContactNamePage(Second), ContactEmailPage(Second)).foreach { page =>
+      Seq(ContactNamePage(Second, NormalMode), ContactEmailPage(Second, NormalMode)).foreach { page =>
         s"must collect second contact details when yes is selected and only $page exists" in {
           enable(ContactFlowReshuffle)
           val answers = emptyUserAnswers
-            .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes)
+            .set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes)
             .get
             .set(page, "existing value")
             .get
-          navigator.nextPage(ContactHaveYouAddedAllPage(First), CheckMode, answers) mustBe
+          navigator.nextPage(ContactHaveYouAddedAllPage(First, NormalMode), CheckMode, answers) mustBe
             routes.ContactNameController.onPageLoad(Second, NormalMode)
         }
       }
@@ -202,22 +202,22 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
       "must return no with retained second contact details to combined CYA" in {
         enable(ContactFlowReshuffle)
         val answers = emptyUserAnswers
-          .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
+          .set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.No)
           .get
-          .set(ContactNamePage(Second), "name")
+          .set(ContactNamePage(Second, NormalMode), "name")
           .get
-          .set(ContactEmailPage(Second), "email")
+          .set(ContactEmailPage(Second, NormalMode), "email")
           .get
-        navigator.nextPage(ContactHaveYouAddedAllPage(First), CheckMode, answers) mustBe
+        navigator.nextPage(ContactHaveYouAddedAllPage(First, NormalMode), CheckMode, answers) mustBe
           routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
       }
 
       "must return add another yes without second contact to second contact name" in {
         enable(ContactFlowReshuffle)
         navigator.nextPage(
-          ContactHaveYouAddedAllPage(First),
+          ContactHaveYouAddedAllPage(First, NormalMode),
           CheckMode,
-          UserAnswers("id").set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes).get
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes).get
         ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
       }
     }

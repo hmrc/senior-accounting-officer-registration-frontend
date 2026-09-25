@@ -31,6 +31,8 @@ import views.html.ContactEmailView
 import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.Inject
+import models.TransactionMode
+import services.ContactUserAnswersService
 
 class ContactEmailController @Inject() (
     override val messagesApi: MessagesApi,
@@ -41,7 +43,8 @@ class ContactEmailController @Inject() (
     requireData: DataRequiredAction,
     formProvider: ContactEmailFormProvider,
     val controllerComponents: MessagesControllerComponents,
-    view: ContactEmailView
+    view: ContactEmailView,
+    userAnswersService: ContactUserAnswersService
 )(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -50,7 +53,7 @@ class ContactEmailController @Inject() (
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(ContactEmailPage(contactType)) match {
+      val preparedForm = request.userAnswers.get(ContactEmailPage(contactType, mode)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -66,9 +69,18 @@ class ContactEmailController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, contactType, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ContactEmailPage(contactType), value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ContactEmailPage(contactType), mode, updatedAnswers))
+              updatedAnswers <- Future
+                .fromTry(request.userAnswers.set(ContactEmailPage(contactType, mode), value))
+              isTransaction    = mode == TransactionMode
+              isSecondContact  = contactType == ContactType.Second
+              committedAnswers =
+                if isTransaction && isSecondContact then {
+                  userAnswersService.commitTransaction(updatedAnswers)
+                } else {
+                  updatedAnswers
+                }
+              _ <- sessionRepository.set(committedAnswers)
+            } yield Redirect(navigator.nextPage(ContactEmailPage(contactType, mode), mode, committedAnswers))
         )
     }
 }

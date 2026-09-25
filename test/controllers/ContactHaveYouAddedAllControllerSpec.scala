@@ -87,7 +87,7 @@ class ContactHaveYouAddedAllControllerSpec
             if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
             val userAnswers =
               UserAnswers(userAnswersId)
-                .set(ContactHaveYouAddedAllPage(contactType), ContactHaveYouAddedAll.values.head)
+                .set(ContactHaveYouAddedAllPage(contactType, NormalMode), ContactHaveYouAddedAll.values.head)
                 .success
                 .value
             val application = applicationBuilder(userAnswers = Some(userAnswers)).build()

@@ -166,13 +166,13 @@ object ContactCheckYourAnswersServiceSpec {
       List(name, email).zipWithIndex
         .foldLeft(userAnswers)((accumulator, configs) => {
           configs match {
-            case Some(value) -> 0 => accumulator.set(ContactNamePage(contactType), value).get
-            case Some(value) -> 1 => accumulator.set(ContactEmailPage(contactType), value).get
+            case Some(value) -> 0 => accumulator.set(ContactNamePage(contactType, NormalMode), value).get
+            case Some(value) -> 1 => accumulator.set(ContactEmailPage(contactType, NormalMode), value).get
             case _                => accumulator
           }
         })
 
     def updateContactHaveYouAddedAll(value: ContactHaveYouAddedAll): UserAnswers =
-      userAnswers.set(ContactHaveYouAddedAllPage(First), value).get
+      userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), value).get
   }
 }

@@ -23,10 +23,13 @@ enum ContactType {
 }
 
 object ContactType {
+  val FIRST_CONTACT_PATH  = "firstContact"
+  val SECOND_CONTACT_PATH = "secondContact"
+
   extension (value: ContactType) {
     def toMongoPath: String = value match {
-      case First  => "firstContact"
-      case Second => "secondContact"
+      case First  => FIRST_CONTACT_PATH
+      case Second => SECOND_CONTACT_PATH
     }
     def messageKey: String = value match {
       case First  => "first"

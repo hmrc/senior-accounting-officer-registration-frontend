@@ -63,7 +63,8 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
         "must populate the view correctly on a GET when the question has previously been answered" in {
           val request     = FakeRequest(GET, contactEmailRoute)
-          val userAnswers = UserAnswers(userAnswersId).set(ContactEmailPage(contactType), "answer").success.value
+          val userAnswers =
+            UserAnswers(userAnswersId).set(ContactEmailPage(contactType, NormalMode), "answer").success.value
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
           val view        = application.injector.instanceOf[ContactEmailView]
           running(application) {
