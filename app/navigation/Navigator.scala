@@ -128,7 +128,7 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
       _ => routes.ContactEmailController.onPageLoad(Second, TransactionMode)
     case ContactEmailPage(Second, TransactionMode) =>
       _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-    case page => ???
+    case _ => _ => routes.IndexController.onPageLoad()
   }
 
   private def currentFlow: ContactFlow =

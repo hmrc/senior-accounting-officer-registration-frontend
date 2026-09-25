@@ -221,5 +221,99 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
         ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
       }
     }
+
+    "in Transaction mode with the reshuffled flow enabled" - {
+      "must go from a page that doesn't exist in the route map to Index" in {
+        enable(ContactFlowReshuffle)
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, TransactionMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
+      }
+
+      "on ContactHaveYouAddedAllPage" - {
+        "there was no previous answer" - {
+          "must throw an exception" in {
+            enable(ContactFlowReshuffle)
+
+            val userAnswers =
+              emptyUserAnswers.add(ContactHaveYouAddedAllPage(First, TransactionMode), ContactHaveYouAddedAll.Yes)
+
+            intercept[NotImplementedError] {
+              navigator.nextPage(ContactHaveYouAddedAllPage(First, TransactionMode), TransactionMode, userAnswers)
+            }
+          }
+        }
+
+        "there was no current answer" - {
+          "must throw an exception" in {
+            enable(ContactFlowReshuffle)
+
+            val userAnswers =
+              emptyUserAnswers.add(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes)
+
+            intercept[NotImplementedError] {
+              navigator.nextPage(ContactHaveYouAddedAllPage(First, TransactionMode), TransactionMode, userAnswers)
+            }
+          }
+        }
+
+        "previously did not add second contact then chose to add another" - {
+          "must redirect to second contact name page" in {
+            enable(ContactFlowReshuffle)
+
+            val userAnswers =
+              emptyUserAnswers
+                .add(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.No)
+                .add(ContactHaveYouAddedAllPage(First, TransactionMode), ContactHaveYouAddedAll.Yes)
+
+            navigator.nextPage(
+              ContactHaveYouAddedAllPage(First, TransactionMode),
+              TransactionMode,
+              userAnswers
+            ) mustBe routes.ContactNameController.onPageLoad(Second, TransactionMode)
+          }
+        }
+
+        "some other combination of previous and current answers" - {
+          "must redirect to contact check your answers page" in {
+            enable(ContactFlowReshuffle)
+
+            val userAnswers =
+              emptyUserAnswers
+                .add(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes)
+                .add(ContactHaveYouAddedAllPage(First, TransactionMode), ContactHaveYouAddedAll.No)
+
+            navigator.nextPage(
+              ContactHaveYouAddedAllPage(First, TransactionMode),
+              TransactionMode,
+              userAnswers
+            ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+          }
+        }
+      }
+
+      "on second ContactNamePage" - {
+        "must redirect to second ContactEmailPage" in {
+          enable(ContactFlowReshuffle)
+
+          navigator.nextPage(
+            ContactNamePage(Second, TransactionMode),
+            TransactionMode,
+            emptyUserAnswers
+          ) mustBe routes.ContactEmailController.onPageLoad(Second, TransactionMode)
+        }
+      }
+
+      "on second ContactEmailPage" - {
+        "must redirect to contact check your answers page" in {
+          enable(ContactFlowReshuffle)
+
+          navigator.nextPage(
+            ContactEmailPage(Second, TransactionMode),
+            TransactionMode,
+            emptyUserAnswers
+          ) mustBe routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+        }
+      }
+    }
   }
 }
