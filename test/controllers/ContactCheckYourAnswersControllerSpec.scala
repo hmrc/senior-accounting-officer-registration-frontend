@@ -22,7 +22,7 @@ import models.ContactType.First
 import models.config.FeatureToggle.ContactFlowReshuffle
 import models.{config, *}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.eq as meq
+import org.mockito.ArgumentMatchers.{any, eq as meq}
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
@@ -33,8 +33,14 @@ import play.api.test.Helpers.*
 import repositories.SessionRepository
 import services.ContactCheckYourAnswersService
 import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
+import services.ContactUserAnswersService
+import org.scalatest.BeforeAndAfterEach
 
-class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar with FeatureToggleSupport {
+class ContactCheckYourAnswersControllerSpec
+    extends SpecBase
+    with MockitoSugar
+    with FeatureToggleSupport
+    with BeforeAndAfterEach {
   def onwardRoute: Call                      = Call("GET", "/foo")
   val testUserAnswers: UserAnswers           = emptyUserAnswers
   val testContacts: ContactsCheckYourAnswers = ContactsCheckYourAnswers(
@@ -43,17 +49,25 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar w
     contactHaveYouAddedAll = ContactHaveYouAddedAll.No
   )
 
+  override protected def beforeEach(): Unit = {
+    disable(ContactFlowReshuffle)
+  }
+
+  override protected def afterEach(): Unit = {
+    disable(ContactFlowReshuffle)
+  }
+
   override protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     super
       .applicationBuilder(userAnswers)
       .overrides(
         bind[SessionRepository].toInstance(mock[SessionRepository]),
-        bind[ContactCheckYourAnswersService].toInstance(mock[ContactCheckYourAnswersService])
+        bind[ContactCheckYourAnswersService].toInstance(mock[ContactCheckYourAnswersService]),
+        bind[ContactUserAnswersService].toInstance(mock[ContactUserAnswersService])
       )
 
   "ContactCheckYourAnswers Controller" - {
     "legacy flow when feature switch is off" - {
-      disable(ContactFlowReshuffle)
       "onPageLoad endpoint:" - {
         "must return OK and the correct view for a GET" in {
           val testContactInfo                    = ContactInfo("name", "email")
@@ -106,15 +120,21 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar w
     }
 
     "new flow when feature switch is on" - {
-      enable(ContactFlowReshuffle)
       "onPageLoadReshuffled endpoint:" - {
         "must return OK and the correct combined view for a GET" in {
+          enable(ContactFlowReshuffle)
+
           val application = applicationBuilder(userAnswers = Some(testUserAnswers))
             .build()
-          val view                               = application.injector.instanceOf[ContactsCheckYourAnswersView]
+          val view = application.injector.instanceOf[ContactsCheckYourAnswersView]
+
           val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
           when(mockContactCheckYourAnswersService.getContactsForCheckYourAnswersReshuffled(meq(testUserAnswers)))
             .thenReturn(Some(testContacts))
+
+          val mockUserAnswersService = application.injector.instanceOf[ContactUserAnswersService]
+          when(mockUserAnswersService.sanitise(meq(testUserAnswers)))
+            .thenReturn(testUserAnswers)
 
           running(application) {
             val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadReshuffled().url)
@@ -125,10 +145,14 @@ class ContactCheckYourAnswersControllerSpec extends SpecBase with MockitoSugar w
           }
         }
 
-        "must redirect to journey recovery when feature switch is off" in {
+        "must redirect to journey recovery" in {
+          enable(ContactFlowReshuffle)
 
-          disable(ContactFlowReshuffle)
           val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
+
+          val mock = application.injector.instanceOf[ContactCheckYourAnswersService]
+
+          when(mock.getContactsForCheckYourAnswersReshuffled(any())).thenReturn(None)
 
           running(application) {
             val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadReshuffled().url)
