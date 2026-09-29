@@ -18,10 +18,10 @@ package services
 
 import base.SpecBase
 import models.ContactHaveYouAddedAll
-import models.NormalMode
-import pages.*
 import models.ContactType
+import models.NormalMode
 import models.TransactionMode
+import pages.*
 
 class ContactUserAnswersServiceSpec extends SpecBase {
 

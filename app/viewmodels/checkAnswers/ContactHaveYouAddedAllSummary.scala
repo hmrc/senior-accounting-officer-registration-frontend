@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{TransactionMode, ContactHaveYouAddedAll, ContactType}
+import models.{ContactHaveYouAddedAll, ContactType, TransactionMode}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 object ContactHaveYouAddedAllSummary {

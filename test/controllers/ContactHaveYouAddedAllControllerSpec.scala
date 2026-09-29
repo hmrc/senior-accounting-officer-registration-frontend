@@ -23,7 +23,7 @@ import models.*
 import models.config.FeatureToggle.ContactFlowReshuffle
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{when, verify, times}
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ContactHaveYouAddedAllPage
@@ -33,10 +33,10 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
+import services.ContactUserAnswersService
 import views.html.{ContactHaveYouAddedAllLegacyView, ContactHaveYouAddedAllView}
 
 import scala.concurrent.Future
-import services.ContactUserAnswersService
 
 class ContactHaveYouAddedAllControllerSpec
     extends SpecBase

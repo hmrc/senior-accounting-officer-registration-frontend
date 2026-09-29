@@ -18,10 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.ContactEmailFormProvider
+import models.TransactionMode
 import models.{ContactType, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ContactEmailPage
 import play.api.data.Form
@@ -30,11 +32,10 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
-import views.html.ContactEmailView
-import scala.concurrent.Future
-import models.TransactionMode
 import services.ContactUserAnswersService
-import org.mockito.Mockito.{verify, times}
+import views.html.ContactEmailView
+
+import scala.concurrent.Future
 
 class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 

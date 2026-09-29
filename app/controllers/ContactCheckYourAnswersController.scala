@@ -23,15 +23,15 @@ import navigation.Navigator
 import pages.{ContactCheckYourAnswersPage, ContactsCheckYourAnswersPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.SessionRepository
 import services.ContactCheckYourAnswersService
+import services.ContactUserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
 
 import scala.concurrent.ExecutionContext
 
 import javax.inject.Inject
-import services.ContactUserAnswersService
-import repositories.SessionRepository
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,

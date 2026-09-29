@@ -19,6 +19,7 @@ package controllers
 import config.AppConfig
 import controllers.actions.*
 import forms.ContactHaveYouAddedAllFormProvider
+import models.TransactionMode
 import models.requests.DataRequest
 import models.{ContactHaveYouAddedAll, ContactType, Mode}
 import navigation.Navigator
@@ -27,14 +28,13 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.ContactUserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{ContactHaveYouAddedAllLegacyView, ContactHaveYouAddedAllView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.Inject
-import models.TransactionMode
-import services.ContactUserAnswersService
 
 class ContactHaveYouAddedAllController @Inject() (
     override val messagesApi: MessagesApi,

@@ -16,10 +16,10 @@
 
 package pages
 
-import models.ContactType
-import play.api.libs.json.JsPath
-import models.Mode
 import models.Area.toArea
+import models.ContactType
+import models.Mode
+import play.api.libs.json.JsPath
 
 final case class ContactNamePage(contactType: ContactType, mode: Mode) extends QuestionPage[String] {
 

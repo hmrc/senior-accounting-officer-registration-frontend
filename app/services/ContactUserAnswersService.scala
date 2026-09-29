@@ -17,8 +17,8 @@
 package services
 
 import models.*
-import models.ContactType.*
 import models.Area.*
+import models.ContactType.*
 import pages.*
 import play.api.Logging
 import play.api.libs.json.*

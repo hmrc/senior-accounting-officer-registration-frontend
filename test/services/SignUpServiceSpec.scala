@@ -21,6 +21,7 @@ import config.FeatureToggleSupport
 import connectors.SignUpConnector
 import models.ContactHaveYouAddedAll.{No, Yes}
 import models.ContactType.*
+import models.NormalMode
 import models.config.FeatureToggle.ContactFlowReshuffle
 import models.registration.*
 import models.{ContactHaveYouAddedAll, ContactType, UserAnswers}
@@ -39,7 +40,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import scala.concurrent.Future
 
 import SignUpServiceSpec.*
-import models.NormalMode
 
 class SignUpServiceSpec
     extends SpecBase

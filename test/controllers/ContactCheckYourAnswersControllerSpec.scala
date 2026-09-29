@@ -24,6 +24,7 @@ import models.{config, *}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.{any, eq as meq}
 import org.mockito.Mockito.*
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -32,9 +33,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
 import services.ContactCheckYourAnswersService
-import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
 import services.ContactUserAnswersService
-import org.scalatest.BeforeAndAfterEach
+import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
 
 class ContactCheckYourAnswersControllerSpec
     extends SpecBase
