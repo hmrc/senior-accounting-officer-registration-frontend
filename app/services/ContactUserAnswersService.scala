@@ -26,9 +26,8 @@ import play.api.libs.json.Reads.*
 
 import javax.inject.Inject
 
-import ContactUserAnswersService.*
-
 class ContactUserAnswersService @Inject extends Logging {
+
   def sanitise(userAnswers: UserAnswers): UserAnswers = {
     userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) =>
@@ -85,7 +84,6 @@ class ContactUserAnswersService @Inject extends Logging {
   }
 
   private def commitTwoContactsTransaction(userAnswers: UserAnswers): UserAnswers = {
-    // TODO: should not come here if two contacts incomplete
     (for {
       decision <- userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode))
       saoName  <- userAnswers.get(ContactNamePage(Second, TransactionMode))

@@ -31,8 +31,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
 import views.html.ContactEmailView
-
 import scala.concurrent.Future
+import models.TransactionMode
+import services.ContactUserAnswersService
+import org.mockito.Mockito.{verify, times}
 
 class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
@@ -44,15 +46,16 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
   "ContactEmail Controller" - {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
+
         lazy val contactEmailRoute = routes.ContactEmailController.onPageLoad(contactType, NormalMode).url
+
         "must return OK and the correct view for a GET" in {
-          val request     = FakeRequest(GET, contactEmailRoute)
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+          val request     = FakeRequest(GET, contactEmailRoute)
           val view        = application.injector.instanceOf[ContactEmailView]
           running(application) {
 
             val result = route(application, request).value
-
             status(result) mustEqual OK
             contentAsString(result) mustEqual view(form, contactType, NormalMode)(using
               request,
@@ -144,6 +147,66 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
           }
+        }
+      }
+    }
+
+    "committing the transaction" - {
+      "when mode is transaction and contact type is second" - {
+        "must commit the transaction" in {
+          val url     = routes.ContactEmailController.onPageLoad(ContactType.Second, TransactionMode).url
+          val request = FakeRequest(POST, url).withFormUrlEncodedBody(("value", "test@example.com"))
+
+          val mockSessionRepository = mock[SessionRepository]
+          when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+          val mockUserAnswersService = mock[ContactUserAnswersService]
+
+          val application =
+            applicationBuilder(userAnswers = Some(emptyUserAnswers))
+              .overrides(
+                bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+                bind[SessionRepository].toInstance(mockSessionRepository),
+                bind[ContactUserAnswersService].toInstance(mockUserAnswersService)
+              )
+              .build()
+
+          running(application) {
+            route(application, request).value
+          }
+
+          verify(mockUserAnswersService, times(1)).commitTransaction(
+            any()
+          )
+        }
+      }
+
+      "when some other arguments are used" - {
+        "must not commit the transaction" in {
+          val url     = routes.ContactEmailController.onPageLoad(ContactType.First, NormalMode).url
+          val request = FakeRequest(POST, url).withFormUrlEncodedBody(("value", "test@example.com"))
+
+          val mockSessionRepository = mock[SessionRepository]
+          when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+          val mockUserAnswersService = mock[ContactUserAnswersService]
+
+          val application =
+            applicationBuilder(userAnswers = Some(emptyUserAnswers))
+              .overrides(
+                bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+                bind[SessionRepository].toInstance(mockSessionRepository),
+                bind[ContactUserAnswersService].toInstance(mockUserAnswersService)
+              )
+              .build()
+
+          running(application) {
+            route(application, request).value
+          }
+
+          verify(mockUserAnswersService, times(0)).commitTransaction(
+            any()
+          )
         }
       }
     }

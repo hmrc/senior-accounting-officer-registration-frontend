@@ -143,16 +143,22 @@ class ContactCheckYourAnswersControllerSpec
             status(result) mustEqual OK
             contentAsString(result) mustEqual view(testContacts)(using request, messages(application)).toString
           }
+
+          verify(mockUserAnswersService, times(1)).sanitise(meq(testUserAnswers))
         }
 
-        "must redirect to journey recovery" in {
+        "must redirect to journey recovery when check your answers service returns None" in {
           enable(ContactFlowReshuffle)
 
           val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
 
-          val mock = application.injector.instanceOf[ContactCheckYourAnswersService]
+          val mockCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
 
-          when(mock.getContactsForCheckYourAnswersReshuffled(any())).thenReturn(None)
+          when(mockCheckYourAnswersService.getContactsForCheckYourAnswersReshuffled(any())).thenReturn(None)
+
+          val mockUserAnswersService = application.injector.instanceOf[ContactUserAnswersService]
+          when(mockUserAnswersService.sanitise(meq(testUserAnswers)))
+            .thenReturn(testUserAnswers)
 
           running(application) {
             val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadReshuffled().url)
@@ -161,6 +167,8 @@ class ContactCheckYourAnswersControllerSpec
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
           }
+
+          verify(mockUserAnswersService, times(1)).sanitise(meq(testUserAnswers))
         }
       }
 
