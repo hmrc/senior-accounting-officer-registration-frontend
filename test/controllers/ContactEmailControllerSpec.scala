@@ -18,10 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.ContactEmailFormProvider
+import models.TransactionMode
 import models.{ContactType, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ContactEmailPage
 import play.api.data.Form
@@ -30,6 +32,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
+import services.ContactUserAnswersService
 import views.html.ContactEmailView
 
 import scala.concurrent.Future
@@ -44,15 +47,16 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
   "ContactEmail Controller" - {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
+
         lazy val contactEmailRoute = routes.ContactEmailController.onPageLoad(contactType, NormalMode).url
+
         "must return OK and the correct view for a GET" in {
-          val request     = FakeRequest(GET, contactEmailRoute)
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+          val request     = FakeRequest(GET, contactEmailRoute)
           val view        = application.injector.instanceOf[ContactEmailView]
           running(application) {
 
             val result = route(application, request).value
-
             status(result) mustEqual OK
             contentAsString(result) mustEqual view(form, contactType, NormalMode)(using
               request,
@@ -63,7 +67,8 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
         "must populate the view correctly on a GET when the question has previously been answered" in {
           val request     = FakeRequest(GET, contactEmailRoute)
-          val userAnswers = UserAnswers(userAnswersId).set(ContactEmailPage(contactType), "answer").success.value
+          val userAnswers =
+            UserAnswers(userAnswersId).set(ContactEmailPage(contactType, NormalMode), "answer").success.value
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
           val view        = application.injector.instanceOf[ContactEmailView]
           running(application) {
@@ -143,6 +148,66 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
           }
+        }
+      }
+    }
+
+    "committing the transaction" - {
+      "when mode is transaction and contact type is second" - {
+        "must commit the transaction" in {
+          val url     = routes.ContactEmailController.onPageLoad(ContactType.Second, TransactionMode).url
+          val request = FakeRequest(POST, url).withFormUrlEncodedBody(("value", "test@example.com"))
+
+          val mockSessionRepository = mock[SessionRepository]
+          when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+          val mockUserAnswersService = mock[ContactUserAnswersService]
+
+          val application =
+            applicationBuilder(userAnswers = Some(emptyUserAnswers))
+              .overrides(
+                bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+                bind[SessionRepository].toInstance(mockSessionRepository),
+                bind[ContactUserAnswersService].toInstance(mockUserAnswersService)
+              )
+              .build()
+
+          running(application) {
+            route(application, request).value
+          }
+
+          verify(mockUserAnswersService, times(1)).commitTransaction(
+            any()
+          )
+        }
+      }
+
+      "when some other arguments are used" - {
+        "must not commit the transaction" in {
+          val url     = routes.ContactEmailController.onPageLoad(ContactType.First, NormalMode).url
+          val request = FakeRequest(POST, url).withFormUrlEncodedBody(("value", "test@example.com"))
+
+          val mockSessionRepository = mock[SessionRepository]
+          when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+          val mockUserAnswersService = mock[ContactUserAnswersService]
+
+          val application =
+            applicationBuilder(userAnswers = Some(emptyUserAnswers))
+              .overrides(
+                bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+                bind[SessionRepository].toInstance(mockSessionRepository),
+                bind[ContactUserAnswersService].toInstance(mockUserAnswersService)
+              )
+              .build()
+
+          running(application) {
+            route(application, request).value
+          }
+
+          verify(mockUserAnswersService, times(0)).commitTransaction(
+            any()
+          )
         }
       }
     }

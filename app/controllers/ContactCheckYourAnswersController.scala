@@ -23,7 +23,9 @@ import navigation.Navigator
 import pages.{ContactCheckYourAnswersPage, ContactsCheckYourAnswersPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.SessionRepository
 import services.ContactCheckYourAnswersService
+import services.ContactUserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
 
@@ -41,7 +43,9 @@ class ContactCheckYourAnswersController @Inject() (
     legacyView: ContactCheckYourAnswersView,
     reshuffledView: ContactsCheckYourAnswersView,
     service: ContactCheckYourAnswersService,
-    navigator: Navigator
+    navigator: Navigator,
+    userAnswersService: ContactUserAnswersService,
+    sessionRepository: SessionRepository
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -60,13 +64,17 @@ class ContactCheckYourAnswersController @Inject() (
     }
 
   def onPageLoadReshuffled(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    if !appConfig.contactFlowReshuffleEnabled then {
-      Redirect(routes.JourneyRecoveryController.onPageLoad())
-    } else {
-      service.getContactsForCheckYourAnswersReshuffled(request.userAnswers) match {
+    if appConfig.contactFlowReshuffleEnabled then {
+      val sanitisedAnswers = userAnswersService.sanitise(request.userAnswers)
+
+      sessionRepository.set(sanitisedAnswers)
+
+      service.getContactsForCheckYourAnswersReshuffled(sanitisedAnswers) match {
         case Some(answers) => Ok(reshuffledView(answers))
         case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
+    } else {
+      Redirect(routes.JourneyRecoveryController.onPageLoad())
     }
   }
 

@@ -21,6 +21,7 @@ import config.FeatureToggleSupport
 import connectors.SignUpConnector
 import models.ContactHaveYouAddedAll.{No, Yes}
 import models.ContactType.*
+import models.NormalMode
 import models.config.FeatureToggle.ContactFlowReshuffle
 import models.registration.*
 import models.{ContactHaveYouAddedAll, ContactType, UserAnswers}
@@ -310,14 +311,14 @@ object SignUpServiceSpec {
       List(name, email).zipWithIndex
         .foldLeft(userAnswers)((accumulator, configs) => {
           configs match {
-            case Some(value) -> 0 => accumulator.set(ContactNamePage(contactType), value).get
-            case Some(value) -> 1 => accumulator.set(ContactEmailPage(contactType), value).get
+            case Some(value) -> 0 => accumulator.set(ContactNamePage(contactType, NormalMode), value).get
+            case Some(value) -> 1 => accumulator.set(ContactEmailPage(contactType, NormalMode), value).get
             case _                => accumulator
           }
         })
 
     def updateContactHaveYouAddedAll(value: ContactHaveYouAddedAll): UserAnswers =
-      userAnswers.set(ContactHaveYouAddedAllPage(First), value).get
+      userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), value).get
   }
 
 }

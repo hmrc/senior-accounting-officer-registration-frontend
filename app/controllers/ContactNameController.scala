@@ -50,7 +50,7 @@ class ContactNameController @Inject() (
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(ContactNamePage(contactType)) match {
+      val preparedForm = request.userAnswers.get(ContactNamePage(contactType, mode)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -66,9 +66,9 @@ class ContactNameController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, contactType, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ContactNamePage(contactType), value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ContactNamePage(contactType, mode), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ContactNamePage(contactType), mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(ContactNamePage(contactType, mode), mode, updatedAnswers))
         )
     }
 }

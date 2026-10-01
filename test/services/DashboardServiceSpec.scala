@@ -33,25 +33,26 @@ class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite with Featur
   val testCompanyDetails: CompanyDetails = CompanyDetails("", "", "", "")
   val testContactInfo: ContactInfo       = ContactInfo("", "")
   val firstNameOnly: Try[UserAnswers]    =
-    emptyUserAnswers.set(CompanyDetailsPage, testCompanyDetails).get.set(ContactNamePage(First), "testName")
-  val firstNameAndEmailOnly: Try[UserAnswers] = firstNameOnly.get.set(ContactEmailPage(First), "testname@testemail.com")
-  val firstContactComplete: Try[UserAnswers]  =
-    firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes)
+    emptyUserAnswers.set(CompanyDetailsPage, testCompanyDetails).get.set(ContactNamePage(First, NormalMode), "testName")
+  val firstNameAndEmailOnly: Try[UserAnswers] =
+    firstNameOnly.get.set(ContactEmailPage(First, NormalMode), "testname@testemail.com")
+  val firstContactComplete: Try[UserAnswers] =
+    firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes)
   val firstContactCompleteReshuffled: Try[UserAnswers] =
-    firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
+    firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.No)
   val firstContactAndSecondName: Try[UserAnswers] = firstNameAndEmailOnly.get
-    .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.No)
+    .set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.No)
     .get
-    .set(ContactNamePage(Second), "testName2")
+    .set(ContactNamePage(Second, NormalMode), "testName2")
   val firstContactAndSecondNameReshuffled: Try[UserAnswers] = firstNameAndEmailOnly.get
-    .set(ContactHaveYouAddedAllPage(First), ContactHaveYouAddedAll.Yes)
+    .set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes)
     .get
-    .set(ContactNamePage(Second), "testName2")
+    .set(ContactNamePage(Second, NormalMode), "testName2")
   val firstAndSecondContactComplete: Try[UserAnswers] =
-    firstContactAndSecondName.get.set(ContactEmailPage(Second), "testname2@testemail.com")
+    firstContactAndSecondName.get.set(ContactEmailPage(Second, NormalMode), "testname2@testemail.com")
 
   val firstAndSecondContactCompleteReshuffled: Try[UserAnswers] = {
-    firstContactAndSecondNameReshuffled.get.set(ContactEmailPage(Second), "testname2@testemail.com")
+    firstContactAndSecondNameReshuffled.get.set(ContactEmailPage(Second, NormalMode), "testname2@testemail.com")
   }
 
   override def beforeEach(): Unit = {

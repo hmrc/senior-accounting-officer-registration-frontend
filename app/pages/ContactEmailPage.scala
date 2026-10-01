@@ -16,12 +16,14 @@
 
 package pages
 
+import models.Area.toArea
 import models.ContactType
+import models.Mode
 import play.api.libs.json.JsPath
 
-final case class ContactEmailPage(contactType: ContactType) extends QuestionPage[String] {
+final case class ContactEmailPage(contactType: ContactType, mode: Mode) extends QuestionPage[String] {
 
-  override def path: JsPath = JsPath \ contactType.toMongoPath \ "email"
+  override def path: JsPath = JsPath \ mode.toArea.toString \ contactType.toMongoPath \ "email"
 
   override def toString: String = s"${contactType.toMongoPath}.email"
 }

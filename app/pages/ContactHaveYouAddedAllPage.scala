@@ -16,13 +16,14 @@
 
 package pages
 
-import models.ContactHaveYouAddedAll
-import models.ContactType
+import models.*
+import models.Area.*
 import play.api.libs.json.JsPath
 
-case class ContactHaveYouAddedAllPage(contactType: ContactType) extends QuestionPage[ContactHaveYouAddedAll] {
+case class ContactHaveYouAddedAllPage(contactType: ContactType, mode: Mode)
+    extends QuestionPage[ContactHaveYouAddedAll] {
 
-  override def path: JsPath = JsPath \ contactType.toMongoPath \ "contactHaveYouAddedAll"
+  override def path: JsPath = JsPath \ mode.toArea.toString \ contactType.toMongoPath \ "contactHaveYouAddedAll"
 
   override def toString: String = s"${contactType.toMongoPath}.contactHaveYouAddedAll"
 }

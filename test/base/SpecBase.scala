@@ -22,10 +22,12 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
+import pages.QuestionPage
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 
 trait SpecBase
@@ -50,4 +52,10 @@ trait SpecBase
         bind[ApiAuthenticatedIdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
+
+  extension (userAnswers: UserAnswers) {
+    def add[A](page: QuestionPage[A], a: A)(using Writes[A]): UserAnswers = {
+      userAnswers.set(page, a).get
+    }
+  }
 }

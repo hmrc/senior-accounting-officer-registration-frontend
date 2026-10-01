@@ -19,6 +19,7 @@ package controllers
 import config.AppConfig
 import controllers.actions.*
 import forms.ContactHaveYouAddedAllFormProvider
+import models.TransactionMode
 import models.requests.DataRequest
 import models.{ContactHaveYouAddedAll, ContactType, Mode}
 import navigation.Navigator
@@ -27,6 +28,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.ContactUserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{ContactHaveYouAddedAllLegacyView, ContactHaveYouAddedAllView}
 
@@ -45,7 +47,8 @@ class ContactHaveYouAddedAllController @Inject() (
     formProvider: ContactHaveYouAddedAllFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactHaveYouAddedAllView,
-    legacyView: ContactHaveYouAddedAllLegacyView
+    legacyView: ContactHaveYouAddedAllLegacyView,
+    userAnswersService: ContactUserAnswersService
 )(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -62,7 +65,7 @@ class ContactHaveYouAddedAllController @Inject() (
 
   def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] = {
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(contactType)) match {
+      val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(contactType, mode)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -73,7 +76,7 @@ class ContactHaveYouAddedAllController @Inject() (
 
   def onPageLoadReshuffled(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(ContactType.First)) match {
+      val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(ContactType.First, mode)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -89,9 +92,20 @@ class ContactHaveYouAddedAllController @Inject() (
           formWithErrors => Future.successful(BadRequest(render(formWithErrors, contactType, mode))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ContactHaveYouAddedAllPage(contactType), value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ContactHaveYouAddedAllPage(contactType), mode, updatedAnswers))
+              updatedAnswers <- Future
+                .fromTry(request.userAnswers.set(ContactHaveYouAddedAllPage(contactType, mode), value))
+              isTransaction            = mode == TransactionMode
+              userAddingOnlyOneContact = value == ContactHaveYouAddedAll.No
+              committedAnswers         =
+                if isTransaction && userAddingOnlyOneContact then {
+                  userAnswersService.commitTransaction(updatedAnswers)
+                } else {
+                  updatedAnswers
+                }
+              _ <- sessionRepository.set(committedAnswers)
+            } yield Redirect(
+              navigator.nextPage(ContactHaveYouAddedAllPage(contactType, mode), mode, committedAnswers)
+            )
         )
     }
 }

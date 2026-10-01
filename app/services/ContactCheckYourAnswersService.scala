@@ -24,14 +24,16 @@ class ContactCheckYourAnswersService {
 
   def getContactInfo(userAnswers: UserAnswers, contactType: ContactType): Option[ContactInfo] =
     for {
-      name  <- userAnswers.get(ContactNamePage(contactType))
-      email <- userAnswers.get(ContactEmailPage(contactType))
-    } yield ContactInfo(name, email)
+      name  <- userAnswers.get(ContactNamePage(contactType, NormalMode))
+      email <- userAnswers.get(ContactEmailPage(contactType, NormalMode))
+    } yield {
+      ContactInfo(name, email)
+    }
 
   def getContactsForCheckYourAnswers(userAnswers: UserAnswers): Option[ContactsCheckYourAnswers] =
     for {
       firstContact        <- getContactInfo(userAnswers, First)
-      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First))
+      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode))
       secondContact = contactHaveAddedAll match {
         case ContactHaveYouAddedAll.Yes => None
         case ContactHaveYouAddedAll.No  => getContactInfo(userAnswers, Second)
@@ -42,7 +44,7 @@ class ContactCheckYourAnswersService {
   def getContactsForCheckYourAnswersReshuffled(userAnswers: UserAnswers): Option[ContactsCheckYourAnswers] =
     for {
       firstContact        <- getContactInfo(userAnswers, First)
-      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First))
+      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode))
       secondContact = contactHaveAddedAll match {
         case ContactHaveYouAddedAll.No  => None
         case ContactHaveYouAddedAll.Yes => getContactInfo(userAnswers, Second)
@@ -54,7 +56,7 @@ class ContactCheckYourAnswersService {
     List(
       getContactInfo(userAnswers = userAnswers, contactType = First),
       getContactInfo(userAnswers = userAnswers, contactType = Second).filter { _ =>
-        userAnswers.get(ContactHaveYouAddedAllPage(First)).contains(ContactHaveYouAddedAll.No)
+        userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)).contains(ContactHaveYouAddedAll.No)
       }
     ).flatten
 }

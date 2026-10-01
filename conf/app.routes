@@ -36,6 +36,8 @@ GET         /contact-details/second/name                       controllers.Conta
 POST        /contact-details/second/name                       controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
 GET         /contact-details/second/change-name                controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 POST        /contact-details/second/change-name                controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+GET         /contact-details/second/transaction-name           controllers.ContactNameController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = TransactionMode)
+POST        /contact-details/second/transaction-name           controllers.ContactNameController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = TransactionMode)
 
 GET         /contact-details/first/email                       controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
 POST        /contact-details/first/email                       controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
@@ -46,11 +48,15 @@ GET         /contact-details/second/email                      controllers.Conta
 POST        /contact-details/second/email                      controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
 GET         /contact-details/second/change-email               controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
 POST        /contact-details/second/change-email               controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = CheckMode)
+GET         /contact-details/second/transaction-email          controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = TransactionMode)
+POST        /contact-details/second/transaction-email          controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = TransactionMode)
 
 GET         /contact-details/first/add-another                 controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
 POST        /contact-details/first/add-another                 controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = NormalMode)
 GET         /contact-details/first/change-add-another          controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
 POST        /contact-details/first/change-add-another          controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = CheckMode)
+GET         /contact-details/first/transaction-add-another     controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode = TransactionMode)
+POST        /contact-details/first/transaction-add-another     controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode = TransactionMode)
 
 GET         /contact-details/second/add-another                controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)
 POST        /contact-details/second/add-another                controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode = NormalMode)

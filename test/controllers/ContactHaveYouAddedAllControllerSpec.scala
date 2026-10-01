@@ -23,7 +23,7 @@ import models.*
 import models.config.FeatureToggle.ContactFlowReshuffle
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ContactHaveYouAddedAllPage
@@ -33,6 +33,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
+import services.ContactUserAnswersService
 import views.html.{ContactHaveYouAddedAllLegacyView, ContactHaveYouAddedAllView}
 
 import scala.concurrent.Future
@@ -87,7 +88,7 @@ class ContactHaveYouAddedAllControllerSpec
             if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
             val userAnswers =
               UserAnswers(userAnswersId)
-                .set(ContactHaveYouAddedAllPage(contactType), ContactHaveYouAddedAll.values.head)
+                .set(ContactHaveYouAddedAllPage(contactType, NormalMode), ContactHaveYouAddedAll.values.head)
                 .success
                 .value
             val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -194,4 +195,78 @@ class ContactHaveYouAddedAllControllerSpec
     }
   }
 
+  "should the transaction be committed" - {
+
+    "User submitted in Transaction mode and chose to not add another contact" - {
+      "must call commitTransaction" in {
+        disable(ContactFlowReshuffle)
+
+        val mockSessionRepository = mock[SessionRepository]
+        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+        val mockUserAnswersService = mock[ContactUserAnswersService]
+        when(mockUserAnswersService.commitTransaction(any())) thenReturn emptyUserAnswers
+
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[ContactUserAnswersService].toInstance(mockUserAnswersService)
+            )
+            .build()
+
+        running(application) {
+          val url = routes.ContactHaveYouAddedAllController.onPageLoad(ContactType.First, TransactionMode).url
+
+          val request =
+            FakeRequest(POST, url)
+              .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.No.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+
+        verify(mockUserAnswersService, times(1)).commitTransaction(any())
+      }
+    }
+
+    "User submitted in Transaction mode and chose to add another contact" - {
+      "must call commitTransaction" in {
+        disable(ContactFlowReshuffle)
+
+        val mockSessionRepository = mock[SessionRepository]
+        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+        val mockUserAnswersService = mock[ContactUserAnswersService]
+        when(mockUserAnswersService.commitTransaction(any())) thenReturn emptyUserAnswers
+
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[ContactUserAnswersService].toInstance(mockUserAnswersService)
+            )
+            .build()
+
+        running(application) {
+          val url = routes.ContactHaveYouAddedAllController.onPageLoad(ContactType.First, TransactionMode).url
+
+          val request =
+            FakeRequest(POST, url)
+              .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.Yes.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+
+        verify(mockUserAnswersService, times(0)).commitTransaction(any())
+      }
+    }
+  }
 }

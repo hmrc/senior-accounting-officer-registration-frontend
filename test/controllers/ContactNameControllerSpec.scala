@@ -65,7 +65,8 @@ class ContactNameControllerSpec extends SpecBase with MockitoSugar {
 
         "must populate the view correctly on a GET when the question has previously been answered" in {
           val request     = FakeRequest(GET, contactNameRoute)
-          val userAnswers = UserAnswers(userAnswersId).set(ContactNamePage(contactType), "answer").success.value
+          val userAnswers =
+            UserAnswers(userAnswersId).set(ContactNamePage(contactType, NormalMode), "answer").success.value
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
           val view        = application.injector.instanceOf[ContactNameView]
           val controller  = application.injector.instanceOf[ContactNameController]

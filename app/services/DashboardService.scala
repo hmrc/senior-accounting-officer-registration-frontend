@@ -43,15 +43,15 @@ class DashboardService @Inject() (appConfig: AppConfig) {
 
   def getContact(userAnswers: UserAnswers, contactType: ContactType): Option[(String, String)] =
     for {
-      name  <- userAnswers.get(ContactNamePage(contactType))
-      email <- userAnswers.get(ContactEmailPage(contactType))
+      name  <- userAnswers.get(ContactNamePage(contactType, NormalMode))
+      email <- userAnswers.get(ContactEmailPage(contactType, NormalMode))
     } yield (name, email)
 
   def contactsCompletedReshuffled(userAnswers: UserAnswers): Boolean = {
     getContact(userAnswers, First)
     def secondContact = getContact(userAnswers, Second)
 
-    userAnswers.get(ContactHaveYouAddedAllPage(First)) match {
+    userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) => {
         secondContact.isDefined
       }
@@ -69,14 +69,14 @@ class DashboardService @Inject() (appConfig: AppConfig) {
 
     def secondContact = getContact(userAnswers, Second)
 
-    userAnswers.get(ContactHaveYouAddedAllPage(First)) match {
+    userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) =>
         firstContact.foldLeft(
-          userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes)
+          userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)).exists(_ == ContactHaveYouAddedAll.Yes)
         )((_, _) => true)
       case Some(ContactHaveYouAddedAll.No) =>
         firstContact.foldLeft(
-          userAnswers.get(ContactHaveYouAddedAllPage(First)).exists(_ == ContactHaveYouAddedAll.Yes)
+          userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)).exists(_ == ContactHaveYouAddedAll.Yes)
         )((_, _) => secondContact.isDefined)
       case None => false
     }
