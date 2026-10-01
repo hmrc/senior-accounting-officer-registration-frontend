@@ -66,11 +66,11 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
   }
 
   private val legacyCheckRoutes: Page => UserAnswers => Call = {
-    case ContactNamePage(contactType, NormalMode) =>
+    case ContactNamePage(contactType, _) =>
       _ => routes.ContactCheckYourAnswersController.onPageLoadLegacy(contactType)
-    case ContactEmailPage(contactType, NormalMode) =>
+    case ContactEmailPage(contactType, _) =>
       _ => routes.ContactCheckYourAnswersController.onPageLoadLegacy(contactType)
-    case _ => _ => routes.IndexController.onPageLoad()
+    case _ => _ => ???
   }
 
   private val reshuffledNormalRoutes: Page => UserAnswers => Call = {
