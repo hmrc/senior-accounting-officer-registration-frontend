@@ -84,7 +84,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       keyText = "Full name",
       valueText = contactInfo.name,
       actionText = "Change",
-      actionHiddenText = "change the full name",
+      actionHiddenText = s"the name of the $contactNumber contact detail",
       actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-name"
     )
 
@@ -93,7 +93,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       keyText = "Email address",
       valueText = contactInfo.email,
       actionText = "Change",
-      actionHiddenText = "change the email address",
+      actionHiddenText = s"the email address of the $contactNumber contact detail",
       actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
     )
   }
