@@ -82,9 +82,9 @@ contactName.hint = For example, ‘Ashley Smith’ or ‘Tax team’
 contactName.checkYourAnswersLabel = Full name
 contactName.error.required = Enter the name of the person or team we can contact
 contactName.error.length = Name of the person or team must be 105 characters or less
-contactName.change.first.hidden = change the full name
+contactName.change.first.hidden = the name of the first contact detail
 contactName.error.invalidChars = Name of the person or team must not include <, >, or "
-contactName.change.second.hidden = change the full name
+contactName.change.second.hidden = the name of the second contact detail
 
 contactEmail.title.first  = First contact details
 contactEmail.title.second = Second contact details
@@ -96,8 +96,8 @@ contactEmail.checkYourAnswersLabel = Email address
 contactEmail.error.required = Enter the email address of a person or team
 contactEmail.error.length = Email address must be 254 characters or less
 contactEmail.error.format = Email address must be in the correct format, like name@example.com
-contactEmail.change.first.hidden = change the email address
-contactEmail.change.second.hidden = change the email address
+contactEmail.change.first.hidden = the email address of the first contact detail
+contactEmail.change.second.hidden = the email address of the second contact detail
 
 contactHaveYouAddedAll.title = First contact details
 contactHaveYouAddedAll.caption = Contact details
@@ -107,7 +107,7 @@ contactHaveYouAddedAll.subheading = Do you want to add another contact?
 contactHaveYouAddedAll.yes = Yes
 contactHaveYouAddedAll.no = No
 contactHaveYouAddedAll.checkYourAnswersLabel = Do you want to add another contact?
-contactHaveYouAddedAll.change.hidden = whether you have added all the contacts you need
+contactHaveYouAddedAll.change.hidden = if you want to add another contact detail
 contactHaveYouAddedAll.error.required = Select yes if you would like to add another contact
 
 contactHaveYouAddedAll.legacy.title = First contact details
