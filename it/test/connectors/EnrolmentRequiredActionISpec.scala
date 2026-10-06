@@ -18,9 +18,6 @@ package connectors
 
 import connectors.EnrolmentRequiredActionISpec.*
 import controllers.actions.EnrolmentRequiredAction
-import models.UserAnswers
-import models.registration.NominatedCompany
-import org.scalatest.BeforeAndAfterEach
 import play.api.http.HeaderNames
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
@@ -31,7 +28,7 @@ import play.api.test.FakeRequest
 import repositories.SessionRepository
 import support.*
 import support.MockAuthHelper.*
-import views.html.ErrorTemplate
+import views.html.UnexpectedErrorView
 
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
@@ -89,23 +86,18 @@ class EnrolmentRequiredActionISpec extends ISpecBase {
           .futureValue
 
         result.status mustBe 500
-        result.body[String] mustBe default500ErrorTemplate
+        result.body[String] mustBe unexpectedErrorContent
         
         MockAuthHelper.verifyAuthWasCalled()
       }
     }
-
   }
 
-  def default500ErrorTemplate: String = {
-    given Messages      = app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
+  def unexpectedErrorContent: String = {
+    given Messages = app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
     given RequestHeader = FakeRequest("GET", testPath)
-    val template        = app.injector.instanceOf[ErrorTemplate]
-    template(
-      Messages("global.error.InternalServerError500.title"),
-      Messages("global.error.InternalServerError500.heading"),
-      Messages("global.error.InternalServerError500.message")
-    ).toString
+    val view = app.injector.instanceOf[UnexpectedErrorView]
+    view().toString
   }
 }
 
@@ -116,5 +108,4 @@ object EnrolmentRequiredActionISpec {
 
   def testSuccessBody(saoSubscriptionId: String) =
     s"Action Passed Successfully: $saoSubscriptionId"
-
 }
