@@ -34,17 +34,33 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-l">@messages("betaLogin.heading")</h1>
+        <p class="govuk-body">@messages("betaLogin.paragraph1")</p>
+
+
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("betaLogin.heading").toText).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(messages("betaLogin.paragraph2").toText)
             )
             .withInputType("password")
-            .withWidth(Full)
+            .withWidth(Fixed20)
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue").toText).withAttribute("id", "submit")
         )
+
+        <h2 class="govuk-heading-s">
+            @messages("betaLogin.subheading")
+        </h2>
+
+        <p class="govuk-body">@messages("betaLogin.paragraph3")</p>
+
+        <ul class = "govuk-list govuk-list--bullet">
+            <li>@messages("betaLogin.bulletPoint1")</li>
+            <li>@messages("betaLogin.bulletPoint2")</li>
+        </ul>
+
     }
 }

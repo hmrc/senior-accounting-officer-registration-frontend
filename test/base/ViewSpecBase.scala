@@ -673,6 +673,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
               Try(elements(index))
                 .getOrElse(fail(s"Index $index out of bounds for length ${elements.size}"))
             element.text() mustEqual expectedText
+            print(element)
           }
         }
       }
@@ -808,7 +809,8 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
 object ViewSpecBase {
   val expectedServiceName                              = "Senior Accounting Officer notification and certificate"
   val expectedServiceId                                = "senior-accounting-officer-registration-frontend"
-  val excludeHelpLinkAndErrorMessageParagraphsSelector = "p:not(:has(a.hmrc-report-technical-issue))"
+  val excludeHelpLinkAndErrorMessageParagraphsSelector =
+    "p:not(:has(a.hmrc-report-technical-issue), .govuk-error-message)"
 
   final case class RadioButton(value: String, label: String, hint: Option[String])
   final case class DateFieldValues(day: String, month: String, year: String)

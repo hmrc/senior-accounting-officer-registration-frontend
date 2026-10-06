@@ -176,9 +176,16 @@ unexpectedError.paragraph2WithLink = Contact your Customer Compliance Manager (C
 
 ########## private beta only content
 
-betaLogin.title = Enter Senior Accounting Officer notification and certificate private beta password
-betaLogin.heading = Enter Senior Accounting Officer notification and certificate private beta password
-betaLogin.error.passwordMismatch = The password is not correct
+betaLogin.title = Enter your password
+betaLogin.heading = Enter your password
+betaLogin.paragraph1 = The Senior Accounting Officer notification and certificate service is in private beta. You’ll need a password to access it.
+betaLogin.paragraph2 = You should have received this in your introduction pack.
+betaLogin.paragraph3 = If you believe you should have access to this service, you can:
+betaLogin.subheading = If you have not received a password
+betaLogin.bulletPoint1 = check your spam or junk folder for an email from email@gov.uk
+betaLogin.bulletPoint2 = contact the team at email@example.com
+betaLogin.error.passwordMismatch = Enter a valid password
+betaLogin.error.required = Enter a password
 
 guidance.title = Register to submit your Senior Accounting Officer notification and certificate
 guidance.heading = Register to submit your Senior Accounting Officer notification and certificate

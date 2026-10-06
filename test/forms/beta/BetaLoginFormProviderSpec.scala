@@ -25,6 +25,7 @@ import play.api.data.FormError
 class BetaLoginFormProviderSpec extends StringFieldBehaviours {
 
   val misMatchKey              = "betaLogin.error.passwordMismatch"
+  val requiredKey              = "betaLogin.error.required"
   val lengthKey                = "betaLogin.error.length"
   val maxLength                = 100
   val mockAppConfig: AppConfig = mock[AppConfig]
@@ -46,7 +47,7 @@ class BetaLoginFormProviderSpec extends StringFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, misMatchKey)
+      requiredError = FormError(fieldName, requiredKey)
     )
 
     "must not bind invalid data" in {
@@ -61,8 +62,13 @@ class BetaLoginFormProviderSpec extends StringFieldBehaviours {
 
   "error message keys must map to the expected text" - {
     createTestWithErrorMessageAssertion(
+      key = requiredKey,
+      message = "Enter a password"
+    )
+
+    createTestWithErrorMessageAssertion(
       key = misMatchKey,
-      message = "The password is not correct"
+      message = "Enter a valid password"
     )
   }
 }
