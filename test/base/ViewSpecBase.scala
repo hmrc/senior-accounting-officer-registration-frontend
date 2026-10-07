@@ -673,7 +673,6 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
               Try(elements(index))
                 .getOrElse(fail(s"Index $index out of bounds for length ${elements.size}"))
             element.text() mustEqual expectedText
-            print(element)
           }
         }
       }
