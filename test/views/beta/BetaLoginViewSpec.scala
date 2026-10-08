@@ -163,7 +163,7 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
 object BetaLoginViewSpec {
   val pageHeading                           = "Enter your password"
   val pageTitle                             = "Enter your password"
-  val pageLabel                             = "You should have received this in your introduction pack."
+  val pageLabel                             = "You should have received this in your welcome pack."
   val pageSubHeadings: Seq[String]          = Seq("If you have not received a password")
   val pageSubHeadingsWithError: Seq[String] = Seq("There is a problem", "If you have not received a password")
   val paragraphs: Seq[String]               = Seq(
@@ -171,8 +171,8 @@ object BetaLoginViewSpec {
     "If you believe you should have access to this service, you can:"
   )
   val bulletPointTexts: List[String] = List(
-    "check your spam or junk folder for an email from email@gov.uk",
-    "contact the team at email@example.com"
+    "check your spam or junk folder for an email from your HMRC contact",
+    "email your HMRC contact to request a password"
   )
 
 }
