@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import base.ViewSpecBase
 import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import views.RegistrationPendingViewSpec.*
-import views.html.RegistrationPendingView
+import views.RegistrationRegisteringViewSpec.*
+import views.html.RegistrationRegisteringView
 
-class RegistrationPendingViewSpec extends ViewSpecBase[RegistrationPendingView] {
+class RegistrationRegisteringViewSpec extends ViewSpecBase[RegistrationRegisteringView] {
 
   "RegistrationPendingView" - {
     "must generate a view" - {
@@ -33,11 +33,15 @@ class RegistrationPendingViewSpec extends ViewSpecBase[RegistrationPendingView] 
 
       doc.createTestsWithStandardPageElements(
         pageTitle = panelTitle,
-        pageHeading = panelTitle,
-        showBackLink = false,
+        pageHeading = panelHeading,
+        showBackLink = true,
         showIsThisPageNotWorkingProperlyLink = true,
         hasError = false
       )
+
+      "must have a paragraph telling the user that it may take a few minutes" in {
+        doc.getElementById("wait-text").text() mustBe waitText
+      }
 
       "must have a spinner" in {
         doc.select("div.loader").size() mustBe 1
@@ -46,6 +50,8 @@ class RegistrationPendingViewSpec extends ViewSpecBase[RegistrationPendingView] 
   }
 }
 
-object RegistrationPendingViewSpec {
-  val panelTitle: String = "Registration pending"
+object RegistrationRegisteringViewSpec {
+  val panelTitle: String   = "Registering your nominated company"
+  val panelHeading: String = "Registering your nominated company"
+  val waitText: String     = "This may take a few minutes - do not close or refresh the page."
 }

@@ -66,7 +66,9 @@ registration.complete.homepageLink = go to your account homepage
 registration.complete.print = Print this page
 registration.complete.continue = Continue
 
-registration.pending.heading = Registration pending
+registration.submitting.heading = Registering your nominated company
+registration.submitting.title = Registering your nominated company
+registration.submitting.paragraph1 = This may take a few minutes - do not close or refresh the page.
 
 contactDetailsGuidance.caption = Contact details
 contactDetailsGuidance.heading = Provide contact details for your nominated company

@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.InternalServerException
 
 import scala.concurrent.Future
 
-class RegistrationPendingControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+class RegistrationRegisteringControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
   val mockSignUpService: SignUpService = mock[SignUpService]
 
@@ -67,7 +67,7 @@ class RegistrationPendingControllerSpec extends SpecBase with MockitoSugar with 
         val application = applicationBuilder().build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.RegistrationPendingController.onPageLoad("key").url)
+          val request = FakeRequest(GET, routes.RegistrationRegisteringController.onPageLoad("key").url)
           val result  = route(application, request).value
 
           status(result) mustEqual Status.OK
@@ -85,7 +85,7 @@ class RegistrationPendingControllerSpec extends SpecBase with MockitoSugar with 
         val application = applicationBuilder().build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.RegistrationPendingController.onPageLoad("key").url)
+          val request = FakeRequest(GET, routes.RegistrationRegisteringController.onPageLoad("key").url)
           val result  = route(application, request).value
 
           status(result) mustEqual Status.SEE_OTHER
@@ -105,7 +105,7 @@ class RegistrationPendingControllerSpec extends SpecBase with MockitoSugar with 
           val application = applicationBuilder().build()
 
           running(application) {
-            val request = FakeRequest(GET, routes.RegistrationPendingController.onPageLoad("key").url)
+            val request = FakeRequest(GET, routes.RegistrationRegisteringController.onPageLoad("key").url)
             val result  = route(application, request).value
 
             intercept[InternalServerException] {

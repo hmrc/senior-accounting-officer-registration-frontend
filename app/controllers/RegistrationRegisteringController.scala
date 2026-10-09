@@ -24,18 +24,18 @@ import services.SignUpService
 import services.SignUpService.SignUpResult
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.RegistrationPendingView
+import views.html.RegistrationRegisteringView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.Inject
 
-class RegistrationPendingController @Inject() (
+class RegistrationRegisteringController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
-    view: RegistrationPendingView,
+    view: RegistrationRegisteringView,
     signUpService: SignUpService
 )(using ExecutionContext)
     extends FrontendBaseController

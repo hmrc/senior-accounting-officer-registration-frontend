@@ -20,7 +20,7 @@ GET         /                                                  controllers.Index
 POST        /                                                  controllers.IndexController.submit()
 
 GET         /registration-complete                             controllers.RegistrationCompleteController.onPageLoad
-GET         /registration-pending                              controllers.RegistrationPendingController.onPageLoad(idempotencyKey: String)
+GET         /registration/registering                          controllers.RegistrationRegisteringController.onPageLoad(idempotencyKey: String)
 
 GET         /business-match                                    controllers.GrsController.start()
 GET         /business-match/result                             controllers.GrsController.callBack(journeyId: String)

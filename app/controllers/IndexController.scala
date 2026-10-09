@@ -80,7 +80,7 @@ class IndexController @Inject() (
   private def submitSignUpWithFaultTolerance[A](userAnswers: UserAnswers)(using Request[A]) =
     signUpService.submitWithFaultTolerance(userAnswers).map {
       case SignUpResult.Pending(idempotencyKey) =>
-        Redirect(routes.RegistrationPendingController.onPageLoad(idempotencyKey))
+        Redirect(routes.RegistrationRegisteringController.onPageLoad(idempotencyKey))
       case result =>
         handleFailure(result, "PostSignUpV2")
     }

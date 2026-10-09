@@ -145,7 +145,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
             val result  = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.RegistrationPendingController
+            redirectLocation(result).value mustEqual routes.RegistrationRegisteringController
               .onPageLoad("idempotencyKey")
               .url
 
@@ -167,7 +167,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
             val result  = route(application, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.RegistrationPendingController
+            redirectLocation(result).value mustEqual routes.RegistrationRegisteringController
               .onPageLoad("idempotencyKey")
               .url
 
