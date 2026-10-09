@@ -17,6 +17,8 @@
 package controllers
 
 import base.SpecBase
+import config.FeatureToggleSupport
+import models.config.FeatureToggle.FaultTolerance
 import models.{DashboardStage, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq as meq}
 import org.mockito.Mockito.*
@@ -35,7 +37,7 @@ import views.html.DashboardView
 
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with FeatureToggleSupport {
 
   val mockDashboardService: DashboardService   = mock[DashboardService]
   val mockSignUpService: SignUpService         = mock[SignUpService]
@@ -86,7 +88,8 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
   "IndexController.submit" - {
     "when SignUpService returns Success" - {
       "must wipe Mongo and continue to Registration Complete page" - {
-        "when Mongo is successfully cleared" in {
+        "when Mongo is successfully cleared - fault tolerance disabled" in {
+          disable(FaultTolerance)
           when(mockSignUpService.submit(any())(using any()))
             .thenReturn(Future.successful(SignUpResult.Success("subscriptionId")))
           val testAnswers = emptyUserAnswers
@@ -106,7 +109,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
           }
         }
 
-        "when clearing Mongo return an error" in {
+        "when clearing Mongo return an error - fault tolerance disabled" in {
           when(mockSignUpService.submit(any())(using any()))
             .thenReturn(Future.successful(SignUpResult.Success("subscriptionId")))
           val testAnswers = emptyUserAnswers
@@ -126,6 +129,53 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
           }
         }
       }
+
+      "must wipe Mongo and continue to Registration Pending page" - {
+        "when Mongo is successfully cleared - fault tolerance enabled" in {
+          enable(FaultTolerance)
+          when(mockSignUpService.submitWithFaultTolerance(any())(using any()))
+            .thenReturn(Future.successful(SignUpResult.Pending("idempotencyKey")))
+          val testAnswers = emptyUserAnswers
+          when(mockSessionRepository.clear(any())).thenReturn(Future.successful(true))
+
+          val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.IndexController.submit().url)
+            val result  = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.RegistrationPendingController
+              .onPageLoad("idempotencyKey")
+              .url
+
+            verify(mockSignUpService, times(1)).submitWithFaultTolerance(meq(testAnswers))(using any())
+            verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
+          }
+        }
+
+        "when clearing Mongo return an error - fault tolerance disabled" in {
+          when(mockSignUpService.submitWithFaultTolerance(any())(using any()))
+            .thenReturn(Future.successful(SignUpResult.Pending("idempotencyKey")))
+          val testAnswers = emptyUserAnswers
+          when(mockSessionRepository.clear(any())).thenReturn(Future.failed(new RuntimeException("test exception")))
+
+          val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.IndexController.submit().url)
+            val result  = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.RegistrationPendingController
+              .onPageLoad("idempotencyKey")
+              .url
+
+            verify(mockSignUpService, times(1)).submitWithFaultTolerance(meq(testAnswers))(using any())
+            verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
+          }
+        }
+      }
     }
 
     for (key, value) <- Map(
@@ -137,7 +187,9 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
       )
     do {
       s"when SignUpService returns $key" - {
-        "must throw an InternalServerException" in {
+        "must throw an InternalServerException - fault tolerance disabled" in {
+          disable(FaultTolerance)
+
           when(mockSignUpService.submit(any())(using any()))
             .thenReturn(Future.successful(value))
           val testAnswers = emptyUserAnswers
@@ -153,6 +205,27 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
             }
 
             verify(mockSignUpService, times(1)).submit(meq(testAnswers))(using any())
+            verify(mockSessionRepository, times(0)).clear(any())
+          }
+        }
+        "must throw an InternalServerException - fault tolerance enabled" in {
+          enable(FaultTolerance)
+
+          when(mockSignUpService.submitWithFaultTolerance(any())(using any()))
+            .thenReturn(Future.successful(value))
+          val testAnswers = emptyUserAnswers
+
+          val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.IndexController.submit().url)
+            val result  = route(application, request).value
+
+            intercept[InternalServerException] {
+              await(result)
+            }
+
+            verify(mockSignUpService, times(1)).submitWithFaultTolerance(meq(testAnswers))(using any())
             verify(mockSessionRepository, times(0)).clear(any())
           }
         }

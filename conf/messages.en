@@ -66,6 +66,8 @@ registration.complete.homepageLink = go to your account homepage
 registration.complete.print = Print this page
 registration.complete.continue = Continue
 
+registration.pending.heading = Registration pending
+
 contactDetailsGuidance.caption = Contact details
 contactDetailsGuidance.heading = Provide contact details for your nominated company
 contactDetailsGuidance.p1 = You need to provide the contact details of the person or team who will submit your company’s SAO notification and certificate.

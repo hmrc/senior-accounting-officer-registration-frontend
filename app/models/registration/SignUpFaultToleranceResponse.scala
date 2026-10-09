@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,25 +18,8 @@ package models.registration
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class NominatedCompany(name: String, utr: String, crn: String)
+case class SignUpFaultToleranceResponse(idempotencyKey: String)
 
-object NominatedCompany {
-  given OFormat[NominatedCompany] = Json.format
-}
-
-final case class Contact(name: String, email: String, status: String, language: String)
-
-object Contact {
-  given OFormat[Contact] = Json.format
-}
-
-final case class SignUpRequest(
-    etmpSafeId: String,
-    nominatedCompany: NominatedCompany,
-    contacts: List[Contact],
-    idempotencyKey: Option[String]
-)
-
-object SignUpRequest {
-  given OFormat[SignUpRequest] = Json.format[SignUpRequest]
+object SignUpFaultToleranceResponse {
+  given OFormat[SignUpFaultToleranceResponse] = Json.format[SignUpFaultToleranceResponse]
 }
