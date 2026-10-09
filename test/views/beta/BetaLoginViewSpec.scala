@@ -51,7 +51,7 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
 
       doc.createTestsWithASingleTextInput(
         name = "value",
-        label = pageHeading,
+        label = pageLabel,
         value = "",
         hint = None,
         hasError = false
@@ -65,6 +65,13 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
       doc.createTestsWithOrWithoutError(
         hasError = false
       )
+
+      doc.createTestsWithParagraphs(paragraphs)
+
+      doc.createTestsForSubHeadings(pageSubHeadings)
+
+      doc.createTestsWithBulletPoints(bulletPointTexts)
+
     }
 
     "when the form is filled in" - {
@@ -80,7 +87,7 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
 
       doc.createTestsWithASingleTextInput(
         name = "value",
-        label = pageHeading,
+        label = pageLabel,
         value = testPassword,
         hint = None,
         hasError = false
@@ -94,6 +101,10 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
       doc.createTestsWithOrWithoutError(
         hasError = false
       )
+      doc.createTestsForSubHeadings(pageSubHeadings)
+
+      doc.createTestsWithBulletPoints(bulletPointTexts)
+
     }
 
     "when the form has errors" - {
@@ -109,7 +120,7 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
 
       doc.createTestsWithASingleTextInput(
         name = "value",
-        label = pageHeading,
+        label = pageLabel,
         value = "",
         hint = None,
         hasError = true
@@ -123,11 +134,45 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
       doc.createTestsWithOrWithoutError(
         hasError = true
       )
+
+      doc.createTestsWithParagraphs(paragraphs)
+
+      doc.createTestsForSubHeadings(pageSubHeadingsWithError)
+
+      doc.createTestsWithBulletPoints(bulletPointTexts)
+
     }
+  }
+
+  extension (target: => Document) {
+    def createTestsForSubHeadings(subheadings: Seq[String]): Unit = {
+      val headings = target.getMainContent.getElementsByTag("h2")
+      "must have expected number of headings" in {
+        headings.size() mustBe subheadings.length
+      }
+      subheadings.zipWithIndex.foreach((subheading, i) => {
+        s"must have heading '$subheading'" in {
+          headings.get(i).text mustBe subheading
+        }
+      })
+    }
+
   }
 }
 
 object BetaLoginViewSpec {
-  val pageHeading = "Enter Senior Accounting Officer notification and certificate private beta password"
-  val pageTitle   = "Enter Senior Accounting Officer notification and certificate private beta password"
+  val pageHeading                           = "Enter your password"
+  val pageTitle                             = "Enter your password"
+  val pageLabel                             = "You should have received this in your welcome pack."
+  val pageSubHeadings: Seq[String]          = Seq("If you have not received a password")
+  val pageSubHeadingsWithError: Seq[String] = Seq("There is a problem", "If you have not received a password")
+  val paragraphs: Seq[String]               = Seq(
+    "The Senior Accounting Officer notification and certificate service is in private beta. You’ll need a password to access it.",
+    "If you believe you should have access to this service, you can:"
+  )
+  val bulletPointTexts: List[String] = List(
+    "check your spam or junk folder for an email from your HMRC contact",
+    "email your HMRC contact to request a password"
+  )
+
 }

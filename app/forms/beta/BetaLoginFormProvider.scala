@@ -27,7 +27,7 @@ class BetaLoginFormProvider @Inject() (appConfig: AppConfig) extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("betaLogin.error.passwordMismatch").verifying(matchPassword)
+      "value" -> text("betaLogin.error.required").verifying(matchPassword)
     )
 
   private def matchPassword: Constraint[String] = {
