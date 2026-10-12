@@ -57,6 +57,12 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
     reset(mockDashboardService)
     reset(mockSignUpService)
     reset(mockSessionRepository)
+    disable(FaultTolerance)
+  }
+
+  override def afterEach(): Unit = {
+    super.beforeEach()
+    disable(FaultTolerance)
   }
 
   "IndexController.onPageLoad" - {
@@ -155,7 +161,8 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
           }
         }
 
-        "when clearing Mongo return an error - fault tolerance disabled" in {
+        "when clearing Mongo return an error - fault tolerance enabled" in {
+          enable(FaultTolerance)
           when(mockSignUpService.submitWithFaultTolerance(any())(using any()))
             .thenReturn(Future.successful(SignUpResult.Pending("idempotencyKey")))
           val testAnswers = emptyUserAnswers
