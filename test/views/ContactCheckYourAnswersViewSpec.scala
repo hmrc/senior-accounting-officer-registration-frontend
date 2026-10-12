@@ -41,7 +41,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
           hasError = false
         )
 
-        doc.createTestsWithLargeCaption(
+        doc.createTestsWithCaption(
           caption = s"$contactType contact details"
         )
 
