@@ -28,12 +28,13 @@
 
 @layout(pageTitle = title(form, messages("contactEmail.heading"), Some(messages(s"contact.${contactType.messageKey}.caption")))) {
 
-    <span class="govuk-caption-m">@messages(s"contact.${contactType.messageKey}.caption")</span>
     @formHelper(action = routes.ContactEmailController.onSubmit(contactType, mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
+
+        <span class="govuk-caption-m">@messages(s"contact.${contactType.messageKey}.caption")</span>
 
         @govukInput(
             InputViewModel(

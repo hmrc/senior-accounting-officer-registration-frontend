@@ -26,12 +26,13 @@
 
 @layout(pageTitle = title(form, messages("contactHaveYouAddedAll.heading"), Some(messages("contactHaveYouAddedAll.caption")))) {
 
-    <span class="govuk-caption-m">@messages("contactHaveYouAddedAll.caption")</span>
     @formHelper(action = routes.ContactHaveYouAddedAllController.onSubmit(contactType, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
+
+        <span class="govuk-caption-m">@messages("contactHaveYouAddedAll.caption")</span>
 
         <h1 class="govuk-heading-l">@messages("contactHaveYouAddedAll.heading")</h1>
         <p class="govuk-body">@messages("contactHaveYouAddedAll.hint")</p>
