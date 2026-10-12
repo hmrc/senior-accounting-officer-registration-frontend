@@ -137,8 +137,8 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
         }
       }
 
-      "must wipe Mongo and continue to Registration Pending page" - {
-        "when Mongo is successfully cleared - fault tolerance enabled" in {
+      "must not wipe Mongo and continue to Registration Pending page" - {
+        "when Mongo is not cleared - fault tolerance enabled" in {
           enable(FaultTolerance)
           when(mockSignUpService.submitWithFaultTolerance(any())(using any()))
             .thenReturn(Future.successful(SignUpResult.Pending("idempotencyKey")))
@@ -157,30 +157,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
               .url
 
             verify(mockSignUpService, times(1)).submitWithFaultTolerance(meq(testAnswers))(using any())
-            verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
-          }
-        }
-
-        "when clearing Mongo return an error - fault tolerance enabled" in {
-          enable(FaultTolerance)
-          when(mockSignUpService.submitWithFaultTolerance(any())(using any()))
-            .thenReturn(Future.successful(SignUpResult.Pending("idempotencyKey")))
-          val testAnswers = emptyUserAnswers
-          when(mockSessionRepository.clear(any())).thenReturn(Future.failed(new RuntimeException("test exception")))
-
-          val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
-
-          running(application) {
-            val request = FakeRequest(POST, routes.IndexController.submit().url)
-            val result  = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.RegistrationRegisteringController
-              .onPageLoad("idempotencyKey")
-              .url
-
-            verify(mockSignUpService, times(1)).submitWithFaultTolerance(meq(testAnswers))(using any())
-            verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
+            verify(mockSessionRepository, never()).clear(meq(userAnswersId))
           }
         }
       }

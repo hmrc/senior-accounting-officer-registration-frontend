@@ -29,7 +29,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DashboardView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 import javax.inject.Inject
@@ -56,16 +56,21 @@ class IndexController @Inject() (
   }
 
   def submit: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val faultToleranceEnabled = appConfig.faultToleranceEnabled
+
     for {
       response <-
-        if appConfig.faultToleranceEnabled then submitSignUpWithFaultTolerance(request.userAnswers)
+        if faultToleranceEnabled then submitSignUpWithFaultTolerance(request.userAnswers)
         else submitSignUp(request.userAnswers)
-      _ <- repository
-        .clear(request.userId)
-        .recover { case NonFatal(e) =>
-          logger.warn("[PostSignUp][CLEAR_MONGO_FAIL]", e)
-          false
-        }
+      _ <-
+        if !faultToleranceEnabled then
+          repository
+            .clear(request.userId)
+            .recover { case NonFatal(e) =>
+              logger.warn("[PostSignUp][CLEAR_MONGO_FAIL]", e)
+              false
+            }
+        else Future.successful(false)
     } yield response
   }
 

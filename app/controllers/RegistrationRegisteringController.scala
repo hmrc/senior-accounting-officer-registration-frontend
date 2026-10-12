@@ -43,7 +43,7 @@ class RegistrationRegisteringController @Inject() (
 
   def onPageLoad(idempotencyKey: String): Action[AnyContent] =
     (identify andThen getData).async { implicit request =>
-      signUpService.getRegistrationState(idempotencyKey).flatMap {
+      signUpService.getRegistrationState(idempotencyKey, request.userId).flatMap {
         case SignUpResult.Success(subscriptionId) =>
           Future.successful(Redirect(routes.RegistrationCompleteController.onPageLoad))
         case SignUpResult.Pending(idempotencyKey) =>

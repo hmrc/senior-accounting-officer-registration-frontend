@@ -21,7 +21,9 @@ import connectors.SignUpConnector
 import models.UserAnswers
 import models.registration.*
 import pages.*
+import play.api.i18n.Lang.logger
 import play.api.libs.json.Json
+import repositories.SessionRepository
 import services.SignUpService.*
 import services.SignUpService.SignUpResult.*
 import uk.gov.hmrc.http.*
@@ -36,19 +38,23 @@ import javax.inject.Inject
 class SignUpService @Inject() (
     signupConnector: SignUpConnector,
     contactService: ContactCheckYourAnswersService,
-    appConfig: AppConfig
+    appConfig: AppConfig,
+    repository: SessionRepository
 )(using ExecutionContext) {
 
   def submit(userAnswers: UserAnswers)(using HeaderCarrier): Future[SignUpResult] =
     mapRequest(userAnswers, idempotencyKey = None)
       .fold(Future.successful(InsufficientUserAnswers))(callSignUp)
 
-  def submitWithFaultTolerance(userAnswers: UserAnswers)(using HeaderCarrier): Future[SignUpResult] =
-    mapRequest(userAnswers, Some(generateIdempotencyKey))
-      .fold(Future.successful(InsufficientUserAnswers))(callSignUpWithFaultTolerance)
+  def submitWithFaultTolerance(userAnswers: UserAnswers)(using HeaderCarrier): Future[SignUpResult] = {
+    getIdempotencyKey(userAnswers).flatMap { idempotencyKey =>
+      mapRequest(userAnswers, Some(idempotencyKey))
+        .fold(Future.successful(InsufficientUserAnswers))(callSignUpWithFaultTolerance)
+    }
+  }
 
-  def getRegistrationState(idempotencyKey: String)(using HeaderCarrier): Future[SignUpResult] =
-    callGetRegistrationState(idempotencyKey)
+  def getRegistrationState(idempotencyKey: String, userId: String)(using HeaderCarrier): Future[SignUpResult] =
+    callGetRegistrationState(idempotencyKey, userId)
 
   private def mapRequest(userAnswers: UserAnswers, idempotencyKey: Option[String]): Option[SignUpRequest] =
     for {
@@ -106,7 +112,9 @@ class SignUpService @Inject() (
       case HttpResponse(status, _, _)               => UnknownFailure(status)
     }
 
-  private def callGetRegistrationState(idempotencyKey: String)(using HeaderCarrier): Future[SignUpResult] =
+  private def callGetRegistrationState(idempotencyKey: String, userId: String)(using
+      HeaderCarrier
+  ): Future[SignUpResult] =
     signupConnector.getStateOfWorkItem(idempotencyKey).map {
       case HttpResponse(200, body, _) =>
         Try(Json.parse(body).as[SignUpResponse]).fold(
@@ -114,7 +122,14 @@ class SignUpService @Inject() (
             case NonFatal(_) => MalformedResponse
             case fatal       => throw fatal
           },
-          response => SignUpResult.Success(response.subscriptionId)
+          response =>
+            repository
+              .clear(userId)
+              .recover { case NonFatal(e) =>
+                logger.warn("[callGetRegistrationState][CLEAR_MONGO_FAIL]", e)
+                false
+              }
+            SignUpResult.Success(response.subscriptionId)
         )
       case HttpResponse(204, _, _)                  => SignUpResult.Pending(idempotencyKey)
       case HttpResponse(400, _, _)                  => BadRequestFailure
@@ -122,7 +137,18 @@ class SignUpService @Inject() (
       case HttpResponse(status, _, _)               => UnknownFailure(status)
     }
 
-  private def generateIdempotencyKey = UUID.randomUUID().toString
+  private def getIdempotencyKey(userAnswers: UserAnswers): Future[String] =
+    userAnswers
+      .getNullable(IdempotencyKey)
+      .fold {
+        val newKey = UUID.randomUUID().toString
+        for {
+          updatedAnswers <- Future.fromTry(
+            userAnswers.set(IdempotencyKey, Some(newKey))
+          )
+          _ <- repository.set(updatedAnswers)
+        } yield newKey
+      }(Future.successful)
 }
 
 object SignUpService {

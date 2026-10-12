@@ -61,7 +61,7 @@ class RegistrationRegisteringControllerSpec extends SpecBase with MockitoSugar w
   "RegistrationPendingController.onPageLoad" - {
     "must return OK and the correct view" - {
       "when signUpService returns a pending result" in {
-        when(mockSignUpService.getRegistrationState(any())(using any()))
+        when(mockSignUpService.getRegistrationState(any(), any())(using any()))
           .thenReturn(Future.successful(SignUpResult.Pending("key")))
 
         val application = applicationBuilder().build()
@@ -72,14 +72,14 @@ class RegistrationRegisteringControllerSpec extends SpecBase with MockitoSugar w
 
           status(result) mustEqual Status.OK
 
-          verify(mockSignUpService, times(1)).getRegistrationState(any())(using any())
+          verify(mockSignUpService, times(1)).getRegistrationState(any(), any())(using any())
         }
       }
     }
 
     "must return a redirect to the registration complete page" - {
       "when signUpService returns a success result" in {
-        when(mockSignUpService.getRegistrationState(any())(using any()))
+        when(mockSignUpService.getRegistrationState(any(), any())(using any()))
           .thenReturn(Future.successful(SignUpResult.Success("id")))
 
         val application = applicationBuilder().build()
@@ -91,7 +91,7 @@ class RegistrationRegisteringControllerSpec extends SpecBase with MockitoSugar w
           status(result) mustEqual Status.SEE_OTHER
           redirectLocation(result).value mustEqual routes.RegistrationCompleteController.onPageLoad.url
 
-          verify(mockSignUpService, times(1)).getRegistrationState(any())(using any())
+          verify(mockSignUpService, times(1)).getRegistrationState(any(), any())(using any())
         }
       }
     }
@@ -99,7 +99,7 @@ class RegistrationRegisteringControllerSpec extends SpecBase with MockitoSugar w
     "must throw an InternalServerException" - {
       errorScenarios.map { scenario =>
         s"when signUpService returns a $scenario" in {
-          when(mockSignUpService.getRegistrationState(any())(using any()))
+          when(mockSignUpService.getRegistrationState(any(), any())(using any()))
             .thenReturn(Future.successful(scenario))
 
           val application = applicationBuilder().build()
@@ -112,7 +112,7 @@ class RegistrationRegisteringControllerSpec extends SpecBase with MockitoSugar w
               await(result)
             }
 
-            verify(mockSignUpService, times(1)).getRegistrationState(any())(using any())
+            verify(mockSignUpService, times(1)).getRegistrationState(any(), any())(using any())
           }
         }
       }

@@ -25,7 +25,9 @@
 
 @()(using request: Request[?], messages: Messages)
 
-@refreshScript = {
+@refreshScriptAndStyleSheet = {
+    <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" />
+
     <script @{views.html.helper.CSPNonce.attr}>
      setTimeout(function() {
          window.location.replace(window.location.href);
@@ -33,10 +35,7 @@
     </script>
 }
 
-<link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" />
-
-@layout(pageTitle = titleNoForm(messages("registration.submitting.title")), additionalHeadBlock = Some(refreshScript)) {
-
+@layout(pageTitle = titleNoForm(messages("registration.submitting.title")), additionalHeadBlock = Some(refreshScriptAndStyleSheet)) {
     <div class="loader"></div>
 
     <h1 class="govuk-heading-l govuk-!-text-align-centre">@messages("registration.submitting.heading")</h1>
