@@ -16,8 +16,10 @@
 
 package handlers
 
+import com.mongodb.MongoException
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.RequestHeader
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{RequestHeader, Result}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.{ErrorTemplate, PageNotFoundView, UnexpectedErrorView}
@@ -48,4 +50,16 @@ class ErrorHandler @Inject() (
     Future.successful(unexpectedErrorView())
   }
 
+  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] =
+    if isMongoFailure(exception) then {
+      Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+    } else {
+      super.onServerError(request, exception)
+    }
+
+  private def isMongoFailure(throwable: Throwable): Boolean =
+    throwable match {
+      case _: MongoException => true
+      case other             => Option(other.getCause).exists(isMongoFailure)
+    }
 }

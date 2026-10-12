@@ -45,9 +45,9 @@ class JourneyRecoveryContinueViewSpec extends ViewSpecBase[JourneyRecoveryContin
 }
 
 object JourneyRecoveryContinueViewSpec {
-  val pageTitle                = "Sorry, there is a problem with the service"
+  val pageTitle                = "Error: Sorry, there is a problem with the service - Registration"
   val pageHeading              = "Sorry, there is a problem with the service"
   val buttonText               = "Continue"
-  val paragraphs: List[String] = List("[Add content to explain how to proceed.]", buttonText)
+  val paragraphs: List[String] = List("We were unable to access your data due to a technical problem.", buttonText)
   val linkText                 = "citrus/date"
 }

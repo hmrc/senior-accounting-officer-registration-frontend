@@ -46,8 +46,8 @@ class JourneyRecoveryStartAgainViewSpec extends ViewSpecBase[JourneyRecoveryStar
 }
 
 object JourneyRecoveryStartAgainViewSpec {
-  val pageTitle                = "Sorry, there is a problem with the service"
+  val pageTitle                = "Error: Sorry, there is a problem with the service - Registration"
   val pageHeading              = "Sorry, there is a problem with the service"
   val buttonText               = "Start again"
-  val paragraphs: List[String] = List("[Add content to explain why the user needs to start again.]", buttonText)
+  val paragraphs: List[String] = List("We were unable to access your data due to a technical problem.", buttonText)
 }

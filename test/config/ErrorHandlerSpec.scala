@@ -17,10 +17,12 @@
 package config
 
 import base.SpecBase
+import com.mongodb.MongoException
 import handlers.ErrorHandler
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
+import play.api.test.Helpers.*
 
 class ErrorHandlerSpec extends SpecBase with GuiceOneAppPerSuite {
 
@@ -44,6 +46,37 @@ class ErrorHandlerSpec extends SpecBase with GuiceOneAppPerSuite {
     "render HTML" in {
       val html = handler.internalServerErrorTemplate.futureValue
       html.contentType mustBe "text/html"
+    }
+  }
+
+  "onServerError must" - {
+
+    "redirect to JourneyRecoveryController when a MongoException occurs" in {
+      val request = FakeRequest("GET", "/")
+      val result  = handler.onServerError(request, new MongoException("boom")).futureValue
+
+      result.header.status mustBe SEE_OTHER
+      result.header.headers.get(LOCATION) mustBe Some(
+        controllers.routes.JourneyRecoveryController.onPageLoad().url
+      )
+    }
+
+    "redirect to JourneyRecoveryController when a MongoException is wrapped inside another exception's cause" in {
+      val request      = FakeRequest("GET", "/")
+      val wrappedMongo = new RuntimeException("wrapper", new MongoException("boom"))
+      val result       = handler.onServerError(request, wrappedMongo).futureValue
+
+      result.header.status mustBe SEE_OTHER
+      result.header.headers.get(LOCATION) mustBe Some(
+        controllers.routes.JourneyRecoveryController.onPageLoad().url
+      )
+    }
+
+    "fall back to the default error handling for a non-Mongo exception" in {
+      val request = FakeRequest("GET", "/")
+      val result  = handler.onServerError(request, new RuntimeException("not mongo related")).futureValue
+
+      result.header.status mustBe INTERNAL_SERVER_ERROR
     }
   }
 
