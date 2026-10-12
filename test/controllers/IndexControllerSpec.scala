@@ -61,7 +61,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
   }
 
   override def afterEach(): Unit = {
-    super.beforeEach()
+    super.afterEach()
     disable(FaultTolerance)
   }
 
