@@ -60,7 +60,6 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
   }
 
   "IndexController.onPageLoad" - {
-
     "must return OK and the correct view" in {
       val testUserAnswer     = Some(emptyUserAnswers)
       val testDashboardStage = DashboardStage.Submission
@@ -88,44 +87,46 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
   "IndexController.submit" - {
     "when SignUpService returns Success" - {
       "must wipe Mongo and continue to Registration Complete page" - {
-        "when Mongo is successfully cleared - fault tolerance disabled" in {
-          disable(FaultTolerance)
-          when(mockSignUpService.submit(any())(using any()))
-            .thenReturn(Future.successful(SignUpResult.Success("subscriptionId")))
-          val testAnswers = emptyUserAnswers
-          when(mockSessionRepository.clear(any())).thenReturn(Future.successful(true))
+        "fault tolerance disabled" - {
+          "when Mongo is successfully cleared" in {
+            disable(FaultTolerance)
+            when(mockSignUpService.submit(any())(using any()))
+              .thenReturn(Future.successful(SignUpResult.Success("subscriptionId")))
+            val testAnswers = emptyUserAnswers
+            when(mockSessionRepository.clear(any())).thenReturn(Future.successful(true))
 
-          val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
+            val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
 
-          running(application) {
-            val request = FakeRequest(POST, routes.IndexController.submit().url)
-            val result  = route(application, request).value
+            running(application) {
+              val request = FakeRequest(POST, routes.IndexController.submit().url)
+              val result  = route(application, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.RegistrationCompleteController.onPageLoad.url
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual routes.RegistrationCompleteController.onPageLoad.url
 
-            verify(mockSignUpService, times(1)).submit(meq(testAnswers))(using any())
-            verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
+              verify(mockSignUpService, times(1)).submit(meq(testAnswers))(using any())
+              verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
+            }
           }
-        }
 
-        "when clearing Mongo return an error - fault tolerance disabled" in {
-          when(mockSignUpService.submit(any())(using any()))
-            .thenReturn(Future.successful(SignUpResult.Success("subscriptionId")))
-          val testAnswers = emptyUserAnswers
-          when(mockSessionRepository.clear(any())).thenReturn(Future.failed(new RuntimeException("test exception")))
+          "when clearing Mongo return an error" in {
+            when(mockSignUpService.submit(any())(using any()))
+              .thenReturn(Future.successful(SignUpResult.Success("subscriptionId")))
+            val testAnswers = emptyUserAnswers
+            when(mockSessionRepository.clear(any())).thenReturn(Future.failed(new RuntimeException("test exception")))
 
-          val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
+            val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
 
-          running(application) {
-            val request = FakeRequest(POST, routes.IndexController.submit().url)
-            val result  = route(application, request).value
+            running(application) {
+              val request = FakeRequest(POST, routes.IndexController.submit().url)
+              val result  = route(application, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.RegistrationCompleteController.onPageLoad.url
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual routes.RegistrationCompleteController.onPageLoad.url
 
-            verify(mockSignUpService, times(1)).submit(meq(testAnswers))(using any())
-            verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
+              verify(mockSignUpService, times(1)).submit(meq(testAnswers))(using any())
+              verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
+            }
           }
         }
       }
