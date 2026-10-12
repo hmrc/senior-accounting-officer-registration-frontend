@@ -33,7 +33,8 @@ object Contact {
 final case class SignUpRequest(
     etmpSafeId: String,
     nominatedCompany: NominatedCompany,
-    contacts: List[Contact]
+    contacts: List[Contact],
+    idempotencyKey: Option[String]
 )
 
 object SignUpRequest {

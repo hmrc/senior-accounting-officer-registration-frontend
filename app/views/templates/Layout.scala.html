@@ -34,7 +34,8 @@
   timeout: Boolean = true,
   breadcrumbs: Option[Html] = None,
   showSignOut: Boolean = true,
-  showHmrcBanner: Boolean = false
+  showHmrcBanner: Boolean = false,
+  additionalHeadBlock: Option[Html] = None
 )(contentBlock: Html)(using rh: RequestHeader, messages: Messages)
 
 @head = {
@@ -52,6 +53,7 @@
             language            = Some(messages.lang.code)
         ))
     }
+    @additionalHeadBlock.getOrElse(HtmlFormat.empty)
 }
 
 @content = {

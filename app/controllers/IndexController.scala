@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.AppConfig
 import controllers.actions.*
 import models.UserAnswers
 import play.api.Logging
@@ -28,7 +29,7 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DashboardView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 import javax.inject.Inject
@@ -42,7 +43,8 @@ class IndexController @Inject() (
     view: DashboardView,
     dashboardService: DashboardService,
     signUpService: SignUpService,
-    repository: SessionRepository
+    repository: SessionRepository,
+    appConfig: AppConfig
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -54,37 +56,58 @@ class IndexController @Inject() (
   }
 
   def submit: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    val faultToleranceEnabled = appConfig.faultToleranceEnabled
+
     for {
-      response <- submitSignUp(request.userAnswers)
-      _        <- repository
-        .clear(request.userId)
-        .recover { case NonFatal(e) =>
-          logger.warn("[PostSignUp][CLEAR_MONGO_FAIL]", e)
-          false
-        }
+      response <-
+        if faultToleranceEnabled then submitSignUpWithFaultTolerance(request.userAnswers)
+        else submitSignUp(request.userAnswers)
+      _ <-
+        if !faultToleranceEnabled then
+          repository
+            .clear(request.userId)
+            .recover { case NonFatal(e) =>
+              logger.warn("[PostSignUp][CLEAR_MONGO_FAIL]", e)
+              false
+            }
+        else Future.successful(false)
     } yield response
   }
 
-  private def submitSignUp[A](userAnswers: UserAnswers)(using Request[A]) = for {
-    result <- signUpService.submit(userAnswers)
-  } yield result match {
-    case SignUpResult.Success(_) =>
-      Redirect(routes.RegistrationCompleteController.onPageLoad)
-    case SignUpResult.InsufficientUserAnswers =>
-      logger.warn("[PostSignUp][INSUFFICENT_USER_ANSWERS]")
-      throw new InternalServerException("Unable to create PostSignUp Request")
-    case SignUpResult.BadRequestFailure =>
-      logger.warn("[PostSignUp][BAD_REQUEST]")
-      throw new InternalServerException("PostSignUp returned BAD_REQUEST")
-    case SignUpResult.MalformedResponse =>
-      logger.warn("[PostSignUp][MalformedResponse]")
-      throw new InternalServerException("PostSignUp returned a MalformedResponse")
-    case SignUpResult.ProtectedServiceFailure(status) =>
-      logger.warn(s"[PostSignUp][PROTECTED_SERVICE_FAILURE]status=$status")
-      throw new InternalServerException(s"PostSignUp returned $status")
-    case SignUpResult.UnknownFailure(status) =>
-      logger.warn(s"[PostSignUp][Unknown]status=$status")
-      throw new InternalServerException(s"PostSignUp returned an unknown status=$status")
-  }
+  private def submitSignUp[A](userAnswers: UserAnswers)(using Request[A]) =
+    signUpService.submit(userAnswers).map {
+      case SignUpResult.Success(_) =>
+        Redirect(routes.RegistrationCompleteController.onPageLoad)
+      case result =>
+        handleFailure(result, "PostSignUp")
+    }
 
+  private def submitSignUpWithFaultTolerance[A](userAnswers: UserAnswers)(using Request[A]) =
+    signUpService.submitWithFaultTolerance(userAnswers).map {
+      case SignUpResult.Pending(idempotencyKey) =>
+        Redirect(routes.RegistrationRegisteringController.onPageLoad(idempotencyKey))
+      case result =>
+        handleFailure(result, "PostSignUpV2")
+    }
+
+  private def handleFailure(result: SignUpResult, context: String): Nothing =
+    result match {
+      case SignUpResult.InsufficientUserAnswers =>
+        logger.warn(s"[$context][INSUFFICENT_USER_ANSWERS]")
+        throw new InternalServerException(s"Unable to create $context Request")
+      case SignUpResult.BadRequestFailure =>
+        logger.warn(s"[$context][BAD_REQUEST]")
+        throw new InternalServerException(s"$context returned BAD_REQUEST")
+      case SignUpResult.MalformedResponse =>
+        logger.warn(s"[$context][MalformedResponse]")
+        throw new InternalServerException(s"$context returned a MalformedResponse")
+      case SignUpResult.ProtectedServiceFailure(status) =>
+        logger.warn(s"[$context][PROTECTED_SERVICE_FAILURE]status=$status")
+        throw new InternalServerException(s"$context returned $status")
+      case SignUpResult.UnknownFailure(status) =>
+        logger.warn(s"[$context][Unknown]status=$status")
+        throw new InternalServerException(s"$context returned an unknown status=$status")
+      case _ =>
+        throw new IllegalStateException(s"Unexpected success result for $context")
+    }
 }

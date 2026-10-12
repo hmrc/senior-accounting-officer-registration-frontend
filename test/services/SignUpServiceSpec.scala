@@ -25,7 +25,7 @@ import models.NormalMode
 import models.config.FeatureToggle.ContactFlowReshuffle
 import models.registration.*
 import models.{ContactHaveYouAddedAll, ContactType, UserAnswers}
-import org.mockito.ArgumentMatchers.{any, eq as meq}
+import org.mockito.ArgumentMatchers.{any, argThat, eq as meq}
 import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -82,7 +82,8 @@ class SignUpServiceSpec
             SignUpRequest(
               etmpSafeId = "registeredBusinessPartnerId",
               nominatedCompany = NominatedCompany(name = "companyName", crn = "companyNumber", utr = "ctUtr"),
-              contacts = contacts
+              contacts = contacts,
+              idempotencyKey = None
             )
           )
         )(using any())
@@ -107,7 +108,7 @@ class SignUpServiceSpec
 
   given HeaderCarrier = HeaderCarrier()
 
-  "SignUpService.getContactInfo" - {
+  "SignUpService.submit" - {
     "when user answer is valid and complete and calling the sign up end point returned a valid 200 response" - {
       "must return Success(subscriptionId) when user answer has the company details" - {
         "and exactly one contact detail" in {
@@ -138,7 +139,8 @@ class SignUpServiceSpec
                   utr = "ctUtr",
                   crn = "companyNumber"
                 ),
-                contacts = List(Contact("name", "email", "valid", "en-GB"))
+                contacts = List(Contact("name", "email", "valid", "en-GB")),
+                idempotencyKey = None
               )
             )
           )(using any())
@@ -169,7 +171,8 @@ class SignUpServiceSpec
                   crn = "companyNumber"
                 ),
                 contacts =
-                  List(Contact("name1", "email1", "valid", "en-GB"), Contact("name2", "email2", "valid", "en-GB"))
+                  List(Contact("name1", "email1", "valid", "en-GB"), Contact("name2", "email2", "valid", "en-GB")),
+                idempotencyKey = None
               )
             )
           )(using any())
@@ -277,6 +280,181 @@ class SignUpServiceSpec
         result.futureValue mustBe UnknownFailure(600)
 
         verify(mockSignUpConnector, times(1)).submit(any())(using any())
+      }
+    }
+
+  }
+
+  "SignUpService.submitWithFaultTolerance" - {
+    "when user answer is valid and complete and calling the sign up end point returned a valid 202 response" - {
+      "must return Pending(idempotencyKey) when user answer has the company details" - {
+        "and exactly one contact detail" in {
+          val testIdempotencyKey = "key"
+          when(mockSignUpConnector.submitWithFaultTolerance(any())(using any())).thenReturn(
+            Future.successful(
+              HttpResponse(
+                202,
+                s"""{"idempotencyKey": "$testIdempotencyKey"}"""
+              )
+            )
+          )
+          val userAnswers = emptyUserAnswers
+            .updateGrs(testCompanyDetails)
+            .updateContact(First, "name", "email")
+            .updateContactHaveYouAddedAll(Yes)
+
+          val result = SUT.submitWithFaultTolerance(userAnswers)
+
+          result.futureValue mustBe Pending(testIdempotencyKey)
+
+          verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(
+            argThat[SignUpRequest] { req =>
+              req.etmpSafeId == "registeredBusinessPartnerId" &&
+              req.nominatedCompany == NominatedCompany(
+                name = "companyName",
+                utr = "ctUtr",
+                crn = "companyNumber"
+              ) &&
+              req.contacts == List(Contact("name", "email", "valid", "en-GB")) &&
+              req.idempotencyKey.nonEmpty
+            }
+          )(using any())
+        }
+        "and have two contact details" in {
+          val testIdempotencyKey = "key"
+          when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
+            .thenReturn(
+              Future.successful(HttpResponse(202, s"""{"idempotencyKey": "$testIdempotencyKey"}"""))
+            )
+          val userAnswers = emptyUserAnswers
+            .updateGrs(testCompanyDetails)
+            .updateContact(First, "name1", "email1")
+            .updateContactHaveYouAddedAll(No)
+            .updateContact(Second, "name2", "email2")
+
+          val result = SUT.submitWithFaultTolerance(userAnswers)
+
+          result.futureValue mustBe Pending(testIdempotencyKey)
+
+          verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(
+            argThat[SignUpRequest] { req =>
+              req.etmpSafeId == "registeredBusinessPartnerId" &&
+              req.nominatedCompany == NominatedCompany(
+                name = "companyName",
+                utr = "ctUtr",
+                crn = "companyNumber"
+              ) &&
+              req.contacts == List(
+                Contact("name1", "email1", "valid", "en-GB"),
+                Contact("name2", "email2", "valid", "en-GB")
+              ) &&
+              req.idempotencyKey.nonEmpty
+            }
+          )(using any())
+        }
+      }
+
+      "must return InsufficientUserAnswers when user answer is incomplete" - {
+        "when there is nothing in user answers" in {
+          val result = SUT.submitWithFaultTolerance(emptyUserAnswers)
+
+          result.futureValue mustBe InsufficientUserAnswers
+          verify(mockSignUpConnector, times(0)).submitWithFaultTolerance(any())(using any())
+        }
+        "when there is only Company Details in user answers" in {
+          val result = SUT.submitWithFaultTolerance(emptyUserAnswers.updateGrs(testCompanyDetails))
+
+          result.futureValue mustBe InsufficientUserAnswers
+          verify(mockSignUpConnector, times(0)).submitWithFaultTolerance(any())(using any())
+        }
+        "when there is only Contact Details in user answers" in {
+          val result = SUT.submitWithFaultTolerance(
+            emptyUserAnswers
+              .updateContact(First, "name1", "email1")
+              .updateContactHaveYouAddedAll(No)
+              .updateContact(Second, "name2", "email2")
+          )
+
+          result.futureValue mustBe InsufficientUserAnswers
+          verify(mockSignUpConnector, times(0)).submitWithFaultTolerance(any())(using any())
+        }
+      }
+    }
+
+    "when user answer is valid and complete" - {
+      "must return MalformedResponse when sign up end point returned an invalid 200 response" in {
+        when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
+          .thenReturn(Future.successful(HttpResponse(202, "{}")))
+        val userAnswers = emptyUserAnswers
+          .updateGrs(testCompanyDetails)
+          .updateContact(First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+
+        val result = SUT.submitWithFaultTolerance(userAnswers)
+
+        result.futureValue mustBe MalformedResponse
+
+        verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(any())(using any())
+      }
+
+      "must return BadRequestFailure when sign up end point returned a 400 response" in {
+        when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
+          .thenReturn(Future.successful(HttpResponse(400, "")))
+        val userAnswers = emptyUserAnswers
+          .updateGrs(testCompanyDetails)
+          .updateContact(First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+
+        val result = SUT.submitWithFaultTolerance(userAnswers)
+
+        result.futureValue mustBe BadRequestFailure
+
+        verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(any())(using any())
+      }
+
+      "must return ProtectedServiceFailure(500) when sign up end point returned a 500 response" in {
+        when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
+          .thenReturn(Future.successful(HttpResponse(500, "")))
+        val userAnswers = emptyUserAnswers
+          .updateGrs(testCompanyDetails)
+          .updateContact(First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+
+        val result = SUT.submitWithFaultTolerance(userAnswers)
+
+        result.futureValue mustBe ProtectedServiceFailure(500)
+
+        verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(any())(using any())
+      }
+
+      "must return ProtectedServiceFailure(502) when sign up end point returned a 502 response" in {
+        when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
+          .thenReturn(Future.successful(HttpResponse(502, "")))
+        val userAnswers = emptyUserAnswers
+          .updateGrs(testCompanyDetails)
+          .updateContact(First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+
+        val result = SUT.submitWithFaultTolerance(userAnswers)
+
+        result.futureValue mustBe ProtectedServiceFailure(502)
+
+        verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(any())(using any())
+      }
+
+      "must return UnknownFailure(status) when sign up end point returned an unknown status response" in {
+        when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
+          .thenReturn(Future.successful(HttpResponse(600, "")))
+        val userAnswers = emptyUserAnswers
+          .updateGrs(testCompanyDetails)
+          .updateContact(First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+
+        val result = SUT.submitWithFaultTolerance(userAnswers)
+
+        result.futureValue mustBe UnknownFailure(600)
+
+        verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(any())(using any())
       }
     }
 

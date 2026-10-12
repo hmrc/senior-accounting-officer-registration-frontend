@@ -41,4 +41,19 @@ class SignUpConnector @Inject() (
       .setHeader("correlationId" -> UUID.randomUUID().toString)
       .execute[HttpResponse]
   }
+
+  def submitWithFaultTolerance(signupSubmission: SignUpRequest)(using HeaderCarrier): Future[HttpResponse] = {
+    http
+      .post(url"${appConfig.protectedServiceBaseUrl}/senior-accounting-officer-registration/v2/sign-up")
+      .withBody(Json.toJson(signupSubmission))
+      .setHeader("correlationId" -> UUID.randomUUID().toString)
+      .execute[HttpResponse]
+  }
+
+  def getStateOfWorkItem(idempotencyKey: String)(using HeaderCarrier): Future[HttpResponse] = {
+    http
+      .get(url"${appConfig.protectedServiceBaseUrl}/senior-accounting-officer-registration/v2/sign-up/$idempotencyKey")
+      .setHeader("correlationId" -> UUID.randomUUID().toString)
+      .execute[HttpResponse]
+  }
 }

@@ -23,15 +23,13 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationCompleteView
 
-import java.time.Clock
 import javax.inject.Inject
 
 class RegistrationCompleteController @Inject() (
     override val messagesApi: MessagesApi,
     requireEnrolment: EnrolmentRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    view: RegistrationCompleteView,
-    clock: Clock
+    view: RegistrationCompleteView
 ) extends FrontendBaseController
     with I18nSupport {
 

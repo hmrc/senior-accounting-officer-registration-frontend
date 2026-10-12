@@ -33,13 +33,15 @@ class SignUpConnectorISpec extends ISpecBase {
   lazy val SUT: SignUpConnector = app.injector.instanceOf[SignUpConnector]
   given HeaderCarrier           = HeaderCarrier()
 
-  def testUrl = "/senior-accounting-officer-registration/sign-up"
+  def submitUrl = "/senior-accounting-officer-registration/sign-up"
+  def submitFaultToleranceUrl = "/senior-accounting-officer-registration/v2/sign-up"
+  def getStateOfWorkUrl = "/senior-accounting-officer-registration/v2/sign-up/key"
 
   "A POST call from SignUpConnector.submit to the target URL" - {
     for status <- Seq(200, 400, 401, 500, 502) yield {
       s"must return the raw HttpResponse for status=$status" in {
         stubFor(
-          post(urlEqualTo(testUrl))
+          post(urlEqualTo(submitUrl))
             .willReturn(
               aResponse()
                 .withHeader("content-type", "application/json")
@@ -65,7 +67,8 @@ class SignUpConnectorISpec extends ISpecBase {
                     status = "String",
                     language = "String"
                   )
-                )
+                ),
+                idempotencyKey = None
               )
             )
             .futureValue
@@ -75,7 +78,7 @@ class SignUpConnectorISpec extends ISpecBase {
 
         verify(
           1,
-          postRequestedFor(urlEqualTo(URI(testUrl).getPath))
+          postRequestedFor(urlEqualTo(URI(submitUrl).getPath))
             .withRequestBody(equalToJson("""
               |{
               |  "etmpSafeId" : "etmpSafeId",
@@ -91,6 +94,95 @@ class SignUpConnectorISpec extends ISpecBase {
               |    "language" : "String"
               |  } ]
               |}""".stripMargin))
+        )
+      }
+    }
+  }
+
+  "A POST call from SignUpConnector.submitWithFaultTolerance to the target URL" - {
+    for status <- Seq(202, 400, 401, 500, 502) yield {
+      s"must return the raw HttpResponse for status=$status" in {
+        stubFor(
+          post(urlEqualTo(submitFaultToleranceUrl))
+            .willReturn(
+              aResponse()
+                .withHeader("content-type", "application/json")
+                .withBody(testBody)
+                .withStatus(status)
+            )
+        )
+
+        val result: HttpResponse =
+          SUT
+            .submitWithFaultTolerance(
+              SignUpRequest(
+                etmpSafeId = "etmpSafeId",
+                nominatedCompany = NominatedCompany(
+                  name = "String",
+                  utr = "String",
+                  crn = "String"
+                ),
+                contacts = List(
+                  Contact(
+                    name = "String",
+                    email = "String",
+                    status = "String",
+                    language = "String"
+                  )
+                ),
+                idempotencyKey = Some("key")
+              )
+            )
+            .futureValue
+
+        result.status mustBe status
+        result.body mustBe testBody
+
+        verify(
+          1,
+          postRequestedFor(urlEqualTo(URI(submitFaultToleranceUrl).getPath))
+            .withRequestBody(equalToJson("""
+                                           |{
+                                           |  "etmpSafeId" : "etmpSafeId",
+                                           |  "nominatedCompany" : {
+                                           |    "name" : "String",
+                                           |    "utr" : "String",
+                                           |    "crn" : "String"
+                                           |  },
+                                           |  "contacts" : [ {
+                                           |    "name" : "String",
+                                           |    "email" : "String",
+                                           |    "status" : "String",
+                                           |    "language" : "String"
+                                           |  } ],
+                                           |  "idempotencyKey": "key"
+                                           |}""".stripMargin))
+        )
+      }
+    }
+  }
+
+  "A GET call from SignUpConnector.getStateOfWorkItem to the target URL" - {
+    for status <- Seq(204, 400, 401, 500, 502) yield {
+      s"must return the raw HttpResponse for status=$status" in {
+        stubFor(
+          get(urlEqualTo(getStateOfWorkUrl))
+            .willReturn(
+              aResponse()
+                .withStatus(status)
+            )
+        )
+
+        val result: HttpResponse =
+          SUT
+            .getStateOfWorkItem("key")
+            .futureValue
+
+        result.status mustBe status
+
+        verify(
+          1,
+          getRequestedFor(urlEqualTo(URI(getStateOfWorkUrl).getPath))
         )
       }
     }
