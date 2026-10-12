@@ -37,7 +37,7 @@ class NominatedCompanyDetailsGuidanceViewSpec extends ViewSpecBase[NominatedComp
       hasError = false
     )
 
-    doc.createTestsWithLargeCaption(
+    doc.createTestsWithCaption(
       caption = pageCaption
     )
 
