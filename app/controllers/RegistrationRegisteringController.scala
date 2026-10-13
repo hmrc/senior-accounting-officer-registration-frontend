@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 class RegistrationRegisteringController @Inject() (
     override val messagesApi: MessagesApi,
-    identify: IdentifierAction,
+    identifyIgnoringRegistration: IdentifierActionIgnoringRegistration,
     getData: DataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
     view: RegistrationRegisteringView,
@@ -42,7 +42,7 @@ class RegistrationRegisteringController @Inject() (
     with I18nSupport {
 
   def onPageLoad(idempotencyKey: String): Action[AnyContent] =
-    (identify andThen getData).async { implicit request =>
+    (identifyIgnoringRegistration andThen getData).async { implicit request =>
       signUpService.getRegistrationState(idempotencyKey, request.userId).flatMap {
         case SignUpResult.Success(subscriptionId) =>
           Future.successful(Redirect(routes.RegistrationCompleteController.onPageLoad))

@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import controllers.actions.{FakeIdentifierActionIgnoringRegistration, IdentifierActionIgnoringRegistration}
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
@@ -41,7 +42,8 @@ class RegistrationRegisteringControllerSpec extends SpecBase with MockitoSugar w
     super
       .applicationBuilder()
       .overrides(
-        inject.bind[SignUpService].toInstance(mockSignUpService)
+        inject.bind[SignUpService].toInstance(mockSignUpService),
+        inject.bind[IdentifierActionIgnoringRegistration].to[FakeIdentifierActionIgnoringRegistration]
       )
 
   override def beforeEach(): Unit = {
