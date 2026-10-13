@@ -21,7 +21,10 @@
 
 @(continueUrl: String)(using request: Request[?], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("journeyRecovery.continue.title"), Some("journeyRecovery.section.registration"))) {
+@layout(
+    showBackLink = false,
+    pageTitle = titleNoForm(messages("journeyRecovery.continue.title"), Some("journeyRecovery.section.registration"))
+) {
 
     <h1 class="govuk-heading-xl">@messages("journeyRecovery.continue.heading")</h1>
 

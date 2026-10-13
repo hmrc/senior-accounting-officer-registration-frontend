@@ -29,7 +29,7 @@ class JourneyRecoveryStartAgainViewSpec extends ViewSpecBase[JourneyRecoveryStar
     doc.createTestsWithStandardPageElements(
       pageTitle = pageTitle,
       pageHeading = pageHeading,
-      showBackLink = true,
+      showBackLink = false,
       showIsThisPageNotWorkingProperlyLink = true,
       hasError = false
     )
