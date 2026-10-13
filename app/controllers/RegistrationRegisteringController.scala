@@ -31,12 +31,12 @@ import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.Inject
 
 class RegistrationRegisteringController @Inject() (
-                                                    override val messagesApi: MessagesApi,
-                                                    identifyIgnoringRegistration: IdentifierActionIgnoringRegistration,
-                                                    getData: DataRetrievalAction,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: RegistrationRegisteringView,
-                                                    signUpService: SignUpService
+    override val messagesApi: MessagesApi,
+    identifyIgnoringRegistration: IdentifierActionIgnoringRegistration,
+    getData: DataRetrievalAction,
+    val controllerComponents: MessagesControllerComponents,
+    view: RegistrationRegisteringView,
+    signUpService: SignUpService
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {

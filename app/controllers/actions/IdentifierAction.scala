@@ -69,7 +69,7 @@ final class FrontendAuthenticatedIdentifierAction @Inject() (
 )(using ExecutionContext)
     extends AuthenticatedIdentifierAction(config, parser, isFrontend = true)
 
-class IdentifierActionIgnoringRegistration @Inject()(
+class IdentifierActionIgnoringRegistration @Inject() (
     override val authConnector: AuthConnector,
     config: AppConfig,
     override val parser: BodyParsers.Default
