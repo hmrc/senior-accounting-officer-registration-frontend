@@ -69,6 +69,18 @@ final class FrontendAuthenticatedIdentifierAction @Inject() (
 )(using ExecutionContext)
     extends AuthenticatedIdentifierAction(config, parser, isFrontend = true)
 
+class IdentifierActionIgnoringRegistration @Inject()(
+    override val authConnector: AuthConnector,
+    config: AppConfig,
+    override val parser: BodyParsers.Default
+)(using ExecutionContext)
+    extends AuthenticatedIdentifierAction(
+      config,
+      parser,
+      isFrontend = true,
+      checkAlreadyRegistered = false
+    )
+
 trait ApiAuthenticatedIdentifierAction extends IdentifierAction
 
 class ApiAuthenticatedIdentifierActionImpl @Inject() (
@@ -82,7 +94,8 @@ class ApiAuthenticatedIdentifierActionImpl @Inject() (
 abstract class AuthenticatedIdentifierAction(
     config: AppConfig,
     val parser: BodyParsers.Default,
-    isFrontend: Boolean
+    isFrontend: Boolean,
+    checkAlreadyRegistered: Boolean = true
 )(using override val executionContext: ExecutionContext)
     extends IdentifierAction
     with AuthorisedFunctions {
@@ -104,7 +117,7 @@ abstract class AuthenticatedIdentifierAction(
         Future.successful(Redirect(routes.AgentCannotAccessServiceController.onPageLoad()))
       case _ ~ Some(AffinityGroup.Organisation) ~ Some(Assistant) ~ _ =>
         Future.successful(Redirect(routes.StandardUserCannotAccessServiceController.onPageLoad()))
-      case _ ~ _ ~ _ ~ enrolments if isAlreadyRegistered(enrolments) =>
+      case _ ~ _ ~ _ ~ enrolments if checkAlreadyRegistered && isAlreadyRegistered(enrolments) =>
         Future.successful(Redirect(routes.AlreadyRegisteredController.onPageLoad()))
       case internalId ~ _ ~ _ ~ _ =>
         internalId
