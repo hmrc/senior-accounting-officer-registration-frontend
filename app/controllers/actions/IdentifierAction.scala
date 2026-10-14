@@ -78,7 +78,7 @@ class IdentifierActionIgnoringRegistration @Inject() (
       config,
       parser,
       isFrontend = true,
-      inhibitEnrolmentCheck = false
+      checkForExistingEnrolment = false
     )
 
 trait ApiAuthenticatedIdentifierAction extends IdentifierAction
@@ -95,7 +95,7 @@ abstract class AuthenticatedIdentifierAction(
     config: AppConfig,
     val parser: BodyParsers.Default,
     isFrontend: Boolean,
-    inhibitEnrolmentCheck: Boolean = true
+    checkForExistingEnrolment: Boolean = true
 )(using override val executionContext: ExecutionContext)
     extends IdentifierAction
     with AuthorisedFunctions {
@@ -117,7 +117,7 @@ abstract class AuthenticatedIdentifierAction(
         Future.successful(Redirect(routes.AgentCannotAccessServiceController.onPageLoad()))
       case _ ~ Some(AffinityGroup.Organisation) ~ Some(Assistant) ~ _ =>
         Future.successful(Redirect(routes.StandardUserCannotAccessServiceController.onPageLoad()))
-      case _ ~ _ ~ _ ~ enrolments if inhibitEnrolmentCheck && isAlreadyRegistered(enrolments) =>
+      case _ ~ _ ~ _ ~ enrolments if checkForExistingEnrolment && isAlreadyRegistered(enrolments) =>
         Future.successful(Redirect(routes.AlreadyRegisteredController.onPageLoad()))
       case internalId ~ _ ~ _ ~ _ =>
         internalId
