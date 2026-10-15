@@ -44,15 +44,15 @@ class AgentCannotAccessServiceViewSpec extends ViewSpecBase[AgentCannotAccessSer
 
     doc.createTestsWithParagraphs(Seq(paragraph1, paragraph2, findOutMoreLinkText))
 
-    "the find out more link" - {
-      doc
-        .getParagraphs()
-        .toSeq(2)
-        .createTestWithLink(
-          linkText = findOutMoreLinkText,
-          destinationUrl = appConfig.whoCanUseServiceUrl
-        )
-    }
+    doc
+      .getParagraphs()
+      .toSeq(2)
+      .createTestWithLink(
+        linkTestDescription = "find out more",
+        linkText = findOutMoreLinkText,
+        destinationUrl = appConfig.whoCanUseServiceUrl,
+        isExternalLink = false
+      )
   }
 }
 

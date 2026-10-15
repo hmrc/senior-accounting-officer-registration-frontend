@@ -42,7 +42,7 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
 
       doc.createTestsWithParagraphs(List(pageHint))
 
-      doc.createTestWithSubheading(subheading = subheading)
+      doc.createTestWithLegendSubheading(subheading = subheading)
 
       doc.createTestsWithRadioButtons(
         name = "value",
@@ -73,7 +73,7 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
 
       doc.createTestWithParagraph(pageHint)
 
-      doc.createTestWithSubheading(subheading = subheading)
+      doc.createTestWithLegendSubheading(subheading = subheading)
 
       doc.createTestsWithRadioButtons(
         name = "value",
@@ -89,23 +89,6 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
         action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First, NormalMode),
         buttonText = "Continue"
       )
-    }
-  }
-  extension (doc: Document) {
-    def createTestWithSubheading(subheading: String): Unit = {
-      val subheadings = doc.select("legend > h2")
-      "must display the correct subheading" in {
-        subheadings.get(0).text() mustBe subheading
-        subheadings.size() mustBe 1
-      }
-    }
-
-    def createTestWithParagraph(pageHint: String): Unit = {
-      val paragraphs = doc.select("h1 + p")
-      "must display the correct paragraph in the error form" in {
-        paragraphs.get(0).text() mustBe pageHint
-        paragraphs.size() mustBe 1
-      }
     }
   }
 }

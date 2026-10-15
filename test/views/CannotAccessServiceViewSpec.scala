@@ -44,25 +44,25 @@ class CannotAccessServiceViewSpec extends ViewSpecBase[CannotAccessServiceView] 
 
     doc.createTestsWithParagraphs(Seq(paragraph1, findOutMoreLinkText, paragraph2))
 
-    "the sign in link" - {
-      doc
-        .getParagraphs()
-        .toSeq(2)
-        .createTestWithLink(
-          linkText = signInLinkText,
-          destinationUrl = appConfig.organisationSignInUrl
-        )
-    }
+    doc
+      .getParagraphs()
+      .toSeq(1)
+      .createTestWithLink(
+        linkTestDescription = "find out more",
+        linkText = findOutMoreLinkText,
+        destinationUrl = appConfig.whoCanUseServiceUrl,
+        isExternalLink = false
+      )
 
-    "the find out more link" - {
-      doc
-        .getParagraphs()
-        .toSeq(1)
-        .createTestWithLink(
-          linkText = findOutMoreLinkText,
-          destinationUrl = appConfig.whoCanUseServiceUrl
-        )
-    }
+    doc
+      .getParagraphs()
+      .toSeq(2)
+      .createTestWithLink(
+        linkTestDescription = "sign in",
+        linkText = signInLinkText,
+        destinationUrl = appConfig.organisationSignInUrl,
+        isExternalLink = false
+      )
   }
 }
 

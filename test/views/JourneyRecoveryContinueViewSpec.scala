@@ -34,13 +34,7 @@ class JourneyRecoveryContinueViewSpec extends ViewSpecBase[JourneyRecoveryContin
     )
 
     doc.createTestsWithParagraphs(paragraphs)
-
-    "must have a button" in {
-      val button = doc.getMainContent.select("a.govuk-button")
-      button.size mustBe 1
-      button.text() mustBe buttonText
-      button.attr("href") mustBe linkText
-    }
+    doc.createTestsWithButton(buttonText = buttonText, href = linkText, isPrimaryButton = false)
   }
 }
 

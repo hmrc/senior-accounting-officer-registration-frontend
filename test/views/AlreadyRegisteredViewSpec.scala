@@ -44,23 +44,16 @@ class AlreadyRegisteredViewSpec extends ViewSpecBase[AlreadyRegisteredView] {
 
     doc.createTestsWithParagraphs(Seq(paragraph1, paragraph2))
 
-    "the business tax account link" - {
-      doc
-        .getParagraphs()
-        .toSeq
-        .head
-        .createTestWithLink(
-          linkText = businessTaxAccountLinkText,
-          destinationUrl = appConfig.businessTaxAccountUrl
-        )
-
-      "must open in a new tab" in {
-        val link = doc.getMainContent.select("a.govuk-link").first
-
-        link.attr("target") mustBe "_blank"
-        link.attr("rel") must include("noopener")
-      }
-    }
+    doc
+      .getParagraphs()
+      .toSeq
+      .head
+      .createTestWithLink(
+        linkTestDescription = "business tax account",
+        linkText = businessTaxAccountLinkText,
+        destinationUrl = appConfig.businessTaxAccountUrl,
+        isExternalLink = true
+      )
   }
 }
 

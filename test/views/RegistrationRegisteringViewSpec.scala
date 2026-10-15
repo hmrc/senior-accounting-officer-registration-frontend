@@ -39,8 +39,11 @@ class RegistrationRegisteringViewSpec extends ViewSpecBase[RegistrationRegisteri
         hasError = false
       )
 
-      "must have a paragraph telling the user that it may take a few minutes" in {
-        doc.getElementById("wait-text").text() mustBe waitText
+      "must have a paragraph telling the user that it may take a few minutes" - {
+        doc.getMainContent
+          .select("#wait-text")
+          .get(0)
+          .createTestWithText(waitText)
       }
 
       "must have a spinner" in {
