@@ -56,30 +56,29 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 
       doc.createTestsWithParagraphs(paragraphsList)
 
-      "must have a print this page link" - {
-        doc.getMainContent
-          .getElementById("print-page-link")
-          .createTestWithLink(
-            linkText = "Print this page",
-            destinationUrl = "#"
-          )
-      }
+      doc.getMainContent
+        .getElementById("print-page-link")
+        .createTestWithLink(
+          linkTestDescription = "print this page",
+          linkText = "Print this page",
+          destinationUrl = "#",
+          isExternalLink = false
+        )
 
-      "must have a 'go to your account homepage' link" - {
-        doc.getMainContent
-          .getElementById("homepage-link")
-          .createTestWithLink(
-            linkText = "go to your account homepage",
-            destinationUrl = "hub-url/senior-accounting-officer"
-          )
-      }
+      doc.getMainContent
+        .getElementById("homepage-link")
+        .createTestWithLink(
+          linkTestDescription = "'go to your account homepage'",
+          linkText = "go to your account homepage",
+          destinationUrl = hubUrl,
+          isExternalLink = false
+        )
 
-      "Continue button" - {
-        doc.getMainContent
-          .select(".govuk-button-primary")
-          .get(0)
-          .createTestWithText("Continue")
-      }
+      doc.createTestsWithButton(
+        buttonText = "Continue",
+        href = hubUrl,
+        isPrimaryButton = true
+      )
     }
   }
 }
@@ -87,8 +86,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
 object RegistrationCompleteViewSpec {
 
   val panelTitle: String = "Registration complete"
-
-  val panelBody: String = "Your reference number REG12345"
+  val panelBody: String  = "Your reference number REG12345"
 
   val paragraphsList: List[String] = List(
     "We’ve sent a confirmation email to all the contacts you gave during registration.",
@@ -96,4 +94,5 @@ object RegistrationCompleteViewSpec {
     "You can now go to your account homepage to submit a notification and certificate."
   )
 
+  val hubUrl = "hub-url/senior-accounting-officer"
 }

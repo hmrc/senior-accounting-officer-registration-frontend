@@ -71,16 +71,20 @@ class DashboardViewSpec extends ViewSpecBase[DashboardView] {
             doc.getMainContent
               .selectFirst("li a[aria-describedby='company-details-status']")
               .createTestWithLink(
+                linkTestDescription = "enter nominated company details",
                 linkText = enterNominatedCompanyDetailsLinkText,
-                destinationUrl = enterNominatedCompanyDetailsLinkUrl
+                destinationUrl = enterNominatedCompanyDetailsLinkUrl,
+                isExternalLink = false
               )
           case ContactsInfo =>
             doc.createTestWithoutElements(byClass = "govuk-button")
             doc.getMainContent
               .selectFirst("li a[aria-describedby='contacts-details-status']")
               .createTestWithLink(
+                linkTestDescription = "enter contact details",
                 linkText = enterYourContactDetailsLinkText,
-                destinationUrl = enterYourContactDetailsLinkUrl
+                destinationUrl = enterYourContactDetailsLinkUrl,
+                isExternalLink = false
               )
           case Submission =>
             doc.createTestsWithSubmissionButton(
