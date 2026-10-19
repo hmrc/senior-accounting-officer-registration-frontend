@@ -44,15 +44,15 @@ class StandardUserCannotAccessServiceViewSpec extends ViewSpecBase[StandardUserC
 
     doc.createTestsWithParagraphs(Seq(paragraph1, paragraph2))
 
-    "the sign in link" - {
-      doc
-        .getParagraphs()
-        .toSeq(1)
-        .createTestWithLink(
-          linkText = signInLinkText,
-          destinationUrl = appConfig.organisationSignInUrl
-        )
-    }
+    doc
+      .getParagraphs()
+      .toSeq(1)
+      .createTestWithLink(
+        linkTestDescription = "sign in",
+        linkText = signInLinkText,
+        destinationUrl = appConfig.organisationSignInUrl,
+        isExternalLink = false
+      )
   }
 }
 

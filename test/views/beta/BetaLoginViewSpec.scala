@@ -68,7 +68,7 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
 
       doc.createTestsWithParagraphs(paragraphs)
 
-      doc.createTestsForSubHeadings(pageSubHeadings)
+      doc.createTestsForH2Headings(pageSubHeadings)
 
       doc.createTestsWithBulletPoints(bulletPointTexts)
 
@@ -101,7 +101,7 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
       doc.createTestsWithOrWithoutError(
         hasError = false
       )
-      doc.createTestsForSubHeadings(pageSubHeadings)
+      doc.createTestsForH2Headings(pageSubHeadings)
 
       doc.createTestsWithBulletPoints(bulletPointTexts)
 
@@ -137,26 +137,11 @@ class BetaLoginViewSpec extends ViewSpecBase[BetaLoginView] {
 
       doc.createTestsWithParagraphs(paragraphs)
 
-      doc.createTestsForSubHeadings(pageSubHeadingsWithError)
+      doc.createTestsForH2Headings(pageSubHeadingsWithError)
 
       doc.createTestsWithBulletPoints(bulletPointTexts)
 
     }
-  }
-
-  extension (target: => Document) {
-    def createTestsForSubHeadings(subheadings: Seq[String]): Unit = {
-      val headings = target.getMainContent.getElementsByTag("h2")
-      "must have expected number of headings" in {
-        headings.size() mustBe subheadings.length
-      }
-      subheadings.zipWithIndex.foreach((subheading, i) => {
-        s"must have heading '$subheading'" in {
-          headings.get(i).text mustBe subheading
-        }
-      })
-    }
-
   }
 }
 

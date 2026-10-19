@@ -35,13 +35,11 @@ class JourneyRecoveryStartAgainViewSpec extends ViewSpecBase[JourneyRecoveryStar
     )
 
     doc.createTestsWithParagraphs(paragraphs)
-
-    "must have a button" in {
-      val button = doc.getMainContent.select("a.govuk-button")
-      button.size mustBe 1
-      button.text() mustBe buttonText
-      button.attr("href") mustBe routes.IndexController.onPageLoad().url
-    }
+    doc.createTestsWithButton(
+      buttonText = buttonText,
+      href = routes.IndexController.onPageLoad().url,
+      isPrimaryButton = false
+    )
   }
 }
 

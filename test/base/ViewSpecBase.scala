@@ -59,13 +59,13 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       createTestWithIsThisPageNotWorkingProperlyLink
     }
 
-    def createTestWithPageTitle(pageTitle: String, hasError: Boolean)(using pos: Position): Unit =
+    private def createTestWithPageTitle(pageTitle: String, hasError: Boolean)(using pos: Position): Unit =
       "must generate a view with the correct title" in {
         val errorPrefix = if hasError then "Error: " else ""
         doc.title mustBe s"$errorPrefix$pageTitle - $expectedServiceName - GOV.UK"
       }
 
-    def createTestWithPageHeading(pageHeading: String)(using
+    private def createTestWithPageHeading(pageHeading: String)(using
         pos: Position
     ): Unit =
       "must generate a view with the correct page heading" in {
@@ -87,7 +87,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
       }
     }
 
-    def createTestWithBackLink(show: Boolean)(using pos: Position): Unit =
+    private def createTestWithBackLink(show: Boolean)(using pos: Position): Unit =
       if show then
         "must show a backlink " in {
           val backLink = doc.getElementsByClass("govuk-back-link")
@@ -107,7 +107,7 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
           }
         }
 
-    def createTestWithIsThisPageNotWorkingProperlyLink(using
+    private def createTestWithIsThisPageNotWorkingProperlyLink(using
         pos: Position
     ): Unit =
       "must generate a view with 'Is this page not working properly? (opens in new tab)' " in {
@@ -139,9 +139,23 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
         "must not show an error" in {
           val elements = doc.getElementsByClass("govuk-error-summary govuk-form-group--error")
           withClue("error message must not be shown\n") {
-            elements.isEmpty() mustBe true
+            elements.isEmpty mustBe true
           }
         }
+
+    def createTestsWithButton(
+        buttonText: String,
+        href: String,
+        isPrimaryButton: Boolean
+    ): Unit = {
+      s"must have a button - $buttonText" in {
+        val buttonSelector = if isPrimaryButton then "a.govuk-button-primary" else "a.govuk-button"
+        val button         = doc.getMainContent.select(buttonSelector)
+        button.size mustBe 1
+        button.text() mustBe buttonText
+        button.attr("href") mustBe href
+      }
+    }
   }
 
   extension (target: => Document | Element) {
@@ -755,34 +769,86 @@ class ViewSpecBase[T <: BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlForm
     }
 
     def createTestWithLink(
+        linkTestDescription: String,
         linkText: String,
-        destinationUrl: String
+        destinationUrl: String,
+        isExternalLink: Boolean
     )(using
         pos: Position
-    ): Unit =
-      s"must have expected link with correct text: $linkText and correct url $destinationUrl within provided element" in {
-        val element       = target.resolve
-        val link: Element = if element.tagName() == "a" then {
-          element
-        } else {
-          val links = element.select("a").asScala
-          withClue(s"Expected to find exactly one link in the element but found ${links.size}\n") {
-            links.size mustBe 1
+    ): Unit = {
+      s"the $linkTestDescription link" - {
+        s"must have expected link with correct text: $linkText and correct url $destinationUrl within provided element" in {
+          val element       = target.resolve
+          val link: Element = if element.tagName() == "a" then {
+            element
+          } else {
+            val links = element.select("a").asScala
+            withClue(s"Expected to find exactly one link in the element but found ${links.size}\n") {
+              links.size mustBe 1
+            }
+            links.head
           }
-          links.head
-        }
-        withClue(s"link text was not as expected. Got ${link.text()}, expected '$linkText'\n") {
-          link.text mustBe linkText
-        }
-        withClue(s"link href was not as expected. Got ${link.attr("href")}, expected '$destinationUrl'\n") {
-          link.attr("href") mustBe destinationUrl
-        }
+          withClue(s"link text was not as expected. Got ${link.text()}, expected '$linkText'\n") {
+            link.text mustBe linkText
+          }
+          withClue(s"link href was not as expected. Got ${link.attr("href")}, expected '$destinationUrl'\n") {
+            link.attr("href") mustBe destinationUrl
+          }
 
-        withClue(s"link must have expected CSS class\n") {
-          link.className() must include("govuk-link")
+          withClue(s"link must have expected CSS class\n") {
+            link.className() must include("govuk-link")
+          }
+
+          if isExternalLink then {
+            withClue("external link must open to new tab") {
+              link.attr("target") mustBe "_blank"
+              link.attr("rel") must include("noopener")
+            }
+          }
         }
       }
+    }
 
+    def createTestsForH2Headings(
+        subheadings: Seq[String]
+    )(using pos: Position): Unit = {
+
+      val headings = target.resolve.select("h2")
+
+      "must have expected number of headings" in {
+        headings.size() mustBe subheadings.size
+      }
+
+      subheadings.zipWithIndex.foreach { case (subheading, i) =>
+        s"must have heading '$subheading'" in {
+          headings.get(i).text() mustBe subheading
+        }
+      }
+    }
+
+    def createTestWithLegendSubheading(
+        subheading: String
+    )(using pos: Position): Unit = {
+
+      val subheadings = target.resolve.select("legend > h2")
+
+      "must display the correct subheading" in {
+        subheadings.size() mustBe 1
+        subheadings.get(0).text() mustBe subheading
+      }
+    }
+
+    def createTestWithParagraph(
+        pageHint: String
+    )(using pos: Position): Unit = {
+
+      val paragraphs = target.resolve.select("h1 + p")
+
+      "must display the correct paragraph in the error form" in {
+        paragraphs.get(0).text() mustBe pageHint
+        paragraphs.size() mustBe 1
+      }
+    }
   }
 
   @inline def radio(value: String, label: String, hint: Option[String] = None): RadioButton =

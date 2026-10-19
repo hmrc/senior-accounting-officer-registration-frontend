@@ -46,8 +46,10 @@ class PageNotFoundViewSpec extends ViewSpecBase[PageNotFoundView] {
       .select("p a")
       .first()
       .createTestWithLink(
+        linkTestDescription = "support email",
         linkText = supportEmailLinkText,
-        destinationUrl = supportEmailMailto
+        destinationUrl = supportEmailMailto,
+        isExternalLink = false
       )
 
     doc.createTestsWithOrWithoutError(hasError = false)
