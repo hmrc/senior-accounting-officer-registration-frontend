@@ -134,6 +134,7 @@ class SignUpService @Inject() (
       case HttpResponse(204, _, _)                  => SignUpResult.Pending(idempotencyKey)
       case HttpResponse(400, _, _)                  => BadRequestFailure
       case HttpResponse(status @ (500 | 502), _, _) => ProtectedServiceFailure(status)
+      case HttpResponse(422, _, _)                  => AlreadyRegistered
       case HttpResponse(status, _, _)               => UnknownFailure(status)
     }
 
@@ -161,6 +162,7 @@ object SignUpService {
     case InsufficientUserAnswers              extends SignUpResult with Failure
     case MalformedResponse                    extends SignUpResult with Failure
     case BadRequestFailure                    extends SignUpResult with Failure
+    case AlreadyRegistered                    extends SignUpResult with Failure
     case ProtectedServiceFailure(status: Int) extends SignUpResult with Failure
     case UnknownFailure(status: Int)          extends SignUpResult with Failure
   }

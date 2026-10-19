@@ -119,5 +119,26 @@ class RegistrationRegisteringControllerSpec extends SpecBase with MockitoSugar w
         }
       }
     }
+    "must redirect to the already registered page" - {
+      "when signUpService returns an already registered result" in {
+        when(mockSignUpService.getRegistrationState(any(), any())(using any()))
+          .thenReturn(Future.successful(SignUpResult.AlreadyRegistered))
+
+        val application = applicationBuilder().build()
+
+        running(application) {
+          val request =
+            FakeRequest(GET, routes.RegistrationRegisteringController.onPageLoad("key").url)
+          val result = route(application, request).value
+
+          redirectLocation(result).value mustEqual
+            routes.AlreadyRegisteredController.onPageLoad().url
+
+          verify(mockSignUpService, times(1))
+            .getRegistrationState(any(), any())(using any())
+        }
+      }
+    }
+
   }
 }
