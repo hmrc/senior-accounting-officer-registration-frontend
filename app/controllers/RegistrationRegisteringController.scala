@@ -22,6 +22,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SignUpService
 import services.SignUpService.SignUpResult
+import services.SignUpService.SignUpResult.AlreadyRegistered
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RegistrationRegisteringView
@@ -57,6 +58,9 @@ class RegistrationRegisteringController @Inject() (
         case SignUpResult.MalformedResponse =>
           logger.warn("[getRegistrationState][MalformedResponse]")
           throw new InternalServerException("getRegistrationState returned a MalformedResponse")
+        case AlreadyRegistered =>
+          logger.warn("[getRegistrationState][AlreadyRegistered]")
+          Future.successful(Redirect(routes.AlreadyRegisteredController.onPageLoad()))
         case SignUpResult.ProtectedServiceFailure(status) =>
           logger.warn(s"[getRegistrationState][PROTECTED_SERVICE_FAILURE]status=$status")
           throw new InternalServerException(s"getRegistrationState returned $status")

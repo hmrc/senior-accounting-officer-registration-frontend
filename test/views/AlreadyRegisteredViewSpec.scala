@@ -42,12 +42,20 @@ class AlreadyRegisteredViewSpec extends ViewSpecBase[AlreadyRegisteredView] {
 
     doc.createTestsWithOrWithoutError(hasError = false)
 
-    doc.createTestsWithParagraphs(Seq(paragraph1, paragraph2))
+    doc.createTestsWithParagraphs(Seq(paragraph1, paragraph2, paragraph3, paragraph4))
+
+    "the bullet points" - {
+      "must show the two access options" in {
+        doc.select(".govuk-list--bullet li").eachText().toArray.toSeq mustBe Seq(
+          bulletPoint1,
+          bulletPoint2
+        )
+      }
+    }
 
     doc
       .getParagraphs()
-      .toSeq
-      .head
+      .toSeq(1)
       .createTestWithLink(
         linkTestDescription = "business tax account",
         linkText = businessTaxAccountLinkText,
@@ -58,10 +66,17 @@ class AlreadyRegisteredViewSpec extends ViewSpecBase[AlreadyRegisteredView] {
 }
 
 object AlreadyRegisteredViewSpec {
-  val pageHeading                = "Your company has already registered for this service"
-  val pageTitle                  = "Your company has already registered for this service"
+  val pageHeading = "Your company has already registered for this service"
+  val pageTitle   = "Your company has already registered for this service"
+
+  val paragraph1   = "You’ll need to do one of the following to access the service:"
+  val bulletPoint1 = "use the registration details already created to log in"
+  val bulletPoint2 = "register a different nominated company"
+
   val businessTaxAccountLinkText = "business tax account (opens in new tab)"
-  val paragraph1: String         =
-    s"You can find a link to the Senior Accounting Officer notification and certificate service on your HMRC $businessTaxAccountLinkText. From there you can manage your account and make a submission."
-  val paragraph2 = "Log in using your organisation Government Gateway ID."
+  val paragraph2: String         =
+    s"You can find a link to the Senior Accounting Officer notification and certificate service on your HMRC $businessTaxAccountLinkText."
+
+  val paragraph3 = "From there you can manage your account and make a submission."
+  val paragraph4 = "Log in using your organisation Government Gateway ID."
 }

@@ -33,7 +33,16 @@
 
     <h1 class="govuk-heading-l">@messages("alreadyRegistered.heading")</h1>
 
-    <p class="govuk-body">@Html(messages("alreadyRegistered.paragraph1", businessTaxAccountLink))</p>
+    <p class="govuk-body">@messages("alreadyRegistered.paragraph1")</p>
+    
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("alreadyRegistered.bulletPoint1")</li>
+        <li>@messages("alreadyRegistered.bulletPoint2")</li>
+    </ul>
 
-    <p class="govuk-body">@messages("alreadyRegistered.paragraph2")</p>
+    <p class="govuk-body">@Html(messages("alreadyRegistered.paragraph2", businessTaxAccountLink))</p>
+
+    <p class="govuk-body">@messages("alreadyRegistered.paragraph3")</p>
+
+    <p class="govuk-body">@messages("alreadyRegistered.paragraph4")</p>
 }
