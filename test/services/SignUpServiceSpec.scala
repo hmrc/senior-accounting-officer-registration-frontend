@@ -281,6 +281,22 @@ class SignUpServiceSpec
 
         verify(mockSignUpConnector, times(1)).submit(any())(using any())
       }
+
+      "must return AlreadyRegistered when sign up end point returned a 422 response" in {
+        when(mockSignUpConnector.submit(any())(using any()))
+          .thenReturn(Future.successful(HttpResponse(422, "")))
+        val userAnswers = emptyUserAnswers
+          .updateGrs(testCompanyDetails)
+          .updateContact(First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+
+        val result = SUT.submit(userAnswers)
+
+        result.futureValue mustBe AlreadyRegistered
+
+        verify(mockSignUpConnector, times(1)).submit(any())(using any())
+      }
+
     }
 
   }
@@ -453,6 +469,21 @@ class SignUpServiceSpec
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
         result.futureValue mustBe UnknownFailure(600)
+
+        verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(any())(using any())
+      }
+
+      "must return AlreadyRegistered when sign up end point returned a 422 response" in {
+        when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
+          .thenReturn(Future.successful(HttpResponse(422, "")))
+        val userAnswers = emptyUserAnswers
+          .updateGrs(testCompanyDetails)
+          .updateContact(First, "name1", "email1")
+          .updateContactHaveYouAddedAll(Yes)
+
+        val result = SUT.submitWithFaultTolerance(userAnswers)
+
+        result.futureValue mustBe AlreadyRegistered
 
         verify(mockSignUpConnector, times(1)).submitWithFaultTolerance(any())(using any())
       }
