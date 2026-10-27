@@ -20,9 +20,7 @@ import base.SpecBase
 import config.FeatureToggleSupport
 import controllers.routes
 import models.ContactType.*
-import models.config.FeatureToggle
-
-import models.{config, *}
+import models.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*
@@ -33,204 +31,232 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
 
   "Navigator" - {
 
-    Seq(ContactHaveYouAddedAll.Yes, ContactHaveYouAddedAll.No).foreach { answer =>
-      s"must route $answer independently in normal mode" in {
-        val answers     = emptyUserAnswers.set(ContactHaveYouAddedAllPage(NormalMode), answer).get
-        val wantsSecond = answer == ContactHaveYouAddedAll.Yes
-        val expected    =
-          if wantsSecond then routes.ContactNameController.onPageLoad(Second, NormalMode)
-          else routes.ContactCheckYourAnswersController.onPageLoad()
-        navigator.nextPage(ContactHaveYouAddedAllPage(NormalMode), NormalMode, answers) mustBe expected
+    "normal mode" - {
+
+      Seq(ContactHaveYouAddedAll.Yes, ContactHaveYouAddedAll.No).foreach { answer =>
+        s"must route $answer independently in normal mode" in {
+          val answers     = emptyUserAnswers.set(ContactHaveYouAddedAllPage(NormalMode), answer).get
+          val wantsSecond = answer == ContactHaveYouAddedAll.Yes
+          val expected    =
+            if wantsSecond then routes.ContactNameController.onPageLoad(Second, NormalMode)
+            else routes.ContactCheckYourAnswersController.onPageLoad()
+          navigator.nextPage(ContactHaveYouAddedAllPage(NormalMode), NormalMode, answers) mustBe expected
+        }
+      }
+
+      "must go from first contact name to first contact email page" in {
+        navigator.nextPage(
+          ContactNamePage(First, NormalMode),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactEmailController.onPageLoad(First, NormalMode)
+      }
+
+      "must go from first contact email to add another page" in {
+        navigator.nextPage(
+          ContactEmailPage(First, NormalMode),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactHaveYouAddedAllController.onPageLoad(NormalMode)
+      }
+
+      "must go from add another yes to second contact name" in {
+        navigator.nextPage(
+          ContactHaveYouAddedAllPage(NormalMode),
+          NormalMode,
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes).get
+        ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
+      }
+
+      "must go from second contact email to CYA" in {
+        navigator.nextPage(
+          ContactEmailPage(Second, NormalMode),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
+      }
+
+      "must go from CYA to index" in {
+        navigator.nextPage(
+          ContactsCheckYourAnswersPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.IndexController.onPageLoad()
+      }
+
+      "must go from a page that doesn't exist in the route map to Index" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
     }
 
-    "must go from first contact email to add another page" in {
+    "check mode" - {
 
-      navigator.nextPage(
-        ContactEmailPage(First, NormalMode),
-        NormalMode,
-        UserAnswers("id")
-      ) mustBe routes.ContactHaveYouAddedAllController.onPageLoad(NormalMode)
-    }
+      "must return name field changes to CYA" in {
+        navigator.nextPage(
+          ContactNamePage(First, NormalMode),
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
+      }
 
-    "must go from add another yes to second contact name" in {
+      "must return email field changes to CYA" in {
+        navigator.nextPage(
+          ContactEmailPage(First, NormalMode),
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
+      }
 
-      navigator.nextPage(
-        ContactHaveYouAddedAllPage(NormalMode),
-        NormalMode,
-        UserAnswers("id").set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes).get
-      ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
-    }
+      "must return add another no to CYA" in {
 
-    "must go from second contact email to CYA" in {
+        navigator.nextPage(
+          ContactHaveYouAddedAllPage(NormalMode),
+          CheckMode,
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No).get
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
+      }
 
-      navigator.nextPage(
-        ContactEmailPage(Second, NormalMode),
-        NormalMode,
-        UserAnswers("id")
-      ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
-    }
+      "must return add another yes with existing second contact to CYA" in {
 
-    "must go from CYA to index" in {
+        navigator.nextPage(
+          ContactHaveYouAddedAllPage(NormalMode),
+          CheckMode,
+          UserAnswers("id")
+            .set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
+            .get
+            .set(ContactNamePage(Second, NormalMode), "name")
+            .get
+            .set(ContactEmailPage(Second, NormalMode), "email")
+            .get
+        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
+      }
 
-      navigator.nextPage(
-        ContactsCheckYourAnswersPage,
-        NormalMode,
-        UserAnswers("id")
-      ) mustBe routes.IndexController.onPageLoad()
-    }
+      Seq(ContactNamePage(Second, NormalMode), ContactEmailPage(Second, NormalMode)).foreach { page =>
+        s"must collect second contact details when yes is selected and only $page exists" in {
 
-    "must return field changes to CYA" in {
+          val answers = emptyUserAnswers
+            .set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
+            .get
+            .set(page, "existing value")
+            .get
+          navigator.nextPage(ContactHaveYouAddedAllPage(NormalMode), CheckMode, answers) mustBe
+            routes.ContactNameController.onPageLoad(Second, NormalMode)
+        }
+      }
 
-      navigator.nextPage(
-        ContactEmailPage(First, NormalMode),
-        CheckMode,
-        UserAnswers("id")
-      ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
-    }
+      "must return no with retained second contact details to CYA" in {
 
-    "must return add another no to CYA" in {
-
-      navigator.nextPage(
-        ContactHaveYouAddedAllPage(NormalMode),
-        CheckMode,
-        UserAnswers("id").set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No).get
-      ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
-    }
-
-    "must return add another yes with existing second contact to CYA" in {
-
-      navigator.nextPage(
-        ContactHaveYouAddedAllPage(NormalMode),
-        CheckMode,
-        UserAnswers("id")
-          .set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
+        val answers = emptyUserAnswers
+          .set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
           .get
           .set(ContactNamePage(Second, NormalMode), "name")
           .get
           .set(ContactEmailPage(Second, NormalMode), "email")
           .get
-      ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
-    }
-
-    Seq(ContactNamePage(Second, NormalMode), ContactEmailPage(Second, NormalMode)).foreach { page =>
-      s"must collect second contact details when yes is selected and only $page exists" in {
-
-        val answers = emptyUserAnswers
-          .set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
-          .get
-          .set(page, "existing value")
-          .get
         navigator.nextPage(ContactHaveYouAddedAllPage(NormalMode), CheckMode, answers) mustBe
-          routes.ContactNameController.onPageLoad(Second, NormalMode)
+          routes.ContactCheckYourAnswersController.onPageLoad()
+      }
+
+      "must return add another yes without second contact to second contact name" in {
+
+        navigator.nextPage(
+          ContactHaveYouAddedAllPage(NormalMode),
+          CheckMode,
+          UserAnswers("id").set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes).get
+        ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
+      }
+
+      "must go from a page that doesn't exist in the route map to Index" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
     }
 
-    "must return no with retained second contact details to CYA" in {
+    "transaction mode" - {
 
-      val answers = emptyUserAnswers
-        .set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
-        .get
-        .set(ContactNamePage(Second, NormalMode), "name")
-        .get
-        .set(ContactEmailPage(Second, NormalMode), "email")
-        .get
-      navigator.nextPage(ContactHaveYouAddedAllPage(NormalMode), CheckMode, answers) mustBe
-        routes.ContactCheckYourAnswersController.onPageLoad()
-    }
+      "must go from a page that doesn't exist in the route map to Index" in {
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, TransactionMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
+      }
 
-    "must return add another yes without second contact to second contact name" in {
+      "on ContactHaveYouAddedAllPage" - {
+        "there was no previous answer" - {
+          "must throw an exception" in {
 
-      navigator.nextPage(
-        ContactHaveYouAddedAllPage(NormalMode),
-        CheckMode,
-        UserAnswers("id").set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes).get
-      ) mustBe routes.ContactNameController.onPageLoad(Second, NormalMode)
-    }
+            val userAnswers =
+              emptyUserAnswers.add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
 
-    "must go from a page that doesn't exist in the route map to Index" in {
+            intercept[NotImplementedError] {
+              navigator.nextPage(ContactHaveYouAddedAllPage(TransactionMode), TransactionMode, userAnswers)
+            }
+          }
+        }
 
-      case object UnknownPage extends Page
-      navigator.nextPage(UnknownPage, TransactionMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
-    }
+        "there was no current answer" - {
+          "must throw an exception" in {
 
-    "on ContactHaveYouAddedAllPage" - {
-      "there was no previous answer" - {
-        "must throw an exception" in {
+            val userAnswers =
+              emptyUserAnswers.add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
 
-          val userAnswers =
-            emptyUserAnswers.add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
+            intercept[NotImplementedError] {
+              navigator.nextPage(ContactHaveYouAddedAllPage(TransactionMode), TransactionMode, userAnswers)
+            }
+          }
+        }
 
-          intercept[NotImplementedError] {
-            navigator.nextPage(ContactHaveYouAddedAllPage(TransactionMode), TransactionMode, userAnswers)
+        "previously did not add second contact then chose to add another" - {
+          "must redirect to second contact name page" in {
+
+            val userAnswers =
+              emptyUserAnswers
+                .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
+                .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
+
+            navigator.nextPage(
+              ContactHaveYouAddedAllPage(TransactionMode),
+              TransactionMode,
+              userAnswers
+            ) mustBe routes.ContactNameController.onPageLoad(Second, TransactionMode)
+          }
+        }
+
+        "some other combination of previous and current answers" - {
+          "must redirect to contact check your answers page" in {
+
+            val userAnswers =
+              emptyUserAnswers
+                .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
+                .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.No)
+
+            navigator.nextPage(
+              ContactHaveYouAddedAllPage(TransactionMode),
+              TransactionMode,
+              userAnswers
+            ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
           }
         }
       }
 
-      "there was no current answer" - {
-        "must throw an exception" in {
-
-          val userAnswers =
-            emptyUserAnswers.add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
-
-          intercept[NotImplementedError] {
-            navigator.nextPage(ContactHaveYouAddedAllPage(TransactionMode), TransactionMode, userAnswers)
-          }
-        }
-      }
-
-      "previously did not add second contact then chose to add another" - {
-        "must redirect to second contact name page" in {
-
-          val userAnswers =
-            emptyUserAnswers
-              .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
-              .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
-
+      "on second ContactNamePage" - {
+        "must redirect to second ContactEmailPage" in {
           navigator.nextPage(
-            ContactHaveYouAddedAllPage(TransactionMode),
+            ContactNamePage(Second, TransactionMode),
             TransactionMode,
-            userAnswers
-          ) mustBe routes.ContactNameController.onPageLoad(Second, TransactionMode)
+            emptyUserAnswers
+          ) mustBe routes.ContactEmailController.onPageLoad(Second, TransactionMode)
         }
       }
 
-      "some other combination of previous and current answers" - {
+      "on second ContactEmailPage" - {
         "must redirect to contact check your answers page" in {
-
-          val userAnswers =
-            emptyUserAnswers
-              .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
-              .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.No)
-
           navigator.nextPage(
-            ContactHaveYouAddedAllPage(TransactionMode),
+            ContactEmailPage(Second, TransactionMode),
             TransactionMode,
-            userAnswers
+            emptyUserAnswers
           ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
         }
       }
     }
-
-    "on second ContactNamePage" - {
-      "must redirect to second ContactEmailPage" in {
-        navigator.nextPage(
-          ContactNamePage(Second, TransactionMode),
-          TransactionMode,
-          emptyUserAnswers
-        ) mustBe routes.ContactEmailController.onPageLoad(Second, TransactionMode)
-      }
-    }
-
-    "on second ContactEmailPage" - {
-      "must redirect to contact check your answers page" in {
-        navigator.nextPage(
-          ContactEmailPage(Second, TransactionMode),
-          TransactionMode,
-          emptyUserAnswers
-        ) mustBe routes.ContactCheckYourAnswersController.onPageLoad()
-      }
-    }
-
   }
 }
