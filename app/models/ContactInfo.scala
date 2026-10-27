@@ -16,12 +16,4 @@
 
 package models
 
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
-import play.api.libs.json.Reads
-
 final case class ContactInfo(name: String, email: String)
-
-object ContactInfo {
-  given OFormat[ContactInfo] = Json.format[ContactInfo]
-}
