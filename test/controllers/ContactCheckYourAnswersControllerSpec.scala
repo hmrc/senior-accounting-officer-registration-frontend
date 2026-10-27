@@ -19,7 +19,6 @@ package controllers
 import base.SpecBase
 import config.FeatureToggleSupport
 import models.ContactType.First
-import models.config.FeatureToggle.ContactFlowReshuffle
 import models.{config, *}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.{any, eq as meq}
@@ -34,7 +33,7 @@ import play.api.test.Helpers.*
 import repositories.SessionRepository
 import services.ContactCheckYourAnswersService
 import services.ContactUserAnswersService
-import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
+import views.html.ContactsCheckYourAnswersView
 
 class ContactCheckYourAnswersControllerSpec
     extends SpecBase
@@ -49,14 +48,6 @@ class ContactCheckYourAnswersControllerSpec
     contactHaveYouAddedAll = ContactHaveYouAddedAll.No
   )
 
-  override protected def beforeEach(): Unit = {
-    disable(ContactFlowReshuffle)
-  }
-
-  override protected def afterEach(): Unit = {
-    disable(ContactFlowReshuffle)
-  }
-
   override protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     super
       .applicationBuilder(userAnswers)
@@ -67,126 +58,69 @@ class ContactCheckYourAnswersControllerSpec
       )
 
   "ContactCheckYourAnswers Controller" - {
-    "legacy flow when feature switch is off" - {
-      "onPageLoad endpoint:" - {
-        "must return OK and the correct view for a GET" in {
-          val testContactInfo                    = ContactInfo("name", "email")
-          val application                        = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-          val view                               = application.injector.instanceOf[ContactCheckYourAnswersView]
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactInfo(meq(testUserAnswers), meq(First)))
-            .thenReturn(Some(testContactInfo))
+    "onPageLoad endpoint:" - {
+      "must return OK and the correct combined view for a GET" in {
+        val application = applicationBuilder(userAnswers = Some(testUserAnswers))
+          .build()
+        val view = application.injector.instanceOf[ContactsCheckYourAnswersView]
 
-          running(application) {
-            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadLegacy(First).url)
-            val result  = route(application, request).value
+        val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
+        when(mockContactCheckYourAnswersService.getContactsForCheckYourAnswers(meq(testUserAnswers)))
+          .thenReturn(Some(testContacts))
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(testContactInfo, First)(using
-              request,
-              messages(application)
-            ).toString
-          }
+        val mockUserAnswersService = application.injector.instanceOf[ContactUserAnswersService]
+        when(mockUserAnswersService.sanitise(meq(testUserAnswers)))
+          .thenReturn(testUserAnswers)
+
+        running(application) {
+          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
+          val result  = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(testContacts)(using request, messages(application)).toString
         }
 
-        "must redirect to journey recovery when no contacts found" in {
-          val application = applicationBuilder(userAnswers = None).build()
-
-          running(application) {
-            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadLegacy(First).url)
-            val result  = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
-          }
-        }
+        verify(mockUserAnswersService, times(1)).sanitise(meq(testUserAnswers))
       }
 
-      "saveAndContinue endpoint:" - {
-        "must redirect to the next page for a POST" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-            .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
-            .build()
+      "must redirect to journey recovery when check your answers service returns None" in {
+        val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
 
-          running(application) {
-            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinueLegacy(First).url)
-            val result  = route(application, request).value
+        val mockCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual onwardRoute.url
-          }
+        when(mockCheckYourAnswersService.getContactsForCheckYourAnswers(any())).thenReturn(None)
+
+        val mockUserAnswersService = application.injector.instanceOf[ContactUserAnswersService]
+        when(mockUserAnswersService.sanitise(meq(testUserAnswers)))
+          .thenReturn(testUserAnswers)
+
+        running(application) {
+          val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoad().url)
+          val result  = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
+        }
+
+        verify(mockUserAnswersService, times(1)).sanitise(meq(testUserAnswers))
+      }
+    }
+
+    "saveAndContinue endpoint:" - {
+      "must redirect to the next page for a POST" in {
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
+          .build()
+
+        running(application) {
+          val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinue().url)
+          val result  = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
         }
       }
     }
 
-    "new flow when feature switch is on" - {
-      "onPageLoadReshuffled endpoint:" - {
-        "must return OK and the correct combined view for a GET" in {
-          enable(ContactFlowReshuffle)
-
-          val application = applicationBuilder(userAnswers = Some(testUserAnswers))
-            .build()
-          val view = application.injector.instanceOf[ContactsCheckYourAnswersView]
-
-          val mockContactCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-          when(mockContactCheckYourAnswersService.getContactsForCheckYourAnswersReshuffled(meq(testUserAnswers)))
-            .thenReturn(Some(testContacts))
-
-          val mockUserAnswersService = application.injector.instanceOf[ContactUserAnswersService]
-          when(mockUserAnswersService.sanitise(meq(testUserAnswers)))
-            .thenReturn(testUserAnswers)
-
-          running(application) {
-            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadReshuffled().url)
-            val result  = route(application, request).value
-
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(testContacts)(using request, messages(application)).toString
-          }
-
-          verify(mockUserAnswersService, times(1)).sanitise(meq(testUserAnswers))
-        }
-
-        "must redirect to journey recovery when check your answers service returns None" in {
-          enable(ContactFlowReshuffle)
-
-          val application = applicationBuilder(userAnswers = Some(testUserAnswers)).build()
-
-          val mockCheckYourAnswersService = application.injector.instanceOf[ContactCheckYourAnswersService]
-
-          when(mockCheckYourAnswersService.getContactsForCheckYourAnswersReshuffled(any())).thenReturn(None)
-
-          val mockUserAnswersService = application.injector.instanceOf[ContactUserAnswersService]
-          when(mockUserAnswersService.sanitise(meq(testUserAnswers)))
-            .thenReturn(testUserAnswers)
-
-          running(application) {
-            val request = FakeRequest(GET, routes.ContactCheckYourAnswersController.onPageLoadReshuffled().url)
-            val result  = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustEqual Some(routes.JourneyRecoveryController.onPageLoad().url)
-          }
-
-          verify(mockUserAnswersService, times(1)).sanitise(meq(testUserAnswers))
-        }
-      }
-
-      "saveAndContinueReshuffled endpoint:" - {
-        "must redirect to the next page for a POST" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-            .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
-            .build()
-
-          running(application) {
-            val request = FakeRequest(POST, routes.ContactCheckYourAnswersController.saveAndContinueReshuffled().url)
-            val result  = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual onwardRoute.url
-          }
-        }
-      }
-    }
   }
 }

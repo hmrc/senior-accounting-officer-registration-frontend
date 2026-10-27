@@ -19,9 +19,8 @@ package services
 import base.SpecBase
 import config.FeatureToggleSupport
 import models.ContactType.{First, Second}
-import models.config.FeatureToggle.ContactFlowReshuffle
 import models.registration.CompanyDetails
-import models.{config, *}
+import models.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*
@@ -32,32 +31,24 @@ class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite with Featur
   val SUT: DashboardService              = app.injector.instanceOf[DashboardService]
   val testCompanyDetails: CompanyDetails = CompanyDetails("", "", "", "")
   val testContactInfo: ContactInfo       = ContactInfo("", "")
-  val firstNameOnly: Try[UserAnswers]    =
+
+  val firstNameOnly: Try[UserAnswers] =
     emptyUserAnswers.set(CompanyDetailsPage, testCompanyDetails).get.set(ContactNamePage(First, NormalMode), "testName")
+
   val firstNameAndEmailOnly: Try[UserAnswers] =
     firstNameOnly.get.set(ContactEmailPage(First, NormalMode), "testname@testemail.com")
+
   val firstContactComplete: Try[UserAnswers] =
-    firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes)
-  val firstContactCompleteReshuffled: Try[UserAnswers] =
-    firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.No)
+    firstNameAndEmailOnly.get.set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
+
   val firstContactAndSecondName: Try[UserAnswers] = firstNameAndEmailOnly.get
-    .set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.No)
+    .set(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
     .get
     .set(ContactNamePage(Second, NormalMode), "testName2")
-  val firstContactAndSecondNameReshuffled: Try[UserAnswers] = firstNameAndEmailOnly.get
-    .set(ContactHaveYouAddedAllPage(First, NormalMode), ContactHaveYouAddedAll.Yes)
-    .get
-    .set(ContactNamePage(Second, NormalMode), "testName2")
+
   val firstAndSecondContactComplete: Try[UserAnswers] =
     firstContactAndSecondName.get.set(ContactEmailPage(Second, NormalMode), "testname2@testemail.com")
 
-  val firstAndSecondContactCompleteReshuffled: Try[UserAnswers] = {
-    firstContactAndSecondNameReshuffled.get.set(ContactEmailPage(Second, NormalMode), "testname2@testemail.com")
-  }
-
-  override def beforeEach(): Unit = {
-    disable(ContactFlowReshuffle)
-  }
   "DashboardService.deriveCurrentStage when" - {
     "there are no userAnswers must return CompanyDetails" in {
       SUT.deriveCurrentStage(None) mustBe DashboardStage.CompanyDetails
@@ -69,49 +60,30 @@ class DashboardServiceSpec extends SpecBase with GuiceOneAppPerSuite with Featur
 
     "userAnswers has companyDetails" - {
 
-      "legacy flow" - {
-        "but not contactInfo must return ContactsInfo" in {
-          SUT.deriveCurrentStage(
-            emptyUserAnswers.set(CompanyDetailsPage, testCompanyDetails).toOption
-          ) mustBe DashboardStage.ContactsInfo
-        }
-
-        "and only first name is entered, must return ContactsInfo" in {
-          SUT.deriveCurrentStage(firstNameOnly.toOption) mustBe DashboardStage.ContactsInfo
-        }
-
-        "and only first name and email are entered, must return ContactsInfo" in {
-          SUT.deriveCurrentStage(firstNameAndEmailOnly.toOption) mustBe DashboardStage.ContactsInfo
-        }
-
-        "and first name and email are entered, yes is selected on 'ContactHaveYouAddedAll', must return Submission" in {
-          SUT.deriveCurrentStage(firstContactComplete.toOption) mustBe DashboardStage.Submission
-        }
-
-        "and completed first contact details, no is selected on 'ContactHaveYouAddedAll', only a second name is entered, must return ContactsInfo" in {
-          SUT.deriveCurrentStage(firstContactAndSecondName.toOption) mustBe DashboardStage.ContactsInfo
-        }
-
-        "and completed first contact details, no is selected on 'ContactHaveYouAddedAll', a second name and email are entered, must return Submission" in {
-          SUT.deriveCurrentStage(firstAndSecondContactComplete.toOption) mustBe DashboardStage.Submission
-        }
+      "but not contactInfo must return ContactsInfo" in {
+        SUT.deriveCurrentStage(
+          emptyUserAnswers.set(CompanyDetailsPage, testCompanyDetails).toOption
+        ) mustBe DashboardStage.ContactsInfo
       }
 
-      "reshuffled flow" - {
-        "and first name and email are entered, no is selected on 'ContactHaveYouAddedAll', must return Submission for the Reshuffled flow" in {
-          enable(ContactFlowReshuffle)
-          SUT.deriveCurrentStage(firstContactCompleteReshuffled.toOption) mustBe DashboardStage.Submission
-        }
+      "and only first name is entered, must return ContactsInfo" in {
+        SUT.deriveCurrentStage(firstNameOnly.toOption) mustBe DashboardStage.ContactsInfo
+      }
 
-        "and completed first contact details, yes is selected on 'ContactHaveYouAddedAll', only a second name is entered, must return ContactsInfo for the Reshuffled flow" in {
-          enable(ContactFlowReshuffle)
-          SUT.deriveCurrentStage(firstContactAndSecondNameReshuffled.toOption) mustBe DashboardStage.ContactsInfo
-        }
+      "and only first name and email are entered, must return ContactsInfo" in {
+        SUT.deriveCurrentStage(firstNameAndEmailOnly.toOption) mustBe DashboardStage.ContactsInfo
+      }
 
-        "and completed first contact details, yes is selected on 'ContactHaveYouAddedAll', a second name and email are entered, must return Submission for the Reshuffled flow" in {
-          enable(ContactFlowReshuffle)
-          SUT.deriveCurrentStage(firstAndSecondContactCompleteReshuffled.toOption) mustBe DashboardStage.Submission
-        }
+      "and first name and email are entered, no is selected on 'ContactHaveYouAddedAll', must return Submission" in {
+        SUT.deriveCurrentStage(firstContactComplete.toOption) mustBe DashboardStage.Submission
+      }
+
+      "and completed first contact details, yes is selected on 'ContactHaveYouAddedAll', only a second name is entered, must return ContactsInfo" in {
+        SUT.deriveCurrentStage(firstContactAndSecondName.toOption) mustBe DashboardStage.ContactsInfo
+      }
+
+      "and completed first contact details, yes is selected on 'ContactHaveYouAddedAll', a second name and email are entered, must return Submission" in {
+        SUT.deriveCurrentStage(firstAndSecondContactComplete.toOption) mustBe DashboardStage.Submission
       }
     }
   }
