@@ -20,7 +20,6 @@ import config.FeatureConfigSupport
 import controllers.routes
 import models.*
 import models.ContactType.*
-import models.config.FeatureToggle.ContactFlowReshuffle
 import pages.*
 import play.api.Configuration
 import play.api.mvc.Call
@@ -31,60 +30,18 @@ import javax.inject.{Inject, Singleton}
 class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSupport {
   given Configuration = configuration
 
-  private enum ContactFlow {
-    case Legacy, Reshuffled
-  }
-
-  private val legacyNormalRoutes: Page => UserAnswers => Call = {
-    case NominatedCompanyDetailsGuidancePage      => _ => routes.GrsController.start()
-    case ContactNamePage(contactType, NormalMode) =>
-      _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
-    case ContactEmailPage(First, NormalMode)  => _ => routes.ContactCheckYourAnswersController.onPageLoadLegacy(First)
-    case ContactEmailPage(Second, NormalMode) => _ => routes.ContactCheckYourAnswersController.onPageLoadLegacy(Second)
-    case ContactCheckYourAnswersPage(contactType) =>
-      _ =>
-        contactType match {
-          case First =>
-            routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
-          case Second =>
-            routes.IndexController.onPageLoad()
-        }
-    case ContactHaveYouAddedAllPage(First, NormalMode) =>
-      userAnswers =>
-        if userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)).contains(ContactHaveYouAddedAll.Yes) then {
-          routes.IndexController.onPageLoad()
-        } else {
-          routes.ContactNameController.onPageLoad(
-            Second,
-            NormalMode
-          )
-        }
-    case _ =>
-      _ => {
-        routes.IndexController.onPageLoad()
-      }
-  }
-
-  private val legacyCheckRoutes: Page => UserAnswers => Call = {
-    case ContactNamePage(contactType, _) =>
-      _ => routes.ContactCheckYourAnswersController.onPageLoadLegacy(contactType)
-    case ContactEmailPage(contactType, _) =>
-      _ => routes.ContactCheckYourAnswersController.onPageLoadLegacy(contactType)
-    case _ => _ => ???
-  }
-
-  private val reshuffledNormalRoutes: Page => UserAnswers => Call = {
+  private val normalRoutes: Page => UserAnswers => Call = {
     case NominatedCompanyDetailsGuidancePage      => _ => routes.GrsController.start()
     case ContactNamePage(contactType, NormalMode) =>
       _ => routes.ContactEmailController.onPageLoad(contactType, NormalMode)
     case ContactEmailPage(First, NormalMode) =>
-      _ => routes.ContactHaveYouAddedAllController.onPageLoad(First, NormalMode)
-    case ContactEmailPage(Second, NormalMode) => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-    case ContactsCheckYourAnswersPage         => _ => routes.IndexController.onPageLoad()
-    case ContactHaveYouAddedAllPage(First, NormalMode) =>
+      _ => routes.ContactHaveYouAddedAllController.onPageLoad(NormalMode)
+    case ContactEmailPage(Second, NormalMode)   => _ => routes.ContactCheckYourAnswersController.onPageLoad()
+    case ContactsCheckYourAnswersPage           => _ => routes.IndexController.onPageLoad()
+    case ContactHaveYouAddedAllPage(NormalMode) =>
       userAnswers =>
-        if userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)).contains(ContactHaveYouAddedAll.No) then {
-          routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+        if userAnswers.get(ContactHaveYouAddedAllPage(NormalMode)).contains(ContactHaveYouAddedAll.No) then {
+          routes.ContactCheckYourAnswersController.onPageLoad()
         } else {
           routes.ContactNameController.onPageLoad(Second, NormalMode)
         }
@@ -92,17 +49,17 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
       _ => routes.IndexController.onPageLoad()
   }
 
-  private val reshuffledCheckRoutes: Page => UserAnswers => Call = {
-    case ContactNamePage(_, _)                => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-    case ContactEmailPage(_, _)               => _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
-    case ContactHaveYouAddedAllPage(First, _) =>
+  private val checkRoutes: Page => UserAnswers => Call = {
+    case ContactNamePage(_, _)         => _ => routes.ContactCheckYourAnswersController.onPageLoad()
+    case ContactEmailPage(_, _)        => _ => routes.ContactCheckYourAnswersController.onPageLoad()
+    case ContactHaveYouAddedAllPage(_) =>
       userAnswers =>
-        userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
-          case Some(ContactHaveYouAddedAll.No) => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+        userAnswers.get(ContactHaveYouAddedAllPage(NormalMode)) match {
+          case Some(ContactHaveYouAddedAll.No) => routes.ContactCheckYourAnswersController.onPageLoad()
           case Some(ContactHaveYouAddedAll.Yes)
               if userAnswers.get(ContactNamePage(Second, NormalMode)).isDefined &&
                 userAnswers.get(ContactEmailPage(Second, NormalMode)).isDefined =>
-            routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+            routes.ContactCheckYourAnswersController.onPageLoad()
           case Some(ContactHaveYouAddedAll.Yes) =>
             routes.ContactNameController.onPageLoad(Second, NormalMode)
           case _ =>
@@ -112,34 +69,28 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
   }
 
   private val transactionRoutes: Page => UserAnswers => Call = {
-    case ContactHaveYouAddedAllPage(First, TransactionMode) =>
+    case ContactHaveYouAddedAllPage(TransactionMode) =>
       userAnswers => {
-        val previousAnswer = userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode))
-        val currentAnswer  = userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode))
+        val previousAnswer = userAnswers.get(ContactHaveYouAddedAllPage(NormalMode))
+        val currentAnswer  = userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode))
         (previousAnswer, currentAnswer) match {
           case (Some(ContactHaveYouAddedAll.No), Some(ContactHaveYouAddedAll.Yes)) =>
             routes.ContactNameController.onPageLoad(Second, TransactionMode)
           case (Some(_), Some(_)) =>
-            routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+            routes.ContactCheckYourAnswersController.onPageLoad()
           case _ => ???
         }
       }
     case ContactNamePage(Second, TransactionMode) =>
       _ => routes.ContactEmailController.onPageLoad(Second, TransactionMode)
     case ContactEmailPage(Second, TransactionMode) =>
-      _ => routes.ContactCheckYourAnswersController.onPageLoadReshuffled()
+      _ => routes.ContactCheckYourAnswersController.onPageLoad()
     case _ => _ => routes.IndexController.onPageLoad()
   }
 
-  private def currentFlow: ContactFlow =
-    if isEnabled(ContactFlowReshuffle) then ContactFlow.Reshuffled else ContactFlow.Legacy
-
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = (currentFlow, mode) match {
-    case (ContactFlow.Legacy, NormalMode)          => legacyNormalRoutes(page)(userAnswers)
-    case (ContactFlow.Legacy, CheckMode)           => legacyCheckRoutes(page)(userAnswers)
-    case (ContactFlow.Legacy, TransactionMode)     => ???
-    case (ContactFlow.Reshuffled, NormalMode)      => reshuffledNormalRoutes(page)(userAnswers)
-    case (ContactFlow.Reshuffled, CheckMode)       => reshuffledCheckRoutes(page)(userAnswers)
-    case (ContactFlow.Reshuffled, TransactionMode) => transactionRoutes(page)(userAnswers)
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+    case NormalMode      => normalRoutes(page)(userAnswers)
+    case CheckMode       => checkRoutes(page)(userAnswers)
+    case TransactionMode => transactionRoutes(page)(userAnswers)
   }
 }

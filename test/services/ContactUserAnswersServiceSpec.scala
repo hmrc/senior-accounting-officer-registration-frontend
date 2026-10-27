@@ -33,22 +33,22 @@ class ContactUserAnswersServiceSpec extends SpecBase {
         emptyUserAnswers
           .add(ContactNamePage(ContactType.First, TransactionMode), "z")
           .add(ContactEmailPage(ContactType.First, TransactionMode), "y")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
           .add(ContactNamePage(ContactType.Second, TransactionMode), "x")
           .add(ContactEmailPage(ContactType.Second, TransactionMode), "w")
           .add(ContactNamePage(ContactType.First, NormalMode), "a")
           .add(ContactEmailPage(ContactType.First, NormalMode), "b")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
+          .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
           .add(ContactNamePage(ContactType.Second, NormalMode), "c")
           .add(ContactEmailPage(ContactType.Second, NormalMode), "d")
 
       val expected = emptyUserAnswers
         .add(ContactNamePage(ContactType.First, NormalMode), "a")
         .add(ContactEmailPage(ContactType.First, NormalMode), "b")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
+        .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
         .add(ContactNamePage(ContactType.First, TransactionMode), "a")
         .add(ContactEmailPage(ContactType.First, TransactionMode), "b")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.No)
+        .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.No)
 
       val result = SUT.sanitise(input)
 
@@ -60,24 +60,24 @@ class ContactUserAnswersServiceSpec extends SpecBase {
         emptyUserAnswers
           .add(ContactNamePage(ContactType.First, TransactionMode), "z")
           .add(ContactEmailPage(ContactType.First, TransactionMode), "y")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
           .add(ContactNamePage(ContactType.Second, TransactionMode), "x")
           .add(ContactEmailPage(ContactType.Second, TransactionMode), "w")
           .add(ContactNamePage(ContactType.First, NormalMode), "a")
           .add(ContactEmailPage(ContactType.First, NormalMode), "b")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
           .add(ContactNamePage(ContactType.Second, NormalMode), "c")
           .add(ContactEmailPage(ContactType.Second, NormalMode), "d")
 
       val expected = emptyUserAnswers
         .add(ContactNamePage(ContactType.First, NormalMode), "a")
         .add(ContactEmailPage(ContactType.First, NormalMode), "b")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, NormalMode), "c")
         .add(ContactEmailPage(ContactType.Second, NormalMode), "d")
         .add(ContactNamePage(ContactType.First, TransactionMode), "a")
         .add(ContactEmailPage(ContactType.First, TransactionMode), "b")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, TransactionMode), "c")
         .add(ContactEmailPage(ContactType.Second, TransactionMode), "d")
 
@@ -91,16 +91,16 @@ class ContactUserAnswersServiceSpec extends SpecBase {
     "one contact added" in {
       val input =
         emptyUserAnswers
-          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.No)
+          .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.No)
           .add(ContactNamePage(ContactType.Second, TransactionMode), "z")
           .add(ContactEmailPage(ContactType.Second, TransactionMode), "y")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
 
       val expected = emptyUserAnswers
-        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.No)
+        .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.No)
         .add(ContactNamePage(ContactType.Second, TransactionMode), "z")
         .add(ContactEmailPage(ContactType.Second, TransactionMode), "y")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
+        .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
 
       val result = SUT.commitTransaction(input)
 
@@ -110,18 +110,18 @@ class ContactUserAnswersServiceSpec extends SpecBase {
     "two contacts added" in {
       val input =
         emptyUserAnswers
-          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
           .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
           .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
+          .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
           .add(ContactNamePage(ContactType.Second, NormalMode), "z")
           .add(ContactEmailPage(ContactType.Second, NormalMode), "y")
 
       val expected = emptyUserAnswers
-        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
         .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, NormalMode), "a")
         .add(ContactEmailPage(ContactType.Second, NormalMode), "b")
 

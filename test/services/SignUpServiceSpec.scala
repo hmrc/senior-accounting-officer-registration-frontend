@@ -22,7 +22,6 @@ import connectors.SignUpConnector
 import models.ContactHaveYouAddedAll.{No, Yes}
 import models.ContactType.*
 import models.NormalMode
-import models.config.FeatureToggle.ContactFlowReshuffle
 import models.registration.*
 import models.{ContactHaveYouAddedAll, ContactType, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, argThat, eq as meq}
@@ -55,56 +54,38 @@ class SignUpServiceSpec
     .build()
 
   override def beforeEach(): Unit = {
-    disable(ContactFlowReshuffle)
     reset(mockSignUpConnector)
   }
 
-  override def afterEach(): Unit = disable(ContactFlowReshuffle)
+  Seq(Yes, No).foreach { answer =>
+    s"submission with answer=$answer must select the correct contacts" in {
+      when(mockSignUpConnector.submit(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(200, """{"subscriptionId":"id"}""")))
+      val answers = emptyUserAnswers
+        .updateGrs(testCompanyDetails)
+        .updateContact(First, "name1", "email1")
+        .updateContactHaveYouAddedAll(answer)
+        .updateContact(Second, "name2", "email2")
+      val wantsSecond = answer == Yes
+      val contacts    = List(Contact("name1", "email1", "valid", "en-GB")) ++
+        (if wantsSecond then List(Contact("name2", "email2", "valid", "en-GB")) else Nil)
 
-  "submission must pass the unavailable SAFE ID marker to the backend" in {
-    when(mockSignUpConnector.submit(any())(using any()))
-      .thenReturn(Future.successful(HttpResponse(200, """{"subscriptionId":"id"}""")))
-    val answers = emptyUserAnswers
-      .updateGrs(testCompanyDetails.copy(registeredBusinessPartnerId = "-"))
-      .updateContact(First, "name1", "email1")
-      .updateContactHaveYouAddedAll(Yes)
-    SUT.submit(answers).futureValue mustBe Success("id")
-    verify(mockSignUpConnector).submit(argThat[SignUpRequest](_.etmpSafeId == "-"))(using any())
-  }
-
-  Seq(false, true).foreach { reshuffled =>
-    Seq(Yes, No).foreach { answer =>
-      s"submission with reshuffle=$reshuffled and answer=$answer must select the correct contacts" in {
-        if reshuffled then enable(ContactFlowReshuffle)
-        when(mockSignUpConnector.submit(any())(using any()))
-          .thenReturn(Future.successful(HttpResponse(200, """{"subscriptionId":"id"}""")))
-        val answers = emptyUserAnswers
-          .updateGrs(testCompanyDetails)
-          .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(answer)
-          .updateContact(Second, "name2", "email2")
-        val wantsSecond = if reshuffled then answer == Yes else answer == No
-        val contacts    = List(Contact("name1", "email1", "valid", "en-GB")) ++
-          (if wantsSecond then List(Contact("name2", "email2", "valid", "en-GB")) else Nil)
-
-        SUT.submit(answers).futureValue mustBe Success("id")
-        verify(mockSignUpConnector).submit(
-          meq(
-            SignUpRequest(
-              etmpSafeId = "registeredBusinessPartnerId",
-              nominatedCompany = NominatedCompany(name = "companyName", crn = "companyNumber", utr = "ctUtr"),
-              contacts = contacts,
-              idempotencyKey = None
-            )
+      SUT.submit(answers).futureValue mustBe Success("id")
+      verify(mockSignUpConnector).submit(
+        meq(
+          SignUpRequest(
+            etmpSafeId = "registeredBusinessPartnerId",
+            nominatedCompany = NominatedCompany(name = "companyName", crn = "companyNumber", utr = "ctUtr"),
+            contacts = contacts,
+            idempotencyKey = None
           )
-        )(using any())
-      }
+        )
+      )(using any())
     }
   }
 
   Seq((None, None), (Some("name2"), None), (None, Some("email2"))).foreach { (name, email) =>
-    s"reshuffled submission must reject incomplete second contact ($name, $email) when yes is selected" in {
-      enable(ContactFlowReshuffle)
+    s"must reject incomplete second contact ($name, $email) when yes is selected" in {
       val answers = emptyUserAnswers
         .updateGrs(testCompanyDetails)
         .updateContact(First, "name1", "email1")
@@ -135,7 +116,7 @@ class SignUpServiceSpec
           val userAnswers = emptyUserAnswers
             .updateGrs(testCompanyDetails)
             .updateContact(First, "name", "email")
-            .updateContactHaveYouAddedAll(Yes)
+            .updateContactHaveYouAddedAll(No)
 
           val result = SUT.submit(userAnswers)
 
@@ -165,7 +146,7 @@ class SignUpServiceSpec
           val userAnswers = emptyUserAnswers
             .updateGrs(testCompanyDetails)
             .updateContact(First, "name1", "email1")
-            .updateContactHaveYouAddedAll(No)
+            .updateContactHaveYouAddedAll(Yes)
             .updateContact(Second, "name2", "email2")
 
           val result = SUT.submit(userAnswers)
@@ -224,7 +205,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -239,7 +220,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -254,7 +235,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -269,7 +250,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -284,7 +265,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -328,7 +309,7 @@ class SignUpServiceSpec
           val userAnswers = emptyUserAnswers
             .updateGrs(testCompanyDetails)
             .updateContact(First, "name", "email")
-            .updateContactHaveYouAddedAll(Yes)
+            .updateContactHaveYouAddedAll(No)
 
           val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -347,6 +328,7 @@ class SignUpServiceSpec
             }
           )(using any())
         }
+
         "and have two contact details" in {
           val testIdempotencyKey = "key"
           when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
@@ -356,7 +338,7 @@ class SignUpServiceSpec
           val userAnswers = emptyUserAnswers
             .updateGrs(testCompanyDetails)
             .updateContact(First, "name1", "email1")
-            .updateContactHaveYouAddedAll(No)
+            .updateContactHaveYouAddedAll(Yes)
             .updateContact(Second, "name2", "email2")
 
           val result = SUT.submitWithFaultTolerance(userAnswers)
@@ -415,7 +397,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -430,7 +412,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -445,7 +427,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -460,7 +442,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -475,7 +457,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -538,7 +520,7 @@ object SignUpServiceSpec {
         })
 
     def updateContactHaveYouAddedAll(value: ContactHaveYouAddedAll): UserAnswers =
-      userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), value).get
+      userAnswers.set(ContactHaveYouAddedAllPage(NormalMode), value).get
   }
 
 }

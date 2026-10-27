@@ -26,7 +26,7 @@ object ContactHaveYouAddedAllSummary {
     ContactSummaryRow.row(
       labelMessageKey = "contactHaveYouAddedAll.checkYourAnswersLabel",
       value = messages(s"contactHaveYouAddedAll.${value.toString}"),
-      changeUrl = routes.ContactHaveYouAddedAllController.onPageLoad(ContactType.First, TransactionMode).url,
+      changeUrl = routes.ContactHaveYouAddedAllController.onPageLoad(TransactionMode).url,
       hiddenTextMessageKey = "contactHaveYouAddedAll.change.hidden",
       testIdPrefix = "contact-have-you-added-all"
     )

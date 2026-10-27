@@ -30,7 +30,7 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
   val formProvider: ContactHaveYouAddedAllFormProvider = app.injector.instanceOf[ContactHaveYouAddedAllFormProvider]
   "ContactHaveYouAddedAllView" - {
     "when there are no prior data for the page" - {
-      val doc: Document = Jsoup.parse(SUT(formProvider(), First, NormalMode).toString)
+      val doc: Document = Jsoup.parse(SUT(formProvider(), NormalMode).toString)
 
       doc.createTestsWithStandardPageElements(
         pageTitle = pageTitle,
@@ -55,13 +55,13 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
       )
 
       doc.createTestsWithSubmissionButton(
-        action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First, NormalMode),
+        action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(NormalMode),
         buttonText = "Continue"
       )
     }
 
     "when the page is errored" - {
-      val doc: Document = Jsoup.parse(SUT(formProvider().withError("value", "broken"), First, NormalMode).toString)
+      val doc: Document = Jsoup.parse(SUT(formProvider().withError("value", "broken"), NormalMode).toString)
 
       doc.createTestsWithStandardPageElements(
         pageTitle = pageTitle,
@@ -86,7 +86,7 @@ class ContactHaveYouAddedAllViewSpec extends ViewSpecBase[ContactHaveYouAddedAll
       )
 
       doc.createTestsWithSubmissionButton(
-        action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(First, NormalMode),
+        action = controllers.routes.ContactHaveYouAddedAllController.onSubmit(NormalMode),
         buttonText = "Continue"
       )
     }

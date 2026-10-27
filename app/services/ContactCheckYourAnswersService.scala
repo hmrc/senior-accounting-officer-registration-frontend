@@ -33,18 +33,7 @@ class ContactCheckYourAnswersService {
   def getContactsForCheckYourAnswers(userAnswers: UserAnswers): Option[ContactsCheckYourAnswers] =
     for {
       firstContact        <- getContactInfo(userAnswers, First)
-      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode))
-      secondContact = contactHaveAddedAll match {
-        case ContactHaveYouAddedAll.Yes => None
-        case ContactHaveYouAddedAll.No  => getContactInfo(userAnswers, Second)
-      }
-      if contactHaveAddedAll != ContactHaveYouAddedAll.No || secondContact.isDefined
-    } yield ContactsCheckYourAnswers(firstContact, secondContact, contactHaveAddedAll)
-
-  def getContactsForCheckYourAnswersReshuffled(userAnswers: UserAnswers): Option[ContactsCheckYourAnswers] =
-    for {
-      firstContact        <- getContactInfo(userAnswers, First)
-      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode))
+      contactHaveAddedAll <- userAnswers.get(ContactHaveYouAddedAllPage(NormalMode))
       secondContact = contactHaveAddedAll match {
         case ContactHaveYouAddedAll.No  => None
         case ContactHaveYouAddedAll.Yes => getContactInfo(userAnswers, Second)
@@ -56,7 +45,7 @@ class ContactCheckYourAnswersService {
     List(
       getContactInfo(userAnswers = userAnswers, contactType = First),
       getContactInfo(userAnswers = userAnswers, contactType = Second).filter { _ =>
-        userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)).contains(ContactHaveYouAddedAll.No)
+        userAnswers.get(ContactHaveYouAddedAllPage(NormalMode)).contains(ContactHaveYouAddedAll.No)
       }
     ).flatten
 }

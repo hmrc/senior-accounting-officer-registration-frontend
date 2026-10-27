@@ -63,7 +63,7 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
       )
 
       doc.select("form").attr("action") mustBe controllers.routes.ContactCheckYourAnswersController
-        .saveAndContinueReshuffled()
+        .saveAndContinue()
         .url
       doc.getElementById("submit").text() mustBe submitButtonText
     }
