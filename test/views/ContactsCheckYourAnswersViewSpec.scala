@@ -48,14 +48,14 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
             (
               "Do you want to add another contact?",
               "Yes",
-              "/senior-accounting-officer/registration/contact-details/first/transaction-add-another"
+              "/senior-accounting-officer/registration/contact-details/transaction-add-another"
             )
           )
         )
       )
 
       doc.select("form").attr("action") mustBe controllers.routes.ContactCheckYourAnswersController
-        .saveAndContinueReshuffled()
+        .saveAndContinue()
         .url
       doc.getElementById("submit").text() mustBe submitButtonText
     }
@@ -73,7 +73,7 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
             (
               "Do you want to add another contact?",
               "No",
-              "/senior-accounting-officer/registration/contact-details/first/transaction-add-another"
+              "/senior-accounting-officer/registration/contact-details/transaction-add-another"
             )
           ),
           List(

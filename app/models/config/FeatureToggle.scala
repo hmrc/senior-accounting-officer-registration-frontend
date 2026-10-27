@@ -25,11 +25,10 @@ import viewmodels.govuk.checkbox.*
 enum FeatureToggle(val key: String, val name: String) {
   override def toString: String = s"features.$key"
 
-  case StubGrs              extends FeatureToggle("stubGrs", "Stub GRS")
-  case GrsAllowRelativeUrl  extends FeatureToggle("grsAllowsRelativeUrl", "GRS Allows Relative URL")
-  case ContactFlowReshuffle extends FeatureToggle("contactFlowReshuffle", "Contact Flow Reshuffle")
-  case PrivateBeta          extends FeatureToggle("private-beta", "Enable Private Beta Mode")
-  case FaultTolerance       extends FeatureToggle("fault-tolerance", "Enable Fault Tolerance Endpoint and Spinner page")
+  case StubGrs             extends FeatureToggle("stubGrs", "Stub GRS")
+  case GrsAllowRelativeUrl extends FeatureToggle("grsAllowsRelativeUrl", "GRS Allows Relative URL")
+  case PrivateBeta         extends FeatureToggle("private-beta", "Enable Private Beta Mode")
+  case FaultTolerance      extends FeatureToggle("fault-tolerance", "Enable Fault Tolerance Endpoint and Spinner page")
 }
 
 object FeatureToggle extends FeatureConfigSupport {

@@ -20,10 +20,9 @@ import models.*
 import models.Area.*
 import play.api.libs.json.JsPath
 
-case class ContactHaveYouAddedAllPage(contactType: ContactType, mode: Mode)
-    extends QuestionPage[ContactHaveYouAddedAll] {
+case class ContactHaveYouAddedAllPage(mode: Mode) extends QuestionPage[ContactHaveYouAddedAll] {
 
-  override def path: JsPath = JsPath \ mode.toArea.toString \ contactType.toMongoPath \ "contactHaveYouAddedAll"
+  override def path: JsPath = JsPath \ mode.toArea.toString \ toString
 
-  override def toString: String = s"${contactType.toMongoPath}.contactHaveYouAddedAll"
+  override def toString: String = "contactHaveYouAddedAll"
 }
