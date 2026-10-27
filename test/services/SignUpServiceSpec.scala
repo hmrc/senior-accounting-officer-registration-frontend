@@ -39,6 +39,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import scala.concurrent.Future
 
 import SignUpServiceSpec.*
+import services.SignUpService.SignUpResult
 
 class SignUpServiceSpec
     extends SpecBase
@@ -482,6 +483,105 @@ class SignUpServiceSpec
       }
     }
 
+  }
+
+  "SignUpService.getRegistrationState" - {
+    "must return sucess with subscription id is received in response" in {
+      val idempotencyKey         = "test idempotency key"
+      val userId                 = "test user id"
+      val expectedSubscriptionId = "test subscription id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(200, s"{\"subscriptionId\": \"$expectedSubscriptionId\"}")))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.Success(expectedSubscriptionId)
+    }
+
+    "must return malformed response when a malformed response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(200, "{")))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.MalformedResponse
+    }
+
+    "must return pending when a 204 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(204)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.Pending(idempotencyKey)
+    }
+
+    "must return bad request failure when a 400 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(400)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.BadRequestFailure
+    }
+
+    "must return protected service failure when a 500 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(500)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.ProtectedServiceFailure(500)
+    }
+
+    "must return protected service failure when a 502 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(502)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.ProtectedServiceFailure(502)
+    }
+
+    "must already registered when a 422 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(422)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.AlreadyRegistered
+    }
+
+    "must return unknown failure registered when an unrecognised status code is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(418)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.UnknownFailure(418)
+    }
   }
 }
 
