@@ -16,25 +16,7 @@
 
 package models
 
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
-
 enum AddAnotherContact(override val toString: String) {
   case Yes extends AddAnotherContact("yes")
   case No  extends AddAnotherContact("no")
-}
-
-object AddAnotherContact extends Enumerable.Implicits[AddAnotherContact] {
-
-  override def members: Array[AddAnotherContact] = AddAnotherContact.values
-
-  def options(using messages: Messages): Seq[RadioItem] = members.map { value =>
-    RadioItem(
-      content = Text(messages(s"addAnotherContact.${value.toString}")),
-      value = Some(value.toString),
-      id = Some(s"value_${value.ordinal}")
-    )
-  }
-
 }
