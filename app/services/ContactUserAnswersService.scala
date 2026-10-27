@@ -109,8 +109,3 @@ class ContactUserAnswersService @Inject extends Logging {
     }).getOrElse(???)
   }
 }
-
-object ContactUserAnswersService {
-  val saoNameKey: String  = ContactNamePage(First, NormalMode).toString
-  val saoEmailKey: String = ContactEmailPage(First, NormalMode).toString
-}
