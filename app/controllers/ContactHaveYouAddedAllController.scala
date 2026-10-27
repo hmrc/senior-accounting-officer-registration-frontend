@@ -20,7 +20,7 @@ import controllers.actions.*
 import forms.ContactHaveYouAddedAllFormProvider
 import models.TransactionMode
 import models.requests.DataRequest
-import models.{ContactHaveYouAddedAll, ContactType, Mode}
+import models.{ContactHaveYouAddedAll, Mode}
 import navigation.Navigator
 import pages.ContactHaveYouAddedAllPage
 import play.api.data.Form
