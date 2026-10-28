@@ -389,6 +389,31 @@ class SignUpServiceSpec
           verify(mockSignUpConnector, times(0)).submitWithFaultTolerance(any())(using any())
         }
       }
+
+      "must return existing idempotency id" in {
+        val expectedIdempotencyKey = "id"
+
+        when(mockSignUpConnector.submitWithFaultTolerance(any())(using any())).thenReturn(
+          Future.successful(
+            HttpResponse(
+              202,
+              s"""{"idempotencyKey": "$expectedIdempotencyKey"}"""
+            )
+          )
+        )
+
+        val result =
+          SUT.submitWithFaultTolerance(
+            emptyUserAnswers
+              .set(IdempotencyKey, Some(expectedIdempotencyKey))
+              .get
+              .updateGrs(testCompanyDetails)
+              .updateContact(First, "name", "email")
+              .updateContactHaveYouAddedAll(No)
+          )
+
+        result.futureValue mustBe Pending(expectedIdempotencyKey)
+      }
     }
 
     "when user answer is valid and complete" - {
