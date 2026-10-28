@@ -161,9 +161,9 @@ alreadyRegistered.heading = Your company has already registered for this service
 alreadyRegistered.paragraph1 = You’ll need to do one of the following to access the service:
 alreadyRegistered.bulletPoint1 = use the registration details already created to log in
 alreadyRegistered.bulletPoint2 = register a different nominated company
-alreadyRegistered.paragraph2 = You can find a link to the Senior Accounting Officer notification and certificate service on your HMRC {0}.
+alreadyRegistered.paragraph2 = You can find a link to the Senior Accounting Officer notification and certificate service in the associated HMRC {0}.
 alreadyRegistered.businessTaxAccount.linkText = business tax account (opens in new tab)
-alreadyRegistered.paragraph3 = From there you can manage your account and make a submission.
+alreadyRegistered.paragraph3 = From there you can make a submission.
 alreadyRegistered.paragraph4 = Log in using your organisation Government Gateway ID.
 
 standardUserCannotAccessService.title = You cannot access this service
