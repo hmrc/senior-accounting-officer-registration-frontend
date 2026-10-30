@@ -88,6 +88,8 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
 
   def privateBetaModeEnabled: Boolean = isEnabled(PrivateBeta)
   def privateBetaPassword: String     = configuration.get[String]("private-beta.password")
+
+  val surveyLink: String = getValue("survey.link")
 }
 
 object AppConfig {
