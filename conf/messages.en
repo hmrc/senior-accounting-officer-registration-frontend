@@ -204,3 +204,6 @@ guidanceCollection.heading = Senior Accounting Officer: detailed information
 
 guidanceSubmit.title = Submit your Senior Accounting Officer notification and certificate
 guidanceSubmit.heading = Submit your Senior Accounting Officer notification and certificate
+
+betaBanner.tag = Beta
+betaBanner.paragraph = This is a new service. We’re still working on ways to improve it.
