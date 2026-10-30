@@ -110,6 +110,7 @@ class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherV
         )
       }
     }
+
     "must return Right(CompanyDetails) for a valid response" in {
       disable(StubGrs)
       mockGrsRetrieve()
@@ -121,7 +122,7 @@ class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherV
           CompanyProfile(testCompanyName, testCompanyNumber),
           testCtUtr,
           true,
-          None,
+          Some(BusinessVerificationStatus.Pass),
           Registered(testRegisteredBusinessPartnerId)
         )
       )
@@ -213,7 +214,32 @@ object GrsConnectorISpec {
   val testCtUtr: String                       = IdentifierGenerator.randomUtr
 
   val validGrsRetrieveJson: String =
-    s"""
-      |{"companyProfile":{"companyName":"$testCompanyName","companyNumber":"$testCompanyNumber","dateOfIncorporation":"2020-01-01","unsanitisedCHROAddress":{"address_line_1":"testLine1","address_line_2":"test town","care_of":"test name","country":"United Kingdom","locality":"test city","po_box":"123","postal_code":"AA11AA","premises":"1","region":"test region"}},"identifiersMatch":true,"registration":{"registrationStatus":"REGISTERED","registeredBusinessPartnerId":"$testRegisteredBusinessPartnerId"},"ctutr":"$testCtUtr"}
-      |""".stripMargin
+    s"""{
+       |  "companyProfile": {
+       |    "companyName": "$testCompanyName",
+       |    "companyNumber": "$testCompanyNumber",
+       |    "dateOfIncorporation": "2020-01-01",
+       |    "unsanitisedCHROAddress": {
+       |      "address_line_1": "testLine1",
+       |      "address_line_2": "test town",
+       |      "care_of": "test name",
+       |      "country": "United Kingdom",
+       |      "locality": "test city",
+       |      "po_box": "123",
+       |      "postal_code": "AA11AA",
+       |      "premises": "1",
+       |      "region": "test region"
+       |    }
+       |  },
+       |  "identifiersMatch": true,
+       |  "businessVerification": {
+       |    "verificationStatus": "PASS"
+       |  },
+       |  "registration": {
+       |    "registrationStatus": "REGISTERED",
+       |    "registeredBusinessPartnerId": "$testRegisteredBusinessPartnerId"
+       |  },
+       |  "ctutr": "$testCtUtr"
+       |}
+       |""".stripMargin
 }
