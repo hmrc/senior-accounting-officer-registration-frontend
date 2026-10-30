@@ -45,7 +45,7 @@ unauthorised.heading = You can’t access this service with this account
 registration.dashboard.title = Register your nominated company
 registration.dashboard.heading = Register your nominated company
 
-registration.dashboard.p1 = Choose the UK company that will submit SAO notifications and certificates for the companies in your organisation. This is called your nominated company.
+registration.dashboard.p1 = Choose the UK company that will submit SAO notifications and certificates for the companies in your group. This is called your nominated company.
 registration.dashboard.p2 = You only need to register once for your organisation. If your organisation has more than one SAO, you can use the same account for all SAOs or register separately to create a different account for each one.
 
 registration.dashboard.row.company = Enter your nominated company details
@@ -136,11 +136,11 @@ nominatedCompanyDetailsGuidance.heading = What you need to start your registrati
 nominatedCompanyDetailsGuidance.caption = Nominated company details
 nominatedCompanyDetailsGuidance.paragraph1 = You must have the following details ready to continue. We’ll use them to confirm your nominated company.
 nominatedCompanyDetailsGuidance.paragraph2 = You’ll need to provide:
-nominatedCompanyDetailsGuidance.bulletPoint1 = Company Registration Number (CRN)
+nominatedCompanyDetailsGuidance.bulletPoint1 = Company registration number (CRN)
 nominatedCompanyDetailsGuidance.bulletPoint2 = Unique Taxpayer Reference (UTR)
 nominatedCompanyDetailsGuidance.paragraph3 = The details you enter must match Companies House records. If they do not match, you cannot complete your registration.
 
-nominatedCompanyDetailsGuidance.paragraph4 = If your nominated company does not have a CRN, register using another company in your organisation that has one.
+nominatedCompanyDetailsGuidance.paragraph4 = If your nominated company does not have a CRN, register using another company in your group that has one.
 nominatedCompanyDetailsGuidance.paragraph5 = If no company in your organisation has a CRN, contact your Customer Compliance Manager if you have one or email {0} for support.
 nominatedCompanyDetailsGuidance.email = wmbc.saomailbox@hmrc.gov.uk
 
