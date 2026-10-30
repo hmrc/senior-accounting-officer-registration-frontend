@@ -57,6 +57,13 @@
         @messages("registration.complete.continue")
     </a>
 
+    <h2 class="govuk-heading-m">@messages("survey.subheading")</h2>
+    <p class="govuk-body">
+        @messages("survey.paragraph1")
+        @Html(messages("survey.paragraph2",config.surveyLink))
+    </p>
+
+
 }
 @linkParagraph(template_paragraph: String, link: String) = @{
     val paragraph = template_paragraph.replace("{0}", s"""<a class="govuk-link" id="homepage-link" href="${config.hubUrl}/senior-accounting-officer">$link</a>""")

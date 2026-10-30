@@ -29,6 +29,7 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
   private val registrationCompleteDetails = RegistrationCompleteDetails(
     registrationId = "REG12345"
   )
+  private val appConfig = app.injector.instanceOf[AppConfig]
 
   "RegistrationCompleteView" - {
     "must generate a view" - {
@@ -79,6 +80,15 @@ class RegistrationCompleteViewSpec extends ViewSpecBase[RegistrationCompleteView
         href = hubUrl,
         isPrimaryButton = true
       )
+
+      doc
+        .getElementById(surveyLinkId)
+        .createTestWithLink(
+          linkTestDescription = "survey link",
+          linkText = surveyLinkPage,
+          destinationUrl = appConfig.surveyLink,
+          isExternalLink = true
+        )
     }
   }
 }
@@ -91,8 +101,11 @@ object RegistrationCompleteViewSpec {
   val paragraphsList: List[String] = List(
     "We’ve sent a confirmation email to all the contacts you gave during registration.",
     "Print this page if you want to keep a paper record of your registration.",
-    "You can now go to your account homepage to submit a notification and certificate."
+    "You can now go to your account homepage to submit a notification and certificate.",
+    "As a private beta user, you are using the first version of this service. Your feedback will help us improve it for future users. Take a short survey to tell us about your experience."
   )
+  val surveyLinkPage = "Take a short survey"
+  val surveyLinkId   = "survey-link"
 
   val hubUrl = "hub-url/senior-accounting-officer"
 }
