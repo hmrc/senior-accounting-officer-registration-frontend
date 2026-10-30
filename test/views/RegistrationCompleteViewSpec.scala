@@ -102,7 +102,8 @@ object RegistrationCompleteViewSpec {
     "We’ve sent a confirmation email to all the contacts you gave during registration.",
     "Print this page if you want to keep a paper record of your registration.",
     "You can now go to your account homepage to submit a notification and certificate.",
-    "As a private beta user, you are using the first version of this service. Your feedback will help us improve it for future users. Take a short survey to tell us about your experience."
+    "As a private beta user, you are using the first version of this service. Your feedback will help us improve it for future users.",
+    "Take a short survey to tell us about your experience."
   )
   val surveyLinkPage = "Take a short survey"
   val surveyLinkId   = "survey-link"
