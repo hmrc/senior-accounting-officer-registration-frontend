@@ -20,13 +20,15 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.*
+@import views.html.templates.PrivateBetaBanner
 
 @this(
     appConfig: AppConfig,
     hmrcTimeoutDialog: HmrcTimeoutDialog,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     betaBanner: StandardBetaBanner,
-    hmrcStandardPage: HmrcStandardPage
+    hmrcStandardPage: HmrcStandardPage,
+    privateBetaBanner: PrivateBetaBanner
 )
 
 @(pageTitle: String,
@@ -77,7 +79,7 @@
     ),
     banners = Banners(
         displayHmrcBanner = showHmrcBanner,
-        phaseBanner = Some(betaBanner(appConfig.feedbackUrl))
+        additionalBannersBlock = Some(privateBetaBanner())
     ),
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
     backLink = if (showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None
