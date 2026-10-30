@@ -281,7 +281,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -498,7 +498,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
