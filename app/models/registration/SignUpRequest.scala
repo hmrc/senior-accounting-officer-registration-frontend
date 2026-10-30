@@ -16,18 +16,18 @@
 
 package models.registration
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, Writes}
 
 final case class NominatedCompany(name: String, utr: String, crn: String)
 
 object NominatedCompany {
-  given OFormat[NominatedCompany] = Json.format
+  given Writes[NominatedCompany] = Json.writes
 }
 
 final case class Contact(name: String, email: String, status: String, language: String)
 
 object Contact {
-  given OFormat[Contact] = Json.format
+  given Writes[Contact] = Json.writes
 }
 
 final case class SignUpRequest(
@@ -38,5 +38,5 @@ final case class SignUpRequest(
 )
 
 object SignUpRequest {
-  given OFormat[SignUpRequest] = Json.format[SignUpRequest]
+  given Writes[SignUpRequest] = Json.writes
 }

@@ -22,11 +22,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[?], contactType: ContactType, mode: Mode)(using request: Request[?], messages: Messages)
+@(form: Form[?], mode: Mode)(using request: Request[?], messages: Messages)
 
 @layout(pageTitle = title(form, messages("contactHaveYouAddedAll.heading"), Some(messages("contactHaveYouAddedAll.caption")))) {
 
-    @formHelper(action = routes.ContactHaveYouAddedAllController.onSubmit(contactType, mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ContactHaveYouAddedAllController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

@@ -16,7 +16,6 @@
 
 package services
 
-import config.AppConfig
 import models.*
 import models.ContactType.{First, Second}
 import pages.*
@@ -25,10 +24,9 @@ import scala.util.Left
 
 import javax.inject.Inject
 
-class DashboardService @Inject() (appConfig: AppConfig) {
+class DashboardService @Inject() () {
 
   def deriveCurrentStage(userAnswers: Option[UserAnswers]): DashboardStage = {
-    val isCompletedFn = if appConfig.contactFlowReshuffleEnabled then contactsCompletedReshuffled else contactsCompleted
     userAnswers
       .fold(DashboardStage.CompanyDetails)(answers =>
         (for {
@@ -36,7 +34,7 @@ class DashboardService @Inject() (appConfig: AppConfig) {
             .get(CompanyDetailsPage)
             .toRight(left = DashboardStage.CompanyDetails)
 
-          _ <- if isCompletedFn(answers) then Right(()) else Left(DashboardStage.ContactsInfo)
+          _ <- if contactsCompleted(answers) then Right(()) else Left(DashboardStage.ContactsInfo)
         } yield DashboardStage.Submission).merge
       )
   }
@@ -47,11 +45,11 @@ class DashboardService @Inject() (appConfig: AppConfig) {
       email <- userAnswers.get(ContactEmailPage(contactType, NormalMode))
     } yield (name, email)
 
-  def contactsCompletedReshuffled(userAnswers: UserAnswers): Boolean = {
+  def contactsCompleted(userAnswers: UserAnswers): Boolean = {
     getContact(userAnswers, First)
     def secondContact = getContact(userAnswers, Second)
 
-    userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
+    userAnswers.get(ContactHaveYouAddedAllPage(NormalMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) => {
         secondContact.isDefined
       }
@@ -59,25 +57,6 @@ class DashboardService @Inject() (appConfig: AppConfig) {
       case Some(ContactHaveYouAddedAll.No) => {
         true
       }
-      case None => false
-    }
-
-  }
-
-  def contactsCompleted(userAnswers: UserAnswers): Boolean = {
-    val firstContact = getContact(userAnswers, First)
-
-    def secondContact = getContact(userAnswers, Second)
-
-    userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
-      case Some(ContactHaveYouAddedAll.Yes) =>
-        firstContact.foldLeft(
-          userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)).exists(_ == ContactHaveYouAddedAll.Yes)
-        )((_, _) => true)
-      case Some(ContactHaveYouAddedAll.No) =>
-        firstContact.foldLeft(
-          userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)).exists(_ == ContactHaveYouAddedAll.Yes)
-        )((_, _) => secondContact.isDefined)
       case None => false
     }
   }

@@ -16,12 +16,11 @@
 
 package controllers
 
-import config.AppConfig
 import controllers.actions.*
 import forms.ContactHaveYouAddedAllFormProvider
 import models.TransactionMode
 import models.requests.DataRequest
-import models.{ContactHaveYouAddedAll, ContactType, Mode}
+import models.{ContactHaveYouAddedAll, Mode}
 import navigation.Navigator
 import pages.ContactHaveYouAddedAllPage
 import play.api.data.Form
@@ -30,7 +29,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.ContactUserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{ContactHaveYouAddedAllLegacyView, ContactHaveYouAddedAllView}
+import views.html.ContactHaveYouAddedAllView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,58 +41,40 @@ class ContactHaveYouAddedAllController @Inject() (
     navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
-    appConfig: AppConfig,
     requireData: DataRequiredAction,
     formProvider: ContactHaveYouAddedAllFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view: ContactHaveYouAddedAllView,
-    legacyView: ContactHaveYouAddedAllLegacyView,
     userAnswersService: ContactUserAnswersService
 )(using ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def form: Form[ContactHaveYouAddedAll] =
-    formProvider(
-      if appConfig.contactFlowReshuffleEnabled then "contactHaveYouAddedAll.error.required"
-      else "contactHaveYouAddedAll.legacy.error.required"
-    )
+  def form: Form[ContactHaveYouAddedAll] = formProvider("contactHaveYouAddedAll.error.required")
 
-  private def render(form: Form[ContactHaveYouAddedAll], contactType: ContactType, mode: Mode)(using DataRequest[?]) =
-    if appConfig.contactFlowReshuffleEnabled then view(form, contactType, mode)
-    else legacyView(form, contactType, mode)
+  private def render(form: Form[ContactHaveYouAddedAll], mode: Mode)(using DataRequest[?]) =
+    view(form, mode)
 
-  def onPageLoad(contactType: ContactType, mode: Mode): Action[AnyContent] = {
+  def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(contactType, mode)) match {
+      val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(mode)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(render(preparedForm, contactType, mode))
-    }
-  }
-
-  def onPageLoadReshuffled(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(ContactType.First, mode)) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(render(preparedForm, ContactType.First, mode))
+      Ok(render(preparedForm, mode))
     }
 
-  def onSubmit(contactType: ContactType, mode: Mode): Action[AnyContent] =
+  def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(render(formWithErrors, contactType, mode))),
+          formWithErrors => Future.successful(BadRequest(render(formWithErrors, mode))),
           value =>
             for {
               updatedAnswers <- Future
-                .fromTry(request.userAnswers.set(ContactHaveYouAddedAllPage(contactType, mode), value))
+                .fromTry(request.userAnswers.set(ContactHaveYouAddedAllPage(mode), value))
               isTransaction            = mode == TransactionMode
               userAddingOnlyOneContact = value == ContactHaveYouAddedAll.No
               committedAnswers         =
@@ -104,7 +85,7 @@ class ContactHaveYouAddedAllController @Inject() (
                 }
               _ <- sessionRepository.set(committedAnswers)
             } yield Redirect(
-              navigator.nextPage(ContactHaveYouAddedAllPage(contactType, mode), mode, committedAnswers)
+              navigator.nextPage(ContactHaveYouAddedAllPage(mode), mode, committedAnswers)
             )
         )
     }
