@@ -93,7 +93,6 @@ contactName.change.second.hidden = the name of the second contact detail
 
 contactEmail.title.first  = First contact details
 contactEmail.title.second = Second contact details
-contactEmail.title.third  = Third contact details
 contactEmail.heading = What is the email address for this contact?
 contactEmail.first.hint = We’ll use this to send confirmations and contact this person about the submission if needed.
 contactEmail.second.hint = We’ll use this address to send confirmations and contact this person about the submission if needed
