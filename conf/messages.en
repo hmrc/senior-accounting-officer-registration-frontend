@@ -93,7 +93,6 @@ contactName.change.second.hidden = the name of the second contact detail
 
 contactEmail.title.first  = First contact details
 contactEmail.title.second = Second contact details
-contactEmail.title.third  = Third contact details
 contactEmail.heading = What is the email address for this contact?
 contactEmail.first.hint = We’ll use this to send confirmations and contact this person about the submission if needed.
 contactEmail.second.hint = We’ll use this address to send confirmations and contact this person about the submission if needed
@@ -143,8 +142,6 @@ nominatedCompanyDetailsGuidance.paragraph3 = The details you enter must match Co
 nominatedCompanyDetailsGuidance.paragraph4 = If your nominated company does not have a CRN, register using another company in your organisation that has one.
 nominatedCompanyDetailsGuidance.paragraph5 = If no company in your organisation has a CRN, contact your Customer Compliance Manager if you have one or email {0} for support.
 nominatedCompanyDetailsGuidance.email = wmbc.saomailbox@hmrc.gov.uk
-
-nominatedCompanyDetailsGuidance.inset.text = If your organisation is not registered with Companies House, nominate a company in your group with a CRN to register. If no company in your group has a CRN, contact HMRC using your usual compliance contact or existing support channels.
 
 cannotAccessService.title = You cannot access this service
 cannotAccessService.heading = You cannot access this service
