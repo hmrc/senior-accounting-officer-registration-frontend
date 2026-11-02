@@ -106,7 +106,7 @@ object DashboardViewSpec {
   val enterYourContactDetailsLinkText     = "Enter your contact details"
   val enterYourContactDetailsLinkUrl      = "/senior-accounting-officer/registration/contact-details"
   val paragraphs: List[String]            = List(
-    "Choose the UK company that will submit SAO notifications and certificates for the companies in your organisation. This is called your nominated company.",
+    "Choose the UK company that will submit SAO notifications and certificates for the companies in your group. This is called your nominated company.",
     "You only need to register once for your organisation. If your organisation has more than one SAO, you can use the same account for all SAOs or register separately to create a different account for each one."
   )
 
