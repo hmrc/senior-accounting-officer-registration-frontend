@@ -85,7 +85,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       valueText = contactInfo.name,
       actionText = "Change",
       actionHiddenText = s"the name of the $contactNumber contact detail",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-name"
+      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/full-name?mode=CheckMode"
     )
 
     validateRow(
@@ -94,7 +94,7 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       valueText = contactInfo.email,
       actionText = "Change",
       actionHiddenText = s"the email address of the $contactNumber contact detail",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/change-email"
+      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/email-address?mode=CheckMode"
     )
   }
 

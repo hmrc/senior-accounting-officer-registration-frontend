@@ -102,7 +102,7 @@ object DashboardViewSpec {
   val pageHeading: String                  = "Register your nominated company"
   val pageTitle: String                    = pageHeading
   val enterNominatedCompanyDetailsLinkText = "Enter your nominated company details"
-  val enterNominatedCompanyDetailsLinkUrl = "/senior-accounting-officer/registration/nominated-company-details-guidance"
+  val enterNominatedCompanyDetailsLinkUrl = "/senior-accounting-officer/registration/start-registration"
   val enterYourContactDetailsLinkText     = "Enter your contact details"
   val enterYourContactDetailsLinkUrl      = "/senior-accounting-officer/registration/contact-details"
   val paragraphs: List[String]            = List(
