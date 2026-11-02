@@ -49,7 +49,8 @@ class PrivateBetaGuardFilter @Inject() (appConfig: AppConfig)(using m: Materiali
   private def isAllowListed(path: String): Boolean =
     path.startsWith("/ping/") ||
       path.contains("/test-only/") ||
-      path.contains("/account/sign")
+      path.contains("/account/sign") ||
+      path.contains("/assets/")
 
 }
 

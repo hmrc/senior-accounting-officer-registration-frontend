@@ -75,8 +75,8 @@ object AlreadyRegisteredViewSpec {
 
   val businessTaxAccountLinkText = "business tax account (opens in new tab)"
   val paragraph2: String         =
-    s"You can find a link to the Senior Accounting Officer notification and certificate service on your HMRC $businessTaxAccountLinkText."
+    s"You can find a link to the Senior Accounting Officer notification and certificate service in the associated HMRC $businessTaxAccountLinkText."
 
-  val paragraph3 = "From there you can manage your account and make a submission."
+  val paragraph3 = "From there you can make a submission."
   val paragraph4 = "Log in using your organisation Government Gateway ID."
 }

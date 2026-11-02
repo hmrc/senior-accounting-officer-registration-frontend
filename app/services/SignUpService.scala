@@ -94,6 +94,7 @@ class SignUpService @Inject() (
         )
       case HttpResponse(400, _, _)                  => BadRequestFailure
       case HttpResponse(status @ (500 | 502), _, _) => ProtectedServiceFailure(status)
+      case HttpResponse(422, _, _)                  => AlreadyRegistered
       case HttpResponse(status, _, _)               => UnknownFailure(status)
     }
 
@@ -109,6 +110,7 @@ class SignUpService @Inject() (
         )
       case HttpResponse(400, _, _)                  => BadRequestFailure
       case HttpResponse(status @ (500 | 502), _, _) => ProtectedServiceFailure(status)
+      case HttpResponse(422, _, _)                  => AlreadyRegistered
       case HttpResponse(status, _, _)               => UnknownFailure(status)
     }
 

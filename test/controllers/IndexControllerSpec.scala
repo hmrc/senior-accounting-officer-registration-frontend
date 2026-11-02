@@ -214,6 +214,52 @@ class IndexControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfter
             verify(mockSessionRepository, times(0)).clear(any())
           }
         }
+        "when SignUpService returns AlreadyRegistered - fault tolerance enabled" in {
+          enable(FaultTolerance)
+
+          when(mockSignUpService.submitWithFaultTolerance(any())(using any()))
+            .thenReturn(Future.successful(SignUpResult.AlreadyRegistered))
+
+          val testAnswers = emptyUserAnswers
+          val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.IndexController.submit().url)
+            val result  = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual
+              routes.AlreadyRegisteredController.onPageLoad().url
+
+            verify(mockSignUpService, times(1))
+              .submitWithFaultTolerance(meq(testAnswers))(using any())
+            verify(mockSessionRepository, never()).clear(meq(userAnswersId))
+          }
+        }
+        "when SignUpService returns AlreadyRegistered- fault tolerance disabled" in {
+          disable(FaultTolerance)
+
+          when(mockSignUpService.submit(any())(using any()))
+            .thenReturn(Future.successful(SignUpResult.AlreadyRegistered))
+
+          val testAnswers = emptyUserAnswers
+          when(mockSessionRepository.clear(any())).thenReturn(Future.successful(true))
+
+          val application = applicationBuilder(userAnswers = Some(testAnswers)).build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.IndexController.submit().url)
+            val result  = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual
+              routes.AlreadyRegisteredController.onPageLoad().url
+
+            verify(mockSignUpService, times(1))
+              .submit(meq(testAnswers))(using any())
+            verify(mockSessionRepository, times(1)).clear(meq(userAnswersId))
+          }
+        }
       }
     }
   }

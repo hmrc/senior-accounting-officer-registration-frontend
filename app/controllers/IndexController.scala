@@ -78,6 +78,8 @@ class IndexController @Inject() (
     signUpService.submit(userAnswers).map {
       case SignUpResult.Success(_) =>
         Redirect(routes.RegistrationCompleteController.onPageLoad)
+      case SignUpResult.AlreadyRegistered =>
+        Redirect(routes.AlreadyRegisteredController.onPageLoad())
       case result =>
         handleFailure(result, "PostSignUp")
     }
@@ -86,6 +88,8 @@ class IndexController @Inject() (
     signUpService.submitWithFaultTolerance(userAnswers).map {
       case SignUpResult.Pending(idempotencyKey) =>
         Redirect(routes.RegistrationRegisteringController.onPageLoad(idempotencyKey))
+      case SignUpResult.AlreadyRegistered =>
+        Redirect(routes.AlreadyRegisteredController.onPageLoad())
       case result =>
         handleFailure(result, "PostSignUpV2")
     }
