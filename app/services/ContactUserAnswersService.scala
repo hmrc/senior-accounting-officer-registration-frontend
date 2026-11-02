@@ -85,14 +85,14 @@ class ContactUserAnswersService @Inject extends Logging {
 
   private def commitTwoContactsTransaction(userAnswers: UserAnswers): UserAnswers = {
     (for {
-      decision <- userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode))
-      saoName  <- userAnswers.get(ContactNamePage(Second, TransactionMode))
-      saoEmail <- userAnswers.get(ContactEmailPage(Second, TransactionMode))
+      decision     <- userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode))
+      contactName  <- userAnswers.get(ContactNamePage(Second, TransactionMode))
+      contactEmail <- userAnswers.get(ContactEmailPage(Second, TransactionMode))
     } yield {
       (for {
         userAnswers <- userAnswers.set(ContactHaveYouAddedAllPage(NormalMode), decision)
-        userAnswers <- userAnswers.set(ContactNamePage(Second, NormalMode), saoName)
-        userAnswers <- userAnswers.set(ContactEmailPage(Second, NormalMode), saoEmail)
+        userAnswers <- userAnswers.set(ContactNamePage(Second, NormalMode), contactName)
+        userAnswers <- userAnswers.set(ContactEmailPage(Second, NormalMode), contactEmail)
       } yield userAnswers).getOrElse(???)
     }).getOrElse(???)
   }
