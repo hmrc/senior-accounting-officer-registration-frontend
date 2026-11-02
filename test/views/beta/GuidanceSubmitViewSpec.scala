@@ -17,6 +17,7 @@
 package views.beta
 
 import base.ViewSpecBase
+import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.html.beta.GuidanceSubmitView
@@ -39,6 +40,15 @@ class GuidanceSubmitViewSpec extends ViewSpecBase[GuidanceSubmitView] {
     )
 
     doc.createTestsWithOrWithoutError(hasError = false)
+
+    "must link the Sign in button to the submission hub" in {
+      val appConfig    = app.injector.instanceOf[AppConfig]
+      val signInButton = generateView().select("a.govuk-button--start")
+
+      signInButton.size() mustBe 1
+      signInButton.text() mustBe "Sign in"
+      signInButton.attr("href") mustBe s"${appConfig.hubUrl}/senior-accounting-officer"
+    }
   }
 }
 
