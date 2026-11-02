@@ -20,7 +20,7 @@ import models.*
 import models.Area.*
 import play.api.libs.json.JsPath
 
-case class ContactHaveYouAddedAllPage(mode: Mode) extends QuestionPage[ContactHaveYouAddedAll] {
+final case class ContactHaveYouAddedAllPage(mode: Mode) extends QuestionPage[ContactHaveYouAddedAll] {
 
   override def path: JsPath = JsPath \ mode.toArea.toString \ toString
 
