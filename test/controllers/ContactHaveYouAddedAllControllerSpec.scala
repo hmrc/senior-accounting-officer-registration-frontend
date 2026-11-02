@@ -57,6 +57,8 @@ class ContactHaveYouAddedAllControllerSpec
         s"When the ContactType is $contactType" - {
           lazy val contactHaveYouAddedAllRoute =
             routes.ContactHaveYouAddedAllController.onPageLoad(contactType, NormalMode).url
+          lazy val contactHaveYouAddedAllPostRoute =
+            routes.ContactHaveYouAddedAllController.onSubmit(contactType, NormalMode).url
           "must return OK and the correct view for a GET" in {
             if reshuffled then enable(ContactFlowReshuffle) else disable(ContactFlowReshuffle)
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -128,7 +130,7 @@ class ContactHaveYouAddedAllControllerSpec
                 .build()
             running(application) {
               val request =
-                FakeRequest(POST, contactHaveYouAddedAllRoute)
+                FakeRequest(POST, contactHaveYouAddedAllPostRoute)
                   .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.values.head.toString))
 
               val result = route(application, request).value
@@ -143,7 +145,7 @@ class ContactHaveYouAddedAllControllerSpec
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
             running(application) {
               val request =
-                FakeRequest(POST, contactHaveYouAddedAllRoute)
+                FakeRequest(POST, contactHaveYouAddedAllPostRoute)
                   .withFormUrlEncodedBody(("value", "invalid value"))
               val boundForm = form.bind(Map("value" -> "invalid value"))
               val view      = (form: Form[ContactHaveYouAddedAll], contactType: ContactType, mode: Mode) =>
@@ -181,7 +183,7 @@ class ContactHaveYouAddedAllControllerSpec
             val application = applicationBuilder(userAnswers = None).build()
             running(application) {
               val request =
-                FakeRequest(POST, contactHaveYouAddedAllRoute)
+                FakeRequest(POST, contactHaveYouAddedAllPostRoute)
                   .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.values.head.toString))
 
               val result = route(application, request).value
