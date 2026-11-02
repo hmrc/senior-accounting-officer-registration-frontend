@@ -63,7 +63,7 @@ object NominatedCompanyDetailsGuidanceViewSpec {
     "You’ll need to provide:",
     "The details you enter must match Companies House records. If they do not match, you cannot complete your registration.",
     "If your nominated company does not have a CRN, register using another company in your group that has one.",
-    "If no company in your organisation has a CRN, contact your Customer Compliance Manager if you have one or email wmbc.saomailbox@hmrc.gov.uk for support."
+    "If no company in your group has a CRN, contact your Customer Compliance Manager if you have one or email wmbc.saomailbox@hmrc.gov.uk for support."
   )
 
   val bulletPointTexts: List[String] = List(
