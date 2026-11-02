@@ -89,13 +89,11 @@ class ContactUserAnswersService @Inject extends Logging {
       saoName  <- userAnswers.get(ContactNamePage(Second, TransactionMode))
       saoEmail <- userAnswers.get(ContactEmailPage(Second, TransactionMode))
     } yield {
-      userAnswers
-        .set(ContactHaveYouAddedAllPage(NormalMode), decision)
-        .flatMap(
-          _.set(ContactNamePage(Second, NormalMode), saoName)
-            .flatMap(_.set(ContactEmailPage(Second, NormalMode), saoEmail))
-        )
-        .getOrElse(???)
+      (for {
+        userAnswers <- userAnswers.set(ContactHaveYouAddedAllPage(NormalMode), decision)
+        userAnswers <- userAnswers.set(ContactNamePage(Second, NormalMode), saoName)
+        userAnswers <- userAnswers.set(ContactEmailPage(Second, NormalMode), saoEmail)
+      } yield userAnswers).getOrElse(???)
     }).getOrElse(???)
   }
 
