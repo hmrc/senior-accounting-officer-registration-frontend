@@ -511,7 +511,7 @@ class SignUpServiceSpec
   }
 
   "SignUpService.getRegistrationState" - {
-    "must return sucess with subscription id is received in response" in {
+    "must return sucess with subscription id in response" in {
       val idempotencyKey         = "test idempotency key"
       val userId                 = "test user id"
       val expectedSubscriptionId = "test subscription id"
