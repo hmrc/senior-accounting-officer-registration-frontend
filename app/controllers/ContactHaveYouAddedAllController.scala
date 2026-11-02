@@ -52,9 +52,6 @@ class ContactHaveYouAddedAllController @Inject() (
 
   def form: Form[ContactHaveYouAddedAll] = formProvider("contactHaveYouAddedAll.error.required")
 
-  private def render(form: Form[ContactHaveYouAddedAll], mode: Mode)(using DataRequest[?]) =
-    view(form, mode)
-
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(ContactHaveYouAddedAllPage(mode)) match {
@@ -62,7 +59,7 @@ class ContactHaveYouAddedAllController @Inject() (
         case Some(value) => form.fill(value)
       }
 
-      Ok(render(preparedForm, mode))
+      Ok(view(preparedForm, mode))
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
@@ -70,7 +67,7 @@ class ContactHaveYouAddedAllController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(render(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
               updatedAnswers <- Future
