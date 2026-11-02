@@ -94,7 +94,8 @@ class ContactCheckYourAnswersViewSpec extends ViewSpecBase[ContactCheckYourAnswe
       valueText = contactInfo.email,
       actionText = "Change",
       actionHiddenText = s"the email address of the $contactNumber contact detail",
-      actionHref = s"/senior-accounting-officer/registration/contact-details/$contactNumber/email-address?mode=CheckMode"
+      actionHref =
+        s"/senior-accounting-officer/registration/contact-details/$contactNumber/email-address?mode=CheckMode"
     )
   }
 

@@ -43,8 +43,16 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
         doc,
         expectedSections = List(
           List(
-            ("Full name", "name1", "/senior-accounting-officer/registration/contact-details/first/full-name?mode=CheckMode"),
-            ("Email address", "email1", "/senior-accounting-officer/registration/contact-details/first/email-address?mode=CheckMode"),
+            (
+              "Full name",
+              "name1",
+              "/senior-accounting-officer/registration/contact-details/first/full-name?mode=CheckMode"
+            ),
+            (
+              "Email address",
+              "email1",
+              "/senior-accounting-officer/registration/contact-details/first/email-address?mode=CheckMode"
+            ),
             (
               "Do you want to add another contact?",
               "Yes",
@@ -68,8 +76,16 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
         doc,
         expectedSections = List(
           List(
-            ("Full name", "name1", "/senior-accounting-officer/registration/contact-details/first/full-name?mode=CheckMode"),
-            ("Email address", "email1", "/senior-accounting-officer/registration/contact-details/first/email-address?mode=CheckMode"),
+            (
+              "Full name",
+              "name1",
+              "/senior-accounting-officer/registration/contact-details/first/full-name?mode=CheckMode"
+            ),
+            (
+              "Email address",
+              "email1",
+              "/senior-accounting-officer/registration/contact-details/first/email-address?mode=CheckMode"
+            ),
             (
               "Do you want to add another contact?",
               "No",
@@ -77,8 +93,16 @@ class ContactsCheckYourAnswersViewSpec extends ViewSpecBase[ContactsCheckYourAns
             )
           ),
           List(
-            ("Full name", "name2", "/senior-accounting-officer/registration/contact-details/second/full-name?mode=CheckMode"),
-            ("Email address", "email2", "/senior-accounting-officer/registration/contact-details/second/email-address?mode=CheckMode")
+            (
+              "Full name",
+              "name2",
+              "/senior-accounting-officer/registration/contact-details/second/full-name?mode=CheckMode"
+            ),
+            (
+              "Email address",
+              "email2",
+              "/senior-accounting-officer/registration/contact-details/second/email-address?mode=CheckMode"
+            )
           )
         )
       )

@@ -48,7 +48,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
 
-        lazy val contactEmailRoute = routes.ContactEmailController.onPageLoad(contactType, NormalMode).url
+        lazy val contactEmailRoute     = routes.ContactEmailController.onPageLoad(contactType, NormalMode).url
         lazy val contactEmailPostRoute = routes.ContactEmailController.onSubmit(contactType, NormalMode).url
 
         "must return OK and the correct view for a GET" in {
@@ -156,8 +156,8 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
     "committing the transaction" - {
       "when mode is transaction and contact type is second" - {
         "must commit the transaction" in {
-          val url     = routes.ContactEmailController.onPageLoad(ContactType.Second, TransactionMode).url
-          val postUrl     = routes.ContactEmailController.onSubmit(ContactType.Second, TransactionMode).url
+          routes.ContactEmailController.onPageLoad(ContactType.Second, TransactionMode).url
+          val postUrl = routes.ContactEmailController.onSubmit(ContactType.Second, TransactionMode).url
           val request = FakeRequest(POST, postUrl).withFormUrlEncodedBody(("value", "test@example.com"))
 
           val mockSessionRepository = mock[SessionRepository]
@@ -186,7 +186,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
       "when some other arguments are used" - {
         "must not commit the transaction" in {
-          val url     = routes.ContactEmailController.onPageLoad(ContactType.First, NormalMode).url
+          routes.ContactEmailController.onPageLoad(ContactType.First, NormalMode).url
           val postUrl = routes.ContactEmailController.onSubmit(ContactType.First, NormalMode).url
 
           val request = FakeRequest(POST, postUrl).withFormUrlEncodedBody(("value", "test@example.com"))
