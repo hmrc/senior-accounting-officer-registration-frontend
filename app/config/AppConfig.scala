@@ -64,9 +64,6 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
     configuration.get[String]("feedback-frontend.host").removeTrailingPathSeparator
   val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/$contactFormServiceIdentifier"
 
-  val languageTranslationEnabled: Boolean =
-    configuration.get[Boolean]("features.welsh-translation")
-
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en")
     // "cy" -> Lang("cy")
@@ -85,6 +82,7 @@ class AppConfig @Inject() (servicesConfig: ServicesConfig, val configuration: Co
   def grsAllowsRelativeUrl: Boolean        = isEnabled(GrsAllowRelativeUrl)
   def contactFlowReshuffleEnabled: Boolean = isEnabled(ContactFlowReshuffle)
   def faultToleranceEnabled: Boolean       = isEnabled(FaultTolerance)
+  def languageTranslationEnabled: Boolean  = isEnabled(WelshTranslation)
 
   def privateBetaModeEnabled: Boolean = isEnabled(PrivateBeta)
   def privateBetaPassword: String     = configuration.get[String]("private-beta.password")
