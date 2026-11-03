@@ -30,6 +30,7 @@ enum FeatureToggle(val key: String, val name: String) {
   case ContactFlowReshuffle extends FeatureToggle("contactFlowReshuffle", "Contact Flow Reshuffle")
   case PrivateBeta          extends FeatureToggle("private-beta", "Enable Private Beta Mode")
   case FaultTolerance       extends FeatureToggle("fault-tolerance", "Enable Fault Tolerance Endpoint and Spinner page")
+  case WelshTranslation     extends FeatureToggle("welsh-translation", "Enable Welsh language toggle")
 }
 
 object FeatureToggle extends FeatureConfigSupport {
