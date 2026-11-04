@@ -20,6 +20,7 @@ import config.AppConfig
 import models.grs.create.{NewJourneyRequest, ServiceLabels}
 import models.grs.retrieve.{CompanyDetails as GrsCompanyDetails, Registration}
 import models.registration.CompanyDetails
+import play.api.Logging
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.Request
 import uk.gov.hmrc.hmrcfrontend.config.AccessibilityStatementConfig
@@ -32,7 +33,7 @@ class GrsService @Inject() (
     appConfig: AppConfig,
     accessibilityStatementConfig: AccessibilityStatementConfig,
     messagesApi: MessagesApi
-) {
+) extends Logging {
 
   def newRequest()(using request: Request[?]): NewJourneyRequest = {
     val continueUrl =
@@ -71,6 +72,9 @@ class GrsService @Inject() (
       case Registration.Registered(value) => Right(value)
       case Registration.RegistrationFailed(failures) if failures.map(_.code).toSet == Set("SERVICE_UNAVAILABLE") =>
         // SAOD-1283: This GRS failure supplies no business partner ID, DPS accepts "-" as a temp workaround.
+        logger.info(
+          "[GrsService][map] GRS registration failed with SERVICE_UNAVAILABLE; continuing with unavailable SAFE ID"
+        )
         Right("-")
       case status => Left(new InternalServerException(s"Unexpected registration status $status"))
     }

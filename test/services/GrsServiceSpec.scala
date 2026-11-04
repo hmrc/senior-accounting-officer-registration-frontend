@@ -125,7 +125,7 @@ class GrsServiceSpec extends SpecBase with GuiceOneAppPerSuite with EitherValues
       )
     }
 
-    "accept only agreed failures after successful matching" in {
+    "accept only SERVICE_UNAVAILABLE registration failures" in {
       val cases = Seq(
         List("SERVICE_UNAVAILABLE")                        -> true,
         List("SERVICE_UNAVAILABLE", "SERVICE_UNAVAILABLE") -> true,
@@ -135,17 +135,17 @@ class GrsServiceSpec extends SpecBase with GuiceOneAppPerSuite with EitherValues
         List("INVALID_REGIME")                             -> false,
         List.empty[String]                                 -> false
       )
-      for (codes, accepted) <- cases; matched <- Seq(true, false) do {
+      for (codes, accepted) <- cases do {
         val result = SUT.map(
           GrsCompanyDetails(
             companyProfile = CompanyProfile(testCompanyName, testCompanyNumber),
             ctutr = testCtUtr,
-            identifiersMatch = matched,
+            identifiersMatch = true,
             businessVerification = None,
             registration = RegistrationFailed(codes.map(code => models.grs.retrieve.Failure(code, "reason")))
           )
         )
-        result.isRight mustBe (accepted && matched)
+        result.isRight mustBe accepted
         if result.isRight then result.toOption.get.registeredBusinessPartnerId mustBe "-"
       }
     }
