@@ -61,6 +61,17 @@ class SignUpServiceSpec
 
   override def afterEach(): Unit = disable(ContactFlowReshuffle)
 
+  "submission must pass the unavailable SAFE ID marker to the backend" in {
+    when(mockSignUpConnector.submit(any())(using any()))
+      .thenReturn(Future.successful(HttpResponse(200, """{"subscriptionId":"id"}""")))
+    val answers = emptyUserAnswers
+      .updateGrs(testCompanyDetails.copy(registeredBusinessPartnerId = "-"))
+      .updateContact(First, "name1", "email1")
+      .updateContactHaveYouAddedAll(Yes)
+    SUT.submit(answers).futureValue mustBe Success("id")
+    verify(mockSignUpConnector).submit(argThat[SignUpRequest](_.etmpSafeId == "-"))(using any())
+  }
+
   Seq(false, true).foreach { reshuffled =>
     Seq(Yes, No).foreach { answer =>
       s"submission with reshuffle=$reshuffled and answer=$answer must select the correct contacts" in {

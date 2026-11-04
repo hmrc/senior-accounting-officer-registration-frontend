@@ -5,7 +5,7 @@ GET       /stub-enrolment                     controllers.testonly.StubEnrolment
 
 + nocsrf
 POST       /grs-stub/start                    controllers.testonly.GrsStubsController.startGrs()
-GET        /grs-stub/:journeyid               controllers.testonly.GrsStubsController.getStubGrs(journeyid)
+GET        /grs-stub/:journeyid               controllers.testonly.GrsStubsController.getStubGrs(journeyid, scenario: String ?= "registered")
 + nocsrf
 POST       /grs-stub/:journeyid               controllers.testonly.GrsStubsController.postStubGrs(journeyid)
 GET        /grs-stub/journey/:journeyid       controllers.testonly.GrsStubsController.getGrs(journeyid)

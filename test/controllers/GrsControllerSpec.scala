@@ -257,6 +257,47 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "must store the marker and continue after matched SERVICE_UNAVAILABLE" in {
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val grsConnector      = application.injector.instanceOf[GrsConnector]
+        val request           = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
+        val sessionRepository = application.injector.instanceOf[SessionRepository]
+
+        when(grsConnector.retrieve(any())(using any())).thenReturn(
+          Future.successful(
+            Right(
+              validGrsCompanyDetails.copy(registration =
+                RegistrationFailed(
+                  List(Failure("SERVICE_UNAVAILABLE", "Dependent systems are currently not responding."))
+                )
+              )
+            )
+          )
+        )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        headers(result).get("Location").value mustEqual "/senior-accounting-officer/registration"
+
+        val inMongo = sessionRepository
+          .get(userAnswersId)
+          .futureValue
+          .value
+          .get(CompanyDetailsPage)
+          .value
+
+        inMongo mustBe CompanyDetails(
+          companyName = testCompanyName,
+          companyNumber = testCompanyNumber,
+          ctUtr = testCtUtr,
+          registeredBusinessPartnerId = "-"
+        )
+      }
+    }
+
     "when there are prior user answer" - {
       "when GRS connector returns a valid company details must sanitise and store it in mongo and redirect to registration dashboard" in {
         val answer      = UserAnswers(id = UUID.randomUUID().toString)

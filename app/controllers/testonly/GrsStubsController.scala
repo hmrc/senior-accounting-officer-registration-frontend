@@ -62,8 +62,13 @@ class GrsStubsController @Inject() (
     Created(Json.toJson(NewJourneyResponse(journeyStartUrl)))
   }
 
-  def getStubGrs(journeyId: String): Action[AnyContent] = identify { implicit request =>
-    Ok(stubGrsView(GrsResponseConfig.form, journeyId))
+  def getStubGrs(journeyId: String, scenario: String): Action[AnyContent] = identify { implicit request =>
+    scenario match {
+      case "registered"          => Ok(stubGrsView(GrsResponseConfig.form, journeyId))
+      case "service-unavailable" =>
+        Ok(stubGrsView(GrsResponseConfig.form.fill(GrsResponseConfig.serviceUnavailable), journeyId))
+      case _ => BadRequest("Unknown GRS scenario")
+    }
   }
 
   def postStubGrs(journeyId: String): Action[AnyContent] = identify.async { implicit request =>
@@ -126,7 +131,23 @@ object GrsStubsController {
   final case class GrsResponseConfig(status: Int, body: String)
 
   object GrsResponseConfig extends Mappings {
-    def default200: GrsResponseConfig       = GrsResponseConfig(status = 200, body = Json.stringify(default200Json))
+    def default200: GrsResponseConfig         = GrsResponseConfig(status = 200, body = Json.stringify(default200Json))
+    def serviceUnavailable: GrsResponseConfig = GrsResponseConfig(
+      200,
+      Json.stringify(
+        default200Json ++ Json.obj(
+          "registration" -> Json.obj(
+            "registrationStatus" -> "REGISTRATION_FAILED",
+            "failures"           -> Json.arr(
+              Json.obj(
+                "code"   -> "SERVICE_UNAVAILABLE",
+                "reason" -> "Dependent systems are currently not responding."
+              )
+            )
+          )
+        )
+      )
+    )
     given format: Format[GrsResponseConfig] = Json.format[GrsResponseConfig]
 
     def form: Form[GrsResponseConfig] = Form(

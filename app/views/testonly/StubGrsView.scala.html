@@ -28,6 +28,8 @@
 
 @layout(pageTitle = titleNoForm("GRS Stubs")) {
     <h1 class="govuk-heading-l">GRS Stubs</h1>
+    <p><a class="govuk-link" href="@routes.GrsStubsController.getStubGrs(journeyId, "registered")">Successful registration</a></p>
+    <p><a class="govuk-link" href="@routes.GrsStubsController.getStubGrs(journeyId, "service-unavailable")">Registration service unavailable</a></p>
     @formHelper(action = routes.GrsStubsController.postStubGrs(journeyId)) {
         @govukInput(
           InputViewModel(

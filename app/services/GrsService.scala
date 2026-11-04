@@ -67,17 +67,22 @@ class GrsService @Inject() (
   }
 
   def map(companyDetails: GrsCompanyDetails): Either[Exception, CompanyDetails] =
-    companyDetails.registration match {
-      case Registration.Registered(id) =>
-        Right(
-          CompanyDetails(
-            companyName = companyDetails.companyProfile.companyName,
-            companyNumber = companyDetails.companyProfile.companyNumber,
-            ctUtr = companyDetails.ctutr,
-            registeredBusinessPartnerId = id
-          )
+    if !companyDetails.identifiersMatch then
+      Left(new InternalServerException("Unexpected GRS returned identifiersMatch=false"))
+    else {
+      val id = companyDetails.registration match {
+        case Registration.Registered(value) => Right(value)
+        case Registration.RegistrationFailed(failures) if failures.map(_.code).toSet == Set("SERVICE_UNAVAILABLE") =>
+          Right("-")
+        case status => Left(new InternalServerException(s"Unexpected registration status $status"))
+      }
+      id.map(value =>
+        CompanyDetails(
+          companyName = companyDetails.companyProfile.companyName,
+          companyNumber = companyDetails.companyProfile.companyNumber,
+          ctUtr = companyDetails.ctutr,
+          registeredBusinessPartnerId = value
         )
-      case status => Left(new InternalServerException(s"Unexpected registration status $status"))
+      )
     }
-
 }
