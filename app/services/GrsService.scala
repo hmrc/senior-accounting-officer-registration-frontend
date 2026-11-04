@@ -71,10 +71,10 @@ class GrsService @Inject() (
     val id = companyDetails.registration match {
       case Registration.Registered(value) => Right(value)
       case Registration.RegistrationFailed(failures) if failures.map(_.code).toSet == Set("SERVICE_UNAVAILABLE") =>
-        // SAOD-1283: This GRS failure supplies no business partner ID, DPS accepts "-" as a temp workaround.
-        logger.info(
+        logger.warn(
           "[GrsService][map] GRS registration failed with SERVICE_UNAVAILABLE; continuing with unavailable SAFE ID"
         )
+        // SAOD-1283: This GRS failure supplies no business partner ID, DPS accepts "-" as a temp workaround.
         Right("-")
       case status => Left(new InternalServerException(s"Unexpected registration status $status"))
     }
