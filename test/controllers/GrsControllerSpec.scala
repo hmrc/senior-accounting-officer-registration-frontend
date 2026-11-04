@@ -181,6 +181,36 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
+      "when GRS connector returns a response model that contains identifiersMatch=false with SERVICE_UNAVAILABLE" in {
+        val answer      = UserAnswers(id = UUID.randomUUID().toString)
+        val application = applicationBuilder(userAnswers = Some(answer)).build()
+
+        running(application) {
+          val grsConnector = application.injector.instanceOf[GrsConnector]
+
+          when(grsConnector.retrieve(any())(using any())).thenReturn(
+            Future.successful(
+              Right(
+                responseWithIdentifierMatchFalse.copy(registration =
+                  RegistrationFailed(
+                    List(Failure("SERVICE_UNAVAILABLE", "Dependent systems are currently not responding."))
+                  )
+                )
+              )
+            )
+          )
+
+          val request = FakeRequest(GET, routes.GrsController.callBack(journeyId).url)
+
+          val err = intercept[InternalServerException] {
+            val result = route(application, request).value
+            await(result)
+          }
+
+          err.message mustBe "Unexpected GRS returned identifiersMatch=false"
+        }
+      }
+
       "when GRS connector returns a response model that contains a REGISTRATION_FAILED status" in {
         val answer      = UserAnswers(id = UUID.randomUUID().toString)
         val application = applicationBuilder(userAnswers = Some(answer)).build()

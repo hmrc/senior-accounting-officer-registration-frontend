@@ -25,6 +25,7 @@ import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.*
 import play.api.data.*
 import play.api.data.Forms.mapping
+import play.api.http.Status.OK
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{Format, JsObject, Json}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -131,9 +132,9 @@ object GrsStubsController {
   final case class GrsResponseConfig(status: Int, body: String)
 
   object GrsResponseConfig extends Mappings {
-    def default200: GrsResponseConfig         = GrsResponseConfig(status = 200, body = Json.stringify(default200Json))
+    def default200: GrsResponseConfig         = GrsResponseConfig(status = OK, body = Json.stringify(default200Json))
     def serviceUnavailable: GrsResponseConfig = GrsResponseConfig(
-      200,
+      OK,
       Json.stringify(
         default200Json ++ Json.obj(
           "registration" -> Json.obj(
