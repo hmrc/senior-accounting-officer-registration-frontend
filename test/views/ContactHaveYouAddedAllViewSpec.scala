@@ -18,8 +18,7 @@ package views
 
 import base.ViewSpecBase
 import forms.ContactHaveYouAddedAllFormProvider
-import models.ContactType.*
-import models.{ContactType, NormalMode}
+import models.NormalMode
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import views.ContactHaveYouAddedAllViewSpec.*
