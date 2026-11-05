@@ -20,7 +20,6 @@ import _root_.config.FeatureToggleSupport
 import base.SpecBase
 import forms.ContactHaveYouAddedAllFormProvider
 import models.*
-
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}

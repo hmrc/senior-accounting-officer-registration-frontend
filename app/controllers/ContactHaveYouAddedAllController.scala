@@ -19,7 +19,6 @@ package controllers
 import controllers.actions.*
 import forms.ContactHaveYouAddedAllFormProvider
 import models.TransactionMode
-import models.requests.DataRequest
 import models.{ContactHaveYouAddedAll, Mode}
 import navigation.Navigator
 import pages.ContactHaveYouAddedAllPage
