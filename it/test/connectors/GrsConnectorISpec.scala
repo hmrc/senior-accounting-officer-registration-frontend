@@ -110,6 +110,27 @@ class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherV
         )
       }
     }
+    "must parse the matched service unavailable response using the GRS stub shape" in {
+      disable(StubGrs)
+      val body = Json.parse(controllers.testonly.GrsStubsController.GrsResponseConfig.default200.body)
+        .as[play.api.libs.json.JsObject] ++ Json.obj(
+          "registration" -> Json.obj(
+            "registrationStatus" -> "REGISTRATION_FAILED",
+            "failures" -> Json.arr(Json.obj(
+              "code" -> "SERVICE_UNAVAILABLE",
+              "reason" -> "Dependent systems are currently not responding."
+            ))
+          )
+        )
+      mockGrsRetrieve(body = Json.stringify(body))
+      val details = SUT.retrieve(testJourneyId).futureValue.value
+      details.identifiersMatch mustBe true
+      details.registration mustBe Registration.RegistrationFailed(List(
+        Failure("SERVICE_UNAVAILABLE", "Dependent systems are currently not responding.")
+      ))
+      app.injector.instanceOf[services.GrsService].map(details).value.registeredBusinessPartnerId mustBe "-"
+    }
+
     "must return Right(CompanyDetails) for a valid response" in {
       disable(StubGrs)
       mockGrsRetrieve()

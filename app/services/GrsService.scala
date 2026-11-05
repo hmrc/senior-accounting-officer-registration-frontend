@@ -20,6 +20,7 @@ import config.AppConfig
 import models.grs.create.{NewJourneyRequest, ServiceLabels}
 import models.grs.retrieve.{CompanyDetails as GrsCompanyDetails, Registration}
 import models.registration.CompanyDetails
+import play.api.Logging
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.Request
 import uk.gov.hmrc.hmrcfrontend.config.AccessibilityStatementConfig
@@ -32,7 +33,7 @@ class GrsService @Inject() (
     appConfig: AppConfig,
     accessibilityStatementConfig: AccessibilityStatementConfig,
     messagesApi: MessagesApi
-) {
+) extends Logging {
 
   def newRequest()(using request: Request[?]): NewJourneyRequest = {
     val continueUrl =
@@ -66,18 +67,24 @@ class GrsService @Inject() (
     else uri.getPath
   }
 
-  def map(companyDetails: GrsCompanyDetails): Either[Exception, CompanyDetails] =
-    companyDetails.registration match {
-      case Registration.Registered(id) =>
-        Right(
-          CompanyDetails(
-            companyName = companyDetails.companyProfile.companyName,
-            companyNumber = companyDetails.companyProfile.companyNumber,
-            ctUtr = companyDetails.ctutr,
-            registeredBusinessPartnerId = id
-          )
+  def map(companyDetails: GrsCompanyDetails): Either[Exception, CompanyDetails] = {
+    val id = companyDetails.registration match {
+      case Registration.Registered(value) => Right(value)
+      case Registration.RegistrationFailed(failures) if failures.map(_.code).toSet == Set("SERVICE_UNAVAILABLE") =>
+        logger.warn(
+          "[GrsService][map] GRS registration failed with SERVICE_UNAVAILABLE; continuing with unavailable SAFE ID"
         )
+        // SAOD-1283: This GRS failure supplies no business partner ID, DPS accepts "-" as a temp workaround.
+        Right("-")
       case status => Left(new InternalServerException(s"Unexpected registration status $status"))
     }
-
+    id.map(value =>
+      CompanyDetails(
+        companyName = companyDetails.companyProfile.companyName,
+        companyNumber = companyDetails.companyProfile.companyNumber,
+        ctUtr = companyDetails.ctutr,
+        registeredBusinessPartnerId = value
+      )
+    )
+  }
 }

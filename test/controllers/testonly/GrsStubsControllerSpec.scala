@@ -52,6 +52,31 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
   }
 
   "GrsStubsController.getStubGrs" - {
+    "render and submit the unavailable preset" in {
+      val id   = UUID.randomUUID().toString
+      val page = route(app, FakeRequest(GET, routes.GrsStubsController.getStubGrs(id, "service-unavailable").url)).value
+      status(page) mustBe OK
+      contentAsString(page) must include("SERVICE_UNAVAILABLE")
+      val preset    = GrsResponseConfig.serviceUnavailable
+      val submitted = route(
+        app,
+        FakeRequest(POST, routes.GrsStubsController.postStubGrs(id).url)
+          .withFormUrlEncodedBody("status" -> preset.status.toString, "body" -> preset.body)
+      ).value
+      status(submitted) mustBe SEE_OTHER
+      val result = route(app, FakeRequest(GET, routes.GrsStubsController.getGrs(id).url)).value
+      status(result) mustBe OK
+      val details = contentAsJson(result).as[CompanyDetails]
+      details.identifiersMatch mustBe true
+      app.injector.instanceOf[services.GrsService].map(details).toOption.get.registeredBusinessPartnerId mustBe "-"
+    }
+
+    "reject unknown scenarios" in {
+      status(
+        route(app, FakeRequest(GET, routes.GrsStubsController.getStubGrs(testJourneyId, "unknown").url)).value
+      ) mustBe BAD_REQUEST
+    }
+
     "must return 200 with the correct view" in {
       val request = FakeRequest(GET, controllers.testonly.routes.GrsStubsController.getStubGrs(testJourneyId).url)
 
