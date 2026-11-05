@@ -18,9 +18,9 @@ package services
 
 import base.SpecBase
 import config.FeatureToggleSupport
+import models.*
 import models.ContactType.{First, Second}
 import models.registration.CompanyDetails
-import models.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*

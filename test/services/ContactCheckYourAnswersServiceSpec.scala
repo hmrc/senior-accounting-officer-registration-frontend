@@ -19,7 +19,6 @@ package services
 import base.SpecBase
 import models.*
 import models.ContactHaveYouAddedAll.{No, Yes}
-import models.ContactType.First
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*
 import services.ContactCheckYourAnswersServiceSpec.*

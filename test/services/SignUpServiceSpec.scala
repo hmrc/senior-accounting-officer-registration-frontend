@@ -33,13 +33,13 @@ import pages.*
 import play.api.inject.*
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Application, inject}
+import services.SignUpService.SignUpResult
 import services.SignUpService.SignUpResult.*
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.Future
 
 import SignUpServiceSpec.*
-import services.SignUpService.SignUpResult
 
 class SignUpServiceSpec
     extends SpecBase

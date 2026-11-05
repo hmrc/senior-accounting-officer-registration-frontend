@@ -18,8 +18,7 @@ package controllers
 
 import base.SpecBase
 import config.FeatureToggleSupport
-import models.ContactType.First
-import models.{config, *}
+import models.*
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.{any, eq as meq}
 import org.mockito.Mockito.*

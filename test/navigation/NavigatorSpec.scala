@@ -19,8 +19,8 @@ package navigation
 import base.SpecBase
 import config.FeatureToggleSupport
 import controllers.routes
-import models.ContactType.*
 import models.*
+import models.ContactType.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.*
