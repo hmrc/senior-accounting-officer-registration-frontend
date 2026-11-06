@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.mvc.JavascriptLiteral
+import play.api.mvc.{JavascriptLiteral, QueryStringBindable}
 
 sealed trait Mode
 
@@ -25,6 +25,35 @@ case object NormalMode      extends Mode
 case object TransactionMode extends Mode
 
 object Mode {
+
+  implicit def queryStringBinder(implicit intBinder: QueryStringBindable[String]): QueryStringBindable[Mode] =
+    new QueryStringBindable[Mode] {
+      override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, Mode]] = {
+        for {
+          mode <- intBinder.bind(key, params)
+        } yield {
+          mode match {
+            case Right(mode) =>
+              mode match {
+                case "NormalMode"      => Right(NormalMode)
+                case "CheckMode"       => Right(CheckMode)
+                case "TransactionMode" => Right(TransactionMode)
+                case _                 => Left(UnbindableMode)
+              }
+            case _ => Left(UnbindableMode)
+          }
+        }
+      }
+
+      override def unbind(key: String, mode: Mode): String = {
+        mode match {
+          case NormalMode      => intBinder.unbind(key, "NormalMode")
+          case CheckMode       => intBinder.unbind(key, "CheckMode")
+          case TransactionMode => intBinder.unbind(key, "TransactionMode")
+          case _               => intBinder.unbind(key, UnbindableMode)
+        }
+      }
+    }
 
   given jsLiteral: JavascriptLiteral[Mode] = new JavascriptLiteral[Mode] {
     override def to(value: Mode): String = value match {
@@ -35,4 +64,7 @@ object Mode {
   }
 
   val values: List[Mode] = List(CheckMode, NormalMode)
+
+  private val UnbindableMode: String = "Unable to bind a Mode"
+
 }

@@ -48,7 +48,8 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
     ContactType.values.foreach { contactType =>
       s"When the ContactType is $contactType" - {
 
-        lazy val contactEmailRoute = routes.ContactEmailController.onPageLoad(contactType, NormalMode).url
+        lazy val contactEmailRoute     = routes.ContactEmailController.onPageLoad(contactType, NormalMode).url
+        lazy val contactEmailPostRoute = routes.ContactEmailController.onSubmit(contactType, NormalMode).url
 
         "must return OK and the correct view for a GET" in {
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -85,7 +86,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
         "must redirect to the next page when valid data is submitted" in {
           val request =
-            FakeRequest(POST, contactEmailRoute)
+            FakeRequest(POST, contactEmailPostRoute)
               .withFormUrlEncodedBody(("value", "test@example.com"))
           val mockSessionRepository = mock[SessionRepository]
           when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
@@ -107,7 +108,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
         "must return a Bad Request and errors when invalid data is submitted" in {
           val request =
-            FakeRequest(POST, contactEmailRoute)
+            FakeRequest(POST, contactEmailPostRoute)
               .withFormUrlEncodedBody(("value", ""))
           val boundForm   = form.bind(Map("value" -> ""))
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -138,7 +139,7 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
         "must redirect to Journey Recovery for a POST if no existing data is found" in {
           val request =
-            FakeRequest(POST, contactEmailRoute)
+            FakeRequest(POST, contactEmailPostRoute)
               .withFormUrlEncodedBody(("value", "answer"))
           val application = applicationBuilder(userAnswers = None).build()
           running(application) {
@@ -155,8 +156,9 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
     "committing the transaction" - {
       "when mode is transaction and contact type is second" - {
         "must commit the transaction" in {
-          val url     = routes.ContactEmailController.onPageLoad(ContactType.Second, TransactionMode).url
-          val request = FakeRequest(POST, url).withFormUrlEncodedBody(("value", "test@example.com"))
+          routes.ContactEmailController.onPageLoad(ContactType.Second, TransactionMode).url
+          val postUrl = routes.ContactEmailController.onSubmit(ContactType.Second, TransactionMode).url
+          val request = FakeRequest(POST, postUrl).withFormUrlEncodedBody(("value", "test@example.com"))
 
           val mockSessionRepository = mock[SessionRepository]
           when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
@@ -184,8 +186,10 @@ class ContactEmailControllerSpec extends SpecBase with MockitoSugar {
 
       "when some other arguments are used" - {
         "must not commit the transaction" in {
-          val url     = routes.ContactEmailController.onPageLoad(ContactType.First, NormalMode).url
-          val request = FakeRequest(POST, url).withFormUrlEncodedBody(("value", "test@example.com"))
+          routes.ContactEmailController.onPageLoad(ContactType.First, NormalMode).url
+          val postUrl = routes.ContactEmailController.onSubmit(ContactType.First, NormalMode).url
+
+          val request = FakeRequest(POST, postUrl).withFormUrlEncodedBody(("value", "test@example.com"))
 
           val mockSessionRepository = mock[SessionRepository]
           when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
