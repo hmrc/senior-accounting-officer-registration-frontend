@@ -143,8 +143,6 @@ nominatedCompanyDetailsGuidance.paragraph4 = If your nominated company does not 
 nominatedCompanyDetailsGuidance.paragraph5 = If no company in your group has a CRN, contact your Customer Compliance Manager if you have one or email {0} for support.
 nominatedCompanyDetailsGuidance.email = wmbc.saomailbox@hmrc.gov.uk
 
-nominatedCompanyDetailsGuidance.inset.text = If your group is not registered with Companies House, nominate a company in your group with a CRN to register. If no company in your group has a CRN, contact HMRC using your usual compliance contact or existing support channels.
-
 cannotAccessService.title = You cannot access this service
 cannotAccessService.heading = You cannot access this service
 cannotAccessService.individual.paragraph1 = You’ve signed in with an individual account. Only administrators of an organisation account can register to use this service.
