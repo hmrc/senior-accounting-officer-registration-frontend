@@ -26,11 +26,11 @@ case object TransactionMode extends Mode
 
 object Mode {
 
-  implicit def queryStringBinder(implicit intBinder: QueryStringBindable[String]): QueryStringBindable[Mode] =
+  implicit def queryStringBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[Mode] =
     new QueryStringBindable[Mode] {
       override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, Mode]] = {
         for {
-          mode <- intBinder.bind(key, params)
+          mode <- stringBinder.bind(key, params)
         } yield {
           mode match {
             case Right(mode) =>
@@ -47,10 +47,10 @@ object Mode {
 
       override def unbind(key: String, mode: Mode): String = {
         mode match {
-          case NormalMode      => intBinder.unbind(key, "NormalMode")
-          case CheckMode       => intBinder.unbind(key, "CheckMode")
-          case TransactionMode => intBinder.unbind(key, "TransactionMode")
-          case _               => intBinder.unbind(key, UnbindableMode)
+          case NormalMode      => stringBinder.unbind(key, "NormalMode")
+          case CheckMode       => stringBinder.unbind(key, "CheckMode")
+          case TransactionMode => stringBinder.unbind(key, "TransactionMode")
+          case _               => stringBinder.unbind(key, UnbindableMode)
         }
       }
     }
