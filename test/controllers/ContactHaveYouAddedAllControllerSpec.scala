@@ -48,13 +48,13 @@ class ContactHaveYouAddedAllControllerSpec
   val formProvider                       = new ContactHaveYouAddedAllFormProvider()
   val form: Form[ContactHaveYouAddedAll] = formProvider()
 
-  s"ContactHaveYouAddedAllController" - {
+  "ContactHaveYouAddedAllController" - {
     List(ContactType.First, ContactType.Second).foreach { contactType =>
       s"When the ContactType is $contactType" - {
         lazy val contactHaveYouAddedAllRoute =
           routes.ContactHaveYouAddedAllController.onPageLoad(NormalMode).url
         lazy val contactHaveYouAddedAllPostRoute =
-          routes.ContactHaveYouAddedAllController.onSubmit(contactType, NormalMode).url
+          routes.ContactHaveYouAddedAllController.onSubmit(NormalMode).url
         "must return OK and the correct view for a GET" in {
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
           running(application) {
@@ -125,54 +125,13 @@ class ContactHaveYouAddedAllControllerSpec
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
           running(application) {
             val request =
-              FakeRequest(POST, contactHaveYouAddedAllRoute)
+              FakeRequest(POST, contactHaveYouAddedAllPostRoute)
                 .withFormUrlEncodedBody(("value", "invalid value"))
             val boundForm = form.bind(Map("value" -> "invalid value"))
             val view      = (form: Form[ContactHaveYouAddedAll], contactType: ContactType, mode: Mode) =>
               application.injector
                 .instanceOf[ContactHaveYouAddedAllView]
                 .apply(form, mode)(using request, messages(application))
-
-            val result = route(application, request).value
-
-            status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, contactType, NormalMode).toString
-          }
-        }
-
-        "must redirect to the next page when valid data is submitted" in {
-          val mockSessionRepository = mock[SessionRepository]
-          when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-          val application =
-            applicationBuilder(userAnswers = Some(emptyUserAnswers))
-              .overrides(
-                bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-                bind[SessionRepository].toInstance(mockSessionRepository)
-              )
-              .build()
-          running(application) {
-            val request =
-              FakeRequest(POST, contactHaveYouAddedAllPostRoute)
-                .withFormUrlEncodedBody(("value", ContactHaveYouAddedAll.values.head.toString))
-
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-          }
-        }
-
-        "must return a Bad Request and errors when invalid data is submitted" in {
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-          running(application) {
-            val request =
-              FakeRequest(POST, contactHaveYouAddedAllPostRoute)
-                .withFormUrlEncodedBody(("value", "invalid value"))
-            val boundForm = form.bind(Map("value" -> "invalid value"))
-            val view      = (form: Form[ContactHaveYouAddedAll], contactType: ContactType, mode: Mode) =>
-              application.injector
-                .instanceOf[ContactHaveYouAddedAllView]
-                .apply(form, contactType, mode)(using request, messages(application))
 
             val result = route(application, request).value
 

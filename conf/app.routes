@@ -40,20 +40,11 @@ POST        /contact-details/first/email-address                       controlle
 GET         /contact-details/second/email-address                      controllers.ContactEmailController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode ?= NormalMode)
 POST        /contact-details/second/email-address                      controllers.ContactEmailController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode)
 
-GET         /contact-details/first/add-second                 controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.First, mode: Mode ?= NormalMode)
-POST        /contact-details/first/add-second                 controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.First, mode: Mode)
+GET         /contact-details/first/add-second                 controllers.ContactHaveYouAddedAllController.onPageLoad(mode: Mode ?= NormalMode)
+POST        /contact-details/first/add-second                 controllers.ContactHaveYouAddedAllController.onSubmit(mode: Mode ?= NormalMode)
 
-GET         /contact-details/second/add-another                controllers.ContactHaveYouAddedAllController.onPageLoad(contactType: ContactType = ContactType.Second, mode: Mode ?= NormalMode)
-POST        /contact-details/second/add-another                controllers.ContactHaveYouAddedAllController.onSubmit(contactType: ContactType = ContactType.Second, mode: Mode)
-
-GET         /contact-details/first/check-answers          controllers.ContactCheckYourAnswersController.onPageLoadLegacy(contactType: ContactType = ContactType.First)
-POST        /contact-details/first/check-answers          controllers.ContactCheckYourAnswersController.saveAndContinueLegacy(contactType: ContactType = ContactType.First)
-
-GET         /contact-details/second/check-answers         controllers.ContactCheckYourAnswersController.onPageLoadLegacy(contactType: ContactType = ContactType.Second)
-POST        /contact-details/second/check-answers         controllers.ContactCheckYourAnswersController.saveAndContinueLegacy(contactType: ContactType = ContactType.Second)
-
-GET         /contact-details/check-answers                controllers.ContactCheckYourAnswersController.onPageLoadReshuffled()
-POST        /contact-details/check-answers                controllers.ContactCheckYourAnswersController.saveAndContinueReshuffled()
+GET         /contact-details/check-answers                controllers.ContactCheckYourAnswersController.onPageLoad()
+POST        /contact-details/check-answers                controllers.ContactCheckYourAnswersController.saveAndContinue()
 
 GET        /start-registration                 controllers.NominatedCompanyDetailsGuidanceController.onPageLoad()
 POST       /start-registration                 controllers.NominatedCompanyDetailsGuidanceController.onSubmit()
