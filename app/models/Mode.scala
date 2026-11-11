@@ -26,7 +26,7 @@ case object TransactionMode extends Mode
 
 object Mode {
 
-  implicit def queryStringBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[Mode] =
+  given queryStringBinder(using stringBinder: QueryStringBindable[String]): QueryStringBindable[Mode] =
     new QueryStringBindable[Mode] {
       override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, Mode]] = {
         for {
