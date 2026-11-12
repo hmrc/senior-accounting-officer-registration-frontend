@@ -29,7 +29,7 @@ import javax.inject.Inject
 class ContactUserAnswersService @Inject extends Logging {
 
   def sanitise(userAnswers: UserAnswers): UserAnswers = {
-    userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
+    userAnswers.get(ContactHaveYouAddedAllPage(NormalMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) =>
         userAnswers
           .clearTransactionArea()
@@ -76,7 +76,7 @@ class ContactUserAnswersService @Inject extends Logging {
   }
 
   def commitTransaction(userAnswers: UserAnswers): UserAnswers = {
-    userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode)) match {
+    userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) => commitTwoContactsTransaction(userAnswers)
       case Some(ContactHaveYouAddedAll.No)  => commitOneContactTransaction(userAnswers)
       case None                             => ???
@@ -85,32 +85,25 @@ class ContactUserAnswersService @Inject extends Logging {
 
   private def commitTwoContactsTransaction(userAnswers: UserAnswers): UserAnswers = {
     (for {
-      decision <- userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode))
-      saoName  <- userAnswers.get(ContactNamePage(Second, TransactionMode))
-      saoEmail <- userAnswers.get(ContactEmailPage(Second, TransactionMode))
+      decision     <- userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode))
+      contactName  <- userAnswers.get(ContactNamePage(Second, TransactionMode))
+      contactEmail <- userAnswers.get(ContactEmailPage(Second, TransactionMode))
     } yield {
-      userAnswers
-        .set(ContactHaveYouAddedAllPage(First, NormalMode), decision)
-        .flatMap(
-          _.set(ContactNamePage(Second, NormalMode), saoName)
-            .flatMap(_.set(ContactEmailPage(Second, NormalMode), saoEmail))
-        )
-        .getOrElse(???)
+      (for {
+        userAnswers <- userAnswers.set(ContactHaveYouAddedAllPage(NormalMode), decision)
+        userAnswers <- userAnswers.set(ContactNamePage(Second, NormalMode), contactName)
+        userAnswers <- userAnswers.set(ContactEmailPage(Second, NormalMode), contactEmail)
+      } yield userAnswers).getOrElse(???)
     }).getOrElse(???)
   }
 
   private def commitOneContactTransaction(userAnswers: UserAnswers): UserAnswers = {
     (for {
-      decision <- userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode))
+      decision <- userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode))
     } yield {
       userAnswers
-        .set(ContactHaveYouAddedAllPage(First, NormalMode), decision)
+        .set(ContactHaveYouAddedAllPage(NormalMode), decision)
         .getOrElse(???)
     }).getOrElse(???)
   }
-}
-
-object ContactUserAnswersService {
-  val saoNameKey: String  = ContactNamePage(First, NormalMode).toString
-  val saoEmailKey: String = ContactEmailPage(First, NormalMode).toString
 }
