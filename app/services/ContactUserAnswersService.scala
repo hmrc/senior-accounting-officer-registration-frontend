@@ -24,9 +24,13 @@ import play.api.Logging
 import play.api.libs.json.*
 import play.api.libs.json.Reads.*
 
+import scala.util.{Failure, Success}
+
 import javax.inject.Inject
 
 class ContactUserAnswersService @Inject extends Logging {
+
+  private val notFoundException = new IllegalStateException("ContactHaveYouAddedAll not found")
 
   def sanitise(userAnswers: UserAnswers): UserAnswers = {
     userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
@@ -39,7 +43,7 @@ class ContactUserAnswersService @Inject extends Logging {
           .clearTransactionArea()
           .clearCommittedAreaSecondContact()
           .copyCommittedAreaToTransactionArea()
-      case None => ???
+      case None => throw notFoundException
     }
   }
 
@@ -48,7 +52,10 @@ class ContactUserAnswersService @Inject extends Logging {
       userAnswers.transformUserAnswers(
         (__).json.update(
           __.read[JsObject].map { _ =>
-            Json.obj(TRANSACTION_PATH -> (userAnswers.data \ COMMITTED_PATH).getOrElse(???))
+            Json.obj(
+              TRANSACTION_PATH -> (userAnswers.data \ COMMITTED_PATH)
+                .getOrElse(throw new IllegalStateException("Commited path not found in userAnswers"))
+            )
           }
         )
       )
@@ -67,8 +74,7 @@ class ContactUserAnswersService @Inject extends Logging {
     private def transformUserAnswers(transformer: Reads[JsObject]): UserAnswers = {
       userAnswers.data.transform(transformer) match {
         case JsError(error) => {
-          logger.error("Json transformation error: " + error)
-          ???
+          throw new Exception("Json transformation error: " + error)
         }
         case JsSuccess(updatedData, _) => userAnswers.copy(data = updatedData)
       }
@@ -79,7 +85,7 @@ class ContactUserAnswersService @Inject extends Logging {
     userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) => commitTwoContactsTransaction(userAnswers)
       case Some(ContactHaveYouAddedAll.No)  => commitOneContactTransaction(userAnswers)
-      case None                             => ???
+      case None                             => throw notFoundException
     }
   }
 
@@ -94,9 +100,11 @@ class ContactUserAnswersService @Inject extends Logging {
         .flatMap(
           _.set(ContactNamePage(Second, NormalMode), saoName)
             .flatMap(_.set(ContactEmailPage(Second, NormalMode), saoEmail))
-        )
-        .getOrElse(???)
-    }).getOrElse(???)
+        ) match {
+        case Success(userAnswers) => userAnswers
+        case Failure(error) => throw error
+      }
+    }).getOrElse(throw notFoundException)
   }
 
   private def commitOneContactTransaction(userAnswers: UserAnswers): UserAnswers = {
@@ -104,9 +112,11 @@ class ContactUserAnswersService @Inject extends Logging {
       decision <- userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode))
     } yield {
       userAnswers
-        .set(ContactHaveYouAddedAllPage(First, NormalMode), decision)
-        .getOrElse(???)
-    }).getOrElse(???)
+        .set(ContactHaveYouAddedAllPage(First, NormalMode), decision) match {
+        case Success(userAnswers) => userAnswers
+        case Failure(error)   => throw error
+      }
+    }).getOrElse(throw notFoundException)
   }
 }
 
