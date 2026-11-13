@@ -28,22 +28,15 @@ object Mode {
 
   given queryStringBinder(using stringBinder: QueryStringBindable[String]): QueryStringBindable[Mode] =
     new QueryStringBindable[Mode] {
-      override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, Mode]] = {
-        for {
-          mode <- stringBinder.bind(key, params)
-        } yield {
-          mode match {
-            case Right(mode) =>
-              mode match {
-                case "NormalMode"      => Right(NormalMode)
-                case "CheckMode"       => Right(CheckMode)
-                case "TransactionMode" => Right(TransactionMode)
-                case _                 => Left(UnbindableMode)
-              }
-            case _ => Left(UnbindableMode)
-          }
-        }
-      }
+      override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, Mode]] =
+        stringBinder
+          .bind(key, params)
+          .map(_.flatMap {
+            case "NormalMode"      => Right(NormalMode)
+            case "CheckMode"       => Right(CheckMode)
+            case "TransactionMode" => Right(TransactionMode)
+            case _                 => Left(UnbindableMode)
+          })
 
       override def unbind(key: String, mode: Mode): String = {
         mode match {
