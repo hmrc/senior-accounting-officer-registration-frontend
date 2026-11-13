@@ -17,6 +17,7 @@
 package services
 
 import base.SpecBase
+import models.Area.COMMITTED_PATH
 import models.ContactHaveYouAddedAll
 import models.ContactType
 import models.NormalMode
@@ -85,6 +86,30 @@ class ContactUserAnswersServiceSpec extends SpecBase {
 
       result.data mustBe expected.data
     }
+
+    "IllegalStateException is thrown with error message 'Commited path not found in userAnswers'" in {
+      val exception = intercept[IllegalStateException] {
+        val userAnswers =  emptyUserAnswers
+          .add(ContactNamePage(ContactType.First, TransactionMode), "a")
+          .add(ContactEmailPage(ContactType.First, TransactionMode), "b")
+          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactNamePage(ContactType.Second, TransactionMode), "c")
+          .add(ContactEmailPage(ContactType.Second, TransactionMode), "d")
+          .add(ContactNamePage(ContactType.First, TransactionMode), "a")
+          .add(ContactEmailPage(ContactType.First, TransactionMode), "b")
+          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactNamePage(ContactType.Second, TransactionMode), "c")
+          .add(ContactEmailPage(ContactType.Second, TransactionMode), "d")
+
+        println("here")
+        println(userAnswers.data)
+        println("after")
+        val input = userAnswers.copy(data = userAnswers.data - COMMITTED_PATH)
+        println(input)
+        SUT.sanitise(input)
+      }
+      exception.getMessage mustBe "Commited path not found in userAnswers"
+    }
   }
 
   "commitTransaction" - {
@@ -106,6 +131,7 @@ class ContactUserAnswersServiceSpec extends SpecBase {
 
       result.data mustBe expected.data
     }
+
 
     "two contacts added" in {
       val input =
@@ -130,11 +156,19 @@ class ContactUserAnswersServiceSpec extends SpecBase {
       result.data mustBe expected.data
     }
 
+    "must throw IllegalStateException when ContactHaveYouAddedAll is not found" in {
+      val exception = intercept[IllegalStateException] {
+        SUT.commitTransaction(emptyUserAnswers)
+      }
+      exception.getMessage mustBe "ContactHaveYouAddedAll not found"
+    }
+
     "missing ContactHaveYouAddedAll answer" - {
-      "must throw exception" in {
-        intercept[NotImplementedError] {
+      "must throw IllegalStateException when ContactHaveYouAddedAll is not found" in {
+        val exceptionFromSanitise = intercept[IllegalStateException] {
           SUT.sanitise(emptyUserAnswers)
         }
+        exceptionFromSanitise.getMessage mustBe "ContactHaveYouAddedAll not found"
       }
     }
   }
