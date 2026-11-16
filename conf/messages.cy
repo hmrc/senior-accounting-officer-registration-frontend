@@ -77,7 +77,7 @@ contactDetailsGuidance.p1 = Bydd angen i chi roi manylion cyswllt y person neu�
 contactDetailsGuidance.p2 = Byddwn ni’n defnyddio’r manylion hyn er mwyn:
 contactDetailsGuidance.b1 = cysylltu â chi os oes gennym gwestiynau am eich cyflwyniad SAO
 contactDetailsGuidance.b2 = anfon eich cadarnhad pan fydd eich cofrestriad wedi cwblhau a phryd y byddwch yn cyflwyno eich hysbysiad a’ch tystysgrif
-contactDetailsGuidance.p3 = Gallwch ychwanegu hyd at 2 gyswllt. Am bob un, nodwch yr enw llawn a'r cyfeiriad e-bost.
+contactDetailsGuidance.p3 = Gallwch ychwanegu hyd at 2 gyswllt. Am bob un, nodwch yr enw llawn a’r cyfeiriad e-bost.
 
 contact.first.caption = Manylion y cyswllt cyntaf
 contact.second.caption = Manylion yr ail gyswllt
