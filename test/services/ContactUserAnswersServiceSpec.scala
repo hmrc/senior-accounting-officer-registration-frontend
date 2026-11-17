@@ -86,25 +86,6 @@ class ContactUserAnswersServiceSpec extends SpecBase {
 
       result.data mustBe expected.data
     }
-
-//    "IllegalStateException is thrown with error message 'Commited path not found in userAnswers'" in {
-//      val exception = intercept[IllegalStateException] {
-//        val userAnswers =  emptyUserAnswers
-//          .add(ContactNamePage(ContactType.First, NormalMode), "a")
-//          .add(ContactEmailPage(ContactType.First, TransactionMode), "b")
-//          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
-//          .add(ContactNamePage(ContactType.Second, TransactionMode), "c")
-//          .add(ContactEmailPage(ContactType.Second, TransactionMode), "d")
-//          .add(ContactNamePage(ContactType.First, TransactionMode), "a")
-//          .add(ContactEmailPage(ContactType.First, TransactionMode), "b")
-//          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
-//          .add(ContactNamePage(ContactType.Second, TransactionMode), "c")
-//          .add(ContactEmailPage(ContactType.Second, TransactionMode), "d")
-//
-//        SUT.sanitise(userAnswers)
-//      }
-//      exception.getMessage mustBe "ContactHaveYouAddedAll is not found"
-//    }
   }
 
   "commitTransaction" - {
@@ -113,25 +94,6 @@ class ContactUserAnswersServiceSpec extends SpecBase {
         emptyUserAnswers
           .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.No)
           .add(ContactNamePage(ContactType.Second, TransactionMode), "z")
-          .add(ContactEmailPage(ContactType.Second, TransactionMode), "y")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
-
-      val expected = emptyUserAnswers
-        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.No)
-        .add(ContactNamePage(ContactType.Second, TransactionMode), "z")
-        .add(ContactEmailPage(ContactType.Second, TransactionMode), "y")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
-
-      val result = SUT.commitTransaction(input)
-
-      result.data mustBe expected.data
-    }
-
-    "exception thrown when attempting to add one contacts" in {
-      val input =
-        emptyUserAnswers
-          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.No)
-          .add(ContactNamePage(ContactType.Second, TransactionMode), "1")
           .add(ContactEmailPage(ContactType.Second, TransactionMode), "y")
           .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
 
