@@ -95,29 +95,30 @@ class ContactUserAnswersService @Inject extends Logging {
       case (Some(decision), Some(saoName), Some(saoEmail)) =>
         val updatedAnswers = for {
           withDecision <- userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), decision)
-          withSaoName <- withDecision.set(ContactNamePage(Second, NormalMode), saoName)
+          withSaoName  <- withDecision.set(ContactNamePage(Second, NormalMode), saoName)
           withSaoEmail <- withSaoName.set(ContactEmailPage(Second, NormalMode), saoEmail)
         } yield withSaoEmail
         updatedAnswers match {
-        case Success(answers) => answers
-        case Failure(error) => throw error
-      }
-      case (Some(decision), _, Some(saoEmail))  => throw IllegalStateException("ContactNamePage not found")
+          case Success(answers) => answers
+          case Failure(error)   => throw error
+        }
+      case (Some(decision), _, Some(saoEmail)) => throw IllegalStateException("ContactNamePage not found")
       case (Some(decision), Some(saoName), _)  => throw IllegalStateException("ContactEmailPage not found")
     }
   }
 
   private def commitOneContactTransaction(userAnswers: UserAnswers): UserAnswers = {
     userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode)) match {
-      case Some(decision) => userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), decision) match {
-        case Success(answers) => answers
-        case Failure(error)   => throw error
-      }
+      case Some(decision) =>
+        userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), decision) match {
+          case Success(answers) => answers
+          case Failure(error)   => throw error
+        }
     }
-}
+  }
 
-object ContactUserAnswersService {
-  val saoNameKey: String = ContactNamePage(First, NormalMode).toString
-  val saoEmailKey: String = ContactEmailPage(First, NormalMode).toString
-}
+  object ContactUserAnswersService {
+    val saoNameKey: String  = ContactNamePage(First, NormalMode).toString
+    val saoEmailKey: String = ContactEmailPage(First, NormalMode).toString
+  }
 }

@@ -17,7 +17,6 @@
 package services
 
 import base.SpecBase
-import models.Area.COMMITTED_PATH
 import models.ContactHaveYouAddedAll
 import models.ContactType
 import models.NormalMode
@@ -140,7 +139,7 @@ class ContactUserAnswersServiceSpec extends SpecBase {
           .add(ContactNamePage(ContactType.Second, NormalMode), "z")
           .add(ContactEmailPage(ContactType.Second, NormalMode), "y")
 
-      val expected = emptyUserAnswers
+      emptyUserAnswers
         .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
         .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
@@ -158,12 +157,12 @@ class ContactUserAnswersServiceSpec extends SpecBase {
       val input =
         emptyUserAnswers
           .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
-                    .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
+          .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
           .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
-                    .add(ContactNamePage(ContactType.Second, NormalMode), "z")
+          .add(ContactNamePage(ContactType.Second, NormalMode), "z")
           .add(ContactEmailPage(ContactType.Second, NormalMode), "y")
 
-      val expected = emptyUserAnswers
+      emptyUserAnswers
         .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
         .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
