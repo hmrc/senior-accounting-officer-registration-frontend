@@ -51,11 +51,8 @@ class ContactUserAnswersService @Inject extends Logging {
     private def copyCommittedAreaToTransactionArea(): UserAnswers = {
       userAnswers.transformUserAnswers(
         (__).json.update(
-          __.read[JsObject].map { _ =>
-            Json.obj(
-              TRANSACTION_PATH -> (userAnswers.data \ COMMITTED_PATH)
-                .getOrElse(throw new IllegalStateException("Commited path not found in userAnswers"))
-            )
+          (__ \ COMMITTED_PATH).read[JsObject].map { commited =>
+            Json.obj(TRANSACTION_PATH -> commited)
           }
         )
       )
@@ -90,37 +87,37 @@ class ContactUserAnswersService @Inject extends Logging {
   }
 
   private def commitTwoContactsTransaction(userAnswers: UserAnswers): UserAnswers = {
-    (for {
-      decision <- userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode))
-      saoName  <- userAnswers.get(ContactNamePage(Second, TransactionMode))
-      saoEmail <- userAnswers.get(ContactEmailPage(Second, TransactionMode))
-    } yield {
-      userAnswers
-        .set(ContactHaveYouAddedAllPage(First, NormalMode), decision)
-        .flatMap(
-          _.set(ContactNamePage(Second, NormalMode), saoName)
-            .flatMap(_.set(ContactEmailPage(Second, NormalMode), saoEmail))
-        ) match {
-        case Success(userAnswers) => userAnswers
+    (
+      userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode)),
+      userAnswers.get(ContactNamePage(Second, TransactionMode)),
+      userAnswers.get(ContactEmailPage(Second, TransactionMode))
+    ) match {
+      case (Some(decision), Some(saoName), Some(saoEmail)) =>
+        val updatedAnswers = for {
+          withDecision <- userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), decision)
+          withSaoName <- withDecision.set(ContactNamePage(Second, NormalMode), saoName)
+          withSaoEmail <- withSaoName.set(ContactEmailPage(Second, NormalMode), saoEmail)
+        } yield withSaoEmail
+        updatedAnswers match {
+        case Success(answers) => answers
         case Failure(error) => throw error
       }
-    }).getOrElse(throw notFoundException)
+      case (Some(decision), _, Some(saoEmail))  => throw IllegalStateException("ContactNamePage not found")
+      case (Some(decision), Some(saoName), _)  => throw IllegalStateException("ContactEmailPage not found")
+    }
   }
 
   private def commitOneContactTransaction(userAnswers: UserAnswers): UserAnswers = {
-    (for {
-      decision <- userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode))
-    } yield {
-      userAnswers
-        .set(ContactHaveYouAddedAllPage(First, NormalMode), decision) match {
-        case Success(userAnswers) => userAnswers
+    userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode)) match {
+      case Some(decision) => userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), decision) match {
+        case Success(answers) => answers
         case Failure(error)   => throw error
       }
-    }).getOrElse(throw notFoundException)
-  }
+    }
 }
 
 object ContactUserAnswersService {
-  val saoNameKey: String  = ContactNamePage(First, NormalMode).toString
+  val saoNameKey: String = ContactNamePage(First, NormalMode).toString
   val saoEmailKey: String = ContactEmailPage(First, NormalMode).toString
+}
 }
