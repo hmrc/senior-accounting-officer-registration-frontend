@@ -16,18 +16,17 @@
 
 package controllers
 
-import config.AppConfig
 import controllers.actions.*
-import models.{ContactType, NormalMode}
+import models.NormalMode
 import navigation.Navigator
-import pages.{ContactCheckYourAnswersPage, ContactsCheckYourAnswersPage}
+import pages.ContactsCheckYourAnswersPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.ContactCheckYourAnswersService
 import services.ContactUserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{ContactCheckYourAnswersView, ContactsCheckYourAnswersView}
+import views.html.ContactsCheckYourAnswersView
 
 import scala.concurrent.ExecutionContext
 
@@ -35,13 +34,11 @@ import javax.inject.Inject
 
 class ContactCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
-    appConfig: AppConfig,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
-    legacyView: ContactCheckYourAnswersView,
-    reshuffledView: ContactsCheckYourAnswersView,
+    view: ContactsCheckYourAnswersView,
     service: ContactCheckYourAnswersService,
     navigator: Navigator,
     userAnswersService: ContactUserAnswersService,
@@ -50,35 +47,18 @@ class ContactCheckYourAnswersController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoadLegacy(contactType: ContactType): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      service.getContactInfo(request.userAnswers, contactType) match {
-        case Some(answers) => Ok(legacyView(answers, contactType))
-        case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
-      }
-  }
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val sanitisedAnswers = userAnswersService.sanitise(request.userAnswers)
 
-  def saveAndContinueLegacy(contactType: ContactType): Action[AnyContent] =
-    (identify andThen getData andThen requireData) { implicit request =>
-      Redirect(navigator.nextPage(ContactCheckYourAnswersPage(contactType), NormalMode, request.userAnswers))
-    }
+    sessionRepository.set(sanitisedAnswers)
 
-  def onPageLoadReshuffled(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    if appConfig.contactFlowReshuffleEnabled then {
-      val sanitisedAnswers = userAnswersService.sanitise(request.userAnswers)
-
-      sessionRepository.set(sanitisedAnswers)
-
-      service.getContactsForCheckYourAnswersReshuffled(sanitisedAnswers) match {
-        case Some(answers) => Ok(reshuffledView(answers))
-        case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
-      }
-    } else {
-      Redirect(routes.JourneyRecoveryController.onPageLoad())
+    service.getContactsForCheckYourAnswers(sanitisedAnswers) match {
+      case Some(answers) => Ok(view(answers))
+      case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
     }
   }
 
-  def saveAndContinueReshuffled(): Action[AnyContent] =
+  def saveAndContinue(): Action[AnyContent] =
     (identify andThen getData andThen requireData) { implicit request =>
       Redirect(navigator.nextPage(ContactsCheckYourAnswersPage, NormalMode, request.userAnswers))
     }

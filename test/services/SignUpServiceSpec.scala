@@ -22,7 +22,6 @@ import connectors.SignUpConnector
 import models.ContactHaveYouAddedAll.{No, Yes}
 import models.ContactType.*
 import models.NormalMode
-import models.config.FeatureToggle.ContactFlowReshuffle
 import models.registration.*
 import models.{ContactHaveYouAddedAll, ContactType, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, argThat, eq as meq}
@@ -34,6 +33,7 @@ import pages.*
 import play.api.inject.*
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Application, inject}
+import services.SignUpService.SignUpResult
 import services.SignUpService.SignUpResult.*
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
@@ -55,56 +55,38 @@ class SignUpServiceSpec
     .build()
 
   override def beforeEach(): Unit = {
-    disable(ContactFlowReshuffle)
     reset(mockSignUpConnector)
   }
 
-  override def afterEach(): Unit = disable(ContactFlowReshuffle)
+  Seq(Yes, No).foreach { answer =>
+    s"submission with answer=$answer must select the correct contacts" in {
+      when(mockSignUpConnector.submit(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(200, """{"subscriptionId":"id"}""")))
+      val answers = emptyUserAnswers
+        .updateGrs(testCompanyDetails)
+        .updateContact(First, "name1", "email1")
+        .updateContactHaveYouAddedAll(answer)
+        .updateContact(Second, "name2", "email2")
+      val wantsSecond = answer == Yes
+      val contacts    = List(Contact("name1", "email1", "valid", "en-GB")) ++
+        (if wantsSecond then List(Contact("name2", "email2", "valid", "en-GB")) else Nil)
 
-  "submission must pass the unavailable SAFE ID marker to the backend" in {
-    when(mockSignUpConnector.submit(any())(using any()))
-      .thenReturn(Future.successful(HttpResponse(200, """{"subscriptionId":"id"}""")))
-    val answers = emptyUserAnswers
-      .updateGrs(testCompanyDetails.copy(registeredBusinessPartnerId = "-"))
-      .updateContact(First, "name1", "email1")
-      .updateContactHaveYouAddedAll(Yes)
-    SUT.submit(answers).futureValue mustBe Success("id")
-    verify(mockSignUpConnector).submit(argThat[SignUpRequest](_.etmpSafeId == "-"))(using any())
-  }
-
-  Seq(false, true).foreach { reshuffled =>
-    Seq(Yes, No).foreach { answer =>
-      s"submission with reshuffle=$reshuffled and answer=$answer must select the correct contacts" in {
-        if reshuffled then enable(ContactFlowReshuffle)
-        when(mockSignUpConnector.submit(any())(using any()))
-          .thenReturn(Future.successful(HttpResponse(200, """{"subscriptionId":"id"}""")))
-        val answers = emptyUserAnswers
-          .updateGrs(testCompanyDetails)
-          .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(answer)
-          .updateContact(Second, "name2", "email2")
-        val wantsSecond = if reshuffled then answer == Yes else answer == No
-        val contacts    = List(Contact("name1", "email1", "valid", "en-GB")) ++
-          (if wantsSecond then List(Contact("name2", "email2", "valid", "en-GB")) else Nil)
-
-        SUT.submit(answers).futureValue mustBe Success("id")
-        verify(mockSignUpConnector).submit(
-          meq(
-            SignUpRequest(
-              etmpSafeId = "registeredBusinessPartnerId",
-              nominatedCompany = NominatedCompany(name = "companyName", crn = "companyNumber", utr = "ctUtr"),
-              contacts = contacts,
-              idempotencyKey = None
-            )
+      SUT.submit(answers).futureValue mustBe Success("id")
+      verify(mockSignUpConnector).submit(
+        meq(
+          SignUpRequest(
+            etmpSafeId = "registeredBusinessPartnerId",
+            nominatedCompany = NominatedCompany(name = "companyName", crn = "companyNumber", utr = "ctUtr"),
+            contacts = contacts,
+            idempotencyKey = None
           )
-        )(using any())
-      }
+        )
+      )(using any())
     }
   }
 
   Seq((None, None), (Some("name2"), None), (None, Some("email2"))).foreach { (name, email) =>
-    s"reshuffled submission must reject incomplete second contact ($name, $email) when yes is selected" in {
-      enable(ContactFlowReshuffle)
+    s"must reject incomplete second contact ($name, $email) when yes is selected" in {
       val answers = emptyUserAnswers
         .updateGrs(testCompanyDetails)
         .updateContact(First, "name1", "email1")
@@ -135,7 +117,7 @@ class SignUpServiceSpec
           val userAnswers = emptyUserAnswers
             .updateGrs(testCompanyDetails)
             .updateContact(First, "name", "email")
-            .updateContactHaveYouAddedAll(Yes)
+            .updateContactHaveYouAddedAll(No)
 
           val result = SUT.submit(userAnswers)
 
@@ -165,7 +147,7 @@ class SignUpServiceSpec
           val userAnswers = emptyUserAnswers
             .updateGrs(testCompanyDetails)
             .updateContact(First, "name1", "email1")
-            .updateContactHaveYouAddedAll(No)
+            .updateContactHaveYouAddedAll(Yes)
             .updateContact(Second, "name2", "email2")
 
           val result = SUT.submit(userAnswers)
@@ -224,7 +206,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -239,7 +221,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -254,7 +236,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -269,7 +251,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -284,7 +266,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -299,7 +281,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submit(userAnswers)
 
@@ -328,7 +310,7 @@ class SignUpServiceSpec
           val userAnswers = emptyUserAnswers
             .updateGrs(testCompanyDetails)
             .updateContact(First, "name", "email")
-            .updateContactHaveYouAddedAll(Yes)
+            .updateContactHaveYouAddedAll(No)
 
           val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -347,6 +329,7 @@ class SignUpServiceSpec
             }
           )(using any())
         }
+
         "and have two contact details" in {
           val testIdempotencyKey = "key"
           when(mockSignUpConnector.submitWithFaultTolerance(any())(using any()))
@@ -356,7 +339,7 @@ class SignUpServiceSpec
           val userAnswers = emptyUserAnswers
             .updateGrs(testCompanyDetails)
             .updateContact(First, "name1", "email1")
-            .updateContactHaveYouAddedAll(No)
+            .updateContactHaveYouAddedAll(Yes)
             .updateContact(Second, "name2", "email2")
 
           val result = SUT.submitWithFaultTolerance(userAnswers)
@@ -406,6 +389,31 @@ class SignUpServiceSpec
           verify(mockSignUpConnector, times(0)).submitWithFaultTolerance(any())(using any())
         }
       }
+
+      "must return existing idempotency id" in {
+        val expectedIdempotencyKey = "id"
+
+        when(mockSignUpConnector.submitWithFaultTolerance(any())(using any())).thenReturn(
+          Future.successful(
+            HttpResponse(
+              202,
+              s"""{"idempotencyKey": "$expectedIdempotencyKey"}"""
+            )
+          )
+        )
+
+        val result =
+          SUT.submitWithFaultTolerance(
+            emptyUserAnswers
+              .set(IdempotencyKey, Some(expectedIdempotencyKey))
+              .get
+              .updateGrs(testCompanyDetails)
+              .updateContact(First, "name", "email")
+              .updateContactHaveYouAddedAll(No)
+          )
+
+        result.futureValue mustBe Pending(expectedIdempotencyKey)
+      }
     }
 
     "when user answer is valid and complete" - {
@@ -415,7 +423,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -430,7 +438,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -445,7 +453,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -460,7 +468,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -475,7 +483,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -490,7 +498,7 @@ class SignUpServiceSpec
         val userAnswers = emptyUserAnswers
           .updateGrs(testCompanyDetails)
           .updateContact(First, "name1", "email1")
-          .updateContactHaveYouAddedAll(Yes)
+          .updateContactHaveYouAddedAll(No)
 
         val result = SUT.submitWithFaultTolerance(userAnswers)
 
@@ -500,6 +508,105 @@ class SignUpServiceSpec
       }
     }
 
+  }
+
+  "SignUpService.getRegistrationState" - {
+    "must return sucess with subscription id in response" in {
+      val idempotencyKey         = "test idempotency key"
+      val userId                 = "test user id"
+      val expectedSubscriptionId = "test subscription id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(200, s"{\"subscriptionId\": \"$expectedSubscriptionId\"}")))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.Success(expectedSubscriptionId)
+    }
+
+    "must return malformed response when a malformed response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(200, "{")))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.MalformedResponse
+    }
+
+    "must return pending when a 204 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(204)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.Pending(idempotencyKey)
+    }
+
+    "must return bad request failure when a 400 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(400)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.BadRequestFailure
+    }
+
+    "must return protected service failure when a 500 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(500)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.ProtectedServiceFailure(500)
+    }
+
+    "must return protected service failure when a 502 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(502)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.ProtectedServiceFailure(502)
+    }
+
+    "must already registered when a 422 response is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(422)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.AlreadyRegistered
+    }
+
+    "must return unknown failure registered when an unrecognised status code is received" in {
+      val idempotencyKey = "test idempotency key"
+      val userId         = "test user id"
+
+      when(mockSignUpConnector.getStateOfWorkItem(any())(using any()))
+        .thenReturn(Future.successful(HttpResponse(418)))
+
+      val result = SUT.getRegistrationState(idempotencyKey, userId).futureValue
+
+      result mustBe SignUpResult.UnknownFailure(418)
+    }
   }
 }
 
@@ -538,7 +645,7 @@ object SignUpServiceSpec {
         })
 
     def updateContactHaveYouAddedAll(value: ContactHaveYouAddedAll): UserAnswers =
-      userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), value).get
+      userAnswers.set(ContactHaveYouAddedAllPage(NormalMode), value).get
   }
 
 }

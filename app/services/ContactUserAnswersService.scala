@@ -33,7 +33,7 @@ class ContactUserAnswersService @Inject extends Logging {
   private val notFoundException = new IllegalStateException("ContactHaveYouAddedAll not found")
 
   def sanitise(userAnswers: UserAnswers): UserAnswers = {
-    userAnswers.get(ContactHaveYouAddedAllPage(First, NormalMode)) match {
+    userAnswers.get(ContactHaveYouAddedAllPage(NormalMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) =>
         userAnswers
           .clearTransactionArea()
@@ -79,7 +79,7 @@ class ContactUserAnswersService @Inject extends Logging {
   }
 
   def commitTransaction(userAnswers: UserAnswers): UserAnswers = {
-    userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode)) match {
+    userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode)) match {
       case Some(ContactHaveYouAddedAll.Yes) => commitTwoContactsTransaction(userAnswers)
       case Some(ContactHaveYouAddedAll.No)  => commitOneContactTransaction(userAnswers)
       case None                             => throw notFoundException
@@ -88,13 +88,13 @@ class ContactUserAnswersService @Inject extends Logging {
 
   private def commitTwoContactsTransaction(userAnswers: UserAnswers): UserAnswers = {
     (
-      userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode)),
+      userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode)),
       userAnswers.get(ContactNamePage(Second, TransactionMode)),
       userAnswers.get(ContactEmailPage(Second, TransactionMode))
     ) match {
       case (Some(decision), Some(saoName), Some(saoEmail)) =>
         val updatedAnswers = for {
-          withDecision <- userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), decision)
+          withDecision <- userAnswers.set(ContactHaveYouAddedAllPage(NormalMode), decision)
           withSaoName  <- withDecision.set(ContactNamePage(Second, NormalMode), saoName)
           withSaoEmail <- withSaoName.set(ContactEmailPage(Second, NormalMode), saoEmail)
         } yield withSaoEmail
@@ -109,9 +109,9 @@ class ContactUserAnswersService @Inject extends Logging {
   }
 
   private def commitOneContactTransaction(userAnswers: UserAnswers): UserAnswers = {
-    userAnswers.get(ContactHaveYouAddedAllPage(First, TransactionMode)) match {
+    userAnswers.get(ContactHaveYouAddedAllPage(TransactionMode)) match {
       case Some(decision) =>
-        userAnswers.set(ContactHaveYouAddedAllPage(First, NormalMode), decision) match {
+        userAnswers.set(ContactHaveYouAddedAllPage(NormalMode), decision) match {
           case Success(answers) => answers
           case Failure(error)   => throw error
         }
