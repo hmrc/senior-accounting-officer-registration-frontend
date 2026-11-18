@@ -130,11 +130,65 @@ class ContactUserAnswersServiceSpec extends SpecBase {
       result.data mustBe expected.data
     }
 
+    "IllegalStateException with message 'ContactNamePage not found' is thrown when attempting to add two contacts" in {
+      val input =
+        emptyUserAnswers
+          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
+          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
+          .add(ContactNamePage(ContactType.Second, NormalMode), "z")
+          .add(ContactEmailPage(ContactType.Second, NormalMode), "y")
+
+      emptyUserAnswers
+        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
+        .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
+        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactNamePage(ContactType.Second, NormalMode), "a")
+        .add(ContactEmailPage(ContactType.Second, NormalMode), "b")
+
+      val exception = intercept[IllegalStateException] {
+        SUT.commitTransaction(input)
+      }
+      exception.getMessage mustBe "ContactNamePage not found"
+    }
+
+    "IllegalStateException with message 'ContactEmailPage not found' is thrown when attempting to add two contacts" in {
+      val input =
+        emptyUserAnswers
+          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
+          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
+          .add(ContactNamePage(ContactType.Second, NormalMode), "z")
+          .add(ContactEmailPage(ContactType.Second, NormalMode), "y")
+
+      emptyUserAnswers
+        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
+        .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
+        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactNamePage(ContactType.Second, NormalMode), "a")
+        .add(ContactEmailPage(ContactType.Second, NormalMode), "b")
+
+      val exception = intercept[IllegalStateException] {
+        SUT.commitTransaction(input)
+      }
+      exception.getMessage mustBe "ContactEmailPage not found"
+    }
+
+    "must throw IllegalStateException when ContactHaveYouAddedAll is not found" in {
+      val exception = intercept[IllegalStateException] {
+        SUT.commitTransaction(emptyUserAnswers)
+      }
+      exception.getMessage mustBe "ContactHaveYouAddedAll not found"
+    }
+
     "missing ContactHaveYouAddedAll answer" - {
-      "must throw exception" in {
-        intercept[NotImplementedError] {
+      "must throw IllegalStateException when ContactHaveYouAddedAll is not found" in {
+        val exceptionFromSanitise = intercept[IllegalStateException] {
           SUT.sanitise(emptyUserAnswers)
         }
+        exceptionFromSanitise.getMessage mustBe "ContactHaveYouAddedAll not found"
       }
     }
   }
