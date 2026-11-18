@@ -102,8 +102,9 @@ class ContactUserAnswersService @Inject extends Logging {
           case Success(answers) => answers
           case Failure(error)   => throw error
         }
-      case (Some(decision), _, Some(saoEmail)) => throw IllegalStateException("ContactNamePage not found")
-      case (Some(decision), Some(saoName), _)  => throw IllegalStateException("ContactEmailPage not found")
+      case (_, None, _) => throw IllegalStateException("ContactNamePage not found")
+      case (_, _, None) => throw IllegalStateException("ContactEmailPage not found")
+      case (None, _, _) => throw notFoundException
     }
   }
 
@@ -114,6 +115,7 @@ class ContactUserAnswersService @Inject extends Logging {
           case Success(answers) => answers
           case Failure(error)   => throw error
         }
+      case None => throw notFoundException
     }
   }
 
