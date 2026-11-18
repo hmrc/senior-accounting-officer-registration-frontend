@@ -133,17 +133,17 @@ class ContactUserAnswersServiceSpec extends SpecBase {
     "IllegalStateException with message 'ContactNamePage not found' is thrown when attempting to add two contacts" in {
       val input =
         emptyUserAnswers
-          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
           .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
+          .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
           .add(ContactNamePage(ContactType.Second, NormalMode), "z")
           .add(ContactEmailPage(ContactType.Second, NormalMode), "y")
 
       emptyUserAnswers
-        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
         .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, NormalMode), "a")
         .add(ContactEmailPage(ContactType.Second, NormalMode), "b")
 
@@ -156,17 +156,17 @@ class ContactUserAnswersServiceSpec extends SpecBase {
     "IllegalStateException with message 'ContactEmailPage not found' is thrown when attempting to add two contacts" in {
       val input =
         emptyUserAnswers
-          .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+          .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
           .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
-          .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.No)
+          .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.No)
           .add(ContactNamePage(ContactType.Second, NormalMode), "z")
           .add(ContactEmailPage(ContactType.Second, NormalMode), "y")
 
       emptyUserAnswers
-        .add(ContactHaveYouAddedAllPage(ContactType.First, TransactionMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, TransactionMode), "a")
         .add(ContactEmailPage(ContactType.Second, TransactionMode), "b")
-        .add(ContactHaveYouAddedAllPage(ContactType.First, NormalMode), ContactHaveYouAddedAll.Yes)
+        .add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
         .add(ContactNamePage(ContactType.Second, NormalMode), "a")
         .add(ContactEmailPage(ContactType.Second, NormalMode), "b")
 
