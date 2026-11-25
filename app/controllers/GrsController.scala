@@ -59,7 +59,7 @@ class GrsController @Inject() (
           Try(Json.parse(r.body).as[NewJourneyResponse]).toEither
             .map(response => SeeOther(response.journeyStartUrl))
             .left
-            .map(_ => throw InternalServerException("Malformatted start journey response from GRS"))
+            .map(_ => throw InternalServerException(s"Malformatted start journey response from GRS, requestBody=${Json.toJson(grsStartRequest)}"))
             .merge
         case code =>
           throw InternalServerException(
@@ -72,10 +72,10 @@ class GrsController @Inject() (
   def callBack(journeyId: String): Action[AnyContent] = (identify andThen getData) async { implicit request =>
     val flow: EitherT[Future, Result, Result] = for {
       grsCompanyDetails <- EitherT(grsConnector.retrieve(journeyId))
-        .leftMap(_ => throw InternalServerException("Failure response from GRS"))
+        .leftMap(_ => throw InternalServerException(s"Failure response from GRS, journeyId=$journeyId"))
         .map {
           case details if !details.identifiersMatch =>
-            throw InternalServerException("Unexpected GRS returned identifiersMatch=false")
+            throw InternalServerException(s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId, details={CompanyProfile=${details.companyProfile}, ctUtr=${details.ctutr}, identifiersMatch=${details.identifiersMatch}, businessVerification=${details.businessVerification}, registration=${details.registration}}")
           case details => details
         }
       companyDetails <- EitherT
@@ -88,10 +88,10 @@ class GrsController @Inject() (
             .set(CompanyDetailsPage, companyDetails)
             .toEither
         )
-        .leftMap(_ => throw InternalServerException("Failed to set Session data"))
+        .leftMap(_ => throw InternalServerException(s"Failed to set Session data, companyDetails={CompanyName=${companyDetails.companyName}, CompanyNumber=${companyDetails.companyNumber}, ctUtr=${companyDetails.ctUtr}, RegisteredBusinessPartnerId=${companyDetails.registeredBusinessPartnerId}}"))
       _ <- EitherT
         .right(sessionRepository.set(updatedAnswer))
-        .leftMap(_ => throw InternalServerException("Failed to update Session repository"))
+        .leftMap(_ => throw InternalServerException(s"Failed to update Session repository, companyDetails={CompanyName=${companyDetails.companyName}, CompanyNumber=${companyDetails.companyNumber}, ctUtr=${companyDetails.ctUtr}, RegisteredBusinessPartnerId=${companyDetails.registeredBusinessPartnerId}}"))
     } yield Redirect(routes.IndexController.onPageLoad())
 
     flow.merge

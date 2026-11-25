@@ -38,8 +38,8 @@ import uk.gov.hmrc.http.{HttpResponse, InternalServerException}
 import utils.IdentifierGenerator
 
 import scala.concurrent.Future
-
 import java.util.UUID
+import scala.util.Random
 
 class GrsControllerSpec extends SpecBase with MockitoSugar {
 
@@ -91,8 +91,11 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
+          val appHost = application.injector.instanceOf[AppConfig].host
           val grsConnector = application.injector.instanceOf[GrsConnector]
           val request      = FakeRequest(GET, routes.GrsController.start().url)
+          val accessibilityStatementUrl = application.injector.instanceOf[AccessibilityStatementConfig].url(request).get
+
 
           when(grsConnector.start(any())(using any())).thenReturn(
             Future.successful(HttpResponse(status = CREATED))
@@ -102,8 +105,9 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             val result = route(application, request).value
             await(result)
           }
+          val result = route(application, request).value
 
-          err.message mustBe "Malformatted start journey response from GRS"
+          err.message mustBe s"""Malformatted start journey response from GRS, requestBody={"continueUrl":"$appHost/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"$appHost/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"$accessibilityStatementUrl","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
         }
       }
 
@@ -177,7 +181,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe "Unexpected GRS returned identifiersMatch=false"
+          err.message mustBe s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId, details={CompanyProfile=${responseWithIdentifierMatchFalse.companyProfile}, ctUtr=${responseWithIdentifierMatchFalse.ctutr}, identifiersMatch=${responseWithIdentifierMatchFalse.identifiersMatch}, businessVerification=${responseWithIdentifierMatchFalse.businessVerification}, registration=${responseWithIdentifierMatchFalse.registration}}"
         }
       }
 
@@ -207,7 +211,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe "Unexpected GRS returned identifiersMatch=false"
+          err.message mustBe s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId, details={CompanyProfile=${responseWithIdentifierMatchFalse.companyProfile}, ctUtr=${responseWithIdentifierMatchFalse.ctutr}, identifiersMatch=${responseWithIdentifierMatchFalse.identifiersMatch}, businessVerification=${responseWithIdentifierMatchFalse.businessVerification}, registration=RegistrationFailed(List(Failure(SERVICE_UNAVAILABLE,Dependent systems are currently not responding.)))}"
         }
       }
 
@@ -323,7 +327,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
           companyName = testCompanyName,
           companyNumber = testCompanyNumber,
           ctUtr = testCtUtr,
-          registeredBusinessPartnerId = "-"
+          registeredBusinessPartnerId = "Business partner identifier is required but was missing or empty."
         )
       }
     }
@@ -381,7 +385,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe "Failure response from GRS"
+          err.message mustBe s"Failure response from GRS, journeyId=$journeyId"
         }
       }
 
@@ -402,7 +406,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe "Failure response from GRS"
+          err.message mustBe s"Failure response from GRS, journeyId=$journeyId"
         }
       }
 
