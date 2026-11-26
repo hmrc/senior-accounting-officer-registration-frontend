@@ -45,8 +45,8 @@ unauthorised.heading = You can’t access this service with this account
 registration.dashboard.title = Cofrestrwch eich cwmni enwebedig
 registration.dashboard.heading = Cofrestrwch eich cwmni enwebedig
 
-registration.dashboard.p1 = Dewiswch y cwmni yn y DU a fydd yn cyflwyno hysbysiadau a thystysgrifau’r SAO ar gyfer y cwmnïau yn eich sefydliad. Dyma’ch cwmni enwebedig.
-registration.dashboard.p2 = Dim ond unwaith y mae angen i chi gofrestru ar gyfer eich sefydliad. Os oes gan eich sefydliad fwy nag un SAO, gallwch ddefnyddio’r un cyfrif ar gyfer pob SAO neu gofrestru ar wahân ar gyfer pob un.
+registration.dashboard.p1 = Dewiswch y cwmni yn y DU a fydd yn cyflwyno hysbysiadau a thystysgrifau’r SAO ar gyfer y cwmnïau yn eich grŵp. Dyma’ch cwmni enwebedig.
+registration.dashboard.p2 = Dim ond unwaith y mae angen i chi gofrestru ar gyfer eich sefydliad. Os oes gan eich sefydliad fwy nag un SAO, gallwch ddefnyddio’r un cyfrif ar gyfer pob SAO neu gofrestru ar wahân er mwyn creu cyfrif gwahanol ar gyfer pob un.
 
 registration.dashboard.row.company = Nodwch fanylion eich cwmni enwebedig
 registration.dashboard.row.contacts = Nodwch eich manylion cyswllt
@@ -67,9 +67,9 @@ registration.complete.homepageLink = go to your account homepage
 registration.complete.print = Print this page
 registration.complete.continue = Parhau
 
-registration.submitting.heading = Registering your nominated company
-registration.submitting.title = Registering your nominated company
-registration.submitting.paragraph1 = This may take a few minutes - do not close or refresh the page.
+registration.submitting.heading = Cofrestru’ch cwmni enwebedig
+registration.submitting.title = Cofrestru’ch cwmni enwebedig
+registration.submitting.paragraph1 = Gall hyn gymryd rhai munudau – peidiwch a chau nac adnewyddu’r dudalen.
 
 contactDetailsGuidance.caption = Manylion cyswllt
 contactDetailsGuidance.heading = Nodwch fanylion cyswllt eich cwmni enwebedig
@@ -139,8 +139,8 @@ nominatedCompanyDetailsGuidance.bulletPoint1 = Rhif Cofrestru’r cwmni (CRN)
 nominatedCompanyDetailsGuidance.bulletPoint2 = Cyfeirnod Unigryw y Trethdalwr (UTR)
 nominatedCompanyDetailsGuidance.paragraph3 = Mae’n rhaid i’r manylion a nodwch gyfateb i gofnodion Tŷ’r Cwmnïau. Os nad ydyn nhw’n cyfateb, ni allwch chi gwblhau’ch cofrestriad.
 
-nominatedCompanyDetailsGuidance.paragraph4 = Os nad oes CRN gan eich cwmni enwebedig, ewch ati i gofrestru gan ddefnyddio cwmni arall yn eich sefydliad sydd ag un.
-nominatedCompanyDetailsGuidance.paragraph5 = Os nad oes CRN gan unrhyw gwmni yn eich sefydliad, cysylltwch â’ch Rheolwr Cydymffurfiad Cwsmeriaid, os oes gennych un neu e-bostiwch {0} am gymorth.
+nominatedCompanyDetailsGuidance.paragraph4 = Os nad oes CRN gan eich cwmni enwebedig, ewch ati i gofrestru gan ddefnyddio cwmni arall yn eich grŵp sydd ag un.
+nominatedCompanyDetailsGuidance.paragraph5 = Os nad oes CRN gan unrhyw gwmni yn eich grŵp, cysylltwch â’ch Rheolwr Cydymffurfiad Cwsmeriaid, os oes gennych un neu e-bostiwch {0} am gymorth.
 nominatedCompanyDetailsGuidance.email = wmbc.saomailbox@hmrc.gov.uk
 
 cannotAccessService.title = You cannot access this service
@@ -205,8 +205,8 @@ guidanceSubmit.heading = Submit your Senior Accounting Officer notification and 
 betaBanner.tag = Beta
 betaBanner.paragraph = This is a new service. We’re still working on ways to improve it.
 
-survey.subheading = Before you go
-survey.paragraph1 = As a private beta user, you are using the first version of this service. Your feedback will help us improve it for future users.
+survey.subheading = Cyn i chi fynd
+survey.paragraph1 = Fel defnyddiwr beta preifat, rydych chi’n defnyddio’r fersiwn gyntaf o’r gwasanaeth hwn. Bydd eich adborth yn ein helpu i’w wella i ddefnyddwyr yn y dyfodol.
 survey.paragraph2WithLink = <a href="{0}" class="govuk-link" id=survey-link target="_blank" rel="noreferrer noopener">Take a short survey</a> to tell us about your experience.
 
 registration-complete.dateTime = {0} {1} ({2}).
