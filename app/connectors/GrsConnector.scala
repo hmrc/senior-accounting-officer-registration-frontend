@@ -79,7 +79,9 @@ object GrsConnector {
             json      <- Try(response.json).toEither
             validated <- json.validate[CompanyDetails].asEither
           } yield validated).left
-            .map(_ => Some(new InternalServerException(s"Retrieve from GRS failed with invalid body, body=$CompanyDetails")))
+            .map(_ =>
+              Some(new InternalServerException(s"Retrieve from GRS failed with invalid body, body=$CompanyDetails"))
+            )
 
         case NOT_FOUND => Left(None)
         case status    =>

@@ -60,7 +60,9 @@ object Registration {
         case RegistrationStatus.REGISTERED =>
           (json \ registeredBusinessPartnerIdKey)
             .validate[String]
-            .collect(JsonValidationError(s"Missing or invalid '$registeredBusinessPartnerIdKey' for REGISTERED status")) { case businessPartnerId: String =>
+            .collect(
+              JsonValidationError(s"Missing or invalid '$registeredBusinessPartnerIdKey' for REGISTERED status")
+            ) { case businessPartnerId: String =>
               Registered(businessPartnerId)
             }
             .get

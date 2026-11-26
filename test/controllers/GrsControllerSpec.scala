@@ -38,8 +38,8 @@ import uk.gov.hmrc.http.{HttpResponse, InternalServerException}
 import utils.IdentifierGenerator
 
 import scala.concurrent.Future
+
 import java.util.UUID
-import scala.util.Random
 
 class GrsControllerSpec extends SpecBase with MockitoSugar {
 
@@ -91,11 +91,10 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
-          val appHost = application.injector.instanceOf[AppConfig].host
-          val grsConnector = application.injector.instanceOf[GrsConnector]
-          val request      = FakeRequest(GET, routes.GrsController.start().url)
+          val appHost                   = application.injector.instanceOf[AppConfig].host
+          val grsConnector              = application.injector.instanceOf[GrsConnector]
+          val request                   = FakeRequest(GET, routes.GrsController.start().url)
           val accessibilityStatementUrl = application.injector.instanceOf[AccessibilityStatementConfig].url(request).get
-
 
           when(grsConnector.start(any())(using any())).thenReturn(
             Future.successful(HttpResponse(status = CREATED))
@@ -105,7 +104,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             val result = route(application, request).value
             await(result)
           }
-          val result = route(application, request).value
+          route(application, request).value
 
           err.message mustBe s"""Malformatted start journey response from GRS, requestBody={"continueUrl":"$appHost/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"$appHost/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"$accessibilityStatementUrl","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
         }
