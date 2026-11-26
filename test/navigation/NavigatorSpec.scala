@@ -187,9 +187,12 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
             val userAnswers =
               emptyUserAnswers.add(ContactHaveYouAddedAllPage(TransactionMode), ContactHaveYouAddedAll.Yes)
 
-            intercept[NotImplementedError] {
-              navigator.nextPage(ContactHaveYouAddedAllPage(TransactionMode), TransactionMode, userAnswers)
-            }
+            navigator.nextPage(
+              ContactHaveYouAddedAllPage(TransactionMode),
+              TransactionMode,
+              userAnswers
+            ) mustBe routes.IndexController.onPageLoad()
+
           }
         }
 
@@ -199,9 +202,12 @@ class NavigatorSpec extends SpecBase with FeatureToggleSupport with BeforeAndAft
             val userAnswers =
               emptyUserAnswers.add(ContactHaveYouAddedAllPage(NormalMode), ContactHaveYouAddedAll.Yes)
 
-            intercept[NotImplementedError] {
-              navigator.nextPage(ContactHaveYouAddedAllPage(TransactionMode), TransactionMode, userAnswers)
-            }
+            navigator.nextPage(
+              ContactHaveYouAddedAllPage(TransactionMode),
+              TransactionMode,
+              userAnswers
+            ) mustBe routes.IndexController.onPageLoad()
+
           }
         }
 

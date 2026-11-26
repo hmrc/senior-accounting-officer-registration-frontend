@@ -78,7 +78,7 @@ class Navigator @Inject() (configuration: Configuration) extends FeatureConfigSu
             routes.ContactNameController.onPageLoad(Second, TransactionMode)
           case (Some(_), Some(_)) =>
             routes.ContactCheckYourAnswersController.onPageLoad()
-          case _ => ???
+          case _ => routes.IndexController.onPageLoad()
         }
       }
     case ContactNamePage(Second, TransactionMode) =>
