@@ -87,9 +87,9 @@ contactName.hint = Er enghraifft, ‘Ashley Smith’ neu ‘Y tîm treth’
 contactName.checkYourAnswersLabel = Enw llawn
 contactName.error.required = Nodwch enw’r person neu’r tîm y gallwn gysylltu ag ef
 contactName.error.length = Mae’n rhaid i enw’r person neu’r tîm fod yn 105 o gymeriadau neu lai
-contactName.change.first.hidden = the name of the first contact detail
+contactName.change.first.hidden = enw’r cyswllt cyntaf
 contactName.error.invalidChars = Mae’n rhaid i enw’r person neu’r tîm beidio â chynnwys <, > na "
-contactName.change.second.hidden = the name of the second contact detail
+contactName.change.second.hidden = enw’r ail gyswllt
 
 contactEmail.title.first  = Manylion y cyswllt cyntaf
 contactEmail.title.second = Manylion yr ail gyswllt
@@ -100,8 +100,8 @@ contactEmail.checkYourAnswersLabel = Cyfeiriad e-bost
 contactEmail.error.required = Nodwch gyfeiriad e-bost y person neu’r tîm
 contactEmail.error.length = Mae’n rhaid i’r cyfeiriad e-bost fod yn 254 o gymeriadau neu lai
 contactEmail.error.format = Mae’n rhaid i’r cyfeiriad e-bost fod yn y fformat cywir, er enghraifft enw@enghraifft.com
-contactEmail.change.first.hidden = the email address of the first contact detail
-contactEmail.change.second.hidden = the email address of the second contact detail
+contactEmail.change.first.hidden = cyfeiriad e-bost y cyswllt cyntaf
+contactEmail.change.second.hidden = cyfeiriad e-bost yr ail gyswllt
 
 contactHaveYouAddedAll.title = Manylion y cyswllt cyntaf
 contactHaveYouAddedAll.caption = Manylion cyswllt
@@ -111,7 +111,7 @@ contactHaveYouAddedAll.subheading = Ydych chi am ychwanegu cyswllt arall?
 contactHaveYouAddedAll.yes = Iawn
 contactHaveYouAddedAll.no = Na
 contactHaveYouAddedAll.checkYourAnswersLabel = Ydych chi am ychwanegu cyswllt arall?
-contactHaveYouAddedAll.change.hidden = if you want to add another contact detail
+contactHaveYouAddedAll.change.hidden = os ydych eisiau ychwanegu cyswllt arall
 contactHaveYouAddedAll.error.required = Dewiswch ‘Iawn’ os ydych am ychwanegu cyswllt arall
 
 contactHaveYouAddedAll.legacy.title = First contact details
@@ -203,7 +203,7 @@ guidanceSubmit.title = Submit your Senior Accounting Officer notification and ce
 guidanceSubmit.heading = Submit your Senior Accounting Officer notification and certificate
 
 betaBanner.tag = Beta
-betaBanner.paragraph = This is a new service. We’re still working on ways to improve it.
+betaBanner.paragraph = Gwasanaeth newydd yw hwn. Rydym yn dal i fod yn gweithio ar ffyrdd i’w wella.
 
 survey.subheading = Cyn i chi fynd
 survey.paragraph1 = Fel defnyddiwr beta preifat, rydych chi’n defnyddio’r fersiwn gyntaf o’r gwasanaeth hwn. Bydd eich adborth yn ein helpu i’w wella i ddefnyddwyr yn y dyfodol.
