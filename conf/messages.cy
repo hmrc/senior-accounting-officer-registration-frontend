@@ -91,7 +91,7 @@ contactName.change.first.hidden = enw’r cyswllt cyntaf
 contactName.error.invalidChars = Mae’n rhaid i enw’r person neu’r tîm beidio â chynnwys <, > na "
 contactName.change.second.hidden = enw’r ail gyswllt
 
-contactEmail.title.first  = Manylion y cyswllt cyntaf
+contactEmail.title.first = Manylion y cyswllt cyntaf
 contactEmail.title.second = Manylion yr ail gyswllt
 contactEmail.heading = Beth yw cyfeiriad e-bost y cyswllt hwn?
 contactEmail.first.hint = Byddwn ni’n defnyddio hyn er mwyn anfon cadarnhad a chysylltu â’r person hwn am y cyflwyniad os oes angen.
@@ -113,13 +113,6 @@ contactHaveYouAddedAll.no = Na
 contactHaveYouAddedAll.checkYourAnswersLabel = Ydych chi am ychwanegu cyswllt arall?
 contactHaveYouAddedAll.change.hidden = os ydych eisiau ychwanegu cyswllt arall
 contactHaveYouAddedAll.error.required = Dewiswch ‘Iawn’ os ydych am ychwanegu cyswllt arall
-
-contactHaveYouAddedAll.legacy.title = First contact details
-contactHaveYouAddedAll.legacy.heading = Have you added all the contacts you need?
-contactHaveYouAddedAll.legacy.hint = Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details.
-contactHaveYouAddedAll.legacy.yes = Yes
-contactHaveYouAddedAll.legacy.no = No, add another contact
-contactHaveYouAddedAll.legacy.error.required = Select yes if you have added all the contacts you need
 
 contactCheckYourAnswers.title.first  = Manylion y cyswllt cyntaf
 contactCheckYourAnswers.title.second = Manylion yr ail gyswllt
