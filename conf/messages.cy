@@ -45,8 +45,8 @@ unauthorised.heading = You can’t access this service with this account
 registration.dashboard.title = Cofrestrwch eich cwmni enwebedig
 registration.dashboard.heading = Cofrestrwch eich cwmni enwebedig
 
-registration.dashboard.p1 = Dewiswch y cwmni yn y DU a fydd yn cyflwyno hysbysiadau a thystysgrifau’r SAO ar gyfer y cwmnïau yn eich sefydliad. Dyma’ch cwmni enwebedig.
-registration.dashboard.p2 = Dim ond unwaith y mae angen i chi gofrestru ar gyfer eich sefydliad. Os oes gan eich sefydliad fwy nag un SAO, gallwch ddefnyddio’r un cyfrif ar gyfer pob SAO neu gofrestru ar wahân ar gyfer pob un.
+registration.dashboard.p1 = Dewiswch y cwmni yn y DU a fydd yn cyflwyno hysbysiadau a thystysgrifau’r SAO ar gyfer y cwmnïau yn eich grŵp. Dyma’ch cwmni enwebedig.
+registration.dashboard.p2 = Dim ond unwaith y mae angen i chi gofrestru ar gyfer eich sefydliad. Os oes gan eich sefydliad fwy nag un SAO, gallwch ddefnyddio’r un cyfrif ar gyfer pob SAO neu gofrestru ar wahân er mwyn creu cyfrif gwahanol ar gyfer pob un.
 
 registration.dashboard.row.company = Nodwch fanylion eich cwmni enwebedig
 registration.dashboard.row.contacts = Nodwch eich manylion cyswllt
@@ -67,9 +67,9 @@ registration.complete.homepageLink = go to your account homepage
 registration.complete.print = Print this page
 registration.complete.continue = Parhau
 
-registration.submitting.heading = Registering your nominated company
-registration.submitting.title = Registering your nominated company
-registration.submitting.paragraph1 = This may take a few minutes - do not close or refresh the page.
+registration.submitting.heading = Cofrestru’ch cwmni enwebedig
+registration.submitting.title = Cofrestru’ch cwmni enwebedig
+registration.submitting.paragraph1 = Gall hyn gymryd rhai munudau – peidiwch a chau nac adnewyddu’r dudalen.
 
 contactDetailsGuidance.caption = Manylion cyswllt
 contactDetailsGuidance.heading = Nodwch fanylion cyswllt eich cwmni enwebedig
@@ -87,11 +87,11 @@ contactName.hint = Er enghraifft, ‘Ashley Smith’ neu ‘Y tîm treth’
 contactName.checkYourAnswersLabel = Enw llawn
 contactName.error.required = Nodwch enw’r person neu’r tîm y gallwn gysylltu ag ef
 contactName.error.length = Mae’n rhaid i enw’r person neu’r tîm fod yn 105 o gymeriadau neu lai
-contactName.change.first.hidden = the name of the first contact detail
+contactName.change.first.hidden = enw’r cyswllt cyntaf
 contactName.error.invalidChars = Mae’n rhaid i enw’r person neu’r tîm beidio â chynnwys <, > na "
-contactName.change.second.hidden = the name of the second contact detail
+contactName.change.second.hidden = enw’r ail gyswllt
 
-contactEmail.title.first  = Manylion y cyswllt cyntaf
+contactEmail.title.first = Manylion y cyswllt cyntaf
 contactEmail.title.second = Manylion yr ail gyswllt
 contactEmail.heading = Beth yw cyfeiriad e-bost y cyswllt hwn?
 contactEmail.first.hint = Byddwn ni’n defnyddio hyn er mwyn anfon cadarnhad a chysylltu â’r person hwn am y cyflwyniad os oes angen.
@@ -100,8 +100,8 @@ contactEmail.checkYourAnswersLabel = Cyfeiriad e-bost
 contactEmail.error.required = Nodwch gyfeiriad e-bost y person neu’r tîm
 contactEmail.error.length = Mae’n rhaid i’r cyfeiriad e-bost fod yn 254 o gymeriadau neu lai
 contactEmail.error.format = Mae’n rhaid i’r cyfeiriad e-bost fod yn y fformat cywir, er enghraifft enw@enghraifft.com
-contactEmail.change.first.hidden = the email address of the first contact detail
-contactEmail.change.second.hidden = the email address of the second contact detail
+contactEmail.change.first.hidden = cyfeiriad e-bost y cyswllt cyntaf
+contactEmail.change.second.hidden = cyfeiriad e-bost yr ail gyswllt
 
 contactHaveYouAddedAll.title = Manylion y cyswllt cyntaf
 contactHaveYouAddedAll.caption = Manylion cyswllt
@@ -111,15 +111,8 @@ contactHaveYouAddedAll.subheading = Ydych chi am ychwanegu cyswllt arall?
 contactHaveYouAddedAll.yes = Iawn
 contactHaveYouAddedAll.no = Na
 contactHaveYouAddedAll.checkYourAnswersLabel = Ydych chi am ychwanegu cyswllt arall?
-contactHaveYouAddedAll.change.hidden = if you want to add another contact detail
+contactHaveYouAddedAll.change.hidden = os ydych eisiau ychwanegu cyswllt arall
 contactHaveYouAddedAll.error.required = Dewiswch ‘Iawn’ os ydych am ychwanegu cyswllt arall
-
-contactHaveYouAddedAll.legacy.title = First contact details
-contactHaveYouAddedAll.legacy.heading = Have you added all the contacts you need?
-contactHaveYouAddedAll.legacy.hint = Provide more than one contact if possible, in case we do not get a response from the primary contact. You can add up to two contact details.
-contactHaveYouAddedAll.legacy.yes = Yes
-contactHaveYouAddedAll.legacy.no = No, add another contact
-contactHaveYouAddedAll.legacy.error.required = Select yes if you have added all the contacts you need
 
 contactCheckYourAnswers.title.first  = Manylion y cyswllt cyntaf
 contactCheckYourAnswers.title.second = Manylion yr ail gyswllt
@@ -139,8 +132,8 @@ nominatedCompanyDetailsGuidance.bulletPoint1 = Rhif Cofrestru’r cwmni (CRN)
 nominatedCompanyDetailsGuidance.bulletPoint2 = Cyfeirnod Unigryw y Trethdalwr (UTR)
 nominatedCompanyDetailsGuidance.paragraph3 = Mae’n rhaid i’r manylion a nodwch gyfateb i gofnodion Tŷ’r Cwmnïau. Os nad ydyn nhw’n cyfateb, ni allwch chi gwblhau’ch cofrestriad.
 
-nominatedCompanyDetailsGuidance.paragraph4 = Os nad oes CRN gan eich cwmni enwebedig, ewch ati i gofrestru gan ddefnyddio cwmni arall yn eich sefydliad sydd ag un.
-nominatedCompanyDetailsGuidance.paragraph5 = Os nad oes CRN gan unrhyw gwmni yn eich sefydliad, cysylltwch â’ch Rheolwr Cydymffurfiad Cwsmeriaid, os oes gennych un neu e-bostiwch {0} am gymorth.
+nominatedCompanyDetailsGuidance.paragraph4 = Os nad oes CRN gan eich cwmni enwebedig, ewch ati i gofrestru gan ddefnyddio cwmni arall yn eich grŵp sydd ag un.
+nominatedCompanyDetailsGuidance.paragraph5 = Os nad oes CRN gan unrhyw gwmni yn eich grŵp, cysylltwch â’ch Rheolwr Cydymffurfiad Cwsmeriaid, os oes gennych un neu e-bostiwch {0} am gymorth.
 nominatedCompanyDetailsGuidance.email = wmbc.saomailbox@hmrc.gov.uk
 
 cannotAccessService.title = You cannot access this service
@@ -203,10 +196,10 @@ guidanceSubmit.title = Submit your Senior Accounting Officer notification and ce
 guidanceSubmit.heading = Submit your Senior Accounting Officer notification and certificate
 
 betaBanner.tag = Beta
-betaBanner.paragraph = This is a new service. We’re still working on ways to improve it.
+betaBanner.paragraph = Gwasanaeth newydd yw hwn. Rydym yn dal i fod yn gweithio ar ffyrdd i’w wella.
 
-survey.subheading = Before you go
-survey.paragraph1 = As a private beta user, you are using the first version of this service. Your feedback will help us improve it for future users.
+survey.subheading = Cyn i chi fynd
+survey.paragraph1 = Fel defnyddiwr beta preifat, rydych chi’n defnyddio’r fersiwn gyntaf o’r gwasanaeth hwn. Bydd eich adborth yn ein helpu i’w wella i ddefnyddwyr yn y dyfodol.
 survey.paragraph2WithLink = <a href="{0}" class="govuk-link" id=survey-link target="_blank" rel="noreferrer noopener">Take a short survey</a> to tell us about your experience.
 
 registration-complete.dateTime = {0} {1} ({2}).
