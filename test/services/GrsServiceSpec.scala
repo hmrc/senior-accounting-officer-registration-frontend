@@ -146,8 +146,7 @@ class GrsServiceSpec extends SpecBase with GuiceOneAppPerSuite with EitherValues
           )
         )
         result.isRight mustBe accepted
-        if result.isRight then
-          result.toOption.get.registeredBusinessPartnerId mustBe "-"
+        if result.isRight then result.toOption.get.registeredBusinessPartnerId mustBe "-"
       }
     }
 
