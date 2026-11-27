@@ -60,11 +60,11 @@ registration.dashboard.submit = Cyflwynwch eich cofrestriad
 registration.complete.heading = Cofrestriad wedi’i gwblhau
 registration.complete.referenceNumberPrefix = Eich cyfeirnod
 registration.complete.p1 = Rydym wedi anfon e-bost cadarnhau at bob un o’r cysylltiadau a roesoch yn y cam cofrestru.
-registration.complete.p2 = if you want to keep a paper record of your registration.
+registration.complete.p2 = os ydych chi eisiau cadw cofnod papur o’ch cofrestriad.
 registration.complete.h2 = Beth sy’n digwydd nesaf
-registration.complete.p3 = You can now {0} to submit a notification and certificate.
-registration.complete.homepageLink = go to your account homepage
-registration.complete.print = Print this page
+registration.complete.p3 = Gallwch nawr {0} er mwyn cyflwyno hysbysiad a thystysgrif.
+registration.complete.homepageLink = fynd i hafan eich cyfrif
+registration.complete.print = Argraffwch y dudalen hon
 registration.complete.continue = Parhau
 
 registration.submitting.heading = Cofrestru’ch cwmni enwebedig
@@ -200,6 +200,6 @@ betaBanner.paragraph = Gwasanaeth newydd yw hwn. Rydym yn dal i fod yn gweithio 
 
 survey.subheading = Cyn i chi fynd
 survey.paragraph1 = Fel defnyddiwr beta preifat, rydych chi’n defnyddio’r fersiwn gyntaf o’r gwasanaeth hwn. Bydd eich adborth yn ein helpu i’w wella i ddefnyddwyr yn y dyfodol.
-survey.paragraph2WithLink = <a href="{0}" class="govuk-link" id=survey-link target="_blank" rel="noreferrer noopener">Take a short survey</a> to tell us about your experience.
+survey.paragraph2WithLink = <a href="{0}" class="govuk-link" id=survey-link target="_blank" rel="noreferrer noopener">Llenwch arolwg byr</a> i roi gwybod i ni am eich profiad.
 
 registration-complete.dateTime = {0} {1} ({2}).
