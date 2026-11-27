@@ -133,7 +133,7 @@ class GrsConnectorISpec extends ISpecBase with FeatureToggleSupport with EitherV
           Failure("SERVICE_UNAVAILABLE", "Dependent systems are currently not responding.")
         )
       )
-      app.injector.instanceOf[services.GrsService].map(details).value.registeredBusinessPartnerId mustBe "Business partner identifier is required but was missing or empty."
+      app.injector.instanceOf[services.GrsService].map(details).value.registeredBusinessPartnerId mustBe "-"
     }
 
     "must return Right(CompanyDetails) for a valid response" in {

@@ -180,7 +180,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId, details={CompanyProfile=${responseWithIdentifierMatchFalse.companyProfile}, ctUtr=${responseWithIdentifierMatchFalse.ctutr}, identifiersMatch=${responseWithIdentifierMatchFalse.identifiersMatch}, businessVerification=${responseWithIdentifierMatchFalse.businessVerification}, registration=${responseWithIdentifierMatchFalse.registration}}"
+          err.message mustBe s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId"
         }
       }
 
@@ -210,7 +210,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId, details={CompanyProfile=${responseWithIdentifierMatchFalse.companyProfile}, ctUtr=${responseWithIdentifierMatchFalse.ctutr}, identifiersMatch=${responseWithIdentifierMatchFalse.identifiersMatch}, businessVerification=${responseWithIdentifierMatchFalse.businessVerification}, registration=RegistrationFailed(List(Failure(SERVICE_UNAVAILABLE,Dependent systems are currently not responding.)))}"
+          err.message mustBe s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId"
         }
       }
 
@@ -326,7 +326,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
           companyName = testCompanyName,
           companyNumber = testCompanyNumber,
           ctUtr = testCtUtr,
-          registeredBusinessPartnerId = "Business partner identifier is required but was missing or empty."
+          registeredBusinessPartnerId = "-"
         )
       }
     }

@@ -73,7 +73,7 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
         .map(details)
         .toOption
         .get
-        .registeredBusinessPartnerId mustBe "Business partner identifier is required but was missing or empty."
+        .registeredBusinessPartnerId mustBe "-"
     }
 
     "reject unknown scenarios" in {

@@ -80,7 +80,7 @@ class GrsController @Inject() (
         .map {
           case details if !details.identifiersMatch =>
             throw InternalServerException(
-              s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId, details={CompanyProfile=${details.companyProfile}, ctUtr=${details.ctutr}, identifiersMatch=${details.identifiersMatch}, businessVerification=${details.businessVerification}, registration=${details.registration}}"
+              s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId"
             )
           case details => details
         }
@@ -96,14 +96,14 @@ class GrsController @Inject() (
         )
         .leftMap(_ =>
           throw InternalServerException(
-            s"Failed to set Session data, companyDetails={CompanyName=${companyDetails.companyName}, CompanyNumber=${companyDetails.companyNumber}, ctUtr=${companyDetails.ctUtr}, RegisteredBusinessPartnerId=${companyDetails.registeredBusinessPartnerId}}"
+            s"Failed to set Session data"
           )
         )
       _ <- EitherT
         .right(sessionRepository.set(updatedAnswer))
         .leftMap(_ =>
           throw InternalServerException(
-            s"Failed to update Session repository, companyDetails={CompanyName=${companyDetails.companyName}, CompanyNumber=${companyDetails.companyNumber}, ctUtr=${companyDetails.ctUtr}, RegisteredBusinessPartnerId=${companyDetails.registeredBusinessPartnerId}}"
+            s"Failed to update Session repository"
           )
         )
     } yield Redirect(routes.IndexController.onPageLoad())

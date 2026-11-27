@@ -74,7 +74,8 @@ class GrsService @Inject() (
         logger.warn(
           "[GrsService][map] GRS registration failed with SERVICE_UNAVAILABLE; continuing with unavailable SAFE ID"
         )
-        Right("Business partner identifier is required but was missing or empty.")
+        // SAOD-1283: This GRS failure supplies no business partner ID, DPS accepts "-" as a temp workaround.
+        Right("-")
       case status => Left(new InternalServerException(s"Unexpected registration status $status"))
     }
     id.map(value =>
