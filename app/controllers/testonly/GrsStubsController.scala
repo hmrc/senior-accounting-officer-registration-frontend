@@ -68,7 +68,7 @@ class GrsStubsController @Inject() (
       case "registered"          => Ok(stubGrsView(GrsResponseConfig.form, journeyId))
       case "service-unavailable" =>
         Ok(stubGrsView(GrsResponseConfig.form.fill(GrsResponseConfig.serviceUnavailable), journeyId))
-      case _ => BadRequest("Unknown GRS scenario")
+      case _ => BadRequest(s"Unknown GRS scenario, scenario=$scenario, journeyId=$journeyId")
     }
   }
 

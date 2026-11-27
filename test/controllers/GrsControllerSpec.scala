@@ -91,8 +91,10 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
-          val grsConnector = application.injector.instanceOf[GrsConnector]
-          val request      = FakeRequest(GET, routes.GrsController.start().url)
+          val appHost                   = application.injector.instanceOf[AppConfig].host
+          val grsConnector              = application.injector.instanceOf[GrsConnector]
+          val request                   = FakeRequest(GET, routes.GrsController.start().url)
+          val accessibilityStatementUrl = application.injector.instanceOf[AccessibilityStatementConfig].url(request).get
 
           when(grsConnector.start(any())(using any())).thenReturn(
             Future.successful(HttpResponse(status = CREATED))
@@ -102,8 +104,9 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             val result = route(application, request).value
             await(result)
           }
+          route(application, request).value
 
-          err.message mustBe "Malformatted start journey response from GRS"
+          err.message mustBe s"""Malformatted start journey response from GRS, requestBody={"continueUrl":"$appHost/senior-accounting-officer/registration/business-match/result","deskProServiceId":"senior-accounting-officer-registration-frontend","signOutUrl":"$appHost/senior-accounting-officer/registration/account/sign-out-survey","regime":"DSAO","accessibilityUrl":"$accessibilityStatementUrl","businessVerificationCheck":false,"labels":{"en":{"optServiceName":"Senior Accounting Officer notification and certificate"}}}"""
         }
       }
 
@@ -177,7 +180,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe "Unexpected GRS returned identifiersMatch=false"
+          err.message mustBe s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId"
         }
       }
 
@@ -207,7 +210,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe "Unexpected GRS returned identifiersMatch=false"
+          err.message mustBe s"Unexpected GRS returned identifiersMatch=false, journeyId=$journeyId"
         }
       }
 
@@ -381,7 +384,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe "Failure response from GRS"
+          err.message mustBe s"Failure response from GRS, journeyId=$journeyId"
         }
       }
 
@@ -402,7 +405,7 @@ class GrsControllerSpec extends SpecBase with MockitoSugar {
             await(result)
           }
 
-          err.message mustBe "Failure response from GRS"
+          err.message mustBe s"Failure response from GRS, journeyId=$journeyId"
         }
       }
 

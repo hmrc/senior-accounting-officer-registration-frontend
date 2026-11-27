@@ -68,7 +68,12 @@ class GrsStubsControllerSpec extends SpecBase with GuiceOneAppPerSuite {
       status(result) mustBe OK
       val details = contentAsJson(result).as[CompanyDetails]
       details.identifiersMatch mustBe true
-      app.injector.instanceOf[services.GrsService].map(details).toOption.get.registeredBusinessPartnerId mustBe "-"
+      app.injector
+        .instanceOf[services.GrsService]
+        .map(details)
+        .toOption
+        .get
+        .registeredBusinessPartnerId mustBe "-"
     }
 
     "reject unknown scenarios" in {
